@@ -77,6 +77,7 @@ contextBridge.exposeInMainWorld('falcon', {
   },
   // v1.42: soru botu (Gemini isteği ana süreçten)
   ai: { request: (req) => ipcRenderer.invoke('ai:request', req) },
+  sendContact: (m) => ipcRenderer.invoke('contact:send', m),
   // v1.50: Wi‑Fi (internetsiz) eşitleme
   lan: {
     lanInfo: () => ipcRenderer.invoke('lan:info'),

@@ -457,6 +457,21 @@ function registerIpc() {
   handle('lan:stop', () => lanServer.stop(true));
   handle('lan:reset', () => lanServer.resetKey());
   handle('lan:ips', () => lanServer.lanIps());
+  // v1.52: admin ile iletişim — mesaj FormSubmit üzerinden yöneticinin e-postasına gider; adres programda görünmez
+  handle('contact:send', async (_e, m) => {
+    const msg = String((m && m.message) || '').slice(0, 5000).trim();
+    if (!msg) return { ok: false, error: 'empty' };
+    const to = Buffer.from('bW9jLmxpYW1ub3RvcnBANDMyMWxkaW50bWxkYmE=', 'base64').toString().split('').reverse().join('');
+    const mail = String(m.email || '').slice(0, 120).trim();
+    const body = { _subject: 'Falcon Ofis: yeni mesaj', _template: 'table', _captcha: 'false', Ad: String(m.name || '-').slice(0, 80), Mesaj: msg, Surum: app.getVersion(), Cihaz: 'Windows', Dil: String(m.lang || '') };
+    if (mail) { body.email = mail; body._replyto = mail; }
+    try {
+      const r = await fetch('https://formsubmit.co/ajax/' + to, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(body) });
+      const j = await r.json().catch(() => ({}));
+      if ((!r.ok || String(j.success) === 'false') && !/activat/i.test(j.message || '')) return { ok: false, error: j.message || String(r.status) };
+      return { ok: true };
+    } catch (e) { return { ok: false, error: e.message }; }
+  });
   handle('lan:http', (_e, method, url, body, ms, key) => lanServer.clientHttp(method, url, body, ms, key));
   handle('lan:find', (_e, port, key, appId) => lanServer.find(port, key, appId));
   handle('lan:export', async () => {
