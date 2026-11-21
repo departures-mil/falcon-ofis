@@ -1,10 +1,10 @@
 {
- "version": "1.51.0",
- "notes": "v1.51: Bilgisayarın güncellemeleri artık GitHub üzerinden geliyor (daha hızlı ve güvenilir; bulut hesabına bağlı olmadan da güncellenir). İndirirken yüzde, MB ve hız görünür. Kayıtlarınız olduğu gibi kalır.",
- "size": 2661637,
- "sha256": "c68ef8a7b2f2395bbc0b0667b08c356053c35576b197ab20a856fee641b9e7c3",
- "sig": "MEUCIQCidqdUERCQJztdriC9smZooqooyg0e9xMf2cY/Xj9BHwIgbUPIOjYhFJoPBkMofrB6STBgP05DKieO6NhK6z4/3/4=",
- "file": "masaustu-1.51.0.fopk",
+ "version": "1.52.0",
+ "notes": "v1.52: Ayarların sonuna 'Admin ile iletişime geç' bölümü eklendi; öneri ve isteklerinizi doğrudan yöneticiye gönderebilirsiniz. Kayıtlarınız olduğu gibi kalır.",
+ "size": 2664471,
+ "sha256": "852b470c019eba1d8160e1abf7004cd5af4af00a3d9a95d0484c5b77e00b3397",
+ "sig": "MEUCIQDGUi6YjTYjWScjsz0udF44agCdSHSPYtamh42EJW7NwgIgC1/xtYGd732pD6CPPTgWum7fLzJU5GJqBJNjN2VAFog=",
+ "file": "masaustu-1.52.0.fopk",
  "electron": "44",
- "publishedAt": "2026-11-21T20:31:42.629Z"
+ "publishedAt": "2026-11-21T21:05:39.210Z"
 }
