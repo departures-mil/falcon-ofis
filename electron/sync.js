@@ -57,6 +57,15 @@ function b64decode(str) {
 const randomId = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 const qi = (name) => `"${String(name).replace(/"/g, '""')}"`;
 const qs = (s) => `'${String(s).replace(/'/g, "''")}'`;
+// Bir satırın tuttuğu dosyalar (dosya sütunu ya da çöp kutusu kaydının dosya listesi)
+function rowFiles(tbl, row) {
+  if (!row) return [];
+  if (tbl === 'trash_items') {
+    try { return (JSON.parse(row.files || '[]') || []).filter((x) => typeof x === 'string' && x); } catch { return []; }
+  }
+  const col = FILE_COLUMNS[tbl];
+  return col && row[col] ? [row[col]] : [];
+}
 
 // ---------- Firebase REST istemcisi ----------
 
@@ -304,9 +313,9 @@ function createSync({
     const t = tables().get(tbl);
     const w = pkWhere(t, pk);
     if (!row) {
-      const old = FILE_COLUMNS[tbl] ? db.get(`SELECT * FROM ${qi(tbl)} WHERE ${w.sql}`, w.params) : null;
+      const old = FILE_COLUMNS[tbl] || tbl === 'trash_items' ? db.get(`SELECT * FROM ${qi(tbl)} WHERE ${w.sql}`, w.params) : null;
       db.db.run(`DELETE FROM ${qi(tbl)} WHERE ${w.sql}`, w.params);
-      if (old?.[FILE_COLUMNS[tbl]]) removedFiles.add(old[FILE_COLUMNS[tbl]]);
+      for (const rel of rowFiles(tbl, old)) removedFiles.add(rel);
       return;
     }
     const cols = t.cols.filter((c) => Object.prototype.hasOwnProperty.call(row, c));
@@ -494,6 +503,7 @@ function createSync({
       const writes = [];
       const items = [];
       const extra = [];
+      let refsNow = null;
       const drop = [];
       for (const e of entries) {
         const t = tables().get(e.tbl);
@@ -509,11 +519,14 @@ function createSync({
         }
         writes.push(rowWrite(e.tbl, e.pk, row, base));
         items.push({ e, data: row ? JSON.stringify(row) : null });
-        // Silinen kaydın dosyası buluttan da silinir
-        const fc = FILE_COLUMNS[e.tbl];
-        if (!row && fc && base?.data) {
-          const rel = JSON.parse(base.data)[fc];
-          if (rel) extra.push(rel);
+        // Silinen kaydın dosyası buluttan da silinir (v1.52: başka kayıt ya da çöp kutusu kullanıyorsa silinmez)
+        if (!row && base?.data && (FILE_COLUMNS[e.tbl] || e.tbl === 'trash_items')) {
+          let gone = [];
+          try { gone = rowFiles(e.tbl, JSON.parse(base.data)); } catch { gone = []; }
+          if (gone.length) {
+            if (!refsNow) refsNow = referencedFiles();
+            for (const rel of gone) if (!refsNow.has(rel) && !extra.includes(rel)) extra.push(rel);
+          }
         }
       }
       if (drop.length) {
@@ -556,6 +569,12 @@ function createSync({
     for (const [tbl, col] of Object.entries(FILE_COLUMNS)) {
       if (!tables().has(tbl)) continue;
       for (const r of db.all(`SELECT DISTINCT ${qi(col)} AS rel FROM ${qi(tbl)} WHERE ${qi(col)} IS NOT NULL AND ${qi(col)} <> ''`)) set.add(r.rel);
+    }
+    // v1.52: çöp kutusundaki kayıtların dosyaları 30 gün saklanır
+    if (tables().has('trash_items')) {
+      for (const r of db.all('SELECT files FROM trash_items WHERE files IS NOT NULL')) {
+        for (const rel of rowFiles('trash_items', r)) set.add(rel);
+      }
     }
     return set;
   }
