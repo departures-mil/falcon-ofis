@@ -1,0 +1,15 @@
+{
+ "version": "1.53.1",
+ "notes": "v1.53.1: Telefon güncellemeleri artık doğrudan GitHub'dan iner (Firebase yedek olarak kalır); indirirken MB ve hız gösterilir. Kayıtlarınız olduğu gibi kalır.",
+ "size": 2975888,
+ "sha256": "bb06e83b5b06b119837ed3416a65d97226c95045848a944b0c1f1124c9412d59",
+ "sig": "MEYCIQDFHW90ujI7VsYRAoWPYZNukAiJFpdE8HhHPp3uud1P2wIhAJSLXz3S0dgGSNeYOwOieVOkhu8iI5pcy6Ns7ncp0T70",
+ "file": "telefon-1.53.1.fopk",
+ "minShell": 5,
+ "publishedAt": "2026-11-22T03:35:06.298Z",
+ "apkFile": "Falcon-Ofis-v1.53.1.apk",
+ "apkVersion": "1.53.1",
+ "apkSize": 3993263,
+ "apkSha256": "7e6fd376b5d57aa39f567de9a9c542cf6f7dcfb43c434542dfd2bae77f96dbba",
+ "apkSig": "MEUCIAuqHcFIzVBfyIi986PvG+Q+Ar+M6ISKIOj9XCtSk3VGAiEA7G2vAO/UVqi3cqZ1NLyQSLI0fTnkq6K9ke4aWEDBO4w="
+}
