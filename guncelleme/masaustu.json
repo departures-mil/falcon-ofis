@@ -1,10 +1,10 @@
 {
- "version": "1.53.2",
- "notes": "v1.53.2: Admin ile iletişim mesajlarının gönderimi düzeltildi (bazı durumlarda mesaj yöneticiye ulaşmıyordu). Kayıtlarınız olduğu gibi kalır.",
- "size": 2699127,
- "sha256": "4f761a0a9898e5e96466d82c179cc05f90cab704d7ec2b2fdc34798a3efc5987",
- "sig": "MEUCIQD4rG6TVJ9BR8RhTxF3whjbvwQANAii8zUT2cqNg0v/bAIgQJWwV3PSRHYB+lP/kH/VeTiMH4aYaih4j7vD4dluHz0=",
- "file": "masaustu-1.53.2.fopk",
+ "version": "1.53.3",
+ "notes": "v1.53.3: Admin duyuruları eklendi; yeni duyurular programda görünür, 🔔 düğmesinden okunur. Kayıtlarınız olduğu gibi kalır.",
+ "size": 2701591,
+ "sha256": "d25aafa2ef3a539d10bcce6f1153795dc7785ae9db31d039c75ccbb57420fd5e",
+ "sig": "MEUCIQDgTNmmP1h5l8pHjM62WYDEXaWsY1st4t25ghA6eVryNQIgHaXJxsHtRqFlmjap3AffbqTtdTz7NJ25jrLusPjBhg8=",
+ "file": "masaustu-1.53.3.fopk",
  "electron": "44",
- "publishedAt": "2026-11-22T03:54:25.752Z"
+ "publishedAt": "2026-11-22T03:58:30.540Z"
 }
