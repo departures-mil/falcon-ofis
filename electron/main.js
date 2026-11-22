@@ -12,6 +12,7 @@ const { fetchOnlineRates, fetchCryptoPrices } = require('./rates');
 const { checkWallets } = require('./wallets');
 const backup = require('./backup');
 const { createSync } = require('./sync');
+const Kullanim = require('./kullanim'); // v1.54: Firebase günlük kullanım sayacı (Ayarlar > Kullanım Limitleri)
 const firebaseConfig = require('./firebase-config');
 const { createSecurity } = require('./security');
 const { createUpdater } = require('./updater');
@@ -114,6 +115,7 @@ function createWindow() {
   mainWindow.setMenuBarVisibility(false);
   // v1.19: yeni sürüm sorunsuz açıldı (açılamazsa birkaç denemeden sonra eski sürüme dönülür)
   mainWindow.webContents.once('did-finish-load', () => global.__falconOverlay?.ok());
+  mainWindow.webContents.on('did-finish-load', () => setTimeout(kullanimGonder, 500));
   mainWindow.once('ready-to-show', () => {
     if (startHidden && !global.__falconShowRequested) return; // Windows açılışında: yalnızca sistem tepsisinde
     revealWindow();
@@ -737,12 +739,13 @@ function autoBackup() {
 }
 
 async function openDatabase() {
+  Kullanim.depo(path.join(app.getPath('userData'), 'kullanim-limit.json'));
   database = await new Database(dbPath(), { backupDir: backupsDir() }).open();
   services = createServices(database, { removeFile: (rel) => fs.rmSync(safeFilePath(rel), { force: true }) });
   sync?.dispose();
   sync = createSync({
     db: database,
-    fetch: (url, opts) => net.fetch(url, opts),
+    fetch: Kullanim.fetchSar((url, opts) => net.fetch(url, opts), () => kullanimGonder()),
     files: syncFiles,
     defaults: firebaseConfig,
     endpoints: syncEndpoints(),
@@ -799,6 +802,17 @@ function lanHooks() {
     backup: lanBackup,
     changed: lanChanged,
   };
+}
+
+// v1.54: kullanım sayacı ana süreçte dosyada tutulur, pencereye aktarılır (pencere kapalıyken de sayar)
+function kullanimGonder() {
+  try {
+    const w = mainWindow;
+    if (!w || w.isDestroyed()) return;
+    w.webContents.executeJavaScript(`window.Kullanim && Kullanim.ice(${JSON.stringify(Kullanim.ozet())})`).catch(() => {});
+  } catch {
+    // pencere yok
+  }
 }
 
 function sendToWindow(channel, ...args) {

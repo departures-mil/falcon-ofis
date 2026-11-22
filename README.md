@@ -22,3 +22,9 @@ Ofis / kasa programı: Windows masaüstü (Electron) + Android. Kayıtlar Fireba
 desteği derlenmiş `index-*.js`'e eklendi (`__fgU` / `__fgD` yardımcıları, güncelleme `check` + `install` içinde) ve
 `index.html` CSP `connect-src`'ye `https://raw.githubusercontent.com` eklendi. Kaynaktan yeni derleme yapan, bu ikisini
 kaynağa da taşımalı; yoksa telefon yine yalnızca Firebase'den alır.
+
+## Kullanım Limitleri (v1.54)
+Ayarlar'da eşitleme kartının altında kullanıcının kendi Firebase hesabındaki günlük okuma/yazma/silme sayacı.
+Ortak istemci `departures-mil/duyurular/istemci/kullanim.js` → `dist/assets/kullanim.js` ve `electron/kullanim.js` (aynı dosya).
+Masaüstünde sayım ana süreçte (`main.js` → `Kullanim.fetchSar`, dosya `kullanim-limit.json`), pencereye `Kullanim.ice` ile aktarılır.
+Telefonda `window.fetch` doğrudan izlenir; `araclar/telefon-yayinla.js` iki dosyayı www klasörüne kendisi ekler.

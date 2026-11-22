@@ -11,6 +11,16 @@ const [version, www, notes = '', apkPath, minShell] = process.argv.slice(2);
 if (!version || !www) throw new Error('kullanım: sürüm www-klasörü "notlar" [apk] [minShell]');
 const G = path.join(__dirname, '..', 'guncelleme');
 const pem = fs.readFileSync(process.env.OZEL_ANAHTAR || '', 'utf8');
+// v1.54: Ayarlar > Kullanım Limitleri kartı telefona da girer (masaüstündeki dist/assets kopyaları kullanılır)
+for (const f of ['kullanim.js', 'kullanim-falcon.js']) fs.copyFileSync(path.join(__dirname, '..', 'dist', 'assets', f), path.join(www, 'assets', f));
+{
+  const ih = path.join(www, 'index.html');
+  let h = fs.readFileSync(ih, 'utf8');
+  if (!h.includes('kullanim.js')) {
+    h = h.replace(/(<script type="module")/, '<script src="./assets/kullanim.js"></script>\n    <script src="./assets/kullanim-falcon.js"></script>\n    $1');
+    fs.writeFileSync(ih, h);
+  }
+}
 const files = pack.listFiles(www).map((r) => ({ path: r, file: path.join(www, r) }));
 const gz = pack.createPack(version, files);
 const sha256 = pack.sha256(gz);
