@@ -1,10 +1,10 @@
 {
- "version": "1.54.0",
- "notes": "v1.54.0: Ayarlar'a «Kullanım Limitleri» eklendi (kendi Firebase hesabınızın bugünkü okuma/yazma/silme kullanımı, sınırın ne kadarı doldu, sıfırlanmaya kalan süre). Bulut kotası tasarrufu: değişmeyen kayıtlar yeniden yazılmaz, kurlar gereksiz yere kaydedilmez, kota dolunca eşitleme sakin bekler. Kayıtlarınız olduğu gibi kalır.",
- "size": 2719752,
- "sha256": "cf06d3cb856e31d3805e6af94a8d80180f870e87335ab3f5b31c7f4c213e87c7",
- "sig": "MEUCIQCN10qzmxLPMZlW1g2oHxs6YWvX2GB2W4HcllKwEYNeNgIgQ1UrcZcffHBujhCrIEieKhtAGiBB6m7KadrjmM7EBrQ=",
- "file": "masaustu-1.54.0.fopk",
+ "version": "1.54.1",
+ "notes": "Falcon Ofis 1.54.1: «Admin ile iletişime geç» düzeltildi — mesajlarınız artık yöneticiye güvenilir biçimde ulaşıyor. Kayıtlarınız olduğu gibi kalır.",
+ "size": 2720133,
+ "sha256": "0f392e1fe9cfb5cfb16c4acae1e44598bf238484b19800f6037b4b6deb5fddf3",
+ "sig": "MEQCICsgHn9sVqv1ThVPE6eMihkIUsTNPcP5rJadTpx4TP6XAiAyEIACZsqnqubKV8WfbU73e7A4/3z4nre+7lNzGOjO9w==",
+ "file": "masaustu-1.54.1.fopk",
  "electron": "44",
- "publishedAt": "2026-11-22T06:38:38.356Z"
+ "publishedAt": "2026-11-22T11:11:28.202Z"
 }

@@ -459,21 +459,29 @@ function registerIpc() {
   handle('lan:stop', () => lanServer.stop(true));
   handle('lan:reset', () => lanServer.resetKey());
   handle('lan:ips', () => lanServer.lanIps());
-  // v1.52: admin ile iletişim — mesaj FormSubmit üzerinden yöneticinin e-postasına gider; adres programda görünmez
-  handle('contact:send', async (_e, m) => {
+  // Yöneticiye mesaj: iki bağımsız kanal, biri kabul ederse ulaşmış sayılır.
+  //  1) Yöneticinin mesaj kutusu (Firestore "mesajlar", yalnızca ekleme; okuma yok) — her ağdan, etkinleştirme gerektirmez
+  //  2) E-posta kopyası (FormSubmit) — Referer'sız isteği reddeder; etkinleştirilmiş site Referer olarak gönderilir
+  const __adminSend = async (m) => {
     const msg = String((m && m.message) || '').slice(0, 5000).trim();
     if (!msg) return { ok: false, error: 'empty' };
+    const name = String(m.name || '').slice(0, 80).trim(), mail = String(m.email || '').slice(0, 120).trim(), ver = String(app.getVersion());
+    const F = (v) => ({ stringValue: String(v || '').slice(0, 4000) });
+    const fields = { mesaj: F(msg), konu: F('Falcon Ofis · ' + String(m.topic || 'Mesaj')), dil: F(m.lang), surum: F(ver), platform: F('Falcon Ofis · Windows'), zaman: { timestampValue: new Date().toISOString() } };
+    if (name) fields.ad = F(name);
+    if (mail) fields.iletisim = F(mail);
     const to = Buffer.from('bW9jLmxpYW1ub3RvcnBANDMyMWxkaW50bWxkYmE=', 'base64').toString().split('').reverse().join('');
-    const mail = String(m.email || '').slice(0, 120).trim();
-    const body = { _subject: 'Falcon Ofis: yeni mesaj', _template: 'table', _captcha: 'false', Ad: String(m.name || '-').slice(0, 80), Mesaj: msg, Surum: app.getVersion(), Cihaz: 'Windows', Dil: String(m.lang || '') };
+    const body = { _subject: 'Falcon Ofis: yeni mesaj', _template: 'table', _captcha: 'false', Ad: name || '-', Mesaj: msg, Surum: ver, Cihaz: 'Windows', Dil: String(m.lang || '') };
     if (mail) { body.email = mail; body._replyto = mail; }
-    try {
-      const r = await fetch('https://formsubmit.co/ajax/' + to, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json', Referer: 'https://departures-mil.github.io/falcon-ofis/', Origin: 'https://departures-mil.github.io', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) FalconOfis/' + app.getVersion() }, body: JSON.stringify(body) });
-      const j = await r.json().catch(() => ({}));
-      if ((!r.ok || String(j.success) === 'false') && !/activat/i.test(j.message || '')) return { ok: false, error: j.message || String(r.status) };
-      return { ok: true };
-    } catch (e) { return { ok: false, error: e.message }; }
-  });
+    const inbox = fetch('https://firestore.googleapis.com/v1/projects/comm-calc-103111111/databases/(default)/documents/mesajlar?key=AIzaSyB12RFS6ENPpmnnPsETfjedNH-3hmNWQvA',
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fields }), signal: AbortSignal.timeout(20000) }).then((r) => r.ok, () => false);
+    const email = fetch('https://formsubmit.co/ajax/' + to, { method: 'POST', signal: AbortSignal.timeout(20000),
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json', Referer: 'https://formsubmit.co/', Origin: 'https://formsubmit.co', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
+      body: JSON.stringify(body) }).then((r) => r.json().catch(() => ({}))).then((j) => String(j.success) === 'true', () => false);
+    const [a, b] = await Promise.all([inbox, email]);
+    return a || b ? { ok: true } : { ok: false, error: 'network' };
+  };
+  handle('contact:send', (_e, m) => __adminSend(m));
   handle('lan:http', (_e, method, url, body, ms, key) => lanServer.clientHttp(method, url, body, ms, key));
   handle('lan:find', (_e, port, key, appId) => lanServer.find(port, key, appId));
   handle('lan:export', async () => {
