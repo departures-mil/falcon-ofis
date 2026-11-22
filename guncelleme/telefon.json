@@ -1,10 +1,10 @@
 {
- "version": "1.53.3",
- "notes": "v1.53.3: Admin duyuruları eklendi; yeni duyurular programda görünür, 🔔 düğmesinden okunur. Kayıtlarınız olduğu gibi kalır.",
- "size": 2980220,
- "sha256": "98ac71598a30487b3cee3cdc6e6ba472b3ea483ddb1d04a045b0721b24cd137f",
- "sig": "MEUCIQDvUU5XXCX+tPI3BkcCX2ZWSTsYJykudQcgNTVk2Bx/SAIgORExhq1ZQfl6kTS/ysz0LUoX8t+Js99i0z57LjGOQzk=",
- "file": "telefon-1.53.3.fopk",
+ "version": "1.54.0",
+ "notes": "v1.54.0: Ayarlar'a «Kullanım Limitleri» eklendi (kendi Firebase hesabınızın bugünkü okuma/yazma/silme kullanımı, sınırın ne kadarı doldu, sıfırlanmaya kalan süre). Bulut kotası tasarrufu: değişmeyen kayıtlar yeniden yazılmaz, kurlar gereksiz yere kaydedilmez, kota dolunca eşitleme sakin bekler. Kayıtlarınız olduğu gibi kalır.",
+ "size": 2987413,
+ "sha256": "15eca59f85117923aebbccbea2beb0a81f348f12f0359c805f3b0fb649f26e0b",
+ "sig": "MEYCIQCauu033gCxd45Xwvn9KI4n7KYkcDSNmYr31+756WFsQQIhAN0xICbXEhIJa6WRKJd75qnuQxoOKeP0ktCmyll37ecE",
+ "file": "telefon-1.54.0.fopk",
  "minShell": 5,
- "publishedAt": "2026-11-22T03:58:30.744Z"
+ "publishedAt": "2026-11-22T06:38:38.649Z"
 }
