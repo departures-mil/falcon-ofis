@@ -6,8 +6,9 @@ Ofis / kasa programı: Windows masaüstü (Electron) + Android. Kayıtlar Fireba
 - `electron/` ana süreç kodu, `dist/` derlenmiş arayüz, `build/` simge, `package.json` (sürüm).
 - `guncelleme/masaustu.json` + `masaustu-<sürüm>.fopk` — ECDSA imzalı masaüstü güncellemesi. Program buradan indirir,
   imzası tutmayanı kurmaz.
-- `guncelleme/telefon.json` + `telefon-<sürüm>.fopk` (+ `Falcon-Ofis-v<sürüm>.apk`) — telefon güncellemesi. Telefon 1.53.1'den beri
-  önce GitHub'a bakar; Firebase'deki (`yayin\kuyruk` yolu) sürüm daha yeniyse onu alır, yani eski yol yedek olarak çalışır.
+- `guncelleme/telefon.json` + `telefon-<sürüm>.fopk` (+ `Falcon-Ofis-v<sürüm>.apk`) — telefon güncellemesi. Telefon 1.54'ten beri
+  yalnızca GitHub'a bakar; Firebase'e yalnızca GitHub'a hiç ulaşılamazsa bakılır. **Güncellemeler artık Firebase'e yüklenmez**
+  (Firebase yalnızca canlı kayıtlar içindir; kotası korunur).
 - İmza anahtarı depoda yoktur (`Falcon Ofis Veri\yayin\anahtar`).
 
 ## Yeni masaüstü sürümü

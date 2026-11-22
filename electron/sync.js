@@ -24,6 +24,11 @@ const PAGE = 300;
 const PUSH_BATCH = 200;
 const CHUNK = 700 * 1024;
 const FILES_PER_ROUND = 15;
+// v1.54: bulut kotasını korumak için — eksik dosya en çok saatte bir, turda en çok 5 tanesi sorulur;
+// kota dolunca bulut 30 dakikada bir yoklanır (reddedilen istek kotadan düşmez), kayıtlar beklemede kalır.
+const MISSING_RETRY_MS = 60 * 60000;
+const MISSING_PER_ROUND = 5;
+const QUOTA_RETRY_MS = 30 * 60000;
 
 const DEFAULT_ENDPOINTS = {
   auth: 'https://identitytoolkit.googleapis.com/v1',
@@ -198,7 +203,7 @@ class FirebaseClient {
 
 function createSync({
   db, fetch, files, defaults = {}, endpoints = {}, deviceName = '', onChange = () => {}, onStatus = () => {},
-  beforeReplace = null, intervalMs = 20000, log = console,
+  beforeReplace = null, intervalMs = 60000, log = console,
 }) {
   let client = null;
   let timer = null;
@@ -435,6 +440,15 @@ function createSync({
       before = null;
     }
     let changed = 0;
+    // v1.54: güncelleme yeni tablo / sütun getirmediyse buluttaki bütün kayıtları yeniden okumaya gerek yok
+    if (before && typeof before === 'object') {
+      let grew = false;
+      for (const t of tables().values()) {
+        const old = before[t.name];
+        if (!old || t.cols.some((c) => !old.includes(c))) { grew = true; break; }
+      }
+      if (!grew) before = null;
+    }
     if (before) {
       const remote = await listAll();
       applying(() => {
@@ -517,8 +531,14 @@ function createSync({
           drop.push(e);
           continue;
         }
+        const data = row ? JSON.stringify(row) : null;
+        // v1.54: bulutta zaten aynısı varsa (ör. Wi‑Fi ile gelip diğer cihazın da gönderdiği kayıt) yeniden yazılmaz
+        if (base && base.data === data) {
+          drop.push(e);
+          continue;
+        }
         writes.push(rowWrite(e.tbl, e.pk, row, base));
-        items.push({ e, data: row ? JSON.stringify(row) : null });
+        items.push({ e, data });
         // Silinen kaydın dosyası buluttan da silinir (v1.52: başka kayıt ya da çöp kutusu kullanıyorsa silinmez)
         if (!row && base?.data && (FILE_COLUMNS[e.tbl] || e.tbl === 'trash_items')) {
           let gone = [];
@@ -595,6 +615,7 @@ function createSync({
     const known = new Map(db.all('SELECT rel, state, tried_at FROM sync_files').map((r) => [r.rel, r]));
     let done = 0;
     let pending = 0;
+    let asked = 0;
     for (const rel of refs) {
       const st = known.get(rel);
       if (st?.state === 'ok') continue;
@@ -618,10 +639,11 @@ function createSync({
         done++;
         continue;
       }
-      if (st?.tried_at && Date.now() - st.tried_at < 5 * 60000) {
+      if ((st?.tried_at && Date.now() - st.tried_at < MISSING_RETRY_MS) || asked >= MISSING_PER_ROUND) {
         pending++;
         continue;
       }
+      asked++;
       const main = await client.getDoc(`${client.userRoot}/files/${fileDocId(rel)}`);
       if (!main) {
         db.tx(() => db.db.run('INSERT INTO sync_files (rel, state, tried_at) VALUES (?, ?, ?) ON CONFLICT(rel) DO UPDATE SET state = excluded.state, tried_at = excluded.tried_at', [rel, 'missing', Date.now()]));
@@ -735,6 +757,7 @@ function createSync({
       lastSync: meta('last_sync'),
       pending: db.get('SELECT COUNT(*) AS n FROM sync_outbox')?.n ?? 0,
       filesPending: state.filesPending || 0,
+      quotaUntil: quotaUntil && Date.now() < quotaUntil ? new Date(quotaUntil).toISOString() : null,
       phase: state.phase,
       error: state.error,
       errorDetail: state.errorDetail,
@@ -829,8 +852,11 @@ function createSync({
     return c;
   }
 
-  async function round() {
+  let quotaUntil = 0;
+  async function round({ manual = false } = {}) {
     if (!ensureClient()) return { skipped: true };
+    // v1.54: kota dolduysa otomatik turlar beklenir (elle Eşitle her zaman dener)
+    if (!manual && quotaUntil && Date.now() < quotaUntil) return { skipped: true, quota: true };
     state.phase = 'syncing';
     emitStatus();
     try {
@@ -841,6 +867,7 @@ function createSync({
       const pushed = await pushWithRetry();
       const filesDone = await syncFiles();
       setMeta({ last_sync: new Date().toISOString() });
+      quotaUntil = 0;
       state.phase = 'idle';
       state.error = null;
       state.errorDetail = null;
@@ -850,9 +877,10 @@ function createSync({
       }
       return { pulled, pushed, files: filesDone };
     } catch (err) {
-      state.phase = err.code === 'ERR_SYNC_OFFLINE' ? 'offline' : 'error';
+      state.phase = err.code === 'ERR_SYNC_OFFLINE' ? 'offline' : err.code === 'ERR_SYNC_QUOTA' ? 'quota' : 'error';
       state.error = err.code || 'ERR_SYNC_SERVER';
       state.errorDetail = err.detail || err.message;
+      if (err.code === 'ERR_SYNC_QUOTA') quotaUntil = Date.now() + QUOTA_RETRY_MS;
       if (state.phase === 'error') log.error?.('eşitleme hatası', err.code, err.detail || err.message);
       throw err;
     } finally {
@@ -861,12 +889,12 @@ function createSync({
   }
 
   // Aynı anda tek eşitleme turu çalışır; o sırada istek gelirse tur bitince bir kez daha çalışır
-  function syncNow() {
+  function syncNow(opts) {
     if (running) {
       again = true;
       return running;
     }
-    running = round().finally(() => {
+    running = round(opts).finally(() => {
       running = null;
       if (again && !stopped) {
         again = false;

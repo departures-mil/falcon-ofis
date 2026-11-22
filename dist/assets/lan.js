@@ -299,6 +299,17 @@
     }
   }
 
+  // v1.54: bulut kotası dolunca Eşitle düğmesi eşleşmiş cihazlarla hemen Wi‑Fi eşitlemesi dener (otomatik ayarından bağımsız)
+  async function forceTry() {
+    if (!A || isDesk() || !has('lanHttp') || running) return null;
+    const m = meta();
+    for (const p of m.pairs) {
+      try { const r = await connect({ app: p.app, hosts: p.hosts, port: p.port, key: p.key, name: p.name }, { quiet: true }); if (r) { toast('📶 ' + repText(r)); A.refresh && A.refresh(); return r; } }
+      catch (e) { /* sıradaki */ }
+    }
+    return null;
+  }
+
   /* ---------------- QR ---------------- */
 
   function qrSvg(text) {
@@ -533,5 +544,5 @@
     };
   }
 
-  window.LanCore = { init, open, close, autoTry, merge, canon, parseTarget, toast, __connect: (t, o) => connect(t, o || {}), available: () => !!(A && has('lanHttp')), busy: () => running };
+  window.LanCore = { init, open, close, autoTry, forceTry, merge, canon, parseTarget, toast, __connect: (t, o) => connect(t, o || {}), available: () => !!(A && has('lanHttp')), busy: () => running };
 })();

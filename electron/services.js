@@ -415,6 +415,15 @@ function createServices(db, { removeFile = () => {} } = {}) {
       } else {
         buy = sell = positive(value, 'ERR_INVALID_RATE');
       }
+      // v1.54: internetten gelen fiyat son kayıttan %0,5'ten az farklıysa ve son kayıt 6 saatten yeniyse yazılmaz.
+      // (Program açıkken her dakika kripto fiyatı alınıyordu; her biri eşitlenen yeni bir satırdı ve bulut kotasını dolduruyordu.)
+      if (source === 'online') {
+        const last = db.get(
+          `SELECT rate, buy_rate, sell_rate, (julianday('now','localtime') - julianday(created_at)) * 24 AS age_h
+           FROM exchange_rates WHERE currency_code = ? ORDER BY id DESC LIMIT 1`, [code]);
+        const near = (x, y) => (x === null || x === undefined) ? (y === null || y === undefined) : (y !== null && y !== undefined && Math.abs(x - y) <= Math.abs(x) * 0.005);
+        if (last && last.age_h !== null && last.age_h < 6 && near(last.rate, sell ?? buy) && near(last.buy_rate ?? last.rate, buy ?? sell) && near(last.sell_rate ?? last.rate, sell ?? buy)) continue;
+      }
       db.run('INSERT INTO exchange_rates (currency_code, rate, buy_rate, sell_rate, source) VALUES (?,?,?,?,?)', [code, sell ?? buy, buy, sell, source]);
     }
     return { rates: latestRates() };
