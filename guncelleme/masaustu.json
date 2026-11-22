@@ -1,10 +1,10 @@
 {
- "version": "1.53.3",
- "notes": "v1.53.3: Admin duyuruları eklendi; yeni duyurular programda görünür, 🔔 düğmesinden okunur. Kayıtlarınız olduğu gibi kalır.",
- "size": 2701591,
- "sha256": "d25aafa2ef3a539d10bcce6f1153795dc7785ae9db31d039c75ccbb57420fd5e",
- "sig": "MEUCIQDgTNmmP1h5l8pHjM62WYDEXaWsY1st4t25ghA6eVryNQIgHaXJxsHtRqFlmjap3AffbqTtdTz7NJ25jrLusPjBhg8=",
- "file": "masaustu-1.53.3.fopk",
+ "version": "1.54.0",
+ "notes": "v1.54.0: Ayarlar'a «Kullanım Limitleri» eklendi (kendi Firebase hesabınızın bugünkü okuma/yazma/silme kullanımı, sınırın ne kadarı doldu, sıfırlanmaya kalan süre). Bulut kotası tasarrufu: değişmeyen kayıtlar yeniden yazılmaz, kurlar gereksiz yere kaydedilmez, kota dolunca eşitleme sakin bekler. Kayıtlarınız olduğu gibi kalır.",
+ "size": 2719752,
+ "sha256": "cf06d3cb856e31d3805e6af94a8d80180f870e87335ab3f5b31c7f4c213e87c7",
+ "sig": "MEUCIQCN10qzmxLPMZlW1g2oHxs6YWvX2GB2W4HcllKwEYNeNgIgQ1UrcZcffHBujhCrIEieKhtAGiBB6m7KadrjmM7EBrQ=",
+ "file": "masaustu-1.54.0.fopk",
  "electron": "44",
- "publishedAt": "2026-11-22T03:58:30.540Z"
+ "publishedAt": "2026-11-22T06:38:38.356Z"
 }
