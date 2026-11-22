@@ -1,10 +1,10 @@
 {
- "version": "1.53.0",
- "notes": "v1.53: Silinenler kutusu (silinen kayıt bağlı kayıtları ve dosyalarıyla 30 gün bekler, tek tuşla geri gelir; silince altta “Geri al” çıkar). Genel arama: sağ üstte Ara ya da Ctrl+K. Görevler sayfası (kişiye iş, son tarih, öncelik, pano). Karşılaştırma sayfası (bu ay ↔ geçen ay, bu yıl ↔ geçen yıl). Koyu / açık / sistem teması ve yazı boyutu (Ayarlar → Görünüm). Kasa formunda otomatik kategori önerisi, çift kayıt ve alışılmadık tutar uyarısı, “Fişten oku”. Asistan: grafikli cevap ve 🎤 sesli soru (asistan kısayolu artık Ctrl+J). Kayıtlarınız olduğu gibi kalır.",
- "size": 2699030,
- "sha256": "a66e61851d9ff4e34bf3752cf7eda70a30c48b1748677193c6cb4fba875f0b5a",
- "sig": "MEQCIBbf7whSQBA/ehhLsS4jXfZTTKd74FnCf5cj83pdVuUfAiASiztP1YK7KbkIllFlho191pNdAHkXMlTGBn9KDmIxvg==",
- "file": "masaustu-1.53.0.fopk",
+ "version": "1.53.2",
+ "notes": "v1.53.2: Admin ile iletişim mesajlarının gönderimi düzeltildi (bazı durumlarda mesaj yöneticiye ulaşmıyordu). Kayıtlarınız olduğu gibi kalır.",
+ "size": 2699127,
+ "sha256": "4f761a0a9898e5e96466d82c179cc05f90cab704d7ec2b2fdc34798a3efc5987",
+ "sig": "MEUCIQD4rG6TVJ9BR8RhTxF3whjbvwQANAii8zUT2cqNg0v/bAIgQJWwV3PSRHYB+lP/kH/VeTiMH4aYaih4j7vD4dluHz0=",
+ "file": "masaustu-1.53.2.fopk",
  "electron": "44",
- "publishedAt": "2026-11-22T02:59:36.738Z"
+ "publishedAt": "2026-11-22T03:54:25.752Z"
 }

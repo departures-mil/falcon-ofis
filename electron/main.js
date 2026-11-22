@@ -466,7 +466,7 @@ function registerIpc() {
     const body = { _subject: 'Falcon Ofis: yeni mesaj', _template: 'table', _captcha: 'false', Ad: String(m.name || '-').slice(0, 80), Mesaj: msg, Surum: app.getVersion(), Cihaz: 'Windows', Dil: String(m.lang || '') };
     if (mail) { body.email = mail; body._replyto = mail; }
     try {
-      const r = await fetch('https://formsubmit.co/ajax/' + to, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(body) });
+      const r = await fetch('https://formsubmit.co/ajax/' + to, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json', Referer: 'https://departures-mil.github.io/falcon-ofis/', Origin: 'https://departures-mil.github.io', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) FalconOfis/' + app.getVersion() }, body: JSON.stringify(body) });
       const j = await r.json().catch(() => ({}));
       if ((!r.ok || String(j.success) === 'false') && !/activat/i.test(j.message || '')) return { ok: false, error: j.message || String(r.status) };
       return { ok: true };
