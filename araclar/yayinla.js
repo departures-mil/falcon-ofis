@@ -1,7 +1,7 @@
 // Falcon Ofis — masaüstü güncellemesini GitHub'a yayınlar (depo kökünden):
 //   OZEL_ANAHTAR="<Falcon Ofis Veri\yayin\anahtar\ozel-anahtar.pem yolu>" node araclar/yayinla.js "notlar"
 // Sürüm package.json'dan okunur; paket guncelleme/masaustu-<sürüm>.fopk, bildirge guncelleme/masaustu.json olur.
-// Telefon güncellemeleri hâlâ programın "yayin\kuyruk" klasörü üzerinden Firebase'e gider (telefon kabuğu Firebase'den okur).
+// Telefon güncellemeleri: araclar/telefon-yayinla.js (o da GitHub'a).
 // Sonra: git add -A && git commit -m "Falcon Ofis X" && git push
 const fs = require('fs');
 const path = require('path');

@@ -22,7 +22,7 @@ fs.writeFileSync(path.join(G, file), gz);
 const m = { version, notes, size: gz.length, sha256, sig, file, minShell: Number(minShell) || 0, publishedAt: new Date().toISOString() };
 if (apkPath) {
   const apk = fs.readFileSync(apkPath);
-  const apkVersion = version;
+  const apkVersion = process.env.APK_VERSION || version; // APK'nın kendi sürümü (ör. 1.53.0) verilebilir
   m.apkFile = `Falcon-Ofis-v${apkVersion}.apk`;
   m.apkVersion = apkVersion;
   m.apkSize = apk.length;

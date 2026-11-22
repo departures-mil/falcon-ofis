@@ -681,7 +681,7 @@ function registerIpc() {
   ipcMain.handle('sync:status', () => sync?.status() ?? null);
   handle('sync:connect', wrap((_e, payload) => sync.connect(payload)));
   handle('sync:disconnect', wrap(() => sync.disconnect()));
-  handle('sync:now', wrap(() => sync.syncNow()));
+  handle('sync:now', wrap(() => sync.syncNow({ manual: true })));
   // v1.19: uygulama içinden güncelleme
   handle('update:check', wrap(() => updater.check()));
   handle('update:install', wrap(() => updater.install()));
