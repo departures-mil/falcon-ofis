@@ -1,0 +1,34 @@
+// Falcon Ofis — telefon güncellemesini GitHub'a yayınlar (depo kökünden):
+//   OZEL_ANAHTAR=<ozel-anahtar.pem> node araclar/telefon-yayinla.js <sürüm> <www klasörü> "notlar" [apk dosyası] [minShell]
+// www klasörü = APK'daki assets/www (index.html + assets/). Telefon (1.53.1 ve sonrası) önce guncelleme/telefon.json'a bakar,
+// Firebase'deki sürüm daha yeniyse onu alır (eski yol yedek olarak çalışır). APK verilirse kabuk seviyesi minShell'den düşük
+// telefonlar APK'yı indirip kurar. İmza metinleri programla aynı: "telefon\nsürüm\nsha256", "telefon-apk\nsürüm\nsha256".
+const fs = require('fs');
+const path = require('path');
+const pack = require('../electron/update-pack');
+
+const [version, www, notes = '', apkPath, minShell] = process.argv.slice(2);
+if (!version || !www) throw new Error('kullanım: sürüm www-klasörü "notlar" [apk] [minShell]');
+const G = path.join(__dirname, '..', 'guncelleme');
+const pem = fs.readFileSync(process.env.OZEL_ANAHTAR || '', 'utf8');
+const files = pack.listFiles(www).map((r) => ({ path: r, file: path.join(www, r) }));
+const gz = pack.createPack(version, files);
+const sha256 = pack.sha256(gz);
+const sig = pack.sign(pem, 'telefon', version, sha256);
+if (!pack.verify('telefon', version, sha256, sig)) throw new Error('anahtar uyuşmuyor');
+for (const f of fs.readdirSync(G)) if (/^telefon-.*\.fopk$|^Falcon-Ofis-.*\.apk$/.test(f)) fs.rmSync(path.join(G, f));
+const file = `telefon-${version}.fopk`;
+fs.writeFileSync(path.join(G, file), gz);
+const m = { version, notes, size: gz.length, sha256, sig, file, minShell: Number(minShell) || 0, publishedAt: new Date().toISOString() };
+if (apkPath) {
+  const apk = fs.readFileSync(apkPath);
+  const apkVersion = version;
+  m.apkFile = `Falcon-Ofis-v${apkVersion}.apk`;
+  m.apkVersion = apkVersion;
+  m.apkSize = apk.length;
+  m.apkSha256 = pack.sha256(apk);
+  m.apkSig = pack.sign(pem, 'telefon-apk', apkVersion, m.apkSha256);
+  fs.writeFileSync(path.join(G, m.apkFile), apk);
+}
+fs.writeFileSync(path.join(G, 'telefon.json'), JSON.stringify(m, null, 1));
+console.log('hazır telefon', version, gz.length, 'bayt', apkPath ? '+ APK' : '');
