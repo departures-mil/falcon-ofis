@@ -1,10 +1,10 @@
 {
- "version": "1.54.0",
- "notes": "v1.54.0: Ayarlar'a «Kullanım Limitleri» eklendi (kendi Firebase hesabınızın bugünkü okuma/yazma/silme kullanımı, sınırın ne kadarı doldu, sıfırlanmaya kalan süre). Bulut kotası tasarrufu: değişmeyen kayıtlar yeniden yazılmaz, kurlar gereksiz yere kaydedilmez, kota dolunca eşitleme sakin bekler. Kayıtlarınız olduğu gibi kalır.",
- "size": 2987413,
- "sha256": "15eca59f85117923aebbccbea2beb0a81f348f12f0359c805f3b0fb649f26e0b",
- "sig": "MEYCIQCauu033gCxd45Xwvn9KI4n7KYkcDSNmYr31+756WFsQQIhAN0xICbXEhIJa6WRKJd75qnuQxoOKeP0ktCmyll37ecE",
- "file": "telefon-1.54.0.fopk",
+ "version": "1.55.0",
+ "notes": "v1.55.0: Telefonda üst çubuk artık yana kaymıyor, tüm düğmeler tek ekranda görünüyor. Dil seçimi tek düğmede toplandı (TR / EN / AR). Kayıtlarınız olduğu gibi kalır.",
+ "size": 2987865,
+ "sha256": "dfba5a0a5cdc78a9906e6263796c64eb9d8b217901432ad4cad45754eb358a76",
+ "sig": "MEQCIGQrUTyo+DQA7FQMPwOBmCte0nF9XGiGfRCg7tISFISjAiBi2/qUj5fINfhY+FYBQx+SX0Rmp5e1j2OrFrXBPTfTxw==",
+ "file": "telefon-1.55.0.fopk",
  "minShell": 5,
- "publishedAt": "2026-11-22T06:38:38.649Z"
+ "publishedAt": "2026-11-22T09:35:35.876Z"
 }
