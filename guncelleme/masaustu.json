@@ -1,10 +1,10 @@
 {
- "version": "1.54.1",
- "notes": "Falcon Ofis 1.54.1: «Admin ile iletişime geç» düzeltildi — mesajlarınız artık yöneticiye güvenilir biçimde ulaşıyor. Kayıtlarınız olduğu gibi kalır.",
- "size": 2720133,
- "sha256": "0f392e1fe9cfb5cfb16c4acae1e44598bf238484b19800f6037b4b6deb5fddf3",
- "sig": "MEQCICsgHn9sVqv1ThVPE6eMihkIUsTNPcP5rJadTpx4TP6XAiAyEIACZsqnqubKV8WfbU73e7A4/3z4nre+7lNzGOjO9w==",
- "file": "masaustu-1.54.1.fopk",
+ "version": "1.56.0",
+ "notes": "Falcon Ofis 1.56.0: Borç / Alacak sayfasına «Kişi bazlı toplam» eklendi — her kişinin kalan borcu, alacağı ve net durumu tek bakışta. Kayıtlarınız olduğu gibi kalır.",
+ "size": 2721193,
+ "sha256": "58fbc23783d489da509d2ef2d8d03638e1b1e6181259b47bf68650684399f546",
+ "sig": "MEUCIQCPp8hLrm+zNbSuI85M4FKfoq3Xo3giPDgfATe+r/qxyAIgAnIQoEOa/flfWEaHD6DNHBnJJv5f4p9LYzo53PZ3J+c=",
+ "file": "masaustu-1.56.0.fopk",
  "electron": "44",
- "publishedAt": "2026-11-22T11:11:28.202Z"
+ "publishedAt": "2026-11-23T11:35:55.594Z"
 }

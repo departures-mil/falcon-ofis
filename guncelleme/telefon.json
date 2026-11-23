@@ -1,10 +1,10 @@
 {
- "version": "1.55.0",
- "notes": "v1.55.0: Telefonda üst çubuk artık yana kaymıyor, tüm düğmeler tek ekranda görünüyor. Dil seçimi tek düğmede toplandı (TR / EN / AR). Kayıtlarınız olduğu gibi kalır.",
- "size": 2987865,
- "sha256": "dfba5a0a5cdc78a9906e6263796c64eb9d8b217901432ad4cad45754eb358a76",
- "sig": "MEQCIGQrUTyo+DQA7FQMPwOBmCte0nF9XGiGfRCg7tISFISjAiBi2/qUj5fINfhY+FYBQx+SX0Rmp5e1j2OrFrXBPTfTxw==",
- "file": "telefon-1.55.0.fopk",
+ "version": "1.56.0",
+ "notes": "v1.56.0: Borç / Alacak sayfasına «Kişi bazlı toplam» eklendi — her kişinin kalan borcu, alacağı ve net durumu tek bakışta. Kayıtlarınız olduğu gibi kalır.",
+ "size": 2988709,
+ "sha256": "88e0b227420369e3bc9486cf34e97fabcc74849f0c62f60280c40ede25fa0e1f",
+ "sig": "MEUCIDuIcVjK9pWS9PnCJyZTMjyzNLmsreov4YDLw0GlBvnVAiEAtiHa65HTHIG/iwcfSd1x6G6BggOn7fFuWqP7PA54+Eg=",
+ "file": "telefon-1.56.0.fopk",
  "minShell": 5,
- "publishedAt": "2026-11-22T09:35:35.876Z"
+ "publishedAt": "2026-11-23T11:35:56.052Z"
 }
