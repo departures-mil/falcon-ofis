@@ -15,6 +15,11 @@
   var APP = 'falcon-ofis', LANGS = ['tr', 'en', 'ar'];
 
   var NEWS = {
+    '1.58.1': {
+      tr: "- Program her açılışta tam ekran açılır (pencere seçimi yalnız o oturum için geçerlidir).\n- Arapça: döviz/dijital para kur kartlarında \"Kur girilmedi\" yazısı küçük ve okunaklı.\n- Arapça: \"Sor\" düğmesi kenar çubuğunun üstüne binmiyor (sol altta).",
+      en: "- The program always opens full screen (the window choice applies only to the current session).\n- Arabic: \"No rate set\" on the currency/crypto rate cards is small and readable.\n- Arabic: the \"Ask\" button no longer covers the sidebar (bottom left).",
+      ar: "- يُفتح البرنامج دائماً بملء الشاشة (اختيار النافذة يسري على الجلسة الحالية فقط).\n- العربية: عبارة «لم يتم إدخال السعر» في بطاقات أسعار العملات والعملات الرقمية صغيرة وواضحة.\n- العربية: لم يعد زر «اسأل» يغطي الشريط الجانبي (أسفل اليسار)."
+    },
     '1.58.0': {
       tr: '- Güncellemeler artık GitHub sürümlerinden gelir: yalnızca değişen kısımlar indirilir (yüzde, MB, kalan ve hız görünür).\n- Sağ üstte Orta düğmesi (yarım pencere), Asistan Agent ve yeni Güncelle düğmesi.\n- Ayarlar > Görünüm: renk şeması seçimi (Falcon varsayılan).\n- Wi‑Fi ve bulut eşitlemesinde öbür cihazda silinen kayıtlar artık arşive alınır (Ayarlar > Arşiv; geri yüklenebilir).\n- Beklenmeyen hatalar (izin verirseniz) yöneticiye kişisel bilgi olmadan bildirilir.\n- Kayıtlarınız, belgeleriniz, PIN kodunuz ve eşitleme bağlantınız aynen korunur.',
       en: '- Updates now come from GitHub releases: only the changed parts are downloaded (percentage, MB, remaining and speed are shown).\n- New Half-window button, Assistant Agent and a new Update button at the top right.\n- Settings > Appearance: colour scheme picker (Falcon is the default).\n- With Wi‑Fi and cloud sync, records deleted on another device are now archived (Settings > Archive; they can be restored).\n- Unexpected errors are reported to the administrator without personal data (if you allow it).\n- Your records, documents, PIN and sync connection are kept as they are.',

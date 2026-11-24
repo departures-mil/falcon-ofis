@@ -38,10 +38,10 @@ const shots = [
     await page.waitForSelector('.topbar-actions', { timeout: 30000 });
     await page.evaluate(async (s) => {
       const set = (k, v) => localStorage.setItem('fc.' + k, JSON.stringify(v));
-      set('scheme', s.scheme); set('onboarding.done', !s.onboarding); set('whatsnew.seen', '1.58.0');
+      set('scheme', s.scheme); set('onboarding.done', !s.onboarding); set('whatsnew.seen', s.ver || '9.9.9');
       localStorage.setItem('falcon-theme', s.theme);
       await window.falcon.settings.set('language', s.lang);
-    }, s);
+    }, Object.assign({ ver: require('../package.json').version }, s));
     await page.reload();
     await page.waitForSelector('.topbar-actions .fc-update-wrap', { timeout: 30000 });
     await page.waitForTimeout(1500);
