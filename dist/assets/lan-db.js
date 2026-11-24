@@ -6,6 +6,8 @@
 //    yani Wi‑Fi'den gelen her değişiklik internet gelince buluta da gönderilir.
 //  - İki cihazda farklı değişmiş kayıtta yeni olan kalır, eskisi local_lan_conflicts'e (çakışma yedeği) yazılır.
 //  - Dosyalara (fotoğraf, dekont, QR) dokunulmaz; eksik olan taraf karşıdan alır, var olanın üstüne yazılmaz.
+//  - v1.58 (ortak çekirdek kuralı): hiçbir kayıt kalıcı silinmez. Öbür cihazda silinen kayıt burada önce local_arsiv'e
+//    (tam satır, geri yüklenebilir, hiç silinmez) yazılır, sonra etkin tablodan kalkar. Bulut eşitlemesi de aynı arşivi kullanır.
 // Not: telefon paketine gömüldüğü için ?. ve ?? kullanılmaz.
 
 const LOCAL_TABLE_RE = /^(sqlite_|sync_|local_|schema_migrations$)/;
@@ -27,6 +29,7 @@ function createLanStore(db, { fileColumns = {}, localSettings = LOCAL_SETTINGS }
       CREATE TABLE IF NOT EXISTS local_lan_meta (key TEXT PRIMARY KEY, value TEXT);
       CREATE TABLE IF NOT EXISTS local_lan_conflicts (n INTEGER PRIMARY KEY AUTOINCREMENT, tbl TEXT NOT NULL, pk TEXT NOT NULL, data TEXT, at INTEGER, saved_at INTEGER NOT NULL, dev TEXT);
     `);
+    ensureArchive(db);
   }
 
   function tables() {
@@ -184,6 +187,7 @@ function createLanStore(db, { fileColumns = {}, localSettings = LOCAL_SETTINGS }
               const id = `${t.name}~${pk}`;
               if (docs[id] || isLocal(t.name, pk) || !dels[id]) continue;
               const w = pkWhere(t, pk);
+              archiveRow(db, t.name, pk, row, 'wifi', dev, dels[id]);
               db.db.run(`DELETE FROM ${qi(t.name)} WHERE ${w.sql}`, w.params);
               deleted++;
             }
@@ -213,7 +217,7 @@ function createLanStore(db, { fileColumns = {}, localSettings = LOCAL_SETTINGS }
     } finally {
       db.db.run('PRAGMA foreign_keys = ON');
     }
-    return { written, deleted, conflicts: kept.length };
+    return { written, deleted: 0, archived: deleted, conflicts: kept.length };
   }
 
   // Kayıtların kullandığı dosyalar (göreli yol)
@@ -241,7 +245,41 @@ function createLanStore(db, { fileColumns = {}, localSettings = LOCAL_SETTINGS }
     return r;
   }
 
-  return { exportState, applyState, fileRefs, conflicts, prepare, preview, merge: (a, b) => merge(a, b) };
+  // v1.58: arşiv (uzak silinenler). Geri yükleme kaydı aynı numarasıyla geri yazar; tetikleyiciler açık olduğundan
+  // öbür cihazlara da (Wi‑Fi / bulut) yeniden gider. Numara bu arada başka bir kayda verildiyse ERR_ARCHIVE_TAKEN.
+  function archiveList(limit) {
+    prepare();
+    return db.all('SELECT n, tbl, pk, data, kaynak, dev, deleted_at, archived_at, restored_at FROM local_arsiv ORDER BY n DESC LIMIT ?', [limit || 300]);
+  }
+  function archiveRestore(n) {
+    const tmap = prepare();
+    const a = one('SELECT * FROM local_arsiv WHERE n = ?', [Number(n)]);
+    if (!a) throw new Error('ERR_NOT_FOUND');
+    const t = tmap.get(a.tbl);
+    if (!t) throw new Error('ERR_NOT_FOUND');
+    const row = JSON.parse(a.data);
+    const w = pkWhere(t, a.pk);
+    if (one(`SELECT 1 AS x FROM ${qi(t.name)} WHERE ${w.sql}`, w.params)) throw new Error('ERR_ARCHIVE_TAKEN');
+    db.tx(() => {
+      const cols = t.cols.filter((c) => Object.prototype.hasOwnProperty.call(row, c));
+      db.db.run(`INSERT INTO ${qi(t.name)} (${cols.map(qi).join(', ')}) VALUES (${cols.map(() => '?').join(', ')})`, cols.map((c) => (row[c] === undefined ? null : row[c])));
+      db.db.run('UPDATE local_arsiv SET restored_at = ? WHERE n = ?', [Date.now(), a.n]);
+    });
+    return { tbl: a.tbl, pk: a.pk };
+  }
+
+  return { exportState, applyState, fileRefs, conflicts, prepare, preview, archiveList, archiveRestore, merge: (a, b) => merge(a, b) };
+}
+
+// v1.58: uzak silme → arşiv (hiç silinmez). Wi‑Fi ve bulut eşitlemesi ortak kullanır.
+function ensureArchive(db) {
+  db.db.exec('CREATE TABLE IF NOT EXISTS local_arsiv (n INTEGER PRIMARY KEY AUTOINCREMENT, tbl TEXT NOT NULL, pk TEXT NOT NULL, data TEXT NOT NULL, kaynak TEXT, dev TEXT, deleted_at INTEGER, archived_at INTEGER NOT NULL, restored_at INTEGER)');
+}
+function archiveRow(db, tbl, pk, row, kaynak, dev, deletedAt) {
+  if (!row) return;
+  ensureArchive(db);
+  db.db.run('INSERT INTO local_arsiv (tbl, pk, data, kaynak, dev, deleted_at, archived_at) VALUES (?,?,?,?,?,?,?)',
+    [tbl, String(pk), JSON.stringify(row), kaynak || '', dev || '', Math.round(Number(deletedAt) || 0) || null, Date.now()]);
 }
 
 // Birleştirme (iki cihazda aynı sonucu verir). Kayıt: {t, k, d (satır), at (değişme zamanı)}
@@ -281,6 +319,6 @@ function merge(a, b) {
   return { docs, dels, conflicts };
 }
 
-const FalconLanDb = { createLanStore, merge, canon };
+const FalconLanDb = { createLanStore, merge, canon, archiveRow, ensureArchive };
 if (typeof module !== 'undefined' && module.exports) module.exports = FalconLanDb;
 else if (typeof window !== 'undefined') window.FalconLanDb = FalconLanDb;

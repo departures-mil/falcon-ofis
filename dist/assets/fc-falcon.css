@@ -1,0 +1,19 @@
+/* Falcon Ofis v1.58 — ortak çekirdek ile Falcon arasındaki küçük uyum kuralları (fc-falcon.js ile birlikte). */
+/* Çekirdek pencereleri / bildirimleri katmanı (FC.ui.root) */
+.fc-layer{position:relative;z-index:1000}
+/* Ayarlar > Görünüm: renk şeması satırı */
+.look-card .fc-scheme-row{align-items:flex-start}
+.look-card .fc-scheme-row .fc-schemes{flex:1 1 auto;min-width:0}
+/* Çekirdek kartları Falcon ayar kartlarıyla aynı aralıkta */
+.settings-grid>.fc-core-card .card-title{margin-top:0}
+/* Arşiv listesi */
+.fc-arsiv{display:grid;gap:0;max-height:420px;overflow:auto;margin-top:6px}
+.fc-arsiv-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--border)}
+.fc-arsiv-row .small{font-size:12px}
+/* Asistan Agent düğmesi Falcon üst çubuğunda */
+.topbar-actions .agent-btn{position:relative}
+/* Orta düğmesi Falcon'un pencere düğmeleriyle aynı çizgi simge */
+.win-controls [data-win=half] svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+/* Üst çubuğa iki düğme (✦, Orta) eklendi: dar ekranda aralık biraz daralır, sayfa adı tek satırda kalır */
+.shell:not(.is-mobile) .topbar .page-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:1600px){.shell:not(.is-mobile) .topbar-actions{gap:10px}.shell:not(.is-mobile) .topbar{gap:14px}}

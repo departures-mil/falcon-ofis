@@ -1,61 +1,74 @@
 {
   "name": "falcon-ofis",
   "productName": "Falcon Ofis",
-  "version": "1.57.0",
+  "version": "1.58.0",
   "description": "Falcon Ofis - kasa, stok, malzeme ve demirbaş takip programı",
   "author": "Falcon",
   "main": "electron/main.js",
   "private": true,
   "scripts": {
-    "dev": "concurrently -k \"vite\" \"wait-on tcp:5173 && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron .\"",
-    "build": "vite build",
     "start": "electron .",
-    "test": "node scripts/test-db.js && node scripts/test-security.js && node scripts/test-services.js && node scripts/test-backup.js && node scripts/test-rates.js && node scripts/test-upgrade-v113.js && node scripts/test-upgrade-v114.js && node scripts/test-codes.js && node scripts/test-wallets.js && node scripts/test-cash-categories.js && node scripts/test-internet.js && node scripts/test-electricity.js && node scripts/test-transfer.js && node scripts/test-sync.js && node scripts/test-update.js",
-    "dist:portable": "vite build && electron-builder --win dir --x64",
-    "dist:win": "vite build && electron-builder --win nsis --x64"
+    "test": "node --test test/app.test.js test/electron-smoke.test.js",
+    "test:electron": "node --test test/electron-smoke.test.js",
+    "surum": "node araclar/surum.js",
+    "dist": "electron-builder --win nsis --x64 --publish never",
+    "kopru": "node araclar/kopru.js"
   },
   "build": {
     "appId": "com.falcon.ofis",
     "productName": "Falcon Ofis",
+    "copyright": "Falcon",
     "directories": {
       "output": "release"
     },
     "files": [
       "dist/**",
       "electron/**",
+      "cekirdek/**",
       "build/icon.png",
       "package.json"
     ],
+    "asar": true,
     "win": {
-      "target": "dir",
-      "icon": "build/icon.ico"
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": true
     },
     "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true
-    },
-    "copyright": "Falcon"
+      "oneClick": true,
+      "perMachine": false,
+      "allowElevation": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Falcon Ofis",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "multiLanguageInstaller": true,
+      "installerLanguages": [
+        "tr_TR",
+        "en_US",
+        "ar_SA"
+      ],
+      "language": "1055",
+      "artifactName": "FalconOfis-Setup-${version}.${ext}"
+    }
   },
   "dependencies": {
     "sql.js": "^1.14.2"
   },
   "devDependencies": {
-    "@fontsource/inter": "^5.3.0",
-    "@fontsource/noto-sans-arabic": "^5.3.0",
-    "@vitejs/plugin-react": "^6.1.2",
-    "concurrently": "^10.0.5",
-    "cross-env": "^10.1.0",
-    "electron": "^44.5.1",
-    "electron-builder": "^26.15.3",
-    "lucide-react": "^1.52.0",
-    "qrcode-generator": "^2.0.4",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
-    "react-router-dom": "^7.18.4",
-    "vite": "^8.3.2",
-    "wait-on": "^9.5.1",
-    "zxing-wasm": "^3.1.4"
+    "electron": "44.11.5",
+    "electron-builder": "^26.18.0"
   },
-  "falconElectron": "44"
+  "falconElectron": "44",
+  "repository": "departures-mil/falcon-ofis"
 }
