@@ -28,3 +28,11 @@ Ayarlar'da eşitleme kartının altında kullanıcının kendi Firebase hesabın
 Ortak istemci `departures-mil/duyurular/istemci/kullanim.js` → `dist/assets/kullanim.js` ve `electron/kullanim.js` (aynı dosya).
 Masaüstünde sayım ana süreçte (`main.js` → `Kullanim.fetchSar`, dosya `kullanim-limit.json`), pencereye `Kullanim.ice` ile aktarılır.
 Telefonda `window.fetch` doğrudan izlenir; `araclar/telefon-yayinla.js` iki dosyayı www klasörüne kendisi ekler.
+
+## Asistan Agent (v1.57)
+✦ Asistan Agent = `ortak-cekirdek/web/dist/fc-agent.js` (+ `agent-baslat.js`), masaüstünde `dist/assets/`, telefonda www `assets/`.
+Bütün programlardaki çalışmayı sayılarla izler (içerik yok), çevrim dışı kurallar ile öneri; bildirim (masaüstü `falcon.notify`,
+telefon `FalconNative.showNotice`) + sağ altta ✦ panel. Ayarlar'da masaüstünde "Admin ile iletişime geç", telefonda "Kullanım Limitleri"
+kartının önünde. Masaüstü ana süreç `electron/fc-agent-main.js` (%APPDATA%/FalconCekirdek/agent ile diğer programlarla paylaşım).
+Telefon 1.57.0 www'si 1.56.0 paketinden çıkarıldı (`update-pack.extractPack`), iki betik eklendi, `index-*.js` içindeki
+gömülü sürüm (`1.56.0`) `1.57.0` yapıldı. Sonraki telefon sürümünde de gömülü sürüm metnini yükseltmeyi unutmayın.

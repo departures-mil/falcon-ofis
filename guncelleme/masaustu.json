@@ -1,10 +1,10 @@
 {
- "version": "1.56.0",
- "notes": "Falcon Ofis 1.56.0: Borç / Alacak sayfasına «Kişi bazlı toplam» eklendi — her kişinin kalan borcu, alacağı ve net durumu tek bakışta. Kayıtlarınız olduğu gibi kalır.",
- "size": 2721193,
- "sha256": "58fbc23783d489da509d2ef2d8d03638e1b1e6181259b47bf68650684399f546",
- "sig": "MEUCIQCPp8hLrm+zNbSuI85M4FKfoq3Xo3giPDgfATe+r/qxyAIgAnIQoEOa/flfWEaHD6DNHBnJJv5f4p9LYzo53PZ3J+c=",
- "file": "masaustu-1.56.0.fopk",
+ "version": "1.57.0",
+ "notes": "Yeni: ✦ Asistan Agent — bütün programlarınızdaki çalışmanızı izler ve daha verimli çalışmanız için öneriler verir (bildirim + program içi panel). Ayarlar'dan açılıp kapatılabilir.",
+ "size": 2762840,
+ "sha256": "7fd6f101f979006cb796981bef1dbf8d758cd5bb56a0eae580586f8de919c593",
+ "sig": "MEUCIQDpHt2BdxVDx87IykbFjGZtkTzFNsNk7OUXVLhjnk+vLAIgO339BF3nIMvczTornfZBAFerwx/iUlEXroQrnHgasNY=",
+ "file": "masaustu-1.57.0.fopk",
  "electron": "44",
- "publishedAt": "2026-11-23T11:35:55.594Z"
+ "publishedAt": "2026-11-24T05:43:45.897Z"
 }
