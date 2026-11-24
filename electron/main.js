@@ -119,9 +119,12 @@ const FILTERS = {
   receipt: [{ name: 'PDF / JPEG / PNG', extensions: ['pdf', 'jpg', 'jpeg', 'png'] }],
 };
 
+let sessionWindowMode = 'fullscreen';
+
 function createWindow() {
-  // Ayarlar > Görünüm: tam ekran (varsayılan) veya pencere
-  const fullscreen = security.windowMode() === 'fullscreen';
+  // kullanıcının kuralı: program HER açılışta tam ekran açılır (1.58.1). Ayarlar > Görünüm'deki "pencere" seçimi yalnız o oturum için geçerlidir.
+  sessionWindowMode = 'fullscreen';
+  const fullscreen = true;
   mainWindow = new BrowserWindow({
     width: 1400,
     height: 900,
@@ -347,7 +350,7 @@ function smokeTest(win) {
 
 function revealWindow() {
   if (!mainWindow || mainWindow.isDestroyed()) return;
-  const fullscreen = security.windowMode() === 'fullscreen';
+  const fullscreen = sessionWindowMode === 'fullscreen';
   if (mainWindow.isMinimized()) mainWindow.restore();
   mainWindow.show();
   if (fullscreen) mainWindow.setFullScreen(true);
@@ -635,10 +638,11 @@ function registerIpc() {
   ipcMain.handle('security:recover', wrap((_e, code, pin) => security.recover(code, pin)));
   ipcMain.handle('security:changePin', wrap((_e, oldPin, pin) => security.changePin(oldPin, pin)));
   ipcMain.handle('security:newRecoveryCode', wrap((_e, pin) => security.newRecoveryCode(pin)));
-  ipcMain.handle('window:getMode', () => security.windowMode());
+  ipcMain.handle('window:getMode', () => sessionWindowMode);
   ipcMain.handle('window:setMode', wrap((_e, mode) => {
     locked();
-    security.setWindowMode(mode);
+    // 1.58.1: kalıcı kaydedilmez — bir sonraki açılış yine tam ekran (Orta / Küçült düğmeleri de oturumluk)
+    sessionWindowMode = mode === 'window' ? 'window' : 'fullscreen';
     if (mainWindow) {
       if (mode === 'fullscreen') mainWindow.setFullScreen(true);
       else {

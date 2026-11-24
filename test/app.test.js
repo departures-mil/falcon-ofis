@@ -147,3 +147,13 @@ test('eski kanal paketi (FOPK1): oluşturma / açma, yol güvenliği, imza doğr
   assert.ok(!pack.verify('telefon', '1.58.0', pack.sha256(gz), sig, pub), 'platform imzaya dahil');
   assert.strictEqual(pack.compareVersions('1.58.0', '1.57.0'), 1);
 });
+
+test('her açılışta tam ekran (1.58.1): pencere seçimi kalıcı değil, açılış ayara bağlı değil', () => {
+  const m = read('electron/main.js');
+  assert.ok(!/security\.windowMode\(\)/.test(m), 'açılış security.windowMode() okumamalı');
+  assert.ok(!/security\.setWindowMode\(/.test(m), 'pencere seçimi kalıcı kaydedilmemeli');
+  assert.match(m, /const fullscreen = true;/);
+  const js = fs.readdirSync(path.join(ROOT, 'dist/assets')).filter((f) => /^index-.*\.js$/.test(f)).map((f) => read('dist/assets/' + f)).join('');
+  assert.ok(js.includes('`rate-value rate-empty`'), 'kur girilmedi küçük metin yaması');
+  assert.match(read('dist/assets/fc-falcon.css'), /html\[dir=rtl\] \.fa-fab/);
+});

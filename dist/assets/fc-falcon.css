@@ -17,3 +17,9 @@
 /* Üst çubuğa iki düğme (✦, Orta) eklendi: dar ekranda aralık biraz daralır, sayfa adı tek satırda kalır */
 .shell:not(.is-mobile) .topbar .page-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:1600px){.shell:not(.is-mobile) .topbar-actions{gap:10px}.shell:not(.is-mobile) .topbar{gap:14px}}
+
+/* 1.58.1: kur girilmemiş kartta "Kur girilmedi" değer boyutunda değil, küçük soluk metin (Arapçada dev harflerle bölünüyordu) */
+.rate-value.rate-empty { font-size: 13px; font-weight: 500; color: var(--muted, #64748b); direction: inherit; unicode-bidi: normal; text-align: start; margin: 8px 0 10px; }
+/* 1.58.1: Arapçada (RTL) kenar çubuğu sağda — "Sor" yüzen düğmesi sola alınır, menü öğelerinin üstüne binmez */
+html[dir=rtl] .fa-fab { right: auto; left: 22px; }
+@media (max-width: 760px) { html[dir=rtl] .fa-fab { left: 14px; } }
