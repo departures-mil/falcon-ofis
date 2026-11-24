@@ -8,6 +8,10 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
 - `departures-mil/ortak-cekirdek` gömülü kopya: `cekirdek/electron/` (fc-electron-main, fc-preload, fcd1) + `dist/cekirdek/`
   (fc-core.js, css, yazı tipleri). Commit `cekirdek/VERSION`'da. Çekirdek deposunu buradan değiştirme.
   Yerel düzeltme: `dist/cekirdek/fc-core.js` → kabuk indirmesinde `latest.json` 404 = "güncel" ("falcon-ofis yerel düzeltmesi").
+  Yerel düzeltme (1.58.2): Windows takası çekirdeğin `swapAndRelaunch` betiği yerine `electron/takas.js` ile yapılır (main.js
+  `swapAndRelaunchSafe`): wscript ile gizli, yollar ortam değişkeninde (Türkçe harf), 15 sn'de kapanmayan program zorla kapatılır,
+  günlük `%TEMP%\falcon-guncelleme.log`. Çekirdeğin betiğinde aynı hatalar var (ayrık cmd → siyah pencereler, `%N%` parantez içinde
+  artmıyor → sonsuz bekleme, UTF-8 yollar bozuk); ortak-cekirdek oturumunda düzeltilmeli. CI: `node test/win-takas.js` (windows-latest).
 - `dist/cekirdek/css/core-falcon.css` = core.css'in `.fc-scope` ile kapsanmış hali (`node araclar/cekirdek-css.js`); Falcon'un kendi
   görünümü değişmez. `tokens.css` Falcon CSS'inden SONRA yüklenir (renk şemaları).
 - Yapıştırıcı `dist/assets/fc-falcon.js` (+ `fc-falcon.css`): dil ve tema Falcon'da kalır (React `<html lang>`, FalconFX

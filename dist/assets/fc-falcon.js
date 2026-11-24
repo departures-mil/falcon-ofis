@@ -15,6 +15,11 @@
   var APP = 'falcon-ofis', LANGS = ['tr', 'en', 'ar'];
 
   var NEWS = {
+    '1.58.2': {
+      tr: "- \"Yeni kurulum gerekli\" penceresindeki \"Şimdi kur\" artık takılmıyor: siyah pencere açılmaz, program kapanmazsa kendisi kapatılır, Türkçe harfli klasörlerde de çalışır.\n- Güncelleme adımları %TEMP%\\falcon-guncelleme.log dosyasına yazılır.",
+      en: "- \"Install now\" in the \"New installer required\" window no longer hangs: no black window opens, the program is closed if it does not exit, and folders with non-English letters work.\n- Update steps are written to %TEMP%\\falcon-guncelleme.log.",
+      ar: "- زر «ثبّت الآن» في نافذة «يلزم مثبّت جديد» لم يعد يتوقف: لا تظهر نافذة سوداء، ويُغلق البرنامج تلقائياً إن لم يُغلق، ويعمل في المجلدات ذات الأحرف غير الإنجليزية.\n- تُكتب خطوات التحديث في الملف %TEMP%\\falcon-guncelleme.log."
+    },
     '1.58.1': {
       tr: "- Program her açılışta tam ekran açılır (pencere seçimi yalnız o oturum için geçerlidir).\n- Arapça: döviz/dijital para kur kartlarında \"Kur girilmedi\" yazısı küçük ve okunaklı.\n- Arapça: \"Sor\" düğmesi kenar çubuğunun üstüne binmiyor (sol altta).",
       en: "- The program always opens full screen (the window choice applies only to the current session).\n- Arabic: \"No rate set\" on the currency/crypto rate cards is small and readable.\n- Arabic: the \"Ask\" button no longer covers the sidebar (bottom left).",

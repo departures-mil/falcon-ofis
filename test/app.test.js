@@ -157,3 +157,17 @@ test('her açılışta tam ekran (1.58.1): pencere seçimi kalıcı değil, aç�
   assert.ok(js.includes('`rate-value rate-empty`'), 'kur girilmedi küçük metin yaması');
   assert.match(read('dist/assets/fc-falcon.css'), /html\[dir=rtl\] \.fa-fab/);
 });
+
+test('güncelleme takası betiği (1.58.2): gizli, takılmaz, Türkçe yol betiğe yazılmaz', () => {
+  const takas = require('../electron/takas');
+  const s = takas.script();
+  assert.ok(/^[\x00-\x7f]*$/.test(s), 'betik yalnız ASCII (yollar ortam değişkeninde)');
+  assert.ok(!/\(\s*[^)]*%[NM]%/.test(s) && !s.includes('!N!'), 'sayaç parantez bloğu içinde okunmuyor');
+  assert.match(s, /if %N% EQU 15 taskkill \/F \/PID %FCU_PID%/, 'kapanmayan program zorla kapatılır');
+  assert.match(s, /if %N% GEQ 30 goto gone/, 'bekleme sınırlı');
+  assert.match(s, /if %M% GEQ 20 goto run/, 'taşıma denemesi sınırlı');
+  const main = read('electron/main.js');
+  assert.ok(main.includes("require('./takas').start("), 'main.js güvenli takası kullanır');
+  assert.ok(!/fcMain\.swapAndRelaunch\(\{\}, st\);\s*return 'restarting'/.test(main), 'çekirdeğin pencereli betiği kullanılmıyor');
+  assert.ok(read('.github/workflows/release.yml').includes('node test/win-takas.js'), 'Windows CI testi');
+});
