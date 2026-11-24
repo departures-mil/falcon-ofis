@@ -42,6 +42,10 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   imzalı `.fopk`'yi overlay olarak çalıştırır. Köprü 1.58.0 ile bir kez konuldu (`araclar/kopru.js`, anahtar
   `C:\Claude Programlarım\_Anahtarlar\FalconOfis\ozel-anahtar.pem`). Eski kabukta yeni sürüm "Yeni kurulum gerekli" der ve
   GitHub sürümünden program dosyalarını yeniler (yazılabilir klasör: app.asar takası; değilse kurulum). Yeni sürümler köprüye konmaz.
+- ONARIM ARACI (`onarim/`, iş akışı `onarim.yml`): 1.58.0 overlay'inde takılanlar için tek tık `FalconOfis-Onarim.cmd` (WinForms, tr/en/ar):
+  takılı `fc-update-*.cmd`/find pencerelerini kapatır, imzalı köprü paketinin zip'ini "onarim" ön sürümünden indirir (SHA-256),
+  `…\guncelleme\1.58.2\` + `aktif.json` (BOM'suz) yazar. Link: releases/download/onarim/FalconOfis-Onarim.zip. Köprü değişirse
+  `onarim.ps1` içindeki `$VERSION` de güncellenmeli (build.js denetler).
 - Android: APK yalnızca kullanıcı isteyince; telefon kabuğu kaynağı burada olmadığından `android` kanalı yok.
 - İmza anahtarları / şifreler depoya girmez.
 
