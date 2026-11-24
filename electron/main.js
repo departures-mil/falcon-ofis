@@ -229,7 +229,7 @@ function beforeUpdate(meta, setup) {
   }
   if (setup) writeDataPointer();
 }
-function runSetupExe(buf, meta) {
+function runSetupExe(buf, meta, deferred) {
   if (process.platform !== 'win32') throw codeErr('SETUP_WINDOWS_ONLY');
   if (!meta || !meta.targetSha256 || sha256hex(buf) !== String(meta.targetSha256).toLowerCase()) throw codeErr('BAD_HASH');
   if (meta.targetSize && buf.length !== Number(meta.targetSize)) throw codeErr('BAD_SIZE');
@@ -239,23 +239,41 @@ function runSetupExe(buf, meta) {
   const exe = path.join(dir, /\.exe$/i.test(name) ? name : `${name}.exe`);
   fs.writeFileSync(exe, buf);
   if (sha256hex(fs.readFileSync(exe)) !== sha256hex(buf)) throw codeErr('STAGE_VERIFY');
+  if (deferred) { stagedUpdate = { kind: 'setup', exe, meta }; return 'staged'; }
   beforeUpdate(meta, true);
-  require('child_process').spawn(exe, [], { detached: true, stdio: 'ignore', windowsHide: false }).unref();
+  // 1.58.3: kurulum sessiz (/S) ve penceresiz; program kapandıktan sonra çekirdeğin yardımcısı çalıştırır, bitince program açılır.
+  fcMain.startHelper({ setup: exe, setupArgs: ['/S'], relaunch: true, version: meta.version });
   setTimeout(() => app.exit(0), 400);
   return 'restarting';
 }
 // 1.58.2: güvenli takas (Windows) electron/takas.js'te: gizli betik, kapanmayan programı zorla kapatma, Unicode yollar.
-function swapAndRelaunchSafe(st) {
-  if (process.platform !== 'win32') return fcMain.swapAndRelaunch({}, st);
+// 1.58.3: noRun → takastan sonra program açılmaz (otomatik güncelleme program kapanırken kurulur).
+function swapAndRelaunchSafe(st, noRun) {
+  if (process.platform !== 'win32') return fcMain.swapAndRelaunch({}, st, noRun);
   try {
     require('./takas').start({ tmp: app.getPath('temp'), pid: process.pid, target: st.target, next: st.next, exe: process.execPath,
-      args: process.argv.slice(1).filter((a) => !/^--fc-/.test(a)) });
+      args: process.argv.slice(1).filter((a) => !/^--fc-/.test(a)), noRun: !!noRun });
   } catch (err) {
     console.error('takas betiği başlatılamadı', err);
-    return fcMain.swapAndRelaunch({}, st);
+    return fcMain.swapAndRelaunch({}, st, noRun);
   }
-  setTimeout(() => app.exit(0), 300);
+  if (!noRun) setTimeout(() => app.exit(0), 300);
 }
+/* 1.58.3 otomatik güncelleme: arayüz yeni sürümü arka planda indirir (meta.deferred) → burada yalnız hazırlanır ('staged');
+   program kapanırken (will-quit) yedek alınıp pencere açmadan kurulur, bir sonraki açılışta yeni sürüm gelir.
+   Güncelle → fc:update:applyStaged: hemen kur + yeniden aç. */
+let stagedUpdate = null;
+function applyStaged(noRun) {
+  const s = stagedUpdate; stagedUpdate = null;
+  if (!s) throw codeErr('NOTHING_STAGED');
+  beforeUpdate(s.meta || {}, s.kind === 'setup');
+  if (s.kind === 'setup') {
+    fcMain.startHelper({ setup: s.exe, setupArgs: ['/S'], relaunch: !noRun });
+    if (!noRun) setTimeout(() => app.exit(0), 400);
+  } else swapAndRelaunchSafe(s.st, noRun);
+  return 'restarting';
+}
+app.on('will-quit', () => { if (stagedUpdate) { try { applyStaged(true); } catch (err) { console.error('kapanışta güncelleme', err); } } });
 function installCore(win) {
   const before = new Set(win.listeners('ready-to-show'));
   fcCore = fcMain.install(win, { channel: bridgeInfo().channel });
@@ -275,6 +293,7 @@ function installCore(win) {
     const ofs = require('original-fs');
     const out = fcMain.applyFcd1(ofs.readFileSync(asarFile()), Buffer.from(bytes));
     const st = fcMain.stage({}, out, meta);
+    if (meta && meta.deferred) { stagedUpdate = { kind: 'swap', st, meta }; return 'staged'; }
     beforeUpdate(meta, false);
     swapAndRelaunchSafe(st);
     return 'restarting';
@@ -282,12 +301,17 @@ function installCore(win) {
   ipcMain.removeHandler('fc:update:full');
   ipcMain.handle('fc:update:full', res((bytes, meta) => {
     const buf = Buffer.from(bytes);
-    if (isSetup(meta)) return runSetupExe(buf, meta);
+    if (isSetup(meta)) {
+      return runSetupExe(buf, meta, !!(meta && meta.deferred));
+    }
     const st = fcMain.stage({}, buf, meta);
+    if (meta && meta.deferred) { stagedUpdate = { kind: 'swap', st, meta }; return 'staged'; }
     beforeUpdate(meta, false);
     swapAndRelaunchSafe(st);
     return 'restarting';
   }));
+  ipcMain.removeHandler('fc:update:applyStaged');
+  ipcMain.handle('fc:update:applyStaged', res(() => applyStaged(false)));
 }
 // Ana süreç çökmesi: program kendini yeniden başlattığı için rapor dosyaya bırakılır, sonraki açılışta arayüze (FC.crash) iletilir
 const crashFile = () => path.join(app.getPath('userData'), 'cokme-bekleyen.json');

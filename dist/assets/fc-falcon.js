@@ -15,6 +15,11 @@
   var APP = 'falcon-ofis', LANGS = ['tr', 'en', 'ar'];
 
   var NEWS = {
+    '1.58.3': {
+      tr: "- Güncellemeler artık tamamen kendiliğinden: yeni sürüm arka planda sessizce indirilir, program kapanınca pencere açmadan kurulur; bir sonraki açılışta yeni sürüm gelir. Hemen kurmak için Güncelle → «Şimdi kur ve yeniden aç». Kurulum gereken güncellemeler de sessiz yapılır. Kayıtlara dokunulmaz.",
+      en: "- Updates are now fully automatic: the new version downloads quietly in the background and installs without any window when the program closes; the next start opens the new version. To install right away: Update → «Install now and reopen». Updates that need the installer also run silently. Records are not touched.",
+      ar: "- أصبحت التحديثات تلقائية بالكامل: يُنزَّل الإصدار الجديد بهدوء في الخلفية ويُثبَّت دون أي نافذة عند إغلاق البرنامج، ويُفتح الإصدار الجديد في المرة التالية. للتثبيت فوراً: تحديث ← «ثبّت الآن وأعد الفتح». التحديثات التي تحتاج إلى برنامج التثبيت تتم بصمت أيضاً. لا تُمَسّ السجلات."
+    },
     '1.58.2': {
       tr: "- \"Yeni kurulum gerekli\" penceresindeki \"Şimdi kur\" artık takılmıyor: siyah pencere açılmaz, program kapanmazsa kendisi kapatılır, Türkçe harfli klasörlerde de çalışır.\n- Güncelleme adımları %TEMP%\\falcon-guncelleme.log dosyasına yazılır.",
       en: "- \"Install now\" in the \"New installer required\" window no longer hangs: no black window opens, the program is closed if it does not exit, and folders with non-English letters work.\n- Update steps are written to %TEMP%\\falcon-guncelleme.log.",
