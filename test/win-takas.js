@@ -27,7 +27,7 @@ async function run(name, holdMs, via) {
   const prog = cp.spawn(process.execPath, ['-e', `setTimeout(()=>{}, ${holdMs})`], { stdio: 'ignore' });
   await sleep(500);
   const t0 = Date.now();
-  const r = takas.start({ tmp: dir, pid: prog.pid, target, next, exe: process.execPath, args: [writer, marker, '--hidden'], noWscript: via === 'cmd' });
+  const r = takas.start({ tmp: dir, pid: prog.pid, target, next, exe: process.execPath, args: [writer, marker, '--hidden'], noWscript: via === 'powershell' });
   console.log(name, 'başlatıldı:', r.via);
   while (!fs.existsSync(marker) && Date.now() - t0 < 90000) await sleep(500);
   const secs = ((Date.now() - t0) / 1000).toFixed(1);
@@ -47,5 +47,5 @@ async function run(name, holdMs, via) {
 (async () => {
   await run('kendisi kapanan program', 3000, 'wscript');
   await run('kapanmayan program (zorla kapatma)', 10 * 60000, 'wscript');
-  await run('yedek yol (cmd)', 3000, 'cmd');
+  await run('yedek yol (powershell)', 3000, 'powershell');
 })().catch((e) => { console.error(e); process.exit(1); });
