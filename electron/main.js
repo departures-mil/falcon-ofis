@@ -244,6 +244,18 @@ function runSetupExe(buf, meta) {
   setTimeout(() => app.exit(0), 400);
   return 'restarting';
 }
+// 1.58.2: güvenli takas (Windows) electron/takas.js'te: gizli betik, kapanmayan programı zorla kapatma, Unicode yollar.
+function swapAndRelaunchSafe(st) {
+  if (process.platform !== 'win32') return fcMain.swapAndRelaunch({}, st);
+  try {
+    require('./takas').start({ tmp: app.getPath('temp'), pid: process.pid, target: st.target, next: st.next, exe: process.execPath,
+      args: process.argv.slice(1).filter((a) => !/^--fc-/.test(a)) });
+  } catch (err) {
+    console.error('takas betiği başlatılamadı', err);
+    return fcMain.swapAndRelaunch({}, st);
+  }
+  setTimeout(() => app.exit(0), 300);
+}
 function installCore(win) {
   const before = new Set(win.listeners('ready-to-show'));
   fcCore = fcMain.install(win, { channel: bridgeInfo().channel });
@@ -264,7 +276,7 @@ function installCore(win) {
     const out = fcMain.applyFcd1(ofs.readFileSync(asarFile()), Buffer.from(bytes));
     const st = fcMain.stage({}, out, meta);
     beforeUpdate(meta, false);
-    fcMain.swapAndRelaunch({}, st);
+    swapAndRelaunchSafe(st);
     return 'restarting';
   }));
   ipcMain.removeHandler('fc:update:full');
@@ -273,7 +285,7 @@ function installCore(win) {
     if (isSetup(meta)) return runSetupExe(buf, meta);
     const st = fcMain.stage({}, buf, meta);
     beforeUpdate(meta, false);
-    fcMain.swapAndRelaunch({}, st);
+    swapAndRelaunchSafe(st);
     return 'restarting';
   }));
 }

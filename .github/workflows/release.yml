@@ -43,6 +43,8 @@ jobs:
       - id: ver
         shell: bash
         run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Güncelleme takası gerçek Windows'ta (gizli betik, zorla kapatma, Türkçe yol)
+        run: node test/win-takas.js
       - name: NSIS kurulum + app.asar
         run: npx electron-builder --win nsis --x64 --publish never
         env:
