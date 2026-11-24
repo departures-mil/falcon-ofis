@@ -87,8 +87,9 @@ function start(o) {
   const ps = path.join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'WindowsPowerShell', 'v1.0', 'powershell.exe');
   const ps1 = bat.replace(/\.cmd$/, '.ps1');
   fs.writeFileSync(ps1, '\ufeff' + 'Start-Process -WindowStyle Hidden -FilePath $env:ComSpec -ArgumentList ("/d /c `"" + $env:FCU_BAT + "`"")\r\n', 'utf8');
-  cp.spawn(fs.existsSync(ps) ? ps : 'powershell.exe', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-File', ps1],
-    { detached: true, stdio: 'ignore', windowsHide: true, env }).unref();
+  // PowerShell beklenerek (ayrık değil) çalıştırılır; Start-Process ile açılan cmd programdan bağımsız yaşar.
+  cp.spawnSync(fs.existsSync(ps) ? ps : 'powershell.exe', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-File', ps1],
+    { stdio: 'ignore', windowsHide: true, env, timeout: 20000 });
   return { bat, vbs, via: 'powershell' };
 }
 
