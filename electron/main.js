@@ -2,6 +2,7 @@
 if (require('./overlay').loadOverlay()) return;
 
 const { app, BrowserWindow, ipcMain, shell, dialog, protocol, net, Notification, Tray, Menu, nativeImage } = require('electron');
+try { require('./fc-agent-main.js').install(); } catch (e) { console.error('fc-agent', e); }
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');

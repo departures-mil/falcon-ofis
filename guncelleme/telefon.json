@@ -1,10 +1,10 @@
 {
- "version": "1.56.0",
- "notes": "v1.56.0: Borç / Alacak sayfasına «Kişi bazlı toplam» eklendi — her kişinin kalan borcu, alacağı ve net durumu tek bakışta. Kayıtlarınız olduğu gibi kalır.",
- "size": 2988709,
- "sha256": "88e0b227420369e3bc9486cf34e97fabcc74849f0c62f60280c40ede25fa0e1f",
- "sig": "MEUCIDuIcVjK9pWS9PnCJyZTMjyzNLmsreov4YDLw0GlBvnVAiEAtiHa65HTHIG/iwcfSd1x6G6BggOn7fFuWqP7PA54+Eg=",
- "file": "telefon-1.56.0.fopk",
- "minShell": 5,
- "publishedAt": "2026-11-23T11:35:56.052Z"
+ "version": "1.57.0",
+ "notes": "Yeni: ✦ Asistan Agent — bütün programlarınızdaki çalışmanızı izler ve daha verimli çalışmanız için öneriler verir (bildirim + program içi panel). Ayarlar'dan açılıp kapatılabilir.",
+ "size": 3030092,
+ "sha256": "3b50094a445f0d47dcfb97e67326540253a3bd1b80db7a10e62ab845b9e3a46f",
+ "sig": "MEYCIQCThb66adnHzD5YdikztCeBk34w0WdSKKzPghxuFPKLQwIhAL4vmOkYsqsXjZa2gQ4xqskl9E0oU4OI1VUSEDktGvgT",
+ "file": "telefon-1.57.0.fopk",
+ "minShell": 0,
+ "publishedAt": "2026-11-24T05:43:46.086Z"
 }
