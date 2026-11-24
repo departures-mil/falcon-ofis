@@ -20,7 +20,7 @@ $T = @{
           pick = 'Falcon Ofis klasörünü seçin'; dl = 'İndiriliyor… %{0}'; dlLine = '{0} / {1} · kalan {2} · Hız {3}/sn'; verify = 'Dosya doğrulanıyor (SHA-256)…'; badHash = 'İndirilen dosya doğrulanamadı. İnternet bağlantınızı kontrol edip yeniden deneyin.'
           write = 'Dosyalar yerleştiriliyor…'; stuck = 'Takılı kalan {0} yardımcı pencere kapatıldı.'; skipNewer = 'Bu kurulum zaten daha yeni: {0}'
           done = "Onarım tamamlandı.`n`n1) Falcon Ofis'i tamamen kapatın (saatin yanındaki simgede de duruyorsa sağ tık → Çık).`n2) Programı yeniden açın.`n3) ""Yeni kurulum gerekli"" penceresi çıkarsa Şimdi kur'a basın.`n`nBundan sonra güncellemeler Güncelle düğmesiyle tek tıkla gelir."
-          fail = 'Onarım tamamlanamadı: {0}'; net = 'İnternet bağlantısı yok ya da GitHub\'a ulaşılamıyor.' }
+          fail = 'Onarım tamamlanamadı: {0}'; net = 'İnternet bağlantısı yok ya da GitHub''a ulaşılamıyor.' }
   en = @{ title = 'Falcon Ofis Repair'; intro = "Repairs the stuck update and prepares the program for version $VERSION.`nYour records, documents, PIN and sync connection are kept."
           start = 'Repair'; close = 'Close'; search = 'Looking for Falcon Ofis…'; found = 'Installation found: {0}'; notFound = 'Falcon Ofis was not found. Choose the program folder (the one containing "Falcon Ofis.exe").'
           pick = 'Choose the Falcon Ofis folder'; dl = 'Downloading… {0}%'; dlLine = '{0} / {1} · {2} left · Speed {3}/s'; verify = 'Verifying file (SHA-256)…'; badHash = 'The downloaded file could not be verified. Check your internet connection and try again.'
