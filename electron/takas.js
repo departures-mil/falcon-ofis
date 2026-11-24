@@ -50,6 +50,7 @@ function script() {
     'start "" "%FCU_EXE%" %FCU_ARGS%',
     '>>"%LOG%" echo program yeniden acildi',
     'del /F /Q "%FCU_VBS%" >NUL 2>&1',
+    'del /F /Q "%~dpn0.ps1" >NUL 2>&1',
     '(goto) 2>NUL & del "%~f0"',
   ].join('\r\n') + '\r\n';
 }
@@ -84,9 +85,10 @@ function start(o) {
   // yedek yol (wscript kapalıysa): PowerShell betiği gizli konsolda başlatır. Doğrudan ayrık "cmd /c" KULLANILMAZ: konsolsuz kalan
   // cmd'nin alt komutları (tasklist | find) ayrı pencerelerde açılıp takılıyor (1.58.0'daki siyah "find" pencereleri; CI'da da görüldü).
   const ps = path.join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'WindowsPowerShell', 'v1.0', 'powershell.exe');
-  cp.spawn(fs.existsSync(ps) ? ps : 'powershell.exe', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-Command',
-    "Start-Process -WindowStyle Hidden -FilePath $env:ComSpec -ArgumentList '/d','/c',('\"' + $env:FCU_BAT + '\"')"],
-  { detached: true, stdio: 'ignore', windowsHide: true, env }).unref();
+  const ps1 = bat.replace(/\.cmd$/, '.ps1');
+  fs.writeFileSync(ps1, '\ufeff' + 'Start-Process -WindowStyle Hidden -FilePath $env:ComSpec -ArgumentList ("/d /c `"" + $env:FCU_BAT + "`"")\r\n', 'utf8');
+  cp.spawn(fs.existsSync(ps) ? ps : 'powershell.exe', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-File', ps1],
+    { detached: true, stdio: 'ignore', windowsHide: true, env }).unref();
   return { bat, vbs, via: 'powershell' };
 }
 
