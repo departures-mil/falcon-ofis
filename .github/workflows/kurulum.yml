@@ -1,0 +1,53 @@
+# Yeni masaüstü sürümü yayınlanınca (guncelleme/masaustu.json değişince) Windows kurulum dosyasını (setup)
+# üretip GitHub sürümüne koyar. Program güncellemeleri yine imzalı .fopk paketleriyle program içinden gelir.
+# Kurulum, eski sürümün üstüne kurar ve programın yanındaki "Falcon Ofis Veri" klasörüne dokunmaz.
+# İndirme linkleri sayfası (departures-mil/duyurular) bu dosyayı kendiliğinden listeler.
+name: Kurulum dosyasi
+
+on:
+  push:
+    branches: [main]
+    paths: ['guncelleme/masaustu.json']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kurulum
+  cancel-in-progress: false
+
+jobs:
+  kurulum:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Bagimliliklar
+        run: npm install --no-audit --no-fund
+      - name: Program klasoru (arayuz dist/ hazir geliyor)
+        shell: bash
+        env: { CSC_IDENTITY_AUTO_DISCOVERY: 'false' }
+        run: |
+          echo "V=$(node -p "require('./package.json').version")" >> "$GITHUB_ENV"
+          npx electron-builder --win dir --x64 --publish never -c.win.target=dir -c.win.icon=build/icon.png
+          ls release
+      - name: Kurulum dosyasi
+        shell: bash
+        run: |
+          M="/c/Program Files (x86)/NSIS/makensis.exe"
+          [ -x "$M" ] || { choco install nsis -y --no-progress >/dev/null; }
+          npx --yes png-to-ico@2.1.8 build/icon.png > icon.ico
+          "$M" -V2 -DDIR -DNAME="Falcon Ofis" -DEXE="Falcon Ofis.exe" -DSRC="$(cygpath -w "$PWD/release/win-unpacked")" \
+            -DVERSION="$V" -DREGKEY=FalconOfis -DICON="$(cygpath -w "$PWD/icon.ico")" \
+            -DOUT="$(cygpath -w "$PWD/Falcon-Ofis-Setup-$V.exe")" kurulum/kurulum.nsi
+      - name: Surume koy
+        shell: bash
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          T="v$V"
+          gh release view "$T" >/dev/null 2>&1 || gh release create "$T" --target "$GITHUB_SHA" \
+            --title "Falcon Ofis $T" --notes "Windows kurulum dosyası. Kurulu programda güncellemeler program içinden gelir."
+          gh release upload "$T" "Falcon-Ofis-Setup-$V.exe" --clobber
