@@ -1,0 +1,68 @@
+# Falcon Ofis Onarım aracı: 1.58.0'da takılan güncellemeyi onaran tek tık dosyası.
+# Köprü paketi (guncelleme/masaustu-*.fopk) imzası doğrulanır → zip + FalconOfis-Onarim.cmd → Windows'ta Türkçe yollu
+# sahte kurulumlarda test → "onarim" ön sürümüne (prerelease; releases/latest'i ETKİLEMEZ) yüklenir → GitHub'dan indirerek yeniden test.
+# Sabit indirme linki: https://github.com/departures-mil/falcon-ofis/releases/download/onarim/FalconOfis-Onarim.zip
+name: onarim
+on:
+  push:
+    branches: [main]
+    paths: ['onarim/**', 'guncelleme/masaustu*', '.github/workflows/onarim.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: { group: onarim, cancel-in-progress: false }
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: node onarim/build.js
+      - uses: actions/upload-artifact@v4
+        with: { name: onarim, path: onarim/out }
+
+  test:
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: onarim, path: out }
+      - name: Onarım testi (yerel paket)
+        shell: powershell
+        run: ./onarim/test-win.ps1 -Out out
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: onarim, path: out }
+      - name: "onarim" ön sürümü
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          v="$(node -p "require('./out/onarim.json').version")"
+          notes="Falcon Ofis $v onarım aracı — güncelleme 1.58.0'da takıldıysa (siyah \"find\" pencereleri): FalconOfis-Onarim.zip'i indirin, içindeki FalconOfis-Onarim.cmd'ye çift tıklayın, Onar'a basın. Kayıtlar korunur."
+          if ! gh release view onarim >/dev/null 2>&1; then
+            gh release create onarim --target "$GITHUB_SHA" --prerelease --title "Falcon Ofis Onarım ($v)" --notes "$notes"
+          else
+            gh release edit onarim --prerelease --title "Falcon Ofis Onarım ($v)" --notes "$notes"
+          fi
+          gh release upload onarim out/falcon-ofis-*-onarim.zip out/FalconOfis-Onarim.zip out/FalconOfis-Onarim.cmd out/onarim.json --clobber
+          gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name
+
+  verify:
+    needs: publish
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: onarim, path: out }
+      - name: Onarım testi (GitHub'dan indirerek)
+        shell: powershell
+        run: ./onarim/test-win.ps1 -Out out -Online
