@@ -46,6 +46,7 @@ contextBridge.exposeInMainWorld('falcon', {
     setMode: (mode) => ipcRenderer.invoke('window:setMode', mode),
     minimize: () => ipcRenderer.invoke('window:minimize'),
     toggleFullscreen: () => ipcRenderer.invoke('window:toggleFullscreen'),
+    half: () => ipcRenderer.invoke('fc:win:half'),
     close: () => ipcRenderer.invoke('window:close'),
   },
   sync: {
@@ -64,16 +65,13 @@ contextBridge.exposeInMainWorld('falcon', {
       return () => ipcRenderer.removeListener('sync:status', h);
     },
   },
-  // v1.19: uygulama içinden güncelleme
-  update: {
-    check: () => ipcRenderer.invoke('update:check'),
-    install: () => ipcRenderer.invoke('update:install'),
-    restart: () => ipcRenderer.invoke('update:restart'),
-    onProgress: (fn) => {
-      const h = (_e, p) => fn(p);
-      ipcRenderer.on('update:progress', h);
-      return () => ipcRenderer.removeListener('update:progress', h);
-    },
+  // v1.58: güncellemeler ortak çekirdekle (FC.updater → GitHub Releases latest.json, yama / tam app.asar, window.fcHost.update).
+  // Eski "update" köprüsü kaldırıldı; köprü (eski kabuk) durumunu arayüz buradan öğrenir.
+  kurulum: { info: () => ipcRenderer.invoke('kurulum:info') },
+  // v1.58: uzak cihazda silinip burada arşive alınan kayıtlar (Wi‑Fi / bulut eşitleme; hiçbir kayıt kalıcı silinmez)
+  arsiv: {
+    list: () => ipcRenderer.invoke('arsiv:list'),
+    restore: (n) => ipcRenderer.invoke('arsiv:restore', n),
   },
   // v1.42: soru botu (Gemini isteği ana süreçten)
   ai: { request: (req) => ipcRenderer.invoke('ai:request', req) },
@@ -104,9 +102,5 @@ contextBridge.exposeInMainWorld('falcon', {
   notify: (title, body) => ipcRenderer.invoke('app:notify', { title, body }),
 });
 
-// Asistan Agent: aynı bilgisayardaki programlarla sayaç paylaşımı (fc-agent-main.js)
-;(function () {
-  const e = require('electron'), un = (p) => p.then((r) => { if (r && r.ok) return r.data; throw new Error((r && r.error) || 'ERR'); });
-  const api = { read: () => un(e.ipcRenderer.invoke('fc:agent:read')), write: (k, j) => un(e.ipcRenderer.invoke('fc:agent:write', k, j)), remove: (k) => un(e.ipcRenderer.invoke('fc:agent:remove', k)) };
-  try { e.contextBridge.exposeInMainWorld('fcAgentHost', api); } catch (x) { try { window.fcAgentHost = api; } catch (y) {} }
-})();
+// v1.58: ortak çekirdek köprüsü (window.fcHost: pencere düğmeleri, güncelleme, indirme, Asistan Agent paylaşımı, ana süreç hataları)
+require('../cekirdek/electron/fc-preload.js');

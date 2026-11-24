@@ -8,6 +8,7 @@
 // birden değiştiyse sütun sütun birleştirilir; stok adetleri gibi sayaçlar toplanarak birleştirilir.
 
 // v1.15: local_ ile başlayan tablolar da cihaza özeldir (buluta gönderilmez)
+const { archiveRow } = require('./lan-db');
 const LOCAL_TABLE_RE = /^(sqlite_|sync_|local_|schema_migrations$)/;
 // Cihaza özel ayarlar buluta gönderilmez
 const LOCAL_SETTINGS = ['language'];
@@ -318,9 +319,11 @@ function createSync({
     const t = tables().get(tbl);
     const w = pkWhere(t, pk);
     if (!row) {
-      const old = FILE_COLUMNS[tbl] || tbl === 'trash_items' ? db.get(`SELECT * FROM ${qi(tbl)} WHERE ${w.sql}`, w.params) : null;
+      // v1.58 (ortak çekirdek kuralı): buluttan gelen silme kaydı kalıcı silmez — satır önce local_arsiv'e yazılır
+      // (Ayarlar > Arşiv'den geri yüklenebilir), dosyaları da silinmez.
+      const old = db.get(`SELECT * FROM ${qi(tbl)} WHERE ${w.sql}`, w.params);
+      if (old) archiveRow(db, tbl, pk, old, 'bulut', '', Date.now());
       db.db.run(`DELETE FROM ${qi(tbl)} WHERE ${w.sql}`, w.params);
-      for (const rel of rowFiles(tbl, old)) removedFiles.add(rel);
       return;
     }
     const cols = t.cols.filter((c) => Object.prototype.hasOwnProperty.call(row, c));

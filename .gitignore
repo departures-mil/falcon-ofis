@@ -2,3 +2,5 @@
 *.jks
 *sifre*
 node_modules/
+release/
+out/

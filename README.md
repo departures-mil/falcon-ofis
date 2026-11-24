@@ -4,16 +4,16 @@ Ofis / kasa programı: Windows masaüstü (Electron) + Android. Kayıtlar Fireba
 **kayıtlar bu depoda bulunmaz**.
 
 - `electron/` ana süreç kodu, `dist/` derlenmiş arayüz, `build/` simge, `package.json` (sürüm).
-- `guncelleme/masaustu.json` + `masaustu-<sürüm>.fopk` — ECDSA imzalı masaüstü güncellemesi. Program buradan indirir,
-  imzası tutmayanı kurmaz.
-- `guncelleme/telefon.json` + `telefon-<sürüm>.fopk` (+ `Falcon-Ofis-v<sürüm>.apk`) — telefon güncellemesi. Telefon 1.54'ten beri
-  yalnızca GitHub'a bakar; Firebase'e yalnızca GitHub'a hiç ulaşılamazsa bakılır. **Güncellemeler artık Firebase'e yüklenmez**
-  (Firebase yalnızca canlı kayıtlar içindir; kotası korunur).
-- İmza anahtarı depoda yoktur (`Falcon Ofis Veri\yayin\anahtar`).
+- **Güncellemeler (v1.58.0'dan beri): yalnız GitHub Releases** — ortak çekirdek (`departures-mil/ortak-cekirdek`) `latest.json` +
+  FCD1 yamalar; kanallar `win-app` (app.asar) ve `win-setup` (NSIS kurulum). Ayrıntı: `CLAUDE.md`.
+- `guncelleme/masaustu.json` + `.fopk` yalnızca **eski kurulumlar için köprü** (1.51–1.57 buraya bakar; ≤1.50 Firebase'e bakardı,
+  oraya son bir kez köprü konuldu). Yeni sürümler buraya konmaz. Telefon dosyaları (`telefon.json`) değişmedi; telefon kabuğunun kaynağı bu depoda yok.
+- İmza anahtarı depoda yoktur (`Falcon Ofis Veri\yayin\anahtar`, `C:\Claude Programlarım\_Anahtarlar\FalconOfis`).
 
-## Yeni masaüstü sürümü
-1. `package.json` içindeki sürümü artır.
-2. `OZEL_ANAHTAR=... node araclar/yayinla.js "notlar"` → `git add -A && git commit && git push`
+## Yeni masaüstü sürümü (v1.58.0'dan beri)
+1. `package.json` sürümünü yükselt, `dist/assets/fc-falcon.js` içindeki `NEWS`'e ve `release-notes.json`'a notları yaz (tr/en/ar).
+2. `npm test` → main'e birleştir → `gh api -X POST repos/departures-mil/falcon-ofis/actions/workflows/release.yml/dispatches -f ref=main`.
+   CI: test (node + Electron/xvfb) → Windows derlemesi (NSIS + app.asar) → ortak release (latest.json, son 5 sürümden yama).
 
 ## Yeni telefon sürümü (GitHub)
 `OZEL_ANAHTAR=... node araclar/telefon-yayinla.js <sürüm> <www klasörü> "notlar" [apk] [minShell]` → commit + push.
@@ -29,10 +29,6 @@ Ortak istemci `departures-mil/duyurular/istemci/kullanim.js` → `dist/assets/ku
 Masaüstünde sayım ana süreçte (`main.js` → `Kullanim.fetchSar`, dosya `kullanim-limit.json`), pencereye `Kullanim.ice` ile aktarılır.
 Telefonda `window.fetch` doğrudan izlenir; `araclar/telefon-yayinla.js` iki dosyayı www klasörüne kendisi ekler.
 
-## Asistan Agent (v1.57)
-✦ Asistan Agent = `ortak-cekirdek/web/dist/fc-agent.js` (+ `agent-baslat.js`), masaüstünde `dist/assets/`, telefonda www `assets/`.
-Bütün programlardaki çalışmayı sayılarla izler (içerik yok), çevrim dışı kurallar ile öneri; bildirim (masaüstü `falcon.notify`,
-telefon `FalconNative.showNotice`) + sağ altta ✦ panel. Ayarlar'da masaüstünde "Admin ile iletişime geç", telefonda "Kullanım Limitleri"
-kartının önünde. Masaüstü ana süreç `electron/fc-agent-main.js` (%APPDATA%/FalconCekirdek/agent ile diğer programlarla paylaşım).
-Telefon 1.57.0 www'si 1.56.0 paketinden çıkarıldı (`update-pack.extractPack`), iki betik eklendi, `index-*.js` içindeki
-gömülü sürüm (`1.56.0`) `1.57.0` yapıldı. Sonraki telefon sürümünde de gömülü sürüm metnini yükseltmeyi unutmayın.
+## Asistan Agent
+v1.58.0'dan beri masaüstünde ortak çekirdeğin `FC.agent`'ı kullanılır (bağımsız `fc-agent.js` kaldırıldı): üst çubukta ✦, Ayarlar'da kart.
+Telefon 1.57.0 www'si hâlâ bağımsız `fc-agent.js` taşır (telefon kaynağı bu depoda değil).

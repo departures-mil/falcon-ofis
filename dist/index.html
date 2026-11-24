@@ -2,7 +2,7 @@
 <html lang="tr" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob: falcon:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self' https://raw.githubusercontent.com" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob: falcon:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self' https://raw.githubusercontent.com https://github.com https://firestore.googleapis.com https://formsubmit.co https://generativelanguage.googleapis.com https://api.openai.com https://api.anthropic.com https://api.groq.com" />
     <title>Falcon Ofis</title>
     <script src="./assets/lan-vendor.js"></script>
     <script src="./assets/lan-db.js"></script>
@@ -12,10 +12,13 @@
     <script src="./assets/duyuru-falcon.js"></script>
     <script src="./assets/kullanim.js"></script>
     <script src="./assets/kullanim-falcon.js"></script>
-  <script src="./assets/fc-agent.js"></script>
-  <script src="./assets/agent-baslat.js"></script>
+    <script src="./cekirdek/fc-core.js"></script>
+    <script src="./assets/fc-falcon.js"></script>
     <script type="module" crossorigin src="./assets/index-DkKBqqT7.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-0BNBHp5S.css">
+    <link rel="stylesheet" href="./cekirdek/css/tokens.css">
+    <link rel="stylesheet" href="./cekirdek/css/core-falcon.css">
+    <link rel="stylesheet" href="./assets/fc-falcon.css">
   </head>
   <body>
     <div id="root"></div>

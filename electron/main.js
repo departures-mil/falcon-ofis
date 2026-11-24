@@ -2,7 +2,6 @@
 if (require('./overlay').loadOverlay()) return;
 
 const { app, BrowserWindow, ipcMain, shell, dialog, protocol, net, Notification, Tray, Menu, nativeImage } = require('electron');
-try { require('./fc-agent-main.js').install(); } catch (e) { console.error('fc-agent', e); }
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -16,9 +15,9 @@ const { createSync } = require('./sync');
 const Kullanim = require('./kullanim'); // v1.54: Firebase günlük kullanım sayacı (Ayarlar > Kullanım Limitleri)
 const firebaseConfig = require('./firebase-config');
 const { createSecurity } = require('./security');
-const { createUpdater } = require('./updater');
 const { updateRoot, compare: compareVersions } = require('./overlay');
-const { createPublisher } = require('./yayin');
+// v1.58: ortak çekirdek (pencere düğmeleri, GitHub Releases güncellemesi: yama / tam app.asar / kurulum, ana süreç hataları)
+const fcMain = require('../cekirdek/electron/fc-electron-main');
 // v1.50: Wi‑Fi (internetsiz) eşitleme
 const lanServer = require('./lan-server');
 const { createLanStore } = require('./lan-db');
@@ -26,14 +25,43 @@ const { FILE_COLUMNS } = require('./sync');
 
 // Taşınabilir sürüm: veriler programın yanındaki "Falcon Ofis Veri" klasöründe tutulur,
 // böylece klasör USB belleğe kopyalanınca kayıtlar da birlikte taşınır. Yazılamıyorsa AppData kullanılır.
-if (app.isPackaged && process.platform === 'win32') {
-  const portableDir = path.join(process.env.PORTABLE_EXECUTABLE_DIR || path.dirname(process.execPath), 'Falcon Ofis Veri');
+// v1.58: kurulumlu sürüm (NSIS, %LOCALAPPDATA%\Programs) verisini kurulum klasörüne YAZMAZ (kaldırma / yeni kurulum
+// o klasörü siler): önce "veri-konumu.json"un gösterdiği eski veri klasörü (eski taşınabilir sürümden kuruluma geçişte
+// köprü yazar), yoksa %APPDATA%\Falcon Ofis. Veri klasörü hiçbir zaman taşınmaz ya da kopyalanmaz.
+const EXE_DIR = process.env.PORTABLE_EXECUTABLE_DIR || path.dirname(process.execPath);
+const NSIS_INSTALL = app.isPackaged && process.platform === 'win32' && fs.existsSync(path.join(EXE_DIR, 'Uninstall Falcon Ofis.exe'));
+const defaultUserData = () => path.join(app.getPath('appData'), 'Falcon Ofis');
+const pointerFile = () => path.join(defaultUserData(), 'veri-konumu.json');
+const hasData = (dir) => { try { return fs.existsSync(path.join(dir, 'data', 'falcon-ofis.db')); } catch { return false; } };
+if (NSIS_INSTALL) {
+  try {
+    const p = JSON.parse(fs.readFileSync(pointerFile(), 'utf8'));
+    if (p && p.dir && hasData(p.dir)) {
+      fs.accessSync(p.dir, fs.constants.W_OK);
+      app.setPath('userData', p.dir);
+    }
+  } catch {
+    // varsayılan: %APPDATA%\Falcon Ofis
+  }
+} else if (app.isPackaged && process.platform === 'win32') {
+  const portableDir = path.join(EXE_DIR, 'Falcon Ofis Veri');
   try {
     fs.mkdirSync(portableDir, { recursive: true });
     fs.accessSync(portableDir, fs.constants.W_OK);
     app.setPath('userData', portableDir);
   } catch {
     // AppData klasöründe devam edilir
+  }
+}
+// Kurulum programına geçmeden önce: yeni kurulum bu veri klasörünü kullansın (yalnız konum yazılır, veri yerinde kalır)
+function writeDataPointer() {
+  if (path.resolve(app.getPath('userData')) === path.resolve(defaultUserData())) return;
+  try {
+    fs.mkdirSync(defaultUserData(), { recursive: true });
+    fs.writeFileSync(`${pointerFile()}.tmp`, JSON.stringify({ dir: app.getPath('userData'), from: app.getVersion(), at: new Date().toISOString() }));
+    fs.renameSync(`${pointerFile()}.tmp`, pointerFile());
+  } catch (err) {
+    console.error('veri-konumu.json yazılamadı', err.message);
   }
 }
 
@@ -57,8 +85,6 @@ let database = null;
 let services = null;
 let sync = null;
 let security = null;
-let updater = null;
-let publisher = null;
 let lanStore = null;
 // v1.45: program kapatılınca sistem tepsisinde (saatin yanında) çalışmaya devam eder; cüzdanlar arka planda izlenir
 let tray = null;
@@ -70,7 +96,8 @@ const filesDir = () => path.join(dataDir(), 'files');
 const dbPath = () => path.join(dataDir(), 'falcon-ofis.db');
 // Otomatik yedekler: veri klasöründe ve ayrıca Belgeler\Falcon Ofis Yedekler'de (program klasörü silinse bile kalır)
 const backupsDir = () => path.join(dataDir(), 'yedekler');
-const docsBackupDir = () => path.join(app.getPath('documents'), 'Falcon Ofis Yedekler');
+// FALCON_TEST_DOCS_DIR yalnızca otomatik testlerde (Belgeler klasörü kirlenmesin)
+const docsBackupDir = () => path.join(process.env.FALCON_TEST_DOCS_DIR || app.getPath('documents'), 'Falcon Ofis Yedekler');
 const localDate = () => {
   const d = new Date();
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
@@ -114,9 +141,12 @@ function createWindow() {
     },
   });
   mainWindow.setMenuBarVisibility(false);
+  installCore(mainWindow);
   // v1.19: yeni sürüm sorunsuz açıldı (açılamazsa birkaç denemeden sonra eski sürüme dönülür)
   mainWindow.webContents.once('did-finish-load', () => global.__falconOverlay?.ok());
   mainWindow.webContents.on('did-finish-load', () => setTimeout(kullanimGonder, 500));
+  mainWindow.webContents.on('did-finish-load', () => setTimeout(forwardPendingCrash, 3000));
+  if (process.env.FALCON_SMOKE === '1') smokeTest(mainWindow); // yalnızca otomatik açılış testi (test/electron-smoke.test.js)
   mainWindow.once('ready-to-show', () => {
     if (startHidden && !global.__falconShowRequested) return; // Windows açılışında: yalnızca sistem tepsisinde
     revealWindow();
@@ -147,6 +177,172 @@ function createWindow() {
   } else {
     mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
   }
+}
+
+// ---------- v1.58: ortak çekirdek ----------
+// fcMain.install: Küçült / Orta / Tam ekran / Kapat (fc:win:*), GitHub indirmesi (fc:net:download), ana süreç hataları → arayüz
+// (çökme raporu), Asistan Agent paylaşımı. Falcon'un açılışı (tepside gizli başlama, Ayarlar'daki pencere kipi) kendi kodunda
+// kaldığından fcMain'in "her açılışta tam ekran göster" dinleyicisi çıkarılır (varsayılan kip zaten tam ekran).
+// Güncelleme takası fcMain.stage + swapAndRelaunch ile yapılır; öncesinde tam yedek alınır, kurulum kanalında veri konumu yazılır.
+let fcCore = null;
+function bridgeInfo() {
+  const ov = global.__falconOverlay || null;
+  let canSwap = false;
+  if (app.isPackaged && !process.env.PORTABLE_EXECUTABLE_FILE) {
+    try {
+      const asar = path.join(process.resourcesPath, 'app.asar');
+      fs.accessSync(process.resourcesPath, fs.constants.W_OK);
+      canSwap = fs.existsSync(asar);
+    } catch {
+      canSwap = false;
+    }
+  }
+  const semver = (v) => (/^\d+\.\d+\.\d+$/.test(String(v || '')) ? String(v) : /^\d+\.\d+$/.test(String(v || '')) ? `${v}.0` : '0.0.0');
+  return {
+    overlay: !!ov, // eski kabuk: bu sürüm eski güncelleyicinin klasöründen (Falcon Ofis Veri/guncelleme) çalışıyor
+    baseVersion: semver(ov ? ov.baseVersion : app.getVersion()),
+    version: app.getVersion(),
+    canSwap, // program klasörü yazılabilir: app.asar yerinde yenilenir (win-app); değilse kurulum (win-setup)
+    channel: canSwap ? 'win-app' : 'win-setup',
+    portableExe: !!process.env.PORTABLE_EXECUTABLE_FILE,
+    nsis: NSIS_INSTALL,
+    packaged: app.isPackaged,
+    dataDir: app.getPath('userData'),
+    noUpdate: process.env.FALCON_TEST_NO_UPDATE === '1', // yalnızca otomatik testler / ekran görüntüleri
+  };
+}
+const codeErr = (code) => Object.assign(new Error(code), { code });
+const sha256hex = (buf) => crypto.createHash('sha256').update(buf).digest('hex');
+function beforeUpdate(meta, setup) {
+  quitting = true;
+  try {
+    if (database) {
+      fs.mkdirSync(backupsDir(), { recursive: true });
+      fs.writeFileSync(path.join(backupsDir(), `guncelleme-oncesi-v${app.getVersion()}-${stamp()}.falcon`), fullBackupBuffer());
+      database.save();
+    }
+  } catch (err) {
+    console.error('güncelleme öncesi yedek', err);
+  }
+  if (setup) writeDataPointer();
+}
+function runSetupExe(buf, meta) {
+  if (process.platform !== 'win32') throw codeErr('SETUP_WINDOWS_ONLY');
+  if (!meta || !meta.targetSha256 || sha256hex(buf) !== String(meta.targetSha256).toLowerCase()) throw codeErr('BAD_HASH');
+  if (meta.targetSize && buf.length !== Number(meta.targetSize)) throw codeErr('BAD_SIZE');
+  const name = String(meta.file || 'FalconOfis-Setup.exe').replace(/[^\w.-]/g, '_');
+  const dir = path.join(app.getPath('temp'), `falcon-kurulum-${process.pid}`);
+  fs.mkdirSync(dir, { recursive: true });
+  const exe = path.join(dir, /\.exe$/i.test(name) ? name : `${name}.exe`);
+  fs.writeFileSync(exe, buf);
+  if (sha256hex(fs.readFileSync(exe)) !== sha256hex(buf)) throw codeErr('STAGE_VERIFY');
+  beforeUpdate(meta, true);
+  require('child_process').spawn(exe, [], { detached: true, stdio: 'ignore', windowsHide: false }).unref();
+  setTimeout(() => app.exit(0), 400);
+  return 'restarting';
+}
+function installCore(win) {
+  const before = new Set(win.listeners('ready-to-show'));
+  fcCore = fcMain.install(win, { channel: bridgeInfo().channel });
+  for (const f of win.listeners('ready-to-show')) if (!before.has(f)) win.removeListener('ready-to-show', f);
+  const res = (f) => async (e, ...a) => {
+    if (BrowserWindow.fromWebContents(e.sender) !== win) return { ok: false, error: 'FORBIDDEN' };
+    try {
+      return { ok: true, data: await f(...a) };
+    } catch (err) {
+      return { ok: false, error: err.code || err.message || 'ERR' };
+    }
+  };
+  const isSetup = (meta) => !!(meta && (/setup/i.test(String(meta.channel || '')) || /\.exe$/i.test(String(meta.file || ''))));
+  const asarFile = () => path.join(process.resourcesPath, 'app.asar');
+  ipcMain.removeHandler('fc:update:patch');
+  ipcMain.handle('fc:update:patch', res((bytes, meta) => {
+    const ofs = require('original-fs');
+    const out = fcMain.applyFcd1(ofs.readFileSync(asarFile()), Buffer.from(bytes));
+    const st = fcMain.stage({}, out, meta);
+    beforeUpdate(meta, false);
+    fcMain.swapAndRelaunch({}, st);
+    return 'restarting';
+  }));
+  ipcMain.removeHandler('fc:update:full');
+  ipcMain.handle('fc:update:full', res((bytes, meta) => {
+    const buf = Buffer.from(bytes);
+    if (isSetup(meta)) return runSetupExe(buf, meta);
+    const st = fcMain.stage({}, buf, meta);
+    beforeUpdate(meta, false);
+    fcMain.swapAndRelaunch({}, st);
+    return 'restarting';
+  }));
+}
+// Ana süreç çökmesi: program kendini yeniden başlattığı için rapor dosyaya bırakılır, sonraki açılışta arayüze (FC.crash) iletilir
+const crashFile = () => path.join(app.getPath('userData'), 'cokme-bekleyen.json');
+function rememberCrash(err) {
+  try {
+    let list = [];
+    try { list = JSON.parse(fs.readFileSync(crashFile(), 'utf8')) || []; } catch { list = []; }
+    list.push({ message: String((err && err.message) || err), stack: String((err && err.stack) || '') });
+    fs.writeFileSync(crashFile(), JSON.stringify(list.slice(-5)));
+  } catch {
+    // yazılamadı
+  }
+}
+function forwardPendingCrash() {
+  let list = [];
+  try { list = JSON.parse(fs.readFileSync(crashFile(), 'utf8')) || []; } catch { return; }
+  try { fs.rmSync(crashFile(), { force: true }); } catch { /* yok */ }
+  for (const m of list) try { fcCore?.forward(m); } catch { /* yok */ }
+}
+// Eski güncelleyicinin (overlay) klasöründe bu sürümden eski / aynı program kopyaları kaldıysa temizlenir (yalnız program
+// dosyaları; kayıtlar orada değildir). Bu sürüm overlay'den çalışıyorsa dokunulmaz.
+function cleanupOldOverlays() {
+  if (global.__falconOverlay) return;
+  try {
+    const root = updateRoot();
+    for (const name of fs.readdirSync(root)) {
+      const full = path.join(root, name);
+      const m = /^(\d+(?:\.\d+)*)(\.indiriliyor)?$/.exec(name);
+      if (m && compareVersions(m[1], app.getVersion()) <= 0 && fs.statSync(full).isDirectory()) fs.rmSync(full, { recursive: true, force: true });
+    }
+    const act = JSON.parse(fs.readFileSync(path.join(root, 'aktif.json'), 'utf8'));
+    if (act && compareVersions(act.version, app.getVersion()) <= 0) fs.renameSync(path.join(root, 'aktif.json'), path.join(root, `aktif-eski-${Date.now()}.json`));
+  } catch {
+    // klasör yok
+  }
+}
+
+// Otomatik açılış testi: arayüz yüklenince durumu tek satır JSON olarak yazar ve çıkar
+function smokeTest(win) {
+  const errors = [];
+  win.webContents.on('console-message', (e) => {
+    const level = e.level !== undefined ? e.level : e.params && e.params.level;
+    const msg = String(e.message || (e.params && e.params.message) || '');
+    if ((level === 'error' || level === 3) && !/net::|Failed to load resource|ERR_|favicon/.test(msg)) errors.push(msg.slice(0, 300));
+  });
+  win.webContents.once('did-finish-load', () => setTimeout(async () => {
+    let out = {};
+    try {
+      out = await win.webContents.executeJavaScript(`(async () => {
+        const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+        const q = (s) => document.querySelector(s);
+        const o = { fc: !!window.FC, host: window.FC && FC.host.kind, coreVersion: window.FC && FC.version, appVersion: (await window.falcon.appInfo()).version,
+          info: await window.falcon.kurulum.info(), scheme: document.documentElement.dataset.scheme, lang: document.documentElement.lang,
+          agentBtn: !!q('.topbar-actions .agent-btn'), updateBtn: !!q('.topbar-actions .fc-update-wrap .update-act'), oldUpdate: typeof (window.falcon.update), 
+          win: [...document.querySelectorAll('.topbar-actions .win-controls button')].map((b) => b.dataset.win || 'falcon'),
+          bridgeModal: [...document.querySelectorAll('.fc-layer .modal h2')].map((h) => h.textContent.trim()) };
+        location.hash = '#/settings'; await wait(2500);
+        o.settings = [...document.querySelectorAll('.settings-grid > *')].map((e) => e.dataset.fcCard || e.id || (e.classList.contains('look-card') ? 'look' : 'falcon'));
+        o.schemes = document.querySelectorAll('.look-card .fc-scheme-row .fc-scheme').length;
+        o.klasik = !!document.querySelector('.fc-scheme[data-id=klasik]');
+        return o; })()`);
+    } catch (err) {
+      out = { error: String(err && err.message || err) };
+    }
+    out.errors = errors;
+    out.fullscreen = win.isFullScreen();
+    process.stdout.write(`FALCON_SMOKE ${JSON.stringify(out)}\n`);
+    quitting = true;
+    setTimeout(() => app.exit(0), 200);
+  }, Number(process.env.FALCON_SMOKE_WAIT || 6000)));
 }
 
 function revealWindow() {
@@ -468,7 +664,7 @@ function registerIpc() {
     if (!msg) return { ok: false, error: 'empty' };
     const name = String(m.name || '').slice(0, 80).trim(), mail = String(m.email || '').slice(0, 120).trim(), ver = String(app.getVersion());
     const F = (v) => ({ stringValue: String(v || '').slice(0, 4000) });
-    const fields = { mesaj: F(msg), konu: F('Falcon Ofis · ' + String(m.topic || 'Mesaj')), dil: F(m.lang), surum: F(ver), platform: F('Falcon Ofis · Windows'), zaman: { timestampValue: new Date().toISOString() } };
+    const fields = { tur: F('oneri'), uygulama: F('falcon-ofis'), mesaj: F(msg), konu: F('Falcon Ofis · ' + String(m.topic || 'Mesaj')), dil: F(m.lang), surum: F(ver), platform: F('Falcon Ofis · Windows'), zaman: { timestampValue: new Date().toISOString() } };
     if (name) fields.ad = F(name);
     if (mail) fields.iletisim = F(mail);
     const to = Buffer.from('', 'base64').toString().split('').reverse().join('');
@@ -693,12 +889,15 @@ function registerIpc() {
   handle('sync:connect', wrap((_e, payload) => sync.connect(payload)));
   handle('sync:disconnect', wrap(() => sync.disconnect()));
   handle('sync:now', wrap(() => sync.syncNow({ manual: true })));
-  // v1.19: uygulama içinden güncelleme
-  handle('update:check', wrap(() => updater.check()));
-  handle('update:install', wrap(() => updater.install()));
-  handle('update:restart', wrap(() => {
-    relaunchApp();
-    return true;
+  // v1.58: güncelleme ortak çekirdekte (fc:update:*, installCore). Arayüz eski kabuk / kurulum durumunu buradan öğrenir.
+  ipcMain.handle('kurulum:info', () => bridgeInfo());
+  // v1.58: uzak cihazda silinip burada arşive alınan kayıtlar (geri yüklenebilir; arşiv hiç silinmez)
+  handle('arsiv:list', wrap(() => lanStore.archiveList(300)));
+  handle('arsiv:restore', wrap((_e, n) => {
+    const r = lanStore.archiveRestore(n);
+    sendToWindow('sync:changed');
+    try { if (sync) sync.poke(); } catch { /* bulut bağlı değil */ }
+    return r;
   }));
   // v1.30: Windows bildirimi (yeni sürüm vb.). Bildirime tıklanınca pencere öne gelir; pencere arkadaysa görev çubuğunda yanıp söner.
   ipcMain.handle('app:notify', (_e, { title, body } = {}) => {
@@ -714,7 +913,7 @@ function registerIpc() {
     n.show();
     return true;
   });
-  ipcMain.handle('app:info', () => ({ version: app.getVersion(), baseVersion: global.__falconOverlay?.baseVersion || app.getVersion(), dataDir: dataDir(), backupsDir: backupsDir(), docsBackupDir: docsBackupDir(), publishDir: publisher?.dirs().root ?? null }));
+  ipcMain.handle('app:info', () => ({ version: app.getVersion(), baseVersion: global.__falconOverlay?.baseVersion || app.getVersion(), dataDir: dataDir(), backupsDir: backupsDir(), docsBackupDir: docsBackupDir() }));
 }
 
 
@@ -909,56 +1108,6 @@ function offerOldData() {
   backup.writeData(dataDir(), data);
 }
 
-// v1.37: güncelleme klasörüne elden (ör. yayın kutusu / Claude) yeni bir sürüm konduysa yeniden başlatmayı önerir.
-// aktif.json'daki sürüm çalışandan yeniyse ve klasörü tamsa bir kez sorulur; "Sonra" denirse bir sonraki açılışta zaten o sürüm açılır.
-const offeredLocalVersions = new Set();
-function localUpdateReady() {
-  try {
-    const root = updateRoot();
-    const active = JSON.parse(fs.readFileSync(path.join(root, 'aktif.json'), 'utf8'));
-    const version = String(active?.version || '').replace(/[^\d.]/g, '');
-    if (!version || compareVersions(version, app.getVersion()) <= 0) return null;
-    const dir = path.join(root, version);
-    const pkg = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'));
-    if (pkg.version !== version || !fs.existsSync(path.join(dir, 'electron', 'main.js'))) return null;
-    if (pkg.falconElectron && String(pkg.falconElectron) !== String(process.versions.electron).split('.')[0]) return null;
-    return version;
-  } catch {
-    return null;
-  }
-}
-function relaunchApp(hidden = false) {
-  const args = process.argv.slice(1).filter((a) => a !== '--hidden' && a !== '--watchdog').concat(hidden ? ['--hidden'] : []);
-  app.relaunch(process.env.PORTABLE_EXECUTABLE_FILE ? { execPath: process.env.PORTABLE_EXECUTABLE_FILE, args } : { args });
-  quitCompletely();
-}
-function watchLocalUpdate() {
-  const check = async () => {
-    const version = localUpdateReady();
-    if (!version || offeredLocalVersions.has(version) || !mainWindow || mainWindow.isDestroyed()) return;
-    offeredLocalVersions.add(version);
-    // v1.45: program yalnızca sistem tepsisindeyse (kimse kullanmıyor) sormadan yeni sürümle yeniden açılır
-    if (!mainWindow.isVisible()) {
-      relaunchApp(true);
-      return;
-    }
-    sendToWindow('update:progress', { phase: 'done', version });
-    const { response } = await dialog.showMessageBox(mainWindow, {
-      type: 'info',
-      title: 'Falcon Ofis',
-      message: `Yeni sürüm hazır: ${version}`,
-      detail: `Şu an ${app.getVersion()} çalışıyor. Yeni sürüme geçmek için programın yeniden başlatılması gerekir; kayıtlar ve ayarlar aynen kalır.`,
-      buttons: ['Şimdi yeniden başlat', 'Sonra'],
-      defaultId: 0,
-      cancelId: 1,
-      noLink: true,
-    });
-    if (response === 0) relaunchApp();
-  };
-  setTimeout(check, 20000);
-  setInterval(check, 30000);
-}
-
 // v1.48: bekçi (Görev Zamanlayıcı) başlattıysa ve kullanıcı bu oturumda "Tamamen kapat" dediyse açılmaz
 const launchedByWatchdog = process.argv.includes('--watchdog');
 let skipLaunch = false;
@@ -971,6 +1120,7 @@ try {
 // Beklenmedik hata: program kendini gizli olarak yeniden başlatır (art arda çökmede bekçiye bırakır)
 process.on('uncaughtException', (err) => {
   console.error('beklenmedik hata', err);
+  rememberCrash(err); // v1.58: sonraki açılışta çökme raporu olarak gönderilir (FC.crash, günde en çok 5, kişisel veri maskelenir)
   try {
     const last = Number(bgSettings().crashAt) || 0;
     setBgSettings({ crashAt: Date.now() });
@@ -1025,31 +1175,15 @@ if (!gotLock) {
       }
     });
 
-    updater = createUpdater({
-      getClient: () => sync?.authedClient() ?? null,
-      currentVersion: () => app.getVersion(),
-      root: updateRoot,
-      onProgress: (p) => sendToWindow('update:progress', p),
-      // Yeni sürüm devreye girmeden önce tam yedek alınır
-      beforeInstall: () => {
-        fs.mkdirSync(backupsDir(), { recursive: true });
-        fs.writeFileSync(path.join(backupsDir(), `guncelleme-oncesi-v${app.getVersion()}-${stamp()}.falcon`), fullBackupBuffer());
-      },
-    });
-    // v1.37: yayın kutusu (klasöre bırakılan güncelleme paketlerini imzalayıp buluta yükler)
-    publisher = createPublisher({
-      root: path.join(app.getPath('userData'), 'yayin'),
-      getClient: () => sync?.authedClient() ?? null,
-      currentVersion: () => app.getVersion(),
-    });
-    publisher.start();
+    // v1.58: güncellemeler yalnız GitHub Releases'ten (ortak çekirdek). Firebase yalnız canlı kayıtlar içindir:
+    // eski "yayın kutusu" (paketleri Firebase'e yükleyen) ve eski güncelleyici kaldırıldı.
+    cleanupOldOverlays();
     registerIpc();
     lanServer.setup({ prefsFile: path.join(app.getPath('userData'), 'wifi-esitleme.json'), hooks: lanHooks });
     createWindow();
     createTray();
     applyAutostart();
     startBackgroundJobs();
-    watchLocalUpdate();
   });
 
   app.on('window-all-closed', () => {
@@ -1064,7 +1198,6 @@ async function shutdown() {
   shuttingDown = true;
   quitting = true;
   {
-    publisher?.stop();
     // Kapanmadan önce bekleyen değişiklikler buluta gönderilmeye çalışılır (en çok birkaç saniye)
     if (sync && sync.status().connected && sync.status().pending > 0) {
       await Promise.race([sync.syncNow().catch(() => {}), new Promise((r) => setTimeout(r, 5000))]);
