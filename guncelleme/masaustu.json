@@ -1,10 +1,10 @@
 {
- "version": "1.58.0",
+ "version": "1.58.2",
  "notes": "Yeni: güncellemeler artık GitHub sürümlerinden, yalnızca değişen kısımlar indirilerek gelir. Bu güncellemeden sonra program dosyaları bir kez yenilenir (\"Yeni kurulum gerekli\" penceresi). Kayıtlar, belgeler, PIN ve eşitleme bağlantısı korunur.",
- "size": 3283645,
- "sha256": "06b0accadd6c2a1dc34dd26e52191010d2f5c88076fb4a1703f8c79f43b49087",
- "sig": "MEYCIQDHFMgB9jeZsj5TZyRYYwK7obU2FWtWTS7aAceFUpr57wIhAK9OR2AgzcSwZ564E6YCEOO/BeJEnZms4C9Jm8oo+62u",
- "file": "masaustu-1.58.0.fopk",
+ "size": 3286837,
+ "sha256": "1ddedc21f2b5728185b3fb2aaa68b7cb77f7305ee1cd0a6cef2623b7a6284599",
+ "sig": "MEUCICHIU4CMD31HH3TryRUU/6l099ojzhhIPYP1p1jJDyUKAiEAhuRLXp1Csrr1aHYfdzwR/K2fQvV52uLIG6xvQB1V7qs=",
+ "file": "masaustu-1.58.2.fopk",
  "electron": "44",
- "publishedAt": "2026-11-24T14:10:41.642Z"
+ "publishedAt": "2026-11-24T20:45:17.456Z"
 }
