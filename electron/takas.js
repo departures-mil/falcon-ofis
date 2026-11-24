@@ -47,8 +47,10 @@ function script() {
     ':ok',
     '>>"%LOG%" echo yeni dosya yerine kondu',
     ':run',
+    'if "%FCU_NORUN%"=="1" goto son',
     'start "" "%FCU_EXE%" %FCU_ARGS%',
     '>>"%LOG%" echo program yeniden acildi',
+    ':son',
     'del /F /Q "%FCU_VBS%" >NUL 2>&1',
     'del /F /Q "%~dpn0.ps1" >NUL 2>&1',
     '(goto) 2>NUL & del "%~f0"',
@@ -58,7 +60,7 @@ function script() {
 const VBS = 'Set sh = CreateObject("WScript.Shell")\r\n'
   + 'sh.Run "cmd.exe /d /c """ & sh.ExpandEnvironmentStrings("%FCU_BAT%") & """", 0, False\r\n';
 
-// o: { tmp, pid, target, next, exe, args[], noWscript }  → { bat, vbs, via }
+// o: { tmp, pid, target, next, exe, args[], noWscript, noRun }  → { bat, vbs, via }   noRun: takastan sonra programı açma (kapanışta otomatik kurulum)
 function start(o) {
   const id = `${o.pid}-${Date.now()}`;
   const bat = path.join(o.tmp, `falcon-takas-${id}.cmd`);
@@ -68,7 +70,7 @@ function start(o) {
   // VBS UTF-16 (BOM): kullanıcı adında Türkçe harf olsa da yol doğru okunur. 0 = gizli pencere, False = beklemeden dön.
   fs.writeFileSync(vbs, Buffer.concat([Buffer.from([0xff, 0xfe]), Buffer.from(VBS, 'utf16le')]));
   const env = Object.assign({}, process.env, {
-    FCU_PID: String(o.pid), FCU_T: o.target, FCU_N: o.next, FCU_EXE: o.exe, FCU_ARGS: args, FCU_BAT: bat, FCU_VBS: vbs,
+    FCU_PID: String(o.pid), FCU_T: o.target, FCU_N: o.next, FCU_EXE: o.exe, FCU_ARGS: args, FCU_BAT: bat, FCU_VBS: vbs, FCU_NORUN: o.noRun ? '1' : '0',
   });
   delete env.ELECTRON_RUN_AS_NODE;
   const ws = path.join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'wscript.exe');

@@ -31,7 +31,8 @@ test('ortak çekirdek kopyası: VERSION, dosyalar, kapsamlı CSS', () => {
   for (const f of ['cekirdek/electron/fc-electron-main.js', 'cekirdek/electron/fc-preload.js', 'cekirdek/electron/fcd1.js', 'dist/cekirdek/fc-core.js', 'dist/cekirdek/css/tokens.css', 'dist/cekirdek/css/core.css', 'dist/cekirdek/css/core-falcon.css']) assert.ok(fs.existsSync(path.join(ROOT, f)), f);
   const core = read('dist/cekirdek/fc-core.js');
   for (const m of ['FC.updater = api', 'FC.topbar = api', 'FC.crash = api', 'FC.onboarding = api', 'FC.whatsnew', 'FC.agent']) assert.ok(core.includes(m), m);
-  assert.ok(core.includes('falcon-ofis yerel düzeltmesi'), 'çekirdek düzeltmesi (kabuk indirmesinde 404 = güncel)');
+  assert.ok(/HTTP_404\\b\/\.test\(txt\)\) return null/.test(core), 'kabuk indirmesinde 404 = güncel (çekirdekte)');
+  assert.ok(core.includes("status: p ? (bgOk ? 'queued' : 'available')"), 'otomatik güncelleme (arka planda indir, kapanınca kur)');
   // core-falcon.css: Falcon'un kendi görünümünü değiştiren kapsamsız seçici yok
   const css = read('dist/cekirdek/css/core-falcon.css').replace(/\/\*[\s\S]*?\*\//g, '').replace(/@keyframes[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g, '');
   const sels = [...css.matchAll(/([^{}]+)\{[^{}]*\}/g)].map((m) => m[1].trim()).filter((s) => s && !s.startsWith('@'));
@@ -168,6 +169,9 @@ test('güncelleme takası betiği (1.58.2): gizli, takılmaz, Türkçe yol beti�
   assert.match(s, /if %M% GEQ 20 goto run/, 'taşıma denemesi sınırlı');
   const main = read('electron/main.js');
   assert.ok(main.includes("require('./takas').start("), 'main.js güvenli takası kullanır');
+  assert.ok(/FCU_NORUN%"=="1" goto son/.test(s), 'kapanışta kurulum: program yeniden açılmaz');
+  assert.ok(main.includes("ipcMain.handle('fc:update:applyStaged'") && main.includes("app.on('will-quit'"), 'otomatik güncelleme: hazırla, kapanınca kur');
+  assert.ok(!/spawn\(exe, \[\], \{ detached: true, stdio: 'ignore', windowsHide: false \}\)/.test(main), 'kurulum görünür açılmaz (sessiz)');
   assert.ok(!/fcMain\.swapAndRelaunch\(\{\}, st\);\s*return 'restarting'/.test(main), 'çekirdeğin pencereli betiği kullanılmıyor');
   assert.ok(read('.github/workflows/release.yml').includes('node test/win-takas.js'), 'Windows CI testi');
 });
