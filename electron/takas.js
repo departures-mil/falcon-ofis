@@ -81,9 +81,13 @@ function start(o) {
       // yedek yola geç
     }
   }
-  // yedek yol: wscript yoksa betik ayrık cmd ile çalışır (pencere görünebilir ama takılmaz)
-  cp.spawn('cmd.exe', ['/d', '/c', bat], { detached: true, stdio: 'ignore', windowsHide: true, env }).unref();
-  return { bat, vbs, via: 'cmd' };
+  // yedek yol (wscript kapalıysa): PowerShell betiği gizli konsolda başlatır. Doğrudan ayrık "cmd /c" KULLANILMAZ: konsolsuz kalan
+  // cmd'nin alt komutları (tasklist | find) ayrı pencerelerde açılıp takılıyor (1.58.0'daki siyah "find" pencereleri; CI'da da görüldü).
+  const ps = path.join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'WindowsPowerShell', 'v1.0', 'powershell.exe');
+  cp.spawn(fs.existsSync(ps) ? ps : 'powershell.exe', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-Command',
+    "Start-Process -WindowStyle Hidden -FilePath $env:ComSpec -ArgumentList '/d','/c',('\"' + $env:FCU_BAT + '\"')"],
+  { detached: true, stdio: 'ignore', windowsHide: true, env }).unref();
+  return { bat, vbs, via: 'powershell' };
 }
 
 module.exports = { script, start };
