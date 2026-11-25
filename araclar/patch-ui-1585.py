@@ -5,7 +5,8 @@
 #   bütün aralıkların günlük ortalamasıyla "Bu hızla yaklaşık N gün yeter" (3 gün kala uyarı rengi, biterse kırmızı).
 # - Okunan değerler listesinde fark: harcamada "−X", yüklemede "⬆ +X yüklendi".
 # Görünüm: dist/assets/fc-falcon.css (.meter-left).
-# kullanım: python3 araclar/patch-ui-1585.py dist/assets/index-*.js
+# kullanım: python3 araclar/patch-ui-1585.py dist/assets/index-*.js   (masaüstü)  ya da telefon www/assets/main-*.js
+# Telefon paketinde aynı kod başka adlarla derlenmiş (Hf→Mf, z→L, Tu→hu, R→I, $→Af); adlar paketten bulunur.
 import sys
 
 HELPER = (
@@ -51,11 +52,23 @@ PAIRS = [
      '(0,R.jsx)(`span`,{className:r&&EL.use(r,e)<0?`meter-diff up`:`muted meter-diff`,dir:`ltr`,children:r?(x=>x<0?`⬆ +${$(-x)} `+s(EL.down?`electricity.topup`:`electricity.reset`):(EL.down?`−`:`+`)+$(x))(EL.use(r,e)):``})'),
 ] + [(old, old[:-1] + ',' + add + '}') for old, add in TXT.values()]
 
+NAMES = [  # (kart, çeviri kancası, gün farkı, jsx, sayı biçimi)
+    ('Hf', 'z', 'Tu', 'R', '$'),
+    ('Mf', 'L', 'hu', 'I', 'Af'),
+]
+
+def rename(x, n):
+    card, hook, days, jsx, fmt = n
+    x = x.replace('function Hf(', 'function %s(' % card).replace('{t:s}=z()', '{t:s}=%s()' % hook)
+    x = x.replace('Tu(', days + '(').replace('(0,R.', '(0,%s.' % jsx)
+    return x.replace('$(', fmt + '(').replace('${$(', '${%s(' % fmt)
+
 for path in sys.argv[1:]:
     s = open(path, encoding='utf8').read()
     if 'function FalconElec(' in s:
         print(path, 'zaten yamalı'); continue
-    for old, new in PAIRS:
+    n = next(n for n in NAMES if 'function %s({m:e,readings:t' % n[0] in s)
+    for old, new in [(o, nw) if o.startswith('confirmDelete') else (rename(o, n), rename(nw, n)) for o, nw in PAIRS]:
         assert s.count(old) == 1, (path, old[:80], s.count(old))
         s = s.replace(old, new)
     open(path, 'w', encoding='utf8').write(s)
