@@ -242,17 +242,22 @@ function runSetupExe(buf, meta, deferred) {
   if (deferred) { stagedUpdate = { kind: 'setup', exe, meta }; return 'staged'; }
   beforeUpdate(meta, true);
   // 1.58.3: kurulum sessiz (/S) ve penceresiz; program kapandıktan sonra çekirdeğin yardımcısı çalıştırır, bitince program açılır.
-  fcMain.startHelper({ setup: exe, setupArgs: ['/S'], relaunch: true, version: meta.version });
+  fcMain.startHelper({ setup: exe, setupArgs: ['/S'], relaunch: true, version: meta.version, args: relaunchArgs() });
   setTimeout(() => app.exit(0), 400);
   return 'restarting';
 }
 // 1.58.2: güvenli takas (Windows) electron/takas.js'te: gizli betik, kapanmayan programı zorla kapatma, Unicode yollar.
+// 1.58.4: Güncelle'den sonra program PENCERESİYLE açılır. Windows açılışında --hidden ile (tepside) başlamış programı aynı
+// argümanlarla açmak onu görünmez bırakıyordu ("program kapandı, öyle kaldı").
+function relaunchArgs() {
+  return process.argv.slice(1).filter((a) => !/^--fc-/.test(a) && a !== '--hidden' && a !== '--watchdog');
+}
 // 1.58.3: noRun → takastan sonra program açılmaz (otomatik güncelleme program kapanırken kurulur).
 function swapAndRelaunchSafe(st, noRun) {
   if (process.platform !== 'win32') return fcMain.swapAndRelaunch({}, st, noRun);
   try {
     require('./takas').start({ tmp: app.getPath('temp'), pid: process.pid, target: st.target, next: st.next, exe: process.execPath,
-      args: process.argv.slice(1).filter((a) => !/^--fc-/.test(a)), noRun: !!noRun });
+      args: relaunchArgs(), noRun: !!noRun, killImage: process.execPath });
   } catch (err) {
     console.error('takas betiği başlatılamadı', err);
     return fcMain.swapAndRelaunch({}, st, noRun);
@@ -268,7 +273,7 @@ function applyStaged(noRun) {
   if (!s) throw codeErr('NOTHING_STAGED');
   beforeUpdate(s.meta || {}, s.kind === 'setup');
   if (s.kind === 'setup') {
-    fcMain.startHelper({ setup: s.exe, setupArgs: ['/S'], relaunch: !noRun });
+    fcMain.startHelper({ setup: s.exe, setupArgs: ['/S'], relaunch: !noRun, args: relaunchArgs() });
     if (!noRun) setTimeout(() => app.exit(0), 400);
   } else swapAndRelaunchSafe(s.st, noRun);
   return 'restarting';

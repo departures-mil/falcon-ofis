@@ -46,6 +46,9 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   takılı `fc-update-*.cmd`/find pencerelerini kapatır, imzalı köprü paketinin zip'ini "onarim" ön sürümünden indirir (SHA-256),
   `…\guncelleme\1.58.2\` + `aktif.json` (BOM'suz) yazar. Link: releases/download/onarim/FalconOfis-Onarim.zip. Köprü değişirse
   `onarim.ps1` içindeki `$VERSION` de güncellenmeli (build.js denetler).
+- 1.58.4: Güncelle sonrası program `--hidden`/`--watchdog` olmadan açılır (`relaunchArgs`); takas.js app.asar taşınamazsa açık kopyaları
+  kapatır (`killImage`), olmazsa yerinde kopyalar + `fc /B` doğrular. Claude masaüstü dosya araçlarıyla `app.asar` İÇİ LİSTELENMEZ:
+  Electron .asar'ı silinmeye kapalı açık tutar ve takası kilitler.
 - Android: APK yalnızca kullanıcı isteyince; telefon kabuğu kaynağı burada olmadığından `android` kanalı yok.
 - İmza anahtarları / şifreler depoya girmez.
 
