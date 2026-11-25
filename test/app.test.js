@@ -166,7 +166,9 @@ test('güncelleme takası betiği (1.58.2): gizli, takılmaz, Türkçe yol beti�
   assert.ok(!/\(\s*[^)]*%[NM]%/.test(s) && !s.includes('!N!'), 'sayaç parantez bloğu içinde okunmuyor');
   assert.match(s, /if %N% EQU 15 taskkill \/F \/PID %FCU_PID%/, 'kapanmayan program zorla kapatılır');
   assert.match(s, /if %N% GEQ 30 goto gone/, 'bekleme sınırlı');
-  assert.match(s, /if %M% GEQ 20 goto run/, 'taşıma denemesi sınırlı');
+  assert.match(s, /if %M% GEQ 10 goto copy/, 'taşıma denemesi sınırlı, sonra kopyalama');
+  assert.match(s, /fc \/B "%FCU_N%" "%FCU_T%" >NUL 2>&1 \|\| goto crestore/, 'kopya bayt bayt doğrulanır, tutmazsa eskisi geri konur');
+  assert.ok(read('electron/main.js').includes("a !== '--hidden'"), 'Güncelle sonrası program görünür açılır (--hidden taşınmaz)');
   const main = read('electron/main.js');
   assert.ok(main.includes("require('./takas').start("), 'main.js güvenli takası kullanır');
   assert.ok(/FCU_NORUN%"=="1" goto son/.test(s), 'kapanışta kurulum: program yeniden açılmaz');

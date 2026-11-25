@@ -1,7 +1,8 @@
 // Gerçek Windows testi (CI build işi, windows-latest): electron/takas.js betiği
 //  1) program kendisi kapanınca dosyayı değiştirip programı yeniden açar,
 //  2) program kapanmazsa ~15 sn'de zorla kapatıp yine değiştirir,
-//  3) Türkçe harfli klasörde (Programlarım) çalışır.
+//  3) Türkçe harfli klasörde (Programlarım) çalışır,
+//  4) (1.58.4) app.asar başka bir süreçte silinmeye kapalı açık tutulurken kopyalayarak değiştirir.
 // Kullanım: node test/win-takas.js   (Windows dışında atlanır)
 'use strict';
 const fs = require('fs');
@@ -15,7 +16,7 @@ if (process.platform !== 'win32') { console.log('win-takas: Windows değil, atla
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const alive = (pid) => { try { process.kill(pid, 0); return true; } catch { return false; } };
 
-async function run(name, holdMs, via) {
+async function run(name, holdMs, via, lock) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'Claude Programlarım İş '));
   const target = path.join(dir, 'app.asar');
   const next = target + '.next';
@@ -25,6 +26,14 @@ async function run(name, holdMs, via) {
   fs.writeFileSync(next, 'YENI');
   fs.writeFileSync(writer, 'require("fs").writeFileSync(process.argv[2], process.argv.slice(3).join("|"))');
   const prog = cp.spawn(process.execPath, ['-e', `setTimeout(()=>{}, ${holdMs})`], { stdio: 'ignore' });
+  // Electron'un .asar okuma biçimi: paylaşım okuma+yazma, SİLME/TAŞIMA YOK (başka bir Electron uygulaması dosyayı okuyorsa böyle kalır)
+  let holder = null;
+  if (lock) {
+    holder = cp.spawn('powershell.exe', ['-NoProfile', '-Command', `$f=[IO.File]::Open($env:HOLD,'Open','Read','ReadWrite'); Start-Sleep -Seconds 120; $f.Close()`],
+      { stdio: 'ignore', env: Object.assign({}, process.env, { HOLD: target }) });
+    await sleep(3000);
+    try { fs.renameSync(target, target + '.dene'); fs.renameSync(target + '.dene', target); console.error('kilit kurulamadı'); process.exit(1); } catch { /* kilitli: beklenen */ }
+  }
   await sleep(500);
   const t0 = Date.now();
   const r = takas.start({ tmp: dir, pid: prog.pid, target, next, exe: process.execPath, args: [writer, marker, '--hidden'], noWscript: via === 'powershell' });
@@ -39,6 +48,8 @@ async function run(name, holdMs, via) {
   if (fs.existsSync(next)) fail('.next kaldı');
   if (fs.readFileSync(marker, 'utf8') !== '--hidden') fail('argümanlar yanlış: ' + fs.readFileSync(marker, 'utf8'));
   if (alive(prog.pid)) fail('eski program hâlâ açık');
+  if (lock && !/kopyalanarak/.test(log)) fail('kopyalama yolu kullanılmadı');
+  if (holder) { try { holder.kill(); } catch { /* yok */ } }
   await sleep(1500);
   if (fs.existsSync(r.bat)) fail('betik silinmedi');
   console.log(`TAMAM ${name} (${r.via}) ${secs} sn`);
@@ -48,4 +59,5 @@ async function run(name, holdMs, via) {
   await run('kendisi kapanan program', 3000, 'wscript');
   await run('kapanmayan program (zorla kapatma)', 10 * 60000, 'wscript');
   await run('yedek yol (powershell)', 3000, 'powershell');
+  await run('kilitli app.asar (kopyalayarak)', 3000, 'wscript', true);
 })().catch((e) => { console.error(e); process.exit(1); });

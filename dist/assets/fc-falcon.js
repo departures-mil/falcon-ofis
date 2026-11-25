@@ -15,6 +15,11 @@
   var APP = 'falcon-ofis', LANGS = ['tr', 'en', 'ar'];
 
   var NEWS = {
+    '1.58.4': {
+      tr: "- Güncelle'ye basınca program kapanıp öyle kalmıyor: güncelleme bitince program her zaman penceresiyle açılır (Windows açılışında arka planda başlamış olsa da).\n- Program dosyası başka bir uygulama tarafından açık tutulsa bile güncelleme yerine konur (gerekirse açık kalan kopyalar kapatılır, dosya kopyalanıp bayt bayt doğrulanır).\n- Kayıtlara dokunulmaz; güncellemeden önce tam yedek alınır.",
+      en: "- Pressing Update no longer leaves the program closed: when the update finishes the program always opens with its window (even if it was started in the background at Windows startup).\n- The update is put in place even if another application keeps the program file open (leftover copies are closed if needed, the file is copied and verified byte by byte).\n- Records are not touched; a full backup is taken before updating.",
+      ar: "- لم يعد الضغط على تحديث يترك البرنامج مغلقاً: عند انتهاء التحديث يُفتح البرنامج دائماً بنافذته (حتى لو بدأ في الخلفية عند تشغيل Windows).\n- يُوضع التحديث في مكانه حتى لو أبقى تطبيق آخر ملف البرنامج مفتوحاً (تُغلق النسخ المتبقية عند الحاجة، ويُنسخ الملف ويُتحقق منه بايتاً بايتاً).\n- لا تُمَسّ السجلات؛ تُؤخذ نسخة احتياطية كاملة قبل التحديث."
+    },
     '1.58.3': {
       tr: "- Güncellemeler artık tamamen kendiliğinden: yeni sürüm arka planda sessizce indirilir, program kapanınca pencere açmadan kurulur; bir sonraki açılışta yeni sürüm gelir. Hemen kurmak için Güncelle → «Şimdi kur ve yeniden aç». Kurulum gereken güncellemeler de sessiz yapılır. Kayıtlara dokunulmaz.",
       en: "- Updates are now fully automatic: the new version downloads quietly in the background and installs without any window when the program closes; the next start opens the new version. To install right away: Update → «Install now and reopen». Updates that need the installer also run silently. Records are not touched.",

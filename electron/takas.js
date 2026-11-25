@@ -5,7 +5,8 @@
 // betikte "Programlarım" gibi Türkçe yollar bozuluyordu. Burada:
 //  - betik wscript üzerinden GİZLİ açılır (konsol penceresi yok); yollar betiğe değil ortam değişkenlerine yazılır (Unicode güvenli),
 //  - program 15 sn'de kapanmazsa zorla kapatılır, 30 sn'de her durumda devam edilir,
-//  - eski dosya 20 kez taşınmaya çalışılır; olmazsa eski dosya yerinde kalır ve program eski hâliyle açılır (kayıtlar etkilenmez),
+//  - eski dosya taşınamazsa (1.58.4) açık kalan kopyalar kapatılır, yine olmazsa dosya yerinde kopyalanıp bayt bayt doğrulanır;
+//    o da olmazsa eski dosya yerinde kalır ve program eski hâliyle açılır (kayıtlar etkilenmez),
 //  - adımlar %TEMP%\falcon-guncelleme.log dosyasına yazılır.
 // Electron'a bağımlı değildir; CI'da (windows-latest) test/win-takas.js ile gerçek Windows'ta denenir.
 const fs = require('fs');
@@ -35,10 +36,27 @@ function script() {
     'if exist "%FCU_T%.bak" del /F /Q "%FCU_T%.bak" >NUL 2>&1',
     'move /Y "%FCU_T%" "%FCU_T%.bak" >NUL 2>&1 && goto put',
     'set /a M+=1',
-    'if %M% GEQ 20 >>"%LOG%" echo eski dosya tasinamadi, program eski haliyle aciliyor',
-    'if %M% GEQ 20 goto run',
+    // 1.58.4: açık kalan başka bir kopya (bekçi, ikinci pencere) dosyayı tutuyorsa kapatılır
+    'if %M% EQU 4 if not "%FCU_IMG%"=="" >>"%LOG%" echo eski dosya kilitli, acik kalan kopyalar kapatiliyor',
+    'if %M% EQU 4 if not "%FCU_IMG%"=="" taskkill /F /IM "%FCU_IMG%" >NUL 2>&1',
+    'if %M% GEQ 10 goto copy',
     'ping -n 2 127.0.0.1 >NUL',
     'goto mv',
+    // 1.58.4: dosya silinmeye/taşınmaya kapalı biçimde açık tutuluyorsa (ör. başka bir uygulama .asar'ı okuyor) yerinde kopyalanır:
+    // önce yedek, sonra yeni dosya üzerine, sonra bayt bayt karşılaştırma; tutmazsa yedek geri konur.
+    ':copy',
+    '>>"%LOG%" echo eski dosya tasinamadi, kopyalanarak yerine konuyor',
+    'copy /B /Y "%FCU_T%" "%FCU_T%.bak" >NUL 2>&1 || goto cfail',
+    'copy /B /Y "%FCU_N%" "%FCU_T%" >NUL 2>&1 || goto crestore',
+    'fc /B "%FCU_N%" "%FCU_T%" >NUL 2>&1 || goto crestore',
+    'del /F /Q "%FCU_N%" >NUL 2>&1',
+    'goto ok',
+    ':crestore',
+    '>>"%LOG%" echo kopya dogrulanamadi, eski dosya geri konuyor',
+    'copy /B /Y "%FCU_T%.bak" "%FCU_T%" >NUL 2>&1',
+    ':cfail',
+    '>>"%LOG%" echo eski dosya degistirilemedi, program eski haliyle aciliyor',
+    'goto run',
     ':put',
     'move /Y "%FCU_N%" "%FCU_T%" >NUL 2>&1 && goto ok',
     '>>"%LOG%" echo yeni dosya konamadi, eskisi geri kondu',
@@ -60,7 +78,7 @@ function script() {
 const VBS = 'Set sh = CreateObject("WScript.Shell")\r\n'
   + 'sh.Run "cmd.exe /d /c """ & sh.ExpandEnvironmentStrings("%FCU_BAT%") & """", 0, False\r\n';
 
-// o: { tmp, pid, target, next, exe, args[], noWscript, noRun }  → { bat, vbs, via }   noRun: takastan sonra programı açma (kapanışta otomatik kurulum)
+// o: { tmp, pid, target, next, exe, args[], noWscript, noRun, killImage }  killImage: dosya kilitliyse kapatılacak program (exe adı)  → { bat, vbs, via }   noRun: takastan sonra programı açma (kapanışta otomatik kurulum)
 function start(o) {
   const id = `${o.pid}-${Date.now()}`;
   const bat = path.join(o.tmp, `falcon-takas-${id}.cmd`);
@@ -70,7 +88,7 @@ function start(o) {
   // VBS UTF-16 (BOM): kullanıcı adında Türkçe harf olsa da yol doğru okunur. 0 = gizli pencere, False = beklemeden dön.
   fs.writeFileSync(vbs, Buffer.concat([Buffer.from([0xff, 0xfe]), Buffer.from(VBS, 'utf16le')]));
   const env = Object.assign({}, process.env, {
-    FCU_PID: String(o.pid), FCU_T: o.target, FCU_N: o.next, FCU_EXE: o.exe, FCU_ARGS: args, FCU_BAT: bat, FCU_VBS: vbs, FCU_NORUN: o.noRun ? '1' : '0',
+    FCU_PID: String(o.pid), FCU_T: o.target, FCU_N: o.next, FCU_EXE: o.exe, FCU_ARGS: args, FCU_BAT: bat, FCU_VBS: vbs, FCU_NORUN: o.noRun ? '1' : '0', FCU_IMG: o.killImage ? path.basename(String(o.killImage)) : '',
   });
   delete env.ELECTRON_RUN_AS_NODE;
   const ws = path.join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'wscript.exe');
