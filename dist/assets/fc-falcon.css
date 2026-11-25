@@ -23,3 +23,10 @@
 /* 1.58.1: Arapçada (RTL) kenar çubuğu sağda — "Sor" yüzen düğmesi sola alınır, menü öğelerinin üstüne binmez */
 html[dir=rtl] .fa-fab { right: auto; left: 22px; }
 @media (max-width: 760px) { html[dir=rtl] .fa-fab { left: 14px; } }
+
+/* 1.58.5: Elektrik — kalan süre tahmini (Ajandam'dan) */
+.meter-left{color:var(--muted);margin-top:2px}
+.meter-left.ok{color:var(--usd,#34d399)}
+.meter-left.soon{color:var(--warn,#f59e0b);font-weight:600}
+.meter-left.late{color:var(--danger,#f43f5e);font-weight:700}
+.meter-diff.up{color:var(--usd,#34d399)}
