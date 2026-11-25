@@ -15,6 +15,11 @@
   var APP = 'falcon-ofis', LANGS = ['tr', 'en', 'ar'];
 
   var NEWS = {
+    '1.58.5': {
+      tr: "- Elektrik: ön ödemeli sayaçta kalan süre tahmini — okunan değerlerden günlük ortalama hesaplanır ve \"Bu hızla yaklaşık N gün yeter\" yazar (3 gün kala uyarı rengi, bitmişse kırmızı).\n- Sayaç türü okumalardan kendiliğinden anlaşılır: değer azalıyorsa harcama artı olarak gösterilir, değer artınca yükleme sayılır (⬆ yüklendi).\n- Kayıtlara ve eşitlemeye dokunulmaz.",
+      en: "- Electricity: remaining-time estimate for prepaid meters — the daily average is calculated from the readings and it shows \"At this rate it lasts about N more days\" (warning colour 3 days before, red if it has run out).\n- The meter type is recognised from the readings: when the value goes down, usage is shown as a positive amount and a rise counts as a top-up (⬆ topped up).\n- Records and sync are not touched.",
+      ar: "- الكهرباء: تقدير المدة المتبقية للعدادات مسبقة الدفع — يُحسب المعدل اليومي من القراءات ويظهر «بهذا المعدل يكفي نحو N يوم» (لون تحذير قبل 3 أيام، وأحمر إذا نفدت).\n- يُتعرَّف على نوع العداد من القراءات: عندما تنخفض القيمة يظهر الاستهلاك كقيمة موجبة، ويُعدّ الارتفاع شحناً (⬆ شحن).\n- لا تُمَسّ السجلات ولا المزامنة."
+    },
     '1.58.4': {
       tr: "- Güncelle'ye basınca program kapanıp öyle kalmıyor: güncelleme bitince program her zaman penceresiyle açılır (Windows açılışında arka planda başlamış olsa da).\n- Program dosyası başka bir uygulama tarafından açık tutulsa bile güncelleme yerine konur (gerekirse açık kalan kopyalar kapatılır, dosya kopyalanıp bayt bayt doğrulanır).\n- Kayıtlara dokunulmaz; güncellemeden önce tam yedek alınır.",
       en: "- Pressing Update no longer leaves the program closed: when the update finishes the program always opens with its window (even if it was started in the background at Windows startup).\n- The update is put in place even if another application keeps the program file open (leftover copies are closed if needed, the file is copied and verified byte by byte).\n- Records are not touched; a full backup is taken before updating.",
