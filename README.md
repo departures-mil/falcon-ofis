@@ -8,7 +8,7 @@ Ofis / kasa programı: Windows masaüstü (Electron) + Android. Kayıtlar Fireba
   FCD1 yamalar; kanallar `win-app` (app.asar) ve `win-setup` (NSIS kurulum). Ayrıntı: `CLAUDE.md`.
 - `guncelleme/masaustu.json` + `.fopk` yalnızca **eski kurulumlar için köprü** (1.51–1.57 buraya bakar; ≤1.50 Firebase'e bakardı,
   oraya son bir kez köprü konuldu). Yeni sürümler buraya konmaz. Telefon dosyaları (`telefon.json`) değişmedi; telefon kabuğunun kaynağı bu depoda yok.
-- İmza anahtarı depoda yoktur (`Falcon Ofis Veri\yayin\anahtar`, `C:\Claude Programlarım\_Anahtarlar\FalconOfis`).
+- İmza anahtarı depoda yoktur (`Falcon Ofis Veri\yayin\anahtar`, geliştiricinin bilgisayarındaki anahtar klasörü).
 
 ## Yeni masaüstü sürümü (v1.58.0'dan beri)
 1. `package.json` sürümünü yükselt, `dist/assets/fc-falcon.js` içindeki `NEWS`'e ve `release-notes.json`'a notları yaz (tr/en/ar).

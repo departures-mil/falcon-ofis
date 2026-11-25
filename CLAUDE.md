@@ -40,7 +40,7 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   (`electron/sync.js`) uzak silmeyi `local_arsiv`'e yazar (Ayarlar → Arşiv, geri yüklenebilir); çakışmada kaybeden `local_lan_conflicts`.
 - ESKİ KANAL KÖPRÜSÜ: 1.51–1.57 `guncelleme/masaustu.json` (raw GitHub), ≤1.50 Firebase `guncellemeler/masaustu` okur; ikisi de ECDSA
   imzalı `.fopk`'yi overlay olarak çalıştırır. Köprü 1.58.0 ile bir kez konuldu (`araclar/kopru.js`, anahtar
-  `C:\Claude Programlarım\_Anahtarlar\FalconOfis\ozel-anahtar.pem`). Eski kabukta yeni sürüm "Yeni kurulum gerekli" der ve
+  geliştiricinin bilgisayarındaki anahtar klasörü). Eski kabukta yeni sürüm "Yeni kurulum gerekli" der ve
   GitHub sürümünden program dosyalarını yeniler (yazılabilir klasör: app.asar takası; değilse kurulum). Yeni sürümler köprüye konmaz.
 - ONARIM ARACI (`onarim/`, iş akışı `onarim.yml`): 1.58.0 overlay'inde takılanlar için tek tık `FalconOfis-Onarim.cmd` (WinForms, tr/en/ar):
   takılı `fc-update-*.cmd`/find pencerelerini kapatır, imzalı köprü paketinin zip'ini "onarim" ön sürümünden indirir (SHA-256),

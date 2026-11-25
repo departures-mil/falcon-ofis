@@ -701,9 +701,8 @@ function registerIpc() {
   handle('lan:stop', () => lanServer.stop(true));
   handle('lan:reset', () => lanServer.resetKey());
   handle('lan:ips', () => lanServer.lanIps());
-  // Yöneticiye mesaj: iki bağımsız kanal, biri kabul ederse ulaşmış sayılır.
-  //  1) Yöneticinin mesaj kutusu (Firestore "mesajlar", yalnızca ekleme; okuma yok) — her ağdan, etkinleştirme gerektirmez
-  //  2) E-posta kopyası (FormSubmit) — Referer'sız isteği reddeder; etkinleştirilmiş site Referer olarak gönderilir
+  // Yöneticiye mesaj: yalnızca yöneticinin mesaj kutusu (Firestore "mesajlar", yalnızca ekleme; okuma yok).
+  // Programda hiçbir kişisel e-posta adresi bulunmaz (eski e-posta kopyası yolu kaldırıldı).
   const __adminSend = async (m) => {
     const msg = String((m && m.message) || '').slice(0, 5000).trim();
     if (!msg) return { ok: false, error: 'empty' };
@@ -712,16 +711,9 @@ function registerIpc() {
     const fields = { tur: F('oneri'), uygulama: F('falcon-ofis'), mesaj: F(msg), konu: F('Falcon Ofis · ' + String(m.topic || 'Mesaj')), dil: F(m.lang), surum: F(ver), platform: F('Falcon Ofis · Windows'), zaman: { timestampValue: new Date().toISOString() } };
     if (name) fields.ad = F(name);
     if (mail) fields.iletisim = F(mail);
-    const to = Buffer.from('', 'base64').toString().split('').reverse().join('');
-    const body = { _subject: 'Falcon Ofis: yeni mesaj', _template: 'table', _captcha: 'false', Ad: name || '-', Mesaj: msg, Surum: ver, Cihaz: 'Windows', Dil: String(m.lang || '') };
-    if (mail) { body.email = mail; body._replyto = mail; }
-    const inbox = fetch('https://firestore.googleapis.com/v1/projects/comm-calc-103111111/databases/(default)/documents/mesajlar?key=AIzaSyB12RFS6ENPpmnnPsETfjedNH-3hmNWQvA',
+    const ok = await fetch('https://firestore.googleapis.com/v1/projects/comm-calc-103111111/databases/(default)/documents/mesajlar?key=AIzaSyB12RFS6ENPpmnnPsETfjedNH-3hmNWQvA',
       { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fields }), signal: AbortSignal.timeout(20000) }).then((r) => r.ok, () => false);
-    const email = fetch('https://formsubmit.co/ajax/' + to, { method: 'POST', signal: AbortSignal.timeout(20000),
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json', Referer: 'https://formsubmit.co/', Origin: 'https://formsubmit.co', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
-      body: JSON.stringify(body) }).then((r) => r.json().catch(() => ({}))).then((j) => String(j.success) === 'true', () => false);
-    const [a, b] = await Promise.all([inbox, email]);
-    return a || b ? { ok: true } : { ok: false, error: 'network' };
+    return ok ? { ok: true } : { ok: false, error: 'network' };
   };
   handle('contact:send', (_e, m) => __adminSend(m));
   handle('lan:http', (_e, method, url, body, ms, key) => lanServer.clientHttp(method, url, body, ms, key));
