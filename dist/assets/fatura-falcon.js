@@ -28,7 +28,7 @@
       editInv: 'Faturayı düzenle', invNo: 'Fatura no', invNoHint: 'Boş bırakılırsa otomatik verilir',
       cName: 'Müşteri adı', cPhone: 'Telefon', cEmail: 'E-posta', cAddress: 'Adres', cTax: 'Vergi / kimlik no',
       currency: 'Para birimi', template: 'Şablon', lang: 'Fatura dili',
-      items: 'Ürün / hizmet kalemleri', itemName: 'Ürün / hizmet', qty: 'Miktar', unit: 'Birim', price: 'Birim fiyat', line: 'Tutar',
+      items: 'Ürün / hizmet kalemleri', itemName: 'Ürün / hizmet', itemNameHint: 'Shift+Enter: alt satır · Enter: miktara geç', itemPick: 'Kayıtlı ürünler', qty: 'Miktar', unit: 'Birim', price: 'Birim fiyat', line: 'Tutar',
       addItem: '+ Kalem ekle', removeItem: 'Kalemi sil', discount: 'İndirim', taxRate: 'Vergi oranı (%)', note: 'Not',
       subtotal: 'Ara toplam', tax: 'Vergi', grand: 'Genel toplam',
       cashTitle: 'Gelir kaydı', cashYes: 'Kasaya giriş yap', cashNo: 'Kasaya giriş yapma (tahsil edilmedi)',
@@ -62,7 +62,7 @@
       editInv: 'Edit invoice', invNo: 'Invoice no', invNoHint: 'Assigned automatically if left empty',
       cName: 'Customer name', cPhone: 'Phone', cEmail: 'E-mail', cAddress: 'Address', cTax: 'Tax / ID no',
       currency: 'Currency', template: 'Template', lang: 'Invoice language',
-      items: 'Products / services', itemName: 'Product / service', qty: 'Qty', unit: 'Unit', price: 'Unit price', line: 'Amount',
+      items: 'Products / services', itemName: 'Product / service', itemNameHint: 'Shift+Enter: new line · Enter: go to quantity', itemPick: 'Saved products', qty: 'Qty', unit: 'Unit', price: 'Unit price', line: 'Amount',
       addItem: '+ Add line', removeItem: 'Remove line', discount: 'Discount', taxRate: 'Tax rate (%)', note: 'Note',
       subtotal: 'Subtotal', tax: 'Tax', grand: 'Grand total',
       cashTitle: 'Income record', cashYes: 'Post to cash box', cashNo: 'Do not post to cash (not collected)',
@@ -96,7 +96,7 @@
       editInv: 'تعديل الفاتورة', invNo: 'رقم الفاتورة', invNoHint: 'يُعطى تلقائياً إذا تُرك فارغاً',
       cName: 'اسم العميل', cPhone: 'الهاتف', cEmail: 'البريد الإلكتروني', cAddress: 'العنوان', cTax: 'الرقم الضريبي / الهوية',
       currency: 'العملة', template: 'القالب', lang: 'لغة الفاتورة',
-      items: 'المنتجات / الخدمات', itemName: 'المنتج / الخدمة', qty: 'الكمية', unit: 'الوحدة', price: 'سعر الوحدة', line: 'المبلغ',
+      items: 'المنتجات / الخدمات', itemName: 'المنتج / الخدمة', itemNameHint: 'Shift+Enter: سطر جديد · Enter: الانتقال إلى الكمية', itemPick: 'المنتجات المحفوظة', qty: 'الكمية', unit: 'الوحدة', price: 'سعر الوحدة', line: 'المبلغ',
       addItem: '+ إضافة بند', removeItem: 'حذف البند', discount: 'الخصم', taxRate: 'نسبة الضريبة (%)', note: 'ملاحظة',
       subtotal: 'المجموع الفرعي', tax: 'الضريبة', grand: 'الإجمالي',
       cashTitle: 'تسجيل الإيراد', cashYes: 'تسجيل في الصندوق', cashNo: 'عدم التسجيل في الصندوق (لم تُحصَّل)',
@@ -258,6 +258,11 @@
     classic: { ink: '#1f2937', accent: '#13213b', soft: '#f5f5f5', line: '#c9ced6' },
     minimal: { ink: '#111827', accent: '#2563eb', soft: '#f8fafc', line: '#e5e7eb' }
   };
+  // çok satırlı ürün adı: ilk satır kalın (ürün), alttakiler özellik satırları
+  function itemNameHtml(n) {
+    var ls = String(n || '').replace(/\r/g, '').trim().split('\n');
+    return ls.length > 1 ? '<b>' + esc(ls[0]) + '</b><br>' + ls.slice(1).map(esc).join('<br>') : esc(ls[0]);
+  }
   function invoiceHtml(inv, cfg, forPdf) {
     var lg = DOC[inv.lang] ? inv.lang : lang();
     var D = DOC[lg], rtl = lg === 'ar', cur = inv.currency_code, tpl = PALETTE[inv.template] ? inv.template : 'falcon', P = PALETTE[tpl];
@@ -294,7 +299,7 @@
       return '<div class="fc">' + (tt ? '<h5>' + esc(tt) + '</h5>' : '') + x + '</div>';
     }).join('');
     var rows = items.map(function (it, i) {
-      return '<tr><td class="c">' + (i + 1) + '</td><td>' + esc(it.name) + '</td><td class="n">' + esc(fmt(it.qty, 'X', lg).replace(/[.,]00$/, '')) +
+      return '<tr><td class="c">' + (i + 1) + '</td><td class="nm">' + itemNameHtml(it.name) + '</td><td class="n">' + esc(fmt(it.qty, 'X', lg).replace(/[.,]00$/, '')) +
         '</td><td class="c">' + esc(it.unit || '') + '</td><td class="n">' + M(it.price) + '</td><td class="n">' + M(rnd(it.qty * it.price, cur)) + '</td></tr>';
     }).join('');
     var totals = '<tr><td>' + D.subtotal + '</td><td class="n">' + M(inv.subtotal) + '</td></tr>' +
@@ -412,7 +417,7 @@
       '.fat-acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:340px;margin-inline-start:auto}.fat-acts .btn{padding:5px 10px;font-size:12.5px}' +
       '.fat-num{font-variant-numeric:tabular-nums;white-space:nowrap}.fat-no{font-weight:700;white-space:nowrap}' +
       '.fat-items{width:100%;border-collapse:collapse}.fat-items th{font-size:12px;text-align:start;opacity:.75;padding:4px 4px;font-weight:600}' +
-      '.fat-items td{padding:3px 4px;vertical-align:middle}.fat-items input{width:100%;min-width:0}.fat-items .q{width:76px}.fat-items .u{width:80px}.fat-items .p{width:120px}.fat-items .l{width:120px;text-align:end;font-variant-numeric:tabular-nums;white-space:nowrap}' +
+      '.fat-items td{padding:3px 4px;vertical-align:top}.fat-items td.l{padding-top:12px}.fat-items td:last-child{padding-top:6px}.fat-items .nmc{position:relative}.fat-items textarea.nm{width:100%;min-width:0;display:block;resize:none;overflow:hidden;line-height:1.4;min-height:38px;padding-inline-end:26px;white-space:pre-wrap;font:inherit}.fat-sug-b{position:absolute;inset-inline-end:10px;top:11px;border:0;background:none;color:inherit;opacity:.6;cursor:pointer;font-size:12px;padding:2px}.fat-sug-b:hover{opacity:1}.fat-sug{position:absolute;z-index:30;inset-inline:4px;top:calc(100% - 2px);max-height:240px;overflow:auto;background:var(--surface,var(--card,#1b2333));border:1px solid var(--border,#3a4458);border-radius:8px;box-shadow:0 8px 24px #0006;padding:4px}.fat-sug[hidden]{display:none}.fat-sug .o{padding:6px 10px;border-radius:6px;cursor:pointer;white-space:pre-line;font-size:13.5px}.fat-sug .o:hover{background:#ffffff14}.fat-items input{width:100%;min-width:0}.fat-items .q{width:76px}.fat-items .u{width:80px}.fat-items .p{width:120px}.fat-items .l{width:120px;text-align:end;font-variant-numeric:tabular-nums;white-space:nowrap}' +
       '.fat-tot{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:14px}.fat-tot div{display:flex;gap:18px;justify-content:space-between;min-width:260px}.fat-tot .g{font-weight:800;font-size:16px;border-top:1px solid var(--border,#334);padding-top:6px}' +
       '.fat-cash{border:1px solid var(--border,#334);border-radius:12px;padding:12px 14px}.fat-cash .segmented{margin:6px 0 8px;flex-wrap:wrap}.fat-cash .segmented button{flex:1;min-width:140px}' +
       '.fat-pv{background:#7d8595;border-radius:10px;padding:14px;overflow:auto;max-height:70vh}.fat-pv-host{transform-origin:top left;margin:0 auto}' +
@@ -685,8 +690,10 @@
         function drawItems() {
           tbody.innerHTML = '';
           st.items.forEach(function (it, i) {
-            var nm = el('input', { value: it.name || '', list: dlP, autocomplete: 'off', placeholder: t('itemName'), oninput: function (e) {
-              it.name = e.target.value;
+            // ürün adı: çok satırlı (Shift+Enter alt satır), kutu yazıya göre büyür; ürün önerileri kendi açılır listesinde
+            var sug = el('div', { class: 'fat-sug', hidden: true });
+            var fit = function () { nm.style.height = 'auto'; nm.style.height = (nm.scrollHeight + 2) + 'px'; };
+            var matchProduct = function () {
               var p = null; for (var j = 0; j < products.length; j++) if (products[j].name === it.name) { p = products[j]; break; }
               if (p) {
                 it.product_id = p.id;
@@ -694,12 +701,36 @@
                 if ((it.price === '' || it.price == null || num(it.price) === 0) && p.sale_price && (!p.cost_currency || p.cost_currency === st.currency)) { it.price = p.sale_price; pr.value = p.sale_price; }
                 recalc();
               } else it.product_id = null;
-            } });
+            };
+            var showSug = function (all) {
+              sug.innerHTML = '';
+              var q = String(it.name || '').toLocaleLowerCase();
+              if (!all && (!q || q.indexOf('\n') >= 0)) { sug.hidden = true; return; }
+              var list = products.filter(function (p) { var n = String(p.name || ''); return n && n !== it.name && (all || n.toLocaleLowerCase().indexOf(q) >= 0); }).slice(0, 10);
+              if (!list.length) { sug.hidden = true; return; }
+              list.forEach(function (p) {
+                sug.appendChild(el('div', { class: 'o', text: p.name, onmousedown: function (e) {
+                  e.preventDefault(); it.name = p.name; nm.value = p.name; sug.hidden = true; fit(); matchProduct();
+                } }));
+              });
+              sug.hidden = false;
+            };
+            var nm = el('textarea', { class: 'nm', rows: '1', value: it.name || '', autocomplete: 'off', placeholder: t('itemName'), title: t('itemNameHint'),
+              oninput: function (e) { it.name = e.target.value; fit(); matchProduct(); showSug(false); },
+              onkeydown: function (e) {
+                if (e.key === 'Escape' && !sug.hidden) { e.stopPropagation(); sug.hidden = true; return; }
+                if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.isComposing) { e.preventDefault(); sug.hidden = true; qt.focus(); try { qt.select(); } catch (x) {} }
+              },
+              onblur: function () { setTimeout(function () { sug.hidden = true; }, 120); } });
+            var sugBtn = products.length ? el('button', { type: 'button', class: 'fat-sug-b', tabindex: '-1', title: t('itemPick'), text: '▾', onmousedown: function (e) {
+              e.preventDefault(); if (sug.hidden) { nm.focus(); showSug(true); } else sug.hidden = true;
+            } }) : null;
+            requestAnimationFrame(fit);
             var qt = el('input', { class: 'q', type: 'number', step: 'any', min: '0', dir: 'ltr', value: it.qty == null ? '' : String(it.qty), oninput: function (e) { it.qty = e.target.value; recalc(); } });
             var un = el('input', { class: 'u', value: it.unit || '', oninput: function (e) { it.unit = e.target.value; } });
             var pr = el('input', { class: 'p', type: 'number', step: 'any', min: '0', dir: 'ltr', value: it.price == null ? '' : String(it.price), oninput: function (e) { it.price = e.target.value; recalc(); } });
             tbody.appendChild(el('tr', null, [
-              el('td', null, [nm]), el('td', null, [qt]), el('td', { class: 'u' }, [un]), el('td', null, [pr]),
+              el('td', { class: 'nmc' }, [nm, sugBtn, sug]), el('td', null, [qt]), el('td', { class: 'u' }, [un]), el('td', null, [pr]),
               el('td', { class: 'l', 'data-l': String(i), dir: 'ltr' }),
               el('td', null, [el('button', { type: 'button', class: 'icon-btn tiny danger', title: t('removeItem'), text: '✕', onclick: function () { st.items.splice(i, 1); if (!st.items.length) st.items.push({ name: '', qty: 1, unit: '', price: '' }); drawItems(); } })])
             ]));
