@@ -1,10 +1,10 @@
 {
- "version": "1.58.5",
- "notes": "Elektrik: ön ödemeli sayaçta kalan süre tahmini — okunan değerlerden günlük ortalama hesaplanır ve 'Bu hızla yaklaşık N gün yeter' yazar (3 gün kala uyarı rengi, bitmişse kırmızı). Sayaç türü okumalardan anlaşılır; değer artınca yükleme sayılır. Kayıtlara dokunulmaz.",
- "size": 3031008,
- "sha256": "50ecc4e935715e1e318ad3ccec314dcf2b08a0c7c414149bf305c8de2612f5c6",
- "sig": "MEQCIFepGFndTOsn9lsTDnbw7uQZCZPBOpDumfEgqcX4y0oIAiBN/kSgbCztmlULcZKJEdl6qweC2V4twqlbhOWcyF0sRw==",
- "file": "telefon-1.58.5.fopk",
+ "version": "1.59.1",
+ "notes": "Bildirim zili: sol alttaki yüzen 🔔 düğmesi kaldırıldı, artık ekranı kapatmaz. Duyurular Ayarlar → 'Bildirimler ve Duyurular' kartından okunur (sayı, yeni rozeti, isteğe bağlı yüzen düğme). Ayrıca 1.59.0 yenilikleri: Fatura sekmesi (PDF, şablonlar, imza, tahsilat), para çıkışlarında ödeme yöntemi (Nakit / Sham Cash / Havale / Diğer). Kayıtlara dokunulmaz.",
+ "size": 3064964,
+ "sha256": "ed23801b1e56182f5a63e61ac9327474ea84ad1ff55a8bf4e4f126b7a71c54fc",
+ "sig": "MEYCIQCN0vzRgfaoXDxN+JvTv6rMLU9uVHixbp0LORWQxjGXKwIhAP+4Msqaqy+VIXuqUz8oWRRA/ivqt0838Doqb1i0KPka",
+ "file": "telefon-1.59.1.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-25T18:49:38.457Z"
+ "publishedAt": "2026-11-27T14:35:30.876Z"
 }

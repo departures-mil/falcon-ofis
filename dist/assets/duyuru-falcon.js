@@ -103,9 +103,13 @@
     zil();
   }
 
-  var zilEl = null;
+  var zilEl = null, dinleyenler = [];
+  function durum() { var g2 = gorulen(); return { toplam: liste.length, yeni: liste.filter(function (d) { return g2.indexOf(d.id) < 0; }).length }; }
   function zil() {
-    if (!A.dugme || !document.body) return;
+    var dz = durum();
+    dinleyenler.forEach(function (f) { try { f(dz); } catch (e) {} });
+    if (!A.dugme) { if (zilEl && zilEl.parentNode) zilEl.parentNode.removeChild(zilEl); zilEl = null; return; }
+    if (!document.body) return;
     stil();
     if (!zilEl) { zilEl = document.createElement('button'); zilEl.className = 'aduy-zil'; zilEl.title = T('baslik'); zilEl.onclick = listeyiGoster; document.body.appendChild(zilEl); }
     var g2 = gorulen(), yeni = liste.filter(function (d) { return g2.indexOf(d.id) < 0; }).length;
@@ -137,7 +141,82 @@
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
     },
     goster: function () { listeyiGoster(); },
-    yenile: cek
+    yenile: cek,
+    // v1.59.1: Ayarlar kartı için — sayı, değişiklik bildirimi, yüzen zili aç/kapa
+    durum: durum,
+    dinle: function (f) { dinleyenler.push(f); try { f(durum()); } catch (e) {} },
+    dugme: function (acik) { A.dugme = !!acik; zil(); }
   };
 })(typeof window !== 'undefined' ? window : this);
-Duyuru.baslat({ uygulama: 'falcon-ofis', surum: '1.53.3', dil: function () { return document.documentElement.lang; } });
+// v1.59.1: Telefonda sol alttaki yüzen 🔔 düğmesi içeriği kapatıyordu → varsayılan olarak gizli; duyurular Ayarlar'daki
+// "Bildirimler ve Duyurular" kartından açılır. Kart masaüstünde de vardır; masaüstünde yüzen düğme varsayılan olarak açık kalır.
+(function () {
+  'use strict';
+  var TEL = /Android|iPhone|iPad/i.test(navigator.userAgent || '');
+  var ANA = 'duyuru_zil_goster';
+  function zilAcik() { var v = null; try { v = localStorage.getItem(ANA); } catch (e) {} return v == null ? !TEL : v === '1'; }
+  Duyuru.baslat({ uygulama: 'falcon-ofis', surum: '1.59.1', dugme: zilAcik(), dil: function () { return document.documentElement.lang; } });
+
+  var Y = {
+    tr: { baslik: 'Bildirimler ve Duyurular', sayi: 'Admin duyuruları', yeni: 'yeni', goster: 'Duyuruları göster', yenile: 'Yenile',
+      zil: 'Ekranda yüzen bildirim düğmesini göster (sol alt)', not: 'Yeni bir duyuru geldiğinde bir kez ekranda açılır; sonra buradan okunur. Yüzen düğme kapalıyken ekranın hiçbir yerini kapatmaz.' },
+    en: { baslik: 'Notifications & Announcements', sayi: 'Admin announcements', yeni: 'new', goster: 'Show announcements', yenile: 'Refresh',
+      zil: 'Show the floating notification button (bottom left)', not: 'A new announcement opens once on screen; after that it can be read here. With the floating button off, nothing covers the screen.' },
+    ar: { baslik: 'الإشعارات والإعلانات', sayi: 'إعلانات المسؤول', yeni: 'جديد', goster: 'عرض الإعلانات', yenile: 'تحديث',
+      zil: 'إظهار زر الإشعارات العائم (أسفل اليسار)', not: 'يُعرض الإعلان الجديد مرة واحدة على الشاشة، ثم يمكن قراءته من هنا. عند إيقاف الزر العائم لا يغطي أي جزء من الشاشة.' }
+  };
+  function d() { var l = String(document.documentElement.lang || 'tr').slice(0, 2).toLowerCase(); return Y[l] ? l : 'tr'; }
+  function T(k) { return Y[d()][k]; }
+  function kac(x) { return String(x == null ? '' : x).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function stil() {
+    if (document.getElementById('dk-stil')) return;
+    var s = document.createElement('style'); s.id = 'dk-stil';
+    s.textContent = '.dk-kart{padding:16px;margin-top:14px}.dk-kart h3{margin:0 0 10px;font-size:15px;font-weight:600}' +
+      '.dk-satir{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;font-size:14px}' +
+      '.dk-rozet{background:#dc2626;color:#fff;border-radius:9px;font-size:11px;min-width:18px;height:18px;line-height:18px;padding:0 6px;text-align:center}' +
+      '.dk-dug{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.dk-dug button{border:1px solid rgba(127,127,127,.35);border-radius:10px;padding:8px 14px;' +
+      'font-size:14px;cursor:pointer;background:rgba(127,127,127,.12);color:inherit}.dk-dug button.ana{background:#2563eb;border-color:#2563eb;color:#fff}' +
+      '.dk-sec{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;margin-bottom:8px}.dk-sec input{width:18px;height:18px}' +
+      '.dk-not{font-size:12.5px;opacity:.75;line-height:1.5}';
+    document.head.appendChild(s);
+  }
+  var son = { toplam: 0, yeni: 0 };
+  function ciz(el) {
+    el.setAttribute('dir', d() === 'ar' ? 'rtl' : 'ltr');
+    el.innerHTML = '<h3>🔔 ' + kac(T('baslik')) + '</h3>' +
+      '<div class="dk-satir">' + kac(T('sayi')) + ': <b>' + son.toplam + '</b>' + (son.yeni ? ' <span class="dk-rozet">' + son.yeni + ' ' + kac(T('yeni')) + '</span>' : '') + '</div>' +
+      '<div class="dk-dug"><button type="button" class="ana" data-k="g">' + kac(T('goster')) + '</button><button type="button" data-k="y">' + kac(T('yenile')) + '</button></div>' +
+      '<label class="dk-sec"><input type="checkbox" data-k="z"' + (zilAcik() ? ' checked' : '') + '> ' + kac(T('zil')) + '</label>' +
+      '<div class="dk-not">' + kac(T('not')) + '</div>';
+    el.querySelector('[data-k="g"]').onclick = function () { Duyuru.goster(); };
+    el.querySelector('[data-k="y"]').onclick = function () { Duyuru.yenile(); };
+    el.querySelector('[data-k="z"]').onchange = function (e) {
+      try { localStorage.setItem(ANA, e.target.checked ? '1' : '0'); } catch (x) {}
+      Duyuru.dugme(e.target.checked);
+    };
+  }
+  var kart = null;
+  function hedefBul() {
+    var k = document.querySelector('.kul-kart');
+    if (k) return k;
+    try { if (window.Kullanim && Kullanim.metindenBul) return Kullanim.metindenBul(['Telefon ve Bilgisayar Eşitleme', 'Phone and Computer Sync', 'Phone & computer sync'], '.card, section'); } catch (e) {}
+    return null;
+  }
+  function yerlestir() {
+    var h = hedefBul();
+    var kopya = document.querySelectorAll('.dk-kart');
+    for (var i = 0; i < kopya.length; i++) if (kopya[i] !== kart) kopya[i].remove();
+    if (!h || !h.parentNode) return;
+    if (h.nextElementSibling === kart) return;
+    if (!kart) { stil(); kart = document.createElement('div'); kart.className = 'card dk-kart'; ciz(kart); }
+    h.parentNode.insertBefore(kart, h.nextSibling);
+  }
+  Duyuru.dinle(function (dz) { son = dz; if (kart) ciz(kart); });
+  function bas() {
+    yerlestir();
+    var bek = 0;
+    new MutationObserver(function () { if (!bek) bek = setTimeout(function () { bek = 0; yerlestir(); }, 60); }).observe(document.body, { childList: true, subtree: true });
+    new MutationObserver(function () { if (kart) ciz(kart); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bas); else bas();
+})();
