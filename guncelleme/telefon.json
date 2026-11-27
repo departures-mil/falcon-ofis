@@ -1,10 +1,10 @@
 {
- "version": "1.59.2",
- "notes": "Fatura: kaydetmeden 👁 Önizle (şablon ve dil önizlemede değişir), resmî alt bilgi (ünvan, adres, vergi dairesi, vergi no, MERSİS, sicil, banka, IBAN), alanlar ayarlanabilir (aç/kapa, ad, sıra, sütun, yeni alan), firma bilgilerinin yeri üstte/altta/ikisi. Kayıtlara dokunulmaz.",
- "size": 3069791,
- "sha256": "fdb42de1054706804214fe2145eb1d0113a4dd6566ae5ee65ec8f742613de425",
- "sig": "MEYCIQCnm0neZhlBLtzf7SO623Cahz4cQ7Nvajk+ipfED0IBbAIhAI20y5rbV6pSw/RypjqexA+9nVGJ5gzyMC9m+Cfo2fwV",
- "file": "telefon-1.59.2.fopk",
+ "version": "1.59.4",
+ "notes": "- Fatura başına imza: «Yeni fatura» / düzenleme penceresinde «✍ İmza ekle» ya da «⊘ İmzasız» seçilir; önizleme çubuğunda da aç/kapa vardır. İmzasız faturada imza alanı boş kalır, elle imzalanabilir. Seçim yalnız o faturaya uygulanır ve faturayla birlikte eşitlenir.\n- Yeni standart Falcon logosu: «CTI» yazısı kaldırıldı; faturalarda artık varsayılan olarak bu logo kullanılır.\n- Fatura ayarları → Logo: «Falcon (standart)», «Falcon CTI (eski)» ya da «Kendi logom» seçilebilir.\n- Fatura kalemlerinde uzun ürün adı: Shift+Enter ile alt satıra geçilir, kutu yazıya göre büyür ve tüm metin tek kutuda görünür (Enter miktara geçer). PDF'te ilk satır kalın, alttaki özellik satırları aynen basılır.\n- Kayıtlı ürünler ▾ düğmesiyle ya da yazarken açılan listeden seçilir.",
+ "size": 3071468,
+ "sha256": "74c649a357bf19b6940443bd3514f65f362c4632b5e87a04fae619d7e1efe15b",
+ "sig": "MEUCIEt2ee2ZEqP6rEpD3V6g4xQYq1j0lQ8Pgl/UY0P2Je/QAiEA64UQZu3c5Vsw1y58whep4Mau8V8Vs4s1F2dpO797ah4=",
+ "file": "telefon-1.59.4.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-27T14:56:00.225Z"
+ "publishedAt": "2026-11-27T16:25:15.347Z"
 }
