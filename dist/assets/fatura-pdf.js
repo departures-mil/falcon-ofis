@@ -222,6 +222,35 @@
       l.items.forEach(function (it) { var c = cellOf(cols, it); if (!c) return; (o[c.key || ('c' + c.x0)] = o[c.key || ('c' + c.x0)] || []).push(it); });
       return o;
     };
+    // PDF iki hücreyi tek metin parçası yapmış olabilir ("K2B04/06 KOM.KNN.05.000180" = Depo + Stok Kodu): sütun sınırını aşan parça sözcüklere bölünür
+    var bounds = [];
+    for (var bi = 0; bi < cols.length - 1; bi++) bounds.push((cols[bi].x1 + cols[bi + 1].x0) / 2);
+    body.forEach(function (l) {
+      var out = [];
+      l.items.forEach(function (it) {
+        var x1 = it.x + (it.w || 0), str = String(it.str);
+        var crosses = bounds.some(function (bx) { return it.x < bx - 2 && x1 > bx + 2; });
+        if (!crosses || str.indexOf(' ') < 0) { out.push(it); return; }
+        var cw = (it.w || 0) / Math.max(1, str.length), pos = 0, parts = [];
+        str.split(' ').forEach(function (wd) {
+          if (wd) parts.push({ str: wd, x: it.x + pos * cw, y: it.y, w: wd.length * cw, h: it.h });
+          pos += wd.length + 1;
+        });
+        // yalnız kod / depo gibi tek sözcüklük hücreler bölünür; ürün adı (uzun metin) olduğu gibi kalır
+        var keys = parts.map(function (x) { var c = cellOf(cols, x); return c ? c.key : ''; });
+        var distinct = keys.filter(function (k, i) { return keys.indexOf(k) === i; });
+        if (distinct.length < 2 || keys.indexOf('name') >= 0) { out.push(it); return; }
+        // aynı sütuna düşen ardışık sözcükler birleşir
+        var merged = [];
+        parts.forEach(function (x, i) {
+          var m = merged[merged.length - 1];
+          if (m && m.k === keys[i]) { m.it.str += ' ' + x.str; m.it.w = x.x + x.w - m.it.x; } else merged.push({ k: keys[i], it: x });
+        });
+        merged.forEach(function (m) { out.push(m.it); });
+      });
+      // bölünen sözcükler aynı sütunda kalıyorsa yeniden birleşir (sütuna göre öbeklenince metin yine boşlukla birleşir)
+      l.items = out;
+    });
     var parsed = body.map(function (l) { return { y: l.y, cells: cellsOf(l) }; });
     // satır başı: sıra no sütununda tam sayı (yoksa miktar sütununda sayı)
     var anchors = parsed.filter(function (p) {
@@ -556,7 +585,7 @@
     });
   }
 
-  var api = { read: read, parseLayout: parseLayout, normalize: normalize, rankModels: rankModels, num: num, extract: extract, version: '1.60.0' };
+  var api = { read: read, parseLayout: parseLayout, normalize: normalize, rankModels: rankModels, num: num, extract: extract, version: '1.60.2' };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.FalconFaturaPdf = api;
 })(typeof window !== 'undefined' ? window : globalThis);

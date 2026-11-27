@@ -220,6 +220,12 @@ test('fatura (1.60): PDF çevrimdışı okuma — e-Fatura düzeni (satıcı, SA
   const r2 = P.normalize(P.parseLayout(JSON.parse(read('test/fixtures/earsiv-sayfa.json'))));
   assert.deepStrictEqual(r2.items.map((x) => [x.name, x.qty, x.unit, x.price, x.vat, x.disc_amount]), [['Laptop çantası 15.6" su geçirmez siyah renk', 2, 'Adet', 450, 20, 0], ['USB-C kablo 1m', 10, 'Adet', 35.5, 10, 35.5], ['Kurulum hizmeti', 1.5, 'Saat', 1200, 20, 0]]);
   assert.deepStrictEqual([r2.buyer.name, r2.buyer.tax_no, r2.buyer.district, r2.seller.name, r2.meta.scenario, r2.meta.date, r2.totals.vat], ['Ahmet Yılmaz', '12345678901', 'KEÇİÖREN', 'ABC BİLİŞİM LTD. ŞTİ.', 'EARSIVFATURA', '2026-10-05', 571.95]);
+  // PDF, Depo ve Stok Kodu hücrelerini tek metin parçası yapmışsa da ayrılır (gerçek faturada görüldü)
+  const pg = JSON.parse(read('test/fixtures/efatura-sayfa.json'));
+  const its = pg[0].items, d0 = its.findIndex((x) => x.str === 'K1B04'), c0 = its.findIndex((x) => x.str === 'BTN.MTL.01.000621');
+  its[d0] = Object.assign({}, its[d0], { str: 'K1B04 BTN.MTL.01.000621', w: its[c0].x + its[c0].w - its[d0].x }); its.splice(c0, 1);
+  const r3 = P.parseLayout(pg);
+  assert.deepStrictEqual([r3.items[0].depot, r3.items[0].code, r3.items[0].name], ['K1B04', 'BTN.MTL.01.000621', 'WD19X-P1 19mm Anahtarlı Mandal Buton 2NO+2NC']);
   assert.strictEqual(P.num('1.785,00 TL'), 1785); assert.strictEqual(P.num('%20,00'), 20); assert.strictEqual(P.num('1,234.50'), 1234.5);
   assert.deepStrictEqual(P.rankModels(['gemini-3.8-flash', 'gemini-3.5-pro', 'gemini-3.6-pro-preview', 'gemini-3.6-pro-preview-tts']), ['gemini-3.6-pro-preview', 'gemini-3.5-pro', 'gemini-3.8-flash']);
   const html = read('dist/index.html');

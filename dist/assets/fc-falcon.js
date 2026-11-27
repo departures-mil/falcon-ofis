@@ -15,6 +15,11 @@
   var APP = 'falcon-ofis', LANGS = ['tr', 'en', 'ar'];
 
   var NEWS = {
+    '1.60.2': {
+      tr: "- PDF'den doldur: PDF'te Depo ve Stok Kodu bitişik yazılmış satırlar (ör. «K2B04/06 KOM.KNN.05.000180») artık doğru ayrılıyor. 2 sayfalık, 28 kalemli gerçek bir e-Fatura ile denendi: bütün kalemler, KDV ve toplam (95.476,90 TL) birebir okundu.",
+      en: "- Fill from PDF: lines where the PDF prints the warehouse and stock code as one piece of text (e.g. «K2B04/06 KOM.KNN.05.000180») are now split correctly. Tested with a real 2-page e-invoice with 28 lines: all lines, VAT and the total (95,476.90 TL) were read exactly.",
+      ar: "- التعبئة من PDF: تُفصل الآن بشكل صحيح البنود التي يطبع فيها الملف المستودع ورمز المخزون كنص واحد (مثل «K2B04/06 KOM.KNN.05.000180»). جُرّب على فاتورة إلكترونية حقيقية من صفحتين و28 بنداً: قُرئت جميع البنود وضريبة القيمة المضافة والإجمالي (95,476.90 ليرة) بدقة تامة."
+    },
     '1.60.1': {
       tr: "- Arapça ve dar ekran: varsayılan kasa adları (Dolar Kasası, Nakit TL…) İngilizce ve Arapçada kendi dilinde görünür; kayıt adı değişmez, telefonla eşitleme etkilenmez.\n- Tarih kutuları programın dilinde (gg.aa.yyyy); dil değişince bir sonraki açılışta uygulanır.\n- 1366 / 1280 piksel ekranlarda üst çubuk taşmaz; Kapat ve diğer pencere düğmeleri her zaman görünür (düğme yazıları dar ekranda gizlenir).\n- Duyuru penceresi programın temasını izler (koyu temada koyu); 🔔 düğmesi menünün üstüne binmez, «Sor»un üstünde durur.\n- «Sor» asistanı internetsiz de kasa bakiyelerini (≈ USD toplamıyla) ve azalan / biten stoğu söyler; Arapça «كم المال في الصندوق» doğru anlaşılır.",
       en: "- Arabic and narrow screens: default cash box names (USD Cash Box, Cash TRY…) appear in English and Arabic; the stored name is unchanged and phone sync is not affected.\n- Date fields follow the program language; after changing the language it applies on the next start.\n- On 1366 / 1280 px screens the top bar no longer overflows; Close and the other window buttons are always visible (button labels are hidden on narrow screens).\n- The announcement window follows the program theme (dark in dark mode); the 🔔 button no longer covers the menu and sits above «Ask».\n- The «Ask» assistant now gives cash balances (with an ≈ USD total) and low / out-of-stock items without internet; Arabic «كم المال في الصندوق» is understood correctly.",
