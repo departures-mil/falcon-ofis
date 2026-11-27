@@ -56,6 +56,11 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   diğer dökümler `dist/assets/cikti-falcon.js` (`FalconCikti.open`, ürün/malzeme dökümü `araclar/patch-ui-163.py` ile). Ürün adı çevirisi:
   `FalconFaturaPdf.translate` (Gemini) → olmazsa çevrimdışı `TERMS` sözlüğü; önbellek ayarı `invoice_name_tr`. Sayfa numarası: fatura HTML'indeki
   `<meta name="falcon-pdf-footer">` → main.js `htmlToPdf` footerTemplate. Test: `araclar/cikti-e2e.js`.
+- 1.64 FATURA ÇIKTISI: tek dil (başlık altındaki diğer dil satırı yok; SYP simgesi `ل.س` yalnız Arapçada, `symOf`/`curLbl`; tip kodları `codeText`
+  — «SATIŞ» da tanınır). «Fatura özeti» kartı yok (damga + QR + barkod `.stbox`). Döviz kuru satırı varsayılan GİZLİ: şablon bayrağı `fx` (göster) / `nf`
+  (gizle), yoksa `layout.fx_show`. Önizleme durumu fatura başına `settings.invoice_pv_<no>` (eşitlenir): `ed[dil] = [{o, i, n}]` (orijinal metin + kaçıncı
+  geçiş → yeni metin; şablon değişince korunur, ekranda yoksa saklanır), `cur` + `rates` (çıktı para birimi ve kullanılan kur; kayıt değişmez), `fxc`,
+  `lang`/`tpl`. Enter düzeltmede kapalı. Test: `araclar/fatura-164-e2e.js`.
 
 ## Test
 - `npm test`: `test/app.test.js` (sürüm, çekirdek kopyası, CSP, güncelleme kanalı, paketleme, Wi‑Fi arşiv kuralı sql.js ile, FOPK) +

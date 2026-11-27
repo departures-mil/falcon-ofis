@@ -129,8 +129,11 @@ fs.mkdirSync(OUT, { recursive: true });
   assert.deepStrictEqual([sensor.sale_price, sensor.cost_currency], [840, 'TRY'], 'kayıtlı ürün fiyatı değişmedi');
   const a = db.prod.find((p) => p.name === 'Ürün A');
   assert.deepStrictEqual([a.sale_price, a.cost_currency], [420, 'TRY'], 'yeni ürün orijinal TL fiyatıyla açıldı');
-  const html = await page.evaluate(async () => { const r = await window.falcon.db.all('SELECT * FROM invoices'); return window.FalconFatura.html(r[0], { company: {}, layout: {}, logo: 'falcon' }, true); });
-  assert.ok(/Döviz Kuru/.test(html) && /1 USD = 40/.test(html), 'PDF HTML kur satırı');
+  // v1.64: kur satırı varsayılan gizli; düzende (fx_show) ya da fatura başına ('fx') açılır
+  const html0 = await page.evaluate(async () => { const r = await window.falcon.db.all('SELECT * FROM invoices'); return window.FalconFatura.html(r[0], { company: {}, layout: {}, logo: 'falcon' }, true); });
+  assert.ok(!/Döviz Kuru/.test(html0), 'kur satırı varsayılan gizli');
+  const html = await page.evaluate(async () => { const r = await window.falcon.db.all('SELECT * FROM invoices'); return window.FalconFatura.html(r[0], { company: {}, layout: { fx_show: true }, logo: 'falcon' }, true); });
+  assert.ok(/Döviz Kuru/.test(html) && /1 USD = 40/.test(html), 'PDF HTML kur satırı (açıkken)');
   fs.writeFileSync(path.join(OUT, 'fatura-usd.html'), html);
 
   // v1.61.2: KDV'siz fatura — KDV sütunları ve satırları yok, KDV hesaplanmaz

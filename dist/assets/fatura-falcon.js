@@ -324,6 +324,37 @@
     }
   };
   ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX5[l]).forEach(function (k) { TX[l][k] = TX5[l][k]; }); });
+  // v1.64: kalıcı düzeltmeler, döviz kuru satırı (aç / kapa), çıktı para birimi çevirisi, dil denetimi
+  var TX6 = {
+    tr: {
+      pvEditHint: 'Önizlemedeki herhangi bir yazıya tıklayıp düzeltin. Düzeltmeler bu faturaya kaydedilir, her dil için ayrı saklanır, şablon değişince de korunur ve PDF\'e aynen girer.',
+      pvEdits: '{n} düzeltme kayıtlı', pvEditsNone: 'Kayıtlı düzeltme yok', pvRevertAll: 'Tümünü orijinale döndür', pvRevertOne: 'Orijinale döndür',
+      pvRevertAllQ: 'Bu dildeki bütün düzeltmeler silinip orijinal metin geri gelsin mi?', pvReverted: 'Orijinal metne dönüldü', pvSavedEd: 'Düzeltme kaydedildi',
+      pvFx: 'Döviz kuru', pvCur: 'Para birimini çevir', pvCurOrig: 'asıl', pvRates: 'Kurlar (1 USD =)', pvRatesRefresh: 'Güncel kuru al',
+      pvRatesBusy: 'Kur alınıyor…', pvRatesOnline: 'Güncel kur alındı', pvRatesOffline: 'İnternet yok: son kaydedilen kur kullanılıyor', pvRatesMissing: '{c} kuru yok — kuru elle yazın',
+      pvCurNote: 'Çeviri yalnız bu çıktı içindir; faturanın kaydı ve kasadaki tutar {c} olarak kalır. Kullanılan kur bu faturayla saklanır.',
+      pvLangWarn: 'Seçilen dilde olmayan yazı var (Arapça harf): {x}', layFx: 'Döviz kurunu faturada göster (varsayılan)', layFxHint: 'Kapalıyken kur satırı faturada görünmez; tek bir faturada önizlemedeki «Döviz kuru» kutusuyla açabilirsiniz.'
+    },
+    en: {
+      pvEditHint: 'Click any text in the preview to correct it. Corrections are saved with this invoice, kept separately for each language, survive template changes and go into the PDF exactly as shown.',
+      pvEdits: '{n} corrections saved', pvEditsNone: 'No saved corrections', pvRevertAll: 'Restore all original text', pvRevertOne: 'Restore original',
+      pvRevertAllQ: 'Delete all corrections in this language and restore the original text?', pvReverted: 'Original text restored', pvSavedEd: 'Correction saved',
+      pvFx: 'Exchange rate', pvCur: 'Convert currency', pvCurOrig: 'original', pvRates: 'Rates (1 USD =)', pvRatesRefresh: 'Get current rate',
+      pvRatesBusy: 'Getting rate…', pvRatesOnline: 'Current rate received', pvRatesOffline: 'No internet: using the last saved rate', pvRatesMissing: 'No {c} rate — enter it manually',
+      pvCurNote: 'The conversion is for this output only; the invoice record and the cash amount stay in {c}. The rate used is saved with this invoice.',
+      pvLangWarn: 'Text not in the selected language (Arabic letters): {x}', layFx: 'Show the exchange rate on invoices (default)', layFxHint: 'When off, the rate line is not printed; turn it on for a single invoice with the «Exchange rate» box in the preview.'
+    },
+    ar: {
+      pvEditHint: 'انقر على أي نص في المعاينة لتصحيحه. تُحفظ التصحيحات مع هذه الفاتورة، وتُحفظ لكل لغة على حدة، وتبقى عند تغيير القالب، وتدخل إلى ملف PDF كما هي.',
+      pvEdits: '{n} تصحيحات محفوظة', pvEditsNone: 'لا توجد تصحيحات محفوظة', pvRevertAll: 'استعادة النص الأصلي كله', pvRevertOne: 'استعادة الأصل',
+      pvRevertAllQ: 'هل تُحذف جميع التصحيحات في هذه اللغة ويُستعاد النص الأصلي؟', pvReverted: 'استُعيد النص الأصلي', pvSavedEd: 'حُفظ التصحيح',
+      pvFx: 'سعر الصرف', pvCur: 'تحويل العملة', pvCurOrig: 'الأصلية', pvRates: 'الأسعار (1 USD =)', pvRatesRefresh: 'جلب السعر الحالي',
+      pvRatesBusy: 'جارٍ جلب السعر…', pvRatesOnline: 'تم جلب السعر الحالي', pvRatesOffline: 'لا يوجد إنترنت: يُستخدم آخر سعر محفوظ', pvRatesMissing: 'لا يوجد سعر {c} — اكتبه يدوياً',
+      pvCurNote: 'التحويل لهذا المستند فقط؛ يبقى سجل الفاتورة والمبلغ في الصندوق بعملة {c}. يُحفظ السعر المستخدم مع هذه الفاتورة.',
+      pvLangWarn: 'يوجد نص بغير اللغة المختارة (حروف عربية): {x}', layFx: 'إظهار سعر الصرف على الفواتير (افتراضياً)', layFxHint: 'عند الإيقاف لا يُطبع سطر سعر الصرف؛ ويمكن تفعيله لفاتورة واحدة من مربع «سعر الصرف» في المعاينة.'
+    }
+  };
+  ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX6[l]).forEach(function (k) { TX[l][k] = TX6[l][k]; }); });
   // Faturanın kendi dilindeki resmi metinler (PDF)
   var DOC = {
     tr: { title: 'FATURA', no: 'Fatura No', date: 'Fatura Tarihi', due: 'Vade Tarihi', billTo: 'Sayın', desc: 'Açıklama', qty: 'Miktar', unit: 'Birim',
@@ -470,7 +501,10 @@
     var loc = (lg || lang()) === 'ar' ? 'ar-SY-u-nu-latn' : (lg || lang()) === 'en' ? 'en-US' : 'tr-TR';
     try { return new Intl.NumberFormat(loc, { minimumFractionDigits: d, maximumFractionDigits: d }).format(n || 0); } catch (e) { return (n || 0).toFixed(d); }
   }
-  function money(n, cur, lg) { return fmt(n, cur, lg) + ' ' + (SYM[cur] || cur); }
+  function symOf(c, lg) { return c === 'SYP' && (lg || lang()) !== 'ar' ? 'SYP' : (SYM[c] || c); }
+  function curLbl(c) { var y = symOf(c); return y === c ? c : c + ' · ' + y; }
+  // v1.64: Suriye lirasının «ل.س» simgesi yalnız Arapçada; Türkçe / İngilizce yazıda «SYP» (karışık dil olmasın)
+  function money(n, cur, lg) { var s = SYM[cur] || cur; if (cur === 'SYP' && (lg || lang()) !== 'ar') s = 'SYP'; return fmt(n, cur, lg) + ' ' + s; }
   function dmy(s) { if (!s) return ''; var p = String(s).slice(0, 10).split('-'); return p.length === 3 ? p[2] + '.' + p[1] + '.' + p[0] : s; }
 
   // ---------- veri ----------
@@ -588,6 +622,9 @@
   function hasStatus(v) { return hasFlagOn(v, 'nd'); }
   function hasVat(v) { return hasFlagOn(v, 'nv'); }
   function withSign(v, on) { return withFlag(v, 'ns', on); }
+  // v1.64: döviz kuru satırı — 'fx' = bu faturada göster, 'nf' = bu faturada gizle, ikisi de yoksa düzen varsayılanı (layout.fx_show, varsayılan kapalı)
+  function hasFx(v, cfg) { var f = tplFlagList(v); return f.indexOf('fx') >= 0 ? true : f.indexOf('nf') >= 0 ? false : !!(cfg && cfg.layout && cfg.layout.fx_show === true); }
+  function withFx(v, on) { var fl = tplFlagList(v).filter(function (x) { return x !== 'fx' && x !== 'nf'; }); fl.push(on ? 'fx' : 'nf'); fl.sort(); return [tplOf(v)].concat(fl).join('|'); }
   function withStatus(v, on) { return withFlag(v, 'nd', on); }
   function withVat(v, on) { return withFlag(v, 'nv', on); }
   // v1.61.2: fatura başına karekod (nq) / barkod (nb) kapatma
@@ -659,6 +696,19 @@
   var CODEW = { SATIS: ['Sales', 'مبيعات'], IADE: ['Return', 'مرتجع'], TEVKIFAT: ['Withholding', 'استقطاع ضريبي'], ISTISNA: ['VAT Exemption', 'إعفاء ضريبي'], OZELMATRAH: ['Special Tax Base', 'وعاء ضريبي خاص'],
     IHRACKAYITLI: ['Export-Registered', 'مسجّلة للتصدير'], TEMELFATURA: ['Basic Invoice', 'فاتورة أساسية'], TICARIFATURA: ['Commercial Invoice', 'فاتورة تجارية'], EARSIVFATURA: ['e-Archive Invoice', 'فاتورة أرشيف إلكتروني'],
     IHRACAT: ['Export', 'تصدير'], KAMU: ['Public Sector', 'القطاع العام'], YOLCUBERABERFATURA: ['Passenger Invoice', 'فاتورة مسافر'] };
+  // v1.64: Türkçe karşılıklar (Falcon / Klasik / Sade şablonlarda; e-Fatura şablonu GİB kodunu aynen yazar)
+  var CODETR = { SATIS: 'Satış', IADE: 'İade', TEVKIFAT: 'Tevkifat', ISTISNA: 'İstisna', OZELMATRAH: 'Özel Matrah', IHRACKAYITLI: 'İhraç Kayıtlı', TEMELFATURA: 'Temel Fatura',
+    TICARIFATURA: 'Ticari Fatura', EARSIVFATURA: 'e-Arşiv Fatura', IHRACAT: 'İhracat', KAMU: 'Kamu', YOLCUBERABERFATURA: 'Yolcu Beraber Fatura' };
+  // «SATIŞ», «satis», «Temel Fatura» → SATIS / TEMELFATURA
+  function codeKey(v) {
+    var m = { 'Ş': 'S', 'İ': 'I', 'I': 'I', 'Ğ': 'G', 'Ü': 'U', 'Ö': 'O', 'Ç': 'C', 'Â': 'A' };
+    return String(v || '').toLocaleUpperCase('tr').replace(/[ŞİĞÜÖÇÂ]/g, function (x) { return m[x]; }).replace(/[\s_-]+/g, '');
+  }
+  function codeText(v, lg, gib) {
+    var k = codeKey(v);
+    if (lg === 'tr') return gib || !CODETR[k] ? v : CODETR[k];
+    return CODEW[k] ? CODEW[k][lg === 'ar' ? 1 : 0] : v;
+  }
   function invoiceHtml(inv, cfg, forPdf) {
     var lg = DOC[inv.lang] ? inv.lang : lang();
     var D = DOC[lg], LB = LBL[lg] || LBL.tr, rtl = lg === 'ar', cur = inv.currency_code, tpl = tplOf(inv.template), P = PALETTE[tpl], gib = tpl === 'efatura';
@@ -667,7 +717,6 @@
     var c = cfg.company || {};
     var logoSrc = logoSrcOf(cfg.logo, tpl === 'falcon' ? '#ffffff' : P.ink);
     var sign = hasSign(inv.template) ? (cfg.signature || SAMPLE_SIGN) : '';
-    var other = ['tr', 'en', 'ar'].filter(function (x) { return x !== lg; }).map(function (x) { return DOC[x].title; }).join(' · ');
     var remaining = rnd((inv.total || 0) - (inv.paid || 0), cur);
     var st = inv.status || 'pending';
     var M = function (n) { return '<span dir="ltr" class="m">' + esc(money(n, cur, lg)) + '</span>'; };
@@ -711,12 +760,15 @@
     // fatura bilgileri (düzendeki sırayla)
     var metaVal = function (k) {
       if (k === 'date') return dmy(inv.date); if (k === 'number') return inv.number; if (k === 'due_date') return inv.due_date ? dmy(inv.due_date) : '';
-      if ((k === 'inv_type' || k === 'scenario') && lg !== 'tr' && CODEW[meta[k]]) return CODEW[meta[k]][lg === 'ar' ? 1 : 0];
+      if ((k === 'inv_type' || k === 'scenario') && meta[k]) return codeText(meta[k], lg, gib);
       return meta[k] || '';
     };
     var LTR_META = { number: 1, ettn: 1, customization: 1, issue_time: 1, order_no: 1, waybill_no: 1, campaign: 1 };
     var metaRows = layOn(cfg, 'meta').filter(function (f) { return metaVal(f.k); }).map(function (f) { return { k: f.k, label: fLabel('meta', f, lg), v: metaVal(f.k), ltr: LTR_META[f.k] || f.custom }; });
-    if (meta.fx_rate) metaRows.push({ k: 'fx_rate', label: D.fxRate, v: meta.fx_rate, ltr: true }); // v1.61: çeviride kullanılan kur
+    // v1.64: döviz kuru satırı varsayılan olarak GİZLİ; fatura başına (önizlemedeki «Döviz kuru») ya da Ayarlar → Fatura düzeni varsayılanıyla açılır.
+    // Metin: önizlemede seçilen kurlar (inv._fx, ör. «1 USD = 51,17 TRY · 1 USD = 13.000 SYP»); yoksa düzenleyicide çeviride kullanılan kur (meta.fx_rate)
+    var fxTxt = inv._fx != null ? inv._fx : meta.fx_rate;
+    if (hasFx(inv.template, cfg) && fxTxt) metaRows.push({ k: 'fx_rate', label: D.fxRate, v: fxTxt, ltr: true });
     // müşteri alanları
     var custVal = function (k) {
       if (k === 'tax_no') return inv.customer_tax || ''; if (k === 'address') return inv.customer_address || ''; if (k === 'phone') return inv.customer_phone || ''; if (k === 'email') return inv.customer_email || '';
@@ -873,14 +925,12 @@
         (tpl !== 'minimal' ? '<img class="wmlogo" src="' + falconLogo(P.ink, false) + '" alt="">' : '') +
         (st === 'cancelled' ? '<div class="wm">' + esc(D.st_cancelled) + '</div>' : '') +
         '<div class="hd"><div class="brand"><img src="' + logoSrc + '" alt=""><div class="co"><b>' + esc(c.name || '') + '</b>' + contact.join('<br>') + '</div></div>' +
-        '<div class="tt">' + (cfg.logo2 ? '<img class="l2" src="' + cfg.logo2 + '" alt="">' : '') + '<h1>' + esc(D.title) + '</h1><div class="o">' + esc(other) + '</div><div class="meta">' +
+        '<div class="tt">' + (cfg.logo2 ? '<img class="l2" src="' + cfg.logo2 + '" alt="">' : '') + '<h1>' + esc(D.title) + '</h1><div class="meta">' +
         metaRows.filter(function (r) { return r.k !== 'ettn'; }).map(function (r) { return '<span>' + esc(r.label) + ':</span> ' + (r.ltr ? '<b dir="ltr">' + esc(r.v) + '</b>' : esc(r.v)); }).join('<br>') +
         '<br><span>' + D.currency + ':</span> ' + esc(cur) + '</div></div></div>' +
         '<div class="body"><div class="parties"><div class="box"><h3>' + D.billTo + '</h3>' + custBlock + '</div>' +
-        '<div class="sumc"><h3>' + esc(X.summary) + '</h3><div>' + esc(X.payable) + '</div><div class="big">' + M(payable) + '</div>' +
-        (inv.due_date ? '<div class="row"><span>' + esc(X.due) + '</span><b dir="ltr">' + esc(dmy(inv.due_date)) + '</b></div>' : '') +
-        '<div class="row"><span>' + esc(X.items) + '</span><b dir="ltr">' + items.length + ' · ' + qTxt + '</b></div>' +
-        (stamp ? '<div>' + stamp + '</div>' : '') + ((qr || bc) ? '<div class="cd2">' + (qr ? '<div class="qr">' + qr + '</div>' : '') + '</div>' : '') + (bc ? '<div class="bc">' + bc + '<div class="t" dir="ltr">' + esc(meta.ettn || inv.number) + '</div></div>' : '') + '</div></div>' +
+        // v1.64: «Fatura özeti» kartı kaldırıldı (ödenecek tutar toplamlarda); durum damgası + karekod + barkod sağda kalır
+        ((stamp || qr || bc) ? '<div class="stbox">' + stamp + ((qr || bc) ? '<div class="codes">' + (qr ? '<div class="qr">' + qr + '</div>' : '') + (bc ? '<div class="bc">' + bc + '<div class="t" dir="ltr">' + esc(meta.ettn || inv.number) + '</div></div>' : '') + '</div>' : '') + '</div>' : '') + '</div>' +
         metaRows.filter(function (r) { return r.k === 'ettn'; }).map(function (r) { return '<div style="font-size:8.5pt;margin:-4mm 0 4mm"><span style="opacity:.7">' + esc(r.label) + ':</span> ' + L(r.v) + '</div>'; }).join('') +
         '<table class="it"><thead>' + thead + '</thead><tbody>' + rows + '</tbody></table>' +
         '<div class="end"><div class="sum"><div class="notes">' + (inv.note ? '<h4>' + D.note + '</h4><p>' + esc(inv.note) + '</p>' : '') + (c.bank ? '<h4>' + D.bank + '</h4><p>' + esc(c.bank) + '</p>' : '') + '<div class="sig"><div class="sg"><div class="im">' + (cfg.stamp ? '<img src="' + cfg.stamp + '" alt="">' : '') + '</div><div class="ln">' + D.stamp + '</div></div>' +
@@ -1025,6 +1075,7 @@
       '.fat-pv-st .n{width:22px;height:22px;border-radius:50%;background:#0ea5e9;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none}.fat-pv-st>b{min-width:120px}' +
       '.fat-pv-st .fat-seg{flex:0 1 auto}.fat-pv-st .fat-seg button{padding:6px 14px;white-space:nowrap}.fat-pv-st .field-hint{flex:1;min-width:220px;margin:0}.fat-pv-nm{font-size:12.5px;opacity:.85}.fat-pv-nm.busy{color:#38bdf8}' +
       '.fat-pv-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.fat-pv-bar select{width:auto;min-width:150px}.fat-pv-bar .sp{flex:1}' +
+      '.fat-pv{position:relative}.fat-pv-rev{position:absolute;z-index:5;box-shadow:0 4px 14px rgba(0,0,0,.35)}.fat-pv-fxcs{display:inline-flex;gap:8px}.fat-pv-cur .fat-seg button{padding:6px 12px;white-space:nowrap}.fat-pv-rate{display:inline-flex;align-items:center;gap:4px}.fat-pv-cur .field-hint{flex-basis:100%}' +
       '.fat-pv-tag{display:inline-block;border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:700;background:#e2a40026;color:#d69500}' +
       '.fat-img{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.fat-img .pv{width:170px;height:80px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid var(--border,#334)}.fat-img .pv img{max-width:160px;max-height:72px}' +
       '.fat-img .pv.dark{background:#13213b}' +
@@ -1116,7 +1167,7 @@
       head.innerHTML = '';
       var qIn = el('input', { type: 'search', placeholder: t('search'), value: flt.q, oninput: function (e) { flt.q = e.target.value; load(); } });
       var stSel = el('select', { onchange: function (e) { flt.st = e.target.value; load(); } }, [opt('', t('all'), !flt.st)].concat(['pending', 'partial', 'paid', 'cancelled'].map(function (s) { return opt(s, t('st_' + s), flt.st === s); })));
-      var cuSel = el('select', { onchange: function (e) { flt.cur = e.target.value; load(); } }, [opt('', t('allCur'), !flt.cur)].concat(CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], flt.cur === c); })));
+      var cuSel = el('select', { onchange: function (e) { flt.cur = e.target.value; load(); } }, [opt('', t('allCur'), !flt.cur)].concat(CUR.map(function (c) { return opt(c, curLbl(c), flt.cur === c); })));
       var fr = el('input', { type: 'date', value: flt.from, title: t('from'), onchange: function (e) { flt.from = e.target.value; load(); } });
       var to = el('input', { type: 'date', value: flt.to, title: t('to'), onchange: function (e) { flt.to = e.target.value; load(); } });
       head.appendChild(el('div', { class: 'filters' }, [el('div', { class: 'search' }, [qIn]), stSel, cuSel, fr, to]));
@@ -1149,7 +1200,7 @@
       Object.keys(by).sort(function (a, b) { return CUR.indexOf(a) - CUR.indexOf(b); }).forEach(function (c) {
         var b = by[c];
         sumBox.appendChild(el('div', { class: 'card' }, [
-          el('div', { class: 'cur' }, [el('span', { text: c + ' · ' + SYM[c] }), el('span', { class: 'muted', text: b.n + ' ' + t('count') })]),
+          el('div', { class: 'cur' }, [el('span', { text: curLbl(c) }), el('span', { class: 'muted', text: b.n + ' ' + t('count') })]),
           el('div', { class: 'ln' }, [el('span', { text: t('sumTotal') }), el('b', { dir: 'ltr', text: money(b.total, c) })]),
           el('div', { class: 'ln ok' }, [el('span', { text: t('sumPaid') }), el('b', { dir: 'ltr', text: money(b.paid, c) })]),
           el('div', { class: 'ln wait' }, [el('span', { text: t('sumOpen') }), el('b', { dir: 'ltr', text: money(rnd(b.total - b.paid, c), c) })])
@@ -1201,44 +1252,173 @@
     // v1.63: çıktı akışı — 1) dil  2) önizle ve düzelt (ürün adları olduğu gibi / çevrilmiş)  3) PDF
     function openPreview(inv, opts) {
       opts = opts || {};
+      var pvKey = (inv.id || opts.onChange) && inv.number ? 'invoice_pv_' + String(inv.number) : '';
       (opts.cfg ? Promise.resolve(opts.cfg) : CFG ? Promise.resolve(CFG) : loadCfg()).then(function (cfg) {
+        // v1.64: önizleme durumu fatura başına kalıcı (settings `invoice_pv_<no>`, eşitlenir):
+        //   ed {tr|en|ar: [{o: orijinal metin, i: aynı metnin kaçıncısı, n: yeni metin}]}, cur (çıktı para birimi), rates {TRY, SYP} (kullanılan kur, 1 USD =),
+        //   fxc (kur satırında gösterilecek birimler), lang / tpl (yalnız kayıtlı faturanın listeden önizlemesinde)
+        return Promise.all([pvKey ? sget(pvKey) : Promise.resolve(''), loadRates()]).then(function (r0) { start(cfg, jparse(r0[0], {}) || {}, r0[1]); });
+      });
+      function start(cfg, pvs, dbRates) {
+        if (!pvs.ed || typeof pvs.ed !== 'object') pvs.ed = {};
         var cur = Object.assign({}, inv);
+        if (!opts.onChange && inv.id) { if (DOC[pvs.lang]) cur.lang = pvs.lang; if (pvs.tpl) cur.template = pvs.tpl; }
         if (!DOC[cur.lang]) cur.lang = lang();
+        var orig = inv.currency_code;
         var host = el('div', { class: 'fat-pv-host', style: 'width:210mm' });
         var sr = host.attachShadow ? host.attachShadow({ mode: 'open' }) : host;
-        var pv = el('div', { class: 'fat-pv' }, [host]);
-        var zoom = 'fit', editing = false, edited = false;
+        var revBtn = el('button', { type: 'button', class: 'btn small fat-pv-rev', style: 'display:none', text: '↺ ' + t('pvRevertOne') });
+        var pv = el('div', { class: 'fat-pv' }, [host, revBtn]);
+        var zoom = 'fit', editing = false;
         var names = pvNamesPref(), tr = { lg: '', map: null, src: '', busy: false };
+        var savePv = function () {
+          if (!pvKey) return Promise.resolve();
+          return sset(pvKey, JSON.stringify(pvs)).catch(function (e) { toast(String(e && e.message || e), 'error'); });
+        };
+        // ---- kurlar / para birimi çevirisi ----
+        var rateOf = function (c) {
+          if (c === 'USD') return 1;
+          var m = pvs.rates && num(pvs.rates[c]) > 0 ? num(pvs.rates[c]) : num(dbRates[c]);
+          return m > 0 ? m : 0;
+        };
+        var outCur = function () { return pvs.cur && CUR.indexOf(pvs.cur) >= 0 && pvs.cur !== orig && rateOf(pvs.cur) > 0 && rateOf(orig) > 0 ? pvs.cur : orig; };
+        var fxList = function () { return Array.isArray(pvs.fxc) ? pvs.fxc : ['TRY', 'SYP']; };
+        var fxLine = function (lg) {
+          var a = fxList().filter(function (c) { return c !== 'USD' && rateOf(c) > 0; });
+          return a.length ? a.map(function (c) { return '1 USD = ' + fmt(rateOf(c), c === 'SYP' ? 'SYP' : 'X', lg) + ' ' + c; }).join(' · ') : null;
+        };
+        var snap = function () { if (!pvs.rates) pvs.rates = { TRY: num(dbRates.TRY) || 0, SYP: num(dbRates.SYP) || 0 }; };
         var view = function () {
-          if (names !== 'tr' || !tr.map || tr.lg !== cur.lang) return cur;
           var its = jparse(cur.items, []); if (!Array.isArray(its)) its = [];
-          return Object.assign({}, cur, { items: JSON.stringify(its.map(function (it) {
-            var o = Object.assign({}, it);
-            if (tr.map[String(it.name || '')] != null) o.name = tr.map[String(it.name || '')];
-            if (it.unit) o.unit = unitTr(it.unit, cur.lang);
-            return o;
-          })) });
+          var o = Object.assign({}, cur);
+          if (names === 'tr' && tr.map && tr.lg === cur.lang) {
+            its = its.map(function (it) {
+              var x = Object.assign({}, it);
+              if (tr.map[String(it.name || '')] != null) x.name = tr.map[String(it.name || '')];
+              if (it.unit) x.unit = unitTr(it.unit, cur.lang);
+              return x;
+            });
+          }
+          var oc = outCur();
+          if (oc !== orig) {
+            var k = rateOf(oc) / rateOf(orig), p4 = function (n) { return Math.round(n * 1e4) / 1e4; };
+            its = its.map(function (it) { var x = Object.assign({}, it); x.price = p4(num(it.price) * k); return x; });
+            var noVat = !hasVat(cur.template), perLine = !noVat && its.some(function (it) { return it.vat != null && it.vat !== ''; });
+            var tt = calcTotals(its, num(cur.discount) * k, noVat ? 0 : cur.tax_rate, oc, perLine);
+            o.currency_code = oc; o.subtotal = tt.subtotal; o.discount = tt.discount; o.tax = tt.tax; o.total = tt.total;
+            o.paid = Math.min(tt.total, rnd(num(cur.paid) * k, oc));
+          }
+          o.items = JSON.stringify(its);
+          var fl = fxLine(cur.lang);
+          if (fl) o._fx = fl;
+          return o;
+        };
+        // ---- kalıcı düzeltmeler ----
+        var ED = { lg: '', recs: [], seen: {} };
+        var ekey = function (o, i) { return o + '\u0001' + i; };
+        var invEl = function () { return sr.querySelector && sr.querySelector('.inv'); };
+        var textNodes = function (root) {
+          var w = document.createTreeWalker(root, 4, null), a = [], n;
+          while ((n = w.nextNode())) { var p = n.parentNode; if (p && /^(STYLE|SCRIPT|svg|SVG)$/.test(p.nodeName)) continue; if (p && p.closest && p.closest('svg')) continue; if (!String(n.nodeValue).trim()) continue; a.push(n); }
+          return a;
+        };
+        var edList = function () { return Array.isArray(pvs.ed[ED.lg]) ? pvs.ed[ED.lg] : []; };
+        var markOf = function (n) { var p = n.parentNode; return p && p.nodeType === 1 ? p : null; };
+        // ekrandaki metinleri kayıtla karşılaştırır → pvs.ed[dil] (bu şablonda görünmeyen eski düzeltmeler korunur)
+        var collect = function () {
+          var x = invEl(); if (!x || !ED.lg || !x.isConnected) return false;
+          var map = new Map(); ED.recs.forEach(function (r) { r.extra = ''; map.set(r.n, r); });
+          var last = null;
+          textNodes(x).forEach(function (n) { var r = map.get(n); if (r) last = r; else if (last) last.extra += n.nodeValue; });
+          var out = [];
+          ED.recs.forEach(function (r) {
+            var v = (r.n.isConnected ? r.n.nodeValue : '') + r.extra, m = markOf(r.n);
+            if (v !== r.o) { out.push({ o: r.o, i: r.i, n: v }); if (m) m.setAttribute('data-fe', '1'); }
+            else if (m && m.getAttribute('data-fe')) { var still = ED.recs.some(function (q2) { return q2 !== r && markOf(q2.n) === m && (q2.n.nodeValue + (q2.extra || '')) !== q2.o; }); if (!still) m.removeAttribute('data-fe'); }
+          });
+          var keep = edList().filter(function (e) { return !ED.seen[ekey(e.o, e.i)]; });
+          var before = JSON.stringify(edList());
+          pvs.ed[ED.lg] = keep.concat(out);
+          drawEd();
+          return before !== JSON.stringify(pvs.ed[ED.lg]);
+        };
+        var applyEdits = function () {
+          var x = invEl(); ED.recs = []; ED.seen = {}; ED.lg = cur.lang;
+          if (!x) return;
+          var occ = {}, ed = {};
+          edList().forEach(function (e) { ed[ekey(e.o, e.i)] = e.n; });
+          textNodes(x).forEach(function (n) {
+            var o = n.nodeValue, i = occ[o] = (occ[o] || 0) + 1, k = ekey(o, i);
+            ED.recs.push({ n: n, o: o, i: i, extra: '' }); ED.seen[k] = 1;
+            if (ed[k] != null) { n.nodeValue = ed[k]; var m = markOf(n); if (m) m.setAttribute('data-fe', '1'); }
+          });
+          drawEd();
+        };
+        // her değişiklikte hemen toplanır (pencere kapanınca düğümler kopar), kayıt 600 ms sonra
+        var saveTimer = 0, dirty = false;
+        var queueSave = function () {
+          if (collect()) dirty = true;
+          clearTimeout(saveTimer);
+          saveTimer = setTimeout(function () { if (dirty) { dirty = false; savePv(); } }, 600);
+        };
+        var flush = function () { clearTimeout(saveTimer); if (collect()) dirty = true; if (dirty) { dirty = false; return savePv(); } return Promise.resolve(); };
+        var edInfo = el('span', { class: 'fat-pv-nm' });
+        var edAll = el('button', { type: 'button', class: 'btn small', text: '↺ ' + t('pvRevertAll'), onclick: function () {
+          confirmBox(t('pvRevertAllQ')).then(function (ok) {
+            if (!ok) return;
+            clearTimeout(saveTimer); pvs.ed[cur.lang] = []; ED.recs = []; savePv(); render(); toast(t('pvReverted'));
+          });
+        } });
+        function drawEd() {
+          var n = Array.isArray(pvs.ed[cur.lang]) ? pvs.ed[cur.lang].length : 0;
+          edInfo.textContent = n ? '✎ ' + t('pvEdits', { n: n }) : '';
+          edAll.style.display = n ? '' : 'none';
+        }
+        // tek alanı geri al: işaretli öğeye tıklayınca ↺ düğmesi çıkar
+        var revTarget = null;
+        var hideRev = function () { revBtn.style.display = 'none'; revTarget = null; };
+        sr.addEventListener && sr.addEventListener('click', function (e) {
+          var tg = e.target && e.target.closest ? e.target.closest('[data-fe]') : null;
+          if (!tg) { hideRev(); return; }
+          revTarget = tg;
+          var a = tg.getBoundingClientRect(), b = pv.getBoundingClientRect();
+          revBtn.style.display = '';
+          revBtn.style.top = Math.max(0, a.top - b.top + pv.scrollTop - 30) + 'px';
+          revBtn.style.left = Math.max(0, a.left - b.left + pv.scrollLeft) + 'px';
+        });
+        revBtn.onmousedown = function (e) { e.preventDefault(); };
+        revBtn.onclick = function () {
+          var tg = revTarget; if (!tg) return;
+          ED.recs.forEach(function (r) { if (tg.contains(r.n) || markOf(r.n) === tg) { if (!r.n.isConnected) tg.appendChild(r.n); r.n.nodeValue = r.o; } });
+          var tracked = new Set(ED.recs.map(function (r) { return r.n; }));
+          textNodes(tg).forEach(function (n) { if (!tracked.has(n)) n.parentNode.removeChild(n); });
+          tg.removeAttribute('data-fe'); hideRev();
+          clearTimeout(saveTimer); collect(); savePv(); toast(t('pvReverted'));
         };
         var render = function () {
+          if (ED.recs.length) collect();
           var h = invoiceHtml(view(), cfg, false);
-          sr.innerHTML = '<style>' + h.css.replace(/@page[^{]*\{[^}]*\}/g, '') + '.inv{box-shadow:0 6px 30px rgba(0,0,0,.35)}.inv[contenteditable] *:hover{outline:1px dashed #38bdf8aa}.inv[contenteditable]:focus{outline:none}</style>' + h.body;
-          if (edited) toast(t('pvEditLost'));
-          edited = false; setEdit(editing);
+          sr.innerHTML = '<style>' + h.css.replace(/@page[^{]*\{[^}]*\}/g, '') + '.inv{box-shadow:0 6px 30px rgba(0,0,0,.35)}.inv[contenteditable] *:hover{outline:1px dashed #38bdf8aa}.inv[contenteditable]:focus{outline:none}' +
+            '[data-fe]{background:rgba(250,204,21,.28);box-shadow:inset 0 -1px 0 #e2a400;border-radius:2px;cursor:pointer}</style>' + h.body;
+          hideRev();
+          applyEdits();
+          setEdit(editing);
           setTimeout(fit, 0);
         };
         var fit = function () {
-          var full = host.offsetWidth || 794, hh = Math.max(1123, (sr.firstElementChild && sr.querySelector('.inv') ? sr.querySelector('.inv').offsetHeight : 1123));
+          var full = host.offsetWidth || 794, hh = Math.max(1123, (invEl() ? invEl().offsetHeight : 1123));
           var k = zoom === 'fit' ? Math.min(1, (pv.clientWidth - 28) / full) : 1;
           host.style.transform = 'scale(' + k + ')'; host.style.height = (hh * k) + 'px'; host.style.marginBottom = '0';
         };
-        var changed = function () { if (opts.onChange) opts.onChange(cur.template, cur.lang); };
+        var keepState = function () { if (!opts.onChange && inv.id) { pvs.lang = cur.lang; pvs.tpl = cur.template; savePv(); } };
+        var changed = function () { if (opts.onChange) opts.onChange(cur.template, cur.lang); keepState(); };
         // 1) dil
         var lgBox = el('div', { class: 'fat-seg fat-pv-lg' });
         var drawLg = function () {
           lgBox.innerHTML = '';
           [['tr', 'Türkçe'], ['en', 'English'], ['ar', 'العربية']].forEach(function (x) {
             lgBox.appendChild(el('button', { type: 'button', class: cur.lang === x[0] ? 'on' : '', dir: x[0] === 'ar' ? 'rtl' : 'ltr', text: x[1], onclick: function () {
-              if (cur.lang === x[0]) return; cur.lang = x[0]; drawLg(); changed(); ensureNames().then(render); render();
+              if (cur.lang === x[0]) return; if (ED.recs.length) collect(); ED.recs = []; cur.lang = x[0]; drawLg(); changed(); ensureNames().then(render); render();
             } }));
           });
         };
@@ -1266,17 +1446,26 @@
             tr = { lg: lg, map: r.map, src: r.src, busy: false }; drawNm();
           }, function () { tr.busy = false; drawNm(); });
         };
-        // 2) düzelt
+        // 3) düzelt
         var edBtn = el('button', { type: 'button', class: 'btn small' });
         var setEdit = function (on) {
           editing = on;
-          var x = sr.querySelector && sr.querySelector('.inv');
+          var x = invEl();
           if (x) { if (on) { x.setAttribute('contenteditable', 'true'); x.setAttribute('spellcheck', 'false'); } else x.removeAttribute('contenteditable'); }
           edBtn.className = 'btn small' + (on ? ' primary' : '');
           edBtn.textContent = on ? '✓ ' + t('pvEditOff') : '✎ ' + t('pvEditOn');
         };
-        edBtn.onclick = function () { setEdit(!editing); if (editing) { var x = sr.querySelector('.inv'); if (x) try { x.focus(); } catch (e) {} } };
-        sr.addEventListener && sr.addEventListener('input', function () { edited = true; });
+        edBtn.onclick = function () { setEdit(!editing); if (editing) { var x = invEl(); if (x) try { x.focus(); } catch (e) {} } else flush().then(function () { if ((pvs.ed[cur.lang] || []).length) toast(t('pvSavedEd')); }); };
+        if (sr.addEventListener) {
+          sr.addEventListener('input', queueSave);
+          // satır sonu eklenmez (alanlar tek satır; kayıt metin düğümleriyle eşleşir), yapıştırma düz metin
+          sr.addEventListener('keydown', function (e) { if (editing && e.key === 'Enter') e.preventDefault(); });
+          sr.addEventListener('paste', function (e) {
+            if (!editing) return; e.preventDefault();
+            var tx = (e.clipboardData && e.clipboardData.getData('text/plain') || '').replace(/\s*\n\s*/g, ' ');
+            try { document.execCommand('insertText', false, tx); } catch (er) {}
+          });
+        }
         var tplSel = el('select', { onchange: function (e) { cur.template = [e.target.value].concat(tplFlagList(cur.template)).join('|'); render(); changed(); } },
           TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), tplOf(cur.template) === x); }));
         var sgCb = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withSign(cur.template, e.target.checked); render(); changed(); } });
@@ -1285,11 +1474,63 @@
         sdCb.checked = hasStatus(cur.template);
         var pvFlag = function (f) { var x = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withFlag(cur.template, f, e.target.checked); render(); changed(); } }); x.checked = hasFlagOn(cur.template, f); return x; };
         var pvLay = cfg.layout || {};
+        // döviz kuru satırı (varsayılan kapalı) + hangi birimler
+        var fxCs = el('span', { class: 'fat-pv-fxcs' });
+        var fxCb = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withFx(cur.template, e.target.checked); if (e.target.checked) { snap(); savePv(); } drawFxCs(); render(); changed(); } });
+        fxCb.checked = hasFx(cur.template, cfg);
+        function drawFxCs() {
+          fxCs.innerHTML = ''; fxCs.style.display = hasFx(cur.template, cfg) ? '' : 'none';
+          ['TRY', 'SYP'].forEach(function (c) {
+            var x = el('input', { type: 'checkbox', onchange: function (e) {
+              var l = fxList().filter(function (z) { return z !== c; }); if (e.target.checked) l.push(c);
+              pvs.fxc = ['TRY', 'SYP'].filter(function (z) { return l.indexOf(z) >= 0; }); savePv(); render();
+            } });
+            x.checked = fxList().indexOf(c) >= 0;
+            fxCs.appendChild(el('label', { class: 'check' }, [x, el('span', { text: c })]));
+          });
+        }
+        // para birimini çevir (yalnız çıktı)
+        var curBox = el('div', { class: 'fat-seg' });
+        var rateIn = {}, rateMsg = el('span', { class: 'fat-pv-nm' });
+        var curNote = el('div', { class: 'field-hint', style: 'margin:0' });
+        function drawCur() {
+          curBox.innerHTML = '';
+          var oc = outCur();
+          CUR.forEach(function (c) {
+            curBox.appendChild(el('button', { type: 'button', class: oc === c ? 'on' : '', text: c + (c === orig ? ' (' + t('pvCurOrig') + ')' : ''), onclick: function () {
+              if (c !== orig && rateOf(c) <= 0) { rateMsg.textContent = '⚠ ' + t('pvRatesMissing', { c: c }); return; }
+              if (c !== orig && rateOf(orig) <= 0) { rateMsg.textContent = '⚠ ' + t('pvRatesMissing', { c: orig }); return; }
+              if (ED.recs.length) collect();
+              snap(); pvs.cur = c === orig ? '' : c; savePv(); drawCur(); render();
+            } }));
+          });
+          ['TRY', 'SYP'].forEach(function (c) { if (rateIn[c] && document.activeElement !== rateIn[c]) rateIn[c].value = rateOf(c) > 0 ? String(rateOf(c)) : ''; });
+          curNote.textContent = oc !== orig ? t('pvCurNote', { c: orig }) : '';
+        }
+        ['TRY', 'SYP'].forEach(function (c) {
+          rateIn[c] = el('input', { type: 'text', inputmode: 'decimal', dir: 'ltr', style: 'width:96px', onchange: function (e) {
+            var v = num(e.target.value); if (!(v > 0)) { drawCur(); return; }
+            snap(); pvs.rates[c] = v; savePv(); drawCur(); render();
+          } });
+        });
+        var rateBtn = el('button', { type: 'button', class: 'btn small', text: '↻ ' + t('pvRatesRefresh'), onclick: function () {
+          var api = F().rates && F().rates.fetchOnline;
+          rateBtn.disabled = true; rateMsg.textContent = '⏳ ' + t('pvRatesBusy');
+          (api ? Promise.race([Promise.resolve().then(api), new Promise(function (res) { setTimeout(function () { res(null); }, 9000); })]) : Promise.resolve(null))
+            .then(function (r) { return !!(r && r.ok); }, function () { return false; })
+            .then(function (online) {
+              return loadRates().then(function (m) {
+                dbRates = m; pvs.rates = { TRY: num(m.TRY) || 0, SYP: num(m.SYP) || 0 };
+                rateBtn.disabled = false; rateMsg.textContent = online ? '✓ ' + t('pvRatesOnline') : '⚠ ' + t('pvRatesOffline');
+                savePv(); drawCur(); render();
+              });
+            });
+        } });
         var zb = el('button', { type: 'button', class: 'btn small', text: t('zoomFull'), onclick: function () { zoom = zoom === 'fit' ? 'full' : 'fit'; zb.textContent = zoom === 'fit' ? t('zoomFull') : t('zoomFit'); fit(); } });
         var steps = el('div', { class: 'fat-pv-steps' }, [
           el('div', { class: 'fat-pv-st' }, [el('span', { class: 'n', text: '1' }), el('b', { text: t('pvStepLang') }), lgBox]),
           el('div', { class: 'fat-pv-st' }, [el('span', { class: 'n', text: '2' }), el('b', { text: t('pvStepNames') }), nmBox, nmInfo]),
-          el('div', { class: 'fat-pv-st' }, [el('span', { class: 'n', text: '3' }), el('b', { text: t('pvStepEdit') }), edBtn, el('span', { class: 'field-hint', text: t('pvEditHint') })])
+          el('div', { class: 'fat-pv-st' }, [el('span', { class: 'n', text: '3' }), el('b', { text: t('pvStepEdit') }), edBtn, edInfo, edAll, el('span', { class: 'field-hint', text: t('pvEditHint') })])
         ]);
         var bar = el('div', { class: 'fat-pv-bar' }, [
           el('span', { class: 'field-label', text: t('template') }), tplSel,
@@ -1297,29 +1538,54 @@
           el('label', { class: 'check fat-pv-sg' }, [sdCb, el('span', { text: t('statusOn') })]),
           pvLay.qr !== false ? el('label', { class: 'check fat-pv-sg' }, [pvFlag('nq'), el('span', { text: t('codeQr') })]) : null,
           pvLay.barcode !== false ? el('label', { class: 'check fat-pv-sg' }, [pvFlag('nb'), el('span', { text: t('codeBc') })]) : null,
+          el('label', { class: 'check fat-pv-sg' }, [fxCb, el('span', { text: t('pvFx') })]), fxCs,
           el('span', { class: 'sp' }), opts.tag ? el('span', { class: 'fat-pv-tag', text: opts.tag }) : null, zb
         ]);
-        // 3) PDF: düzeltilmiş önizleme aynen PDF'e girer
+        var curBar = el('div', { class: 'fat-pv-bar fat-pv-cur' }, [
+          el('span', { class: 'field-label', text: t('pvCur') }), curBox,
+          el('span', { class: 'field-label', text: t('pvRates') }),
+          el('label', { class: 'fat-pv-rate' }, [el('span', { text: 'TRY' }), rateIn.TRY]), el('label', { class: 'fat-pv-rate' }, [el('span', { text: 'SYP' }), rateIn.SYP]),
+          rateBtn, rateMsg, curNote
+        ]);
+        // PDF: önizlemedeki (düzeltilmiş) gövde aynen PDF'e girer
         var pdfHtml = function () {
           var full = invoiceHtml(view(), cfg, true);
-          var x = sr.querySelector && sr.querySelector('.inv');
-          if (!edited || !x) return full;
+          var x = invEl();
+          if (!x) return full;
           var c2 = x.cloneNode(true); c2.removeAttribute('contenteditable'); c2.removeAttribute('spellcheck');
+          Array.prototype.forEach.call(c2.querySelectorAll('[data-fe]'), function (z) { z.removeAttribute('data-fe'); });
           return full.replace(/<body>[\s\S]*<\/body>/, function () { return '<body>' + c2.outerHTML + '</body>'; });
         };
-        var foot = [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } })];
+        // dil denetimi: Türkçe / İngilizce çıktıda Arapça harf kalmışsa uyarır (müşteri adı gibi girilen yazılara dokunulmaz)
+        var langCheck = function () {
+          var x = invEl(); if (!x || cur.lang === 'ar') return;
+          var m = String(x.textContent || '').match(/[؀-ۿ][؀-ۿ\s]{0,30}/);
+          if (m) toast(t('pvLangWarn', { x: m[0].trim() }), 'error');
+        };
+        var foot = [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { flush(); m.close(); } })];
         var m;
-        if (opts.extra) foot = foot.concat(opts.extra(function () { return m; }, cur));
+        if (opts.extra) foot = foot.concat(opts.extra(function () { flush(); return m; }, cur));
         else foot.push(el('button', { type: 'button', class: 'btn primary', text: '⬇ ' + t('pvPdf'), onclick: function (e) {
           var b = e.target; b.disabled = true;
+          flush(); langCheck();
           savePdfHtml(cur, pdfHtml()).then(function (x) { b.disabled = false; if (x !== null && x !== undefined) toast(t('pdfSaved')); }, function (er) { b.disabled = false; toast(String(er && er.message || er), 'error'); });
         } }));
-        m = modal(t('previewTitle') + (cur.number ? ' · ' + cur.number : ''), [steps, bar, pv], foot, 'xwide');
-        var onRs = function () { if (!pv.isConnected) { window.removeEventListener('resize', onRs); return; } fit(); };
+        m = modal(t('previewTitle') + (cur.number ? ' · ' + cur.number : ''), [steps, bar, curBar, pv], foot, 'xwide');
+        var onRs = function () { if (!pv.isConnected) { window.removeEventListener('resize', onRs); flush(); return; } fit(); };
         window.addEventListener('resize', onRs);
-        drawLg(); drawNm(); render();
+        // pencere ✕ / Esc ile kapanırsa da bekleyen düzeltme kaydedilir
+        var mo = new MutationObserver(function () { if (!pv.isConnected) { mo.disconnect(); flush(); } });
+        mo.observe(document.body, { childList: true });
+        drawLg(); drawNm(); drawFxCs(); drawCur(); render();
         ensureNames().then(function () { if (names === 'tr') render(); });
-      });
+        window.__falconPv = { collect: collect, flush: flush, state: pvs, key: pvKey };
+      }
+    }
+    // son kayıtlı kurlar (1 USD = rate birim)
+    function loadRates() {
+      return q('SELECT currency_code AS c, rate FROM exchange_rates r WHERE id = (SELECT MAX(id) FROM exchange_rates WHERE currency_code = r.currency_code)').then(function (rows) {
+        var m = { USD: 1 }; rows.forEach(function (x) { if (CUR.indexOf(x.c) >= 0 && x.c !== 'USD' && x.rate > 0) m[x.c] = x.rate; }); return m;
+      }).catch(function () { return { USD: 1 }; });
     }
     // Ayarlardaki şirket bilgileriyle örnek fatura
     function sampleInv(cfg, d) {
@@ -1499,7 +1765,7 @@
           }
           return field(fLabel('meta', f, lang()), x, f.k === 'number' ? { hint: t('invNoHint') } : null);
         });
-        var curSel = el('select', { onchange: function (e) { var old = st.currency; st.currency = e.target.value; switchCurrency(old, st.currency); drawFx(); drawCash(); } }, CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], st.currency === c); }));
+        var curSel = el('select', { onchange: function (e) { var old = st.currency; st.currency = e.target.value; switchCurrency(old, st.currency); drawFx(); drawCash(); } }, CUR.map(function (c) { return opt(c, curLbl(c), st.currency === c); }));
         var tplSel = el('select', { onchange: function (e) { st.template = [e.target.value].concat(tplFlagList(st.template)).join('|'); } }, TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), tplOf(st.template) === x); }));
         var sgBox = el('div', { class: 'fat-seg' });
         var drawSg = function () {
@@ -1623,10 +1889,10 @@
           CUR.filter(function (c) { return c !== 'USD'; }).forEach(function (c) {
             var x = el('input', { type: 'number', step: 'any', min: '0', dir: 'ltr', value: fxRate(c) > 0 ? String(fxRate(c)) : '', class: miss && !(fxRate(c) > 0) ? 'bad' : null,
               onchange: function (e) { var v = num(e.target.value); if (v > 0 && v !== num(FX.r[c])) FX.man[c] = v; else delete FX.man[c]; fxApply(true); } });
-            row.appendChild(el('label', { class: 'fat-fx-i' }, [el('span', { text: '1 USD =' }), x, el('span', { text: c }), el('span', { dir: 'rtl', text: SYM[c] })]));
+            row.appendChild(el('label', { class: 'fat-fx-i' }, [el('span', { text: '1 USD =' }), x, el('span', { text: c }), el('span', { dir: lang() === 'ar' ? 'rtl' : 'ltr', text: symOf(c) })]));
           });
           fxBox.appendChild(row);
-          var srcSel = el('select', { onchange: function (e) { fxFrom = e.target.value; } }, CUR.filter(function (c) { return c !== st.currency; }).map(function (c) { return opt(c, c + ' · ' + SYM[c], fxFrom === c); }));
+          var srcSel = el('select', { onchange: function (e) { fxFrom = e.target.value; } }, CUR.filter(function (c) { return c !== st.currency; }).map(function (c) { return opt(c, curLbl(c), fxFrom === c); }));
           if (fxFrom === st.currency) fxFrom = srcSel.value;
           fxBox.appendChild(el('div', { class: 'fat-fx-cv' }, [el('span', { text: t('fxFromLbl') }), srcSel,
             el('button', { type: 'button', class: 'btn small primary', text: '⇄ ' + t('fxConvertTo', { c: st.currency }), onclick: function () { convertFrom(srcSel.value); } })]));
@@ -2091,8 +2357,8 @@
       var cur = CUR.indexOf(r.currency) >= 0 ? r.currency : '';
       // v1.61.4: PDF'teki fiyatların para birimi (okunamadıysa TRY) ve faturanın para birimi; farklıysa fiyatlar aktarılırken çevrilir
       var srcCur = cur || 'TRY', dstCur = srcCur;
-      var dstSel = el('select', { onchange: function (e) { dstCur = e.target.value; } }, CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], dstCur === c); }));
-      var srcSel = el('select', { onchange: function (e) { srcCur = e.target.value; } }, CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], srcCur === c); }));
+      var dstSel = el('select', { onchange: function (e) { dstCur = e.target.value; } }, CUR.map(function (c) { return opt(c, curLbl(c), dstCur === c); }));
+      var srcSel = el('select', { onchange: function (e) { srcCur = e.target.value; } }, CUR.map(function (c) { return opt(c, curLbl(c), srcCur === c); }));
       var curRow = el('div', { class: 'fat-fx-cv' }, [el('span', { text: t('impSrcCur') }), srcSel, el('span', { text: '→ ' + t('impDstCur') }), dstSel]);
       // v1.61.2: çevrimdışı teyit — farklı satırlar işaretlenir
       var ck = r.check || null, diffRows = {};
@@ -2356,7 +2622,7 @@
           if (f.custom) { var x = el('input', { value: ex[f.k] || '', oninput: function (e) { ex[f.k] = e.target.value; } }); kids.push(field(lb, x)); return; }
           if (f.k === 'price') {
             kids.push(field(lb, el('div', { class: 'fat-inrow' }, [inp('sale_price', { type: 'number', step: 'any', min: '0', dir: 'ltr' }),
-              el('select', { onchange: function (e) { d.currency = e.target.value; } }, CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], d.currency === c); }))]), { group: true }));
+              el('select', { onchange: function (e) { d.currency = e.target.value; } }, CUR.map(function (c) { return opt(c, curLbl(c), d.currency === c); }))]), { group: true }));
           } else if (f.k === 'vat') kids.push(field(lb, inp('vat_rate', { type: 'number', step: 'any', min: '0', max: '100', dir: 'ltr' })));
           else if (f.k === 'description') kids.push(field(lb, inp('description', { tag: 'textarea', rows: '2' }), { span: 2 }));
           else kids.push(field(lb, inp(f.k, f.k === 'code' ? { dir: 'ltr' } : null)));
@@ -2500,7 +2766,7 @@
           };
           draw(); return box;
         };
-        var dCur = el('select', { onchange: function (e) { d.currency = e.target.value; } }, CUR.map(function (x) { return opt(x, x + ' · ' + SYM[x], d.currency === x); }));
+        var dCur = el('select', { onchange: function (e) { d.currency = e.target.value; } }, CUR.map(function (x) { return opt(x, curLbl(x), d.currency === x); }));
         var dTax = el('input', { type: 'number', step: 'any', min: '0', max: '100', dir: 'ltr', value: String(d.tax_rate || 0), oninput: function (e) { d.tax_rate = num(e.target.value); } });
         var dTpl = el('select', { onchange: function (e) { d.template = e.target.value; } }, TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), d.template === x); }));
         var dVt = el('input', { type: 'checkbox', onchange: function (e) { d.vat_on = e.target.checked; } }); dVt.checked = d.vat_on !== false;
@@ -2529,7 +2795,8 @@
             field(t('layMeta'), layEditor('meta', lay.meta), { span: 2, group: true }),
             field(t('layCust'), layEditor('cust', lay.cust), { span: 2, group: true, hint: t('layCustHint') }),
             field(t('layProd'), layEditor('prod', lay.prod), { span: 2, group: true }),
-            el('div', { class: 'span-2 fat-chks' }, [chk('qr', t('layQr')), chk('barcode', t('layBarcode'))])
+            el('div', { class: 'span-2 fat-chks' }, [chk('qr', t('layQr')), chk('barcode', t('layBarcode')), chk('fx_show', t('layFx'), true)]),
+            el('div', { class: 'span-2 field-hint', text: t('layFxHint') })
           ]),
           el('h3', { class: 'section-title', style: 'margin-top:16px', text: t('sDefaults') }),
           el('div', { class: 'form' }, [field(t('currency'), dCur), field(t('taxRate'), dTax, { hint: t('dVatHint') }), field(t('template'), dTpl), field(t('lang'), dLg), el('label', { class: 'check span-2' }, [dSd, el('span', { text: t('statusDefault') })]), el('label', { class: 'check span-2' }, [dVt, el('span', { text: t('vatDefault') })]),
@@ -2569,5 +2836,5 @@
   }
 
   if (document.head) style(); else document.addEventListener('DOMContentLoaded', style);
-  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, translateNames: translateNames, namesPref: pvNamesPref, logo: falconLogo, version: '1.63.0' };
+  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, translateNames: translateNames, namesPref: pvNamesPref, logo: falconLogo, version: '1.64.0' };
 })();
