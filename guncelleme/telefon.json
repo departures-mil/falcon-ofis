@@ -1,10 +1,10 @@
 {
- "version": "1.60.2",
- "notes": "PDF'den doldur: Depo ve Stok Kodu bitişik yazılmış satırlar artık doğru ayrılıyor (28 kalemli gerçek e-Fatura ile denendi).",
- "size": 3658462,
- "sha256": "f90d0c6ecf843dc271bf9fd48ccdb4384661fe742efe688eb15b2e241c1791b9",
- "sig": "MEQCIE7ij21afuaikJ08wXzEMxOwNSNbxcDXHRCE6yHDAWfEAiAsFn/8ycEIvPoAgrmeQCzr8BYFM2aG8Vg0kPu2sRMqQg==",
- "file": "telefon-1.60.2.fopk",
+ "version": "1.61.2",
+ "notes": "PDF'den doldur: yapay zeka okuması çevrimdışı okumayla teyit edilir; yapay zekanın neden kullanılamadığı doğru yazılır (zaman aşımı ≠ internet yok). Ayrıca 1.61: fatura döviz çevirisi, ödeme damgası kaldırılabilir.",
+ "size": 3666575,
+ "sha256": "1efa27d77135e9e984faa02751f3bbaaf477d11a01d98a8e685deed7605bfdcf",
+ "sig": "MEUCICkKsaRXJFJV6sZaSZ7QlvCHanZaELBrKvJKVHmgJZtnAiEAgEyrSQzCR9rgRxUczVnIJg7iE6ROKSKTPOhQAXnLVLI=",
+ "file": "telefon-1.61.2.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-27T17:31:10.323Z"
+ "publishedAt": "2026-11-27T18:23:56.702Z"
 }
