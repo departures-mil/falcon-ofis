@@ -13,7 +13,8 @@ const G = path.join(__dirname, '..', 'guncelleme');
 const pem = fs.readFileSync(process.env.OZEL_ANAHTAR || '', 'utf8');
 // v1.54: Ayarlar > Kullanım Limitleri kartı telefona da girer (masaüstündeki dist/assets kopyaları kullanılır)
 // v1.59: Fatura sekmesi eklentisi de (dist/assets/fatura-falcon.js) telefona girer
-for (const f of ['kullanim.js', 'kullanim-falcon.js', 'fatura-falcon.js']) fs.copyFileSync(path.join(__dirname, '..', 'dist', 'assets', f), path.join(www, 'assets', f));
+// v1.59.1: duyuru-falcon.js (yüzen 🔔 gizli, Ayarlar'da "Bildirimler ve Duyurular" kartı) da masaüstü kopyasından gelir
+for (const f of ['kullanim.js', 'kullanim-falcon.js', 'fatura-falcon.js', 'duyuru-falcon.js']) fs.copyFileSync(path.join(__dirname, '..', 'dist', 'assets', f), path.join(www, 'assets', f));
 {
   const ih = path.join(www, 'index.html');
   let h = fs.readFileSync(ih, 'utf8');
