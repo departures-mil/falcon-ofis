@@ -1,10 +1,10 @@
 {
- "version": "1.63.0",
- "notes": "Fatura PDF yeni düzen (2 sayfa, sayfa no, yazıyla tutar, fatura özeti). PDF öncesi: dil seçimi (TR/EN/AR), ürün adları olduğu gibi ya da çevrilmiş, önizle ve düzelt.",
- "size": 3682158,
- "sha256": "60faaed59f616306fdb8e453327c0c982600660434fe297ae080ceb512f00e88",
- "sig": "MEUCID+DW00duKG/rtNoYVDqA9min2gFJb+MUZhnek2ZK8m9AiEAgQBVOMvxHdmWfU1qYJnlfLDXZJsCM36qz6kaGJ5u4oU=",
- "file": "telefon-1.63.0.fopk",
+ "version": "1.64.0",
+ "notes": "Fatura: tek dil, özet kartı kaldırıldı, döviz kuru satırı aç/kapa (TRY/SYP), para birimini çevir, önizleme düzeltmeleri kalıcı.",
+ "size": 3687905,
+ "sha256": "dd5785c06e2ee79edf42c947d481fac9a6c015c84f04a6462fed1b05435a4333",
+ "sig": "MEYCIQD1l/Gr7NEhFasig6q0D/rxEdh76Z3ipdrDUv99D9QlPwIhANgzJoEe86Q/SDKwLqMP0w0i3sy+SiSqDTaBXo6RnowN",
+ "file": "telefon-1.64.0.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-27T19:40:35.141Z"
+ "publishedAt": "2026-11-27T20:17:46.669Z"
 }
