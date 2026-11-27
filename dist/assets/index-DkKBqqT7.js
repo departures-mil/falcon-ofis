@@ -236,6 +236,7 @@ FA.parse=function(text,ctx,range){
   return out;
 };
 FA.local=async function(text,ctx,range,tr){
+  if(window.FalconAskLocal){try{var pre=await window.FalconAskLocal(text,ctx,range);if(pre)return pre}catch(e){}}
   var P=FA.parse(text,ctx,range),f=P.filters,L=[];
   if(!P.understood)return{text:tr(`assist.notUnderstood`),local:!0};
   var groups=P.groups.length?P.groups:[{label:null}];

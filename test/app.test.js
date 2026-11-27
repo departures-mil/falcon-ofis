@@ -304,3 +304,20 @@ test('Arapça / dar ekran (1.60): varsayılan adlar ekranda çevrilir, tarih yer
   assert.ok(duyuru.includes('.aduy-kut{background:var(--modal-bg') && !duyuru.includes('prefers-color-scheme'), 'duyuru penceresi programın temasını izler');
   assert.ok(duyuru.includes('.aduy-zil{position:fixed;inset-inline-end:'), 'bildirim düğmesi kenar çubuğunun üstüne binmez');
 });
+
+test('Sor asistanı çevrimdışı (1.60): kasa bakiyesi ve azalan stok soruları tr/en/ar tanınır, dönem soruları pakete kalır', () => {
+  const html = read('dist/index.html');
+  assert.ok(html.indexOf('sor-yerel-falcon.js') > 0 && html.indexOf('sor-yerel-falcon.js') < html.indexOf('type="module"'));
+  const bundle = fs.readdirSync(path.join(ROOT, 'dist/assets')).filter((f) => /^index-.*\.js$/.test(f)).map((f) => read('dist/assets/' + f)).join('');
+  assert.ok(bundle.includes('if(window.FalconAskLocal){try{var pre=await window.FalconAskLocal(text,ctx,range);if(pre)return pre}catch(e){}}'), 'FA.local kancası (patch-ui-160)');
+  const g = { document: { documentElement: { getAttribute: () => 'tr' } } };
+  g.window = g;
+  new Function('window', 'document', read('dist/assets/sor-yerel-falcon.js'))(g, g.document);
+  const { RX, norm } = g.FalconAskLocal._test;
+  const bal = (s) => RX.balance.test(norm(s)) && !RX.period.test(norm(s));
+  const low = (s) => RX.stockWord.test(norm(s)) && RX.stockLow.test(norm(s)) && !RX.period.test(norm(s));
+  for (const s of ['Kasada ne kadar para var?', 'Bakiye nedir', 'How much money do we have?', 'كم المال في الصندوق؟', 'ما هو رصيد الصناديق']) assert.ok(bal(s), s);
+  for (const s of ['Bu ay ne kadar harcadık?', 'Dün kasaya ne kadar giriş oldu?', 'كم صرفنا هذا الشهر؟']) assert.ok(!bal(s), s);
+  for (const s of ['Stokta azalan malzemeler hangileri?', 'Which items are running low?', 'ما المواد التي نفدت من المخزون؟', 'biten ürünler']) assert.ok(low(s), s);
+  for (const s of ['Stokta kaç ürün var?', 'Bu ay hangi malzemeler bitti?']) assert.ok(!low(s), s);
+});
