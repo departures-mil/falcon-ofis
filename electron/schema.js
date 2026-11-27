@@ -869,3 +869,55 @@ migrations.push({
     CREATE INDEX idx_tasks_status ON tasks(status, due_date);
   `,
 });
+
+migrations.push({
+  version: 28,
+  name: 'v1.59-fatura-odeme-yontemi',
+  sql: `
+    -- v1.59: Para çıkışının ödeme yöntemi: cash (nakit) | shamcash | bank (havale / banka) | other. NULL = eski kayıt
+    -- (Sham Cash bilgisi varsa arayüz onu Sham Cash sayar). bank / other için işlem no ve not sc_ref / sc_note'ta durur.
+    ALTER TABLE cash_transactions ADD COLUMN pay_method TEXT;
+    -- Faturalar. items: JSON [{name, qty, unit, price, product_id}]. Tutarlar faturanın para biriminde.
+    -- status: pending (tahsil edilmedi) | partial (kısmi) | paid (ödendi) | cancelled (iptal). paid = tahsil edilen toplam.
+    CREATE TABLE invoices (
+      id               INTEGER PRIMARY KEY AUTOINCREMENT,
+      number           TEXT NOT NULL,
+      date             TEXT NOT NULL,
+      due_date         TEXT,
+      customer_name    TEXT NOT NULL,
+      customer_phone   TEXT,
+      customer_email   TEXT,
+      customer_address TEXT,
+      customer_tax     TEXT,
+      person_id        INTEGER,
+      currency_code    TEXT NOT NULL,
+      items            TEXT NOT NULL,
+      subtotal         REAL NOT NULL DEFAULT 0,
+      discount         REAL NOT NULL DEFAULT 0,
+      tax_rate         REAL NOT NULL DEFAULT 0,
+      tax              REAL NOT NULL DEFAULT 0,
+      total            REAL NOT NULL DEFAULT 0,
+      paid             REAL NOT NULL DEFAULT 0,
+      status           TEXT NOT NULL DEFAULT 'pending',
+      template         TEXT,
+      lang             TEXT,
+      note             TEXT,
+      created_at       TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+      updated_at       TEXT
+    );
+    CREATE INDEX idx_invoices_date ON invoices(date);
+    -- Tahsilatlar: her biri kasaya bir giriş (cash_transaction_id, related_type = 'invoice') olarak yazılır.
+    CREATE TABLE invoice_payments (
+      id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+      invoice_id          INTEGER NOT NULL,
+      date                TEXT NOT NULL,
+      amount              REAL NOT NULL,
+      account_id          INTEGER,
+      cash_transaction_id INTEGER,
+      note                TEXT,
+      created_at          TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+      updated_at          TEXT
+    );
+    CREATE INDEX idx_invoice_payments_inv ON invoice_payments(invoice_id);
+  `,
+});

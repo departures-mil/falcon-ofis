@@ -12,12 +12,17 @@ if (!version || !www) throw new Error('kullanım: sürüm www-klasörü "notlar"
 const G = path.join(__dirname, '..', 'guncelleme');
 const pem = fs.readFileSync(process.env.OZEL_ANAHTAR || '', 'utf8');
 // v1.54: Ayarlar > Kullanım Limitleri kartı telefona da girer (masaüstündeki dist/assets kopyaları kullanılır)
-for (const f of ['kullanim.js', 'kullanim-falcon.js']) fs.copyFileSync(path.join(__dirname, '..', 'dist', 'assets', f), path.join(www, 'assets', f));
+// v1.59: Fatura sekmesi eklentisi de (dist/assets/fatura-falcon.js) telefona girer
+for (const f of ['kullanim.js', 'kullanim-falcon.js', 'fatura-falcon.js']) fs.copyFileSync(path.join(__dirname, '..', 'dist', 'assets', f), path.join(www, 'assets', f));
 {
   const ih = path.join(www, 'index.html');
   let h = fs.readFileSync(ih, 'utf8');
   if (!h.includes('kullanim.js')) {
     h = h.replace(/(<script type="module")/, '<script src="./assets/kullanim.js"></script>\n    <script src="./assets/kullanim-falcon.js"></script>\n    $1');
+    fs.writeFileSync(ih, h);
+  }
+  if (!h.includes('fatura-falcon.js')) {
+    h = h.replace(/(<script src="\.\/assets\/kullanim-falcon\.js"><\/script>)/, '$1\n    <script src="./assets/fatura-falcon.js"></script>');
     fs.writeFileSync(ih, h);
   }
 }

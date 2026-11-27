@@ -324,15 +324,36 @@
     depo: function (dosya) { depoDosya = dosya; return K; },
     // Derlenmiş arayüzlerde: bul() bir öğe döndürdüğünde kartı onun hemen ardına koyar, sayfa değişse de korur.
     yerlestir: function (bul, once) {
+      // v1.59: kart TEK olur. Arayüz eşitleme kartını yeniden çizdiğinde (telefonda durum her değiştiğinde) eski kart
+      // yerinde kalıp yenisi ekleniyordu → onlarca kopya. Artık sayfadaki bütün kopyalar bulunur, biri kalır, gerisi silinir;
+      // kalan kart yerinden kaymışsa hedefin yanına taşınır (yeniden oluşturulmaz).
+      var meshul = false;
       var calis = function () {
+        if (meshul) return;
         var hedef = null; try { hedef = bul(); } catch (e) {}
-        if (!hedef || !hedef.parentNode) return;
-        var k = once ? hedef.previousElementSibling : hedef.nextElementSibling;
-        if (k && k.classList && k.classList.contains('kul-kart')) return;
-        var yeni = kart(); if (A.sinif) yeni.className += ' ' + A.sinif;
-        hedef.parentNode.insertBefore(yeni, once ? hedef : hedef.nextSibling);
+        var hepsi = Array.prototype.slice.call(g.document.querySelectorAll('.kul-kart[data-kul-yer]'));
+        if (!hedef || !hedef.parentNode) {
+          // Ayarlar sayfası kapandıysa kalan kopyalar temizlenir
+          if (hepsi.length > 1) { meshul = true; try { hepsi.slice(1).forEach(function (x) { x.remove(); }); } finally { meshul = false; } }
+          return;
+        }
+        meshul = true;
+        try {
+          var bu = hepsi[0] || null;
+          for (var i = 1; i < hepsi.length; i++) hepsi[i].remove();
+          if (!bu) {
+            bu = kart(); if (A.sinif) bu.className += ' ' + A.sinif;
+            bu.setAttribute('data-kul-yer', '1');
+          }
+          var komsu = once ? hedef.previousElementSibling : hedef.nextElementSibling;
+          if (komsu !== bu) hedef.parentNode.insertBefore(bu, once ? hedef : hedef.nextSibling);
+        } finally { meshul = false; }
       };
-      var bas = function () { calis(); new MutationObserver(function () { calis(); }).observe(g.document.body, { childList: true, subtree: true }); };
+      var bekle = 0;
+      var bas = function () {
+        calis();
+        new MutationObserver(function () { if (bekle) return; bekle = setTimeout(function () { bekle = 0; calis(); }, 60); }).observe(g.document.body, { childList: true, subtree: true });
+      };
       if (g.document.readyState === 'loading') g.document.addEventListener('DOMContentLoaded', bas); else bas();
     },
     // Metni içeren en dar kutuyu bulur (ör. 'TELEFON VE BİLGİSAYAR EŞİTLEME' başlıklı kart).

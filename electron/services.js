@@ -242,13 +242,16 @@ function createServices(db, { removeFile = () => {} } = {}) {
   // add_to_cash = false: yalnızca bilgi amaçlı kayıt, kasa bakiyesini etkilemez
   // v1.49: Sham Cash bilgileri (yalnızca çıkışta). sc_save_payee: alıcı listesine de kaydedilir / güncellenir.
   function saveShamCash(txId, p) {
-    if (p.sc_on === undefined && p.sc_account === undefined && p.sc_name === undefined) return; // eski arayüz: dokunma
+    if (p.sc_on === undefined && p.sc_account === undefined && p.sc_name === undefined && p.pay_method === undefined) return; // eski arayüz: dokunma
     const tx = db.get('SELECT direction, sc_qr_path, sc_payee_id FROM cash_transactions WHERE id = ?', [txId]);
     if (!tx) return;
-    const on = p.sc_on !== false && tx.direction === 'out';
+    const PM = ['cash', 'shamcash', 'bank', 'other'];
+    const method = tx.direction === 'out' && PM.includes(p.pay_method) ? p.pay_method : null;
+    const on = (method ? method === 'shamcash' : p.sc_on !== false) && tx.direction === 'out';
+    const keepRef = on || method === 'bank' || method === 'other';
     const v = {
       account: on ? optText(p.sc_account) : null, name: on ? optText(p.sc_name) : null, phone: on ? optText(p.sc_phone) : null,
-      ref: on ? optText(p.sc_ref) : null, note: on ? optText(p.sc_note) : null, qrText: on ? optText(p.sc_qr_text) : null,
+      ref: keepRef ? optText(p.sc_ref) : null, note: keepRef ? optText(p.sc_note) : null, qrText: on ? optText(p.sc_qr_text) : null,
     };
     const qr = on ? replaceFile(tx.sc_qr_path, optText(p.sc_qr), !!p.sc_remove_qr) : replaceFile(tx.sc_qr_path, null, true);
     let payeeId = on && p.sc_payee_id ? Number(p.sc_payee_id) || null : null;
@@ -271,8 +274,8 @@ function createServices(db, { removeFile = () => {} } = {}) {
     }
     // Kullanım sayısı yalnızca alıcı bu harekete ilk kez bağlanınca artar (düzenlemede tekrar sayılmaz)
     if (payeeId && on && Number(tx.sc_payee_id) !== Number(payeeId)) db.run(`UPDATE shamcash_payees SET use_count = use_count + 1, last_used = ? WHERE id = ?`, [new Date().toISOString().slice(0, 10), payeeId]);
-    db.run('UPDATE cash_transactions SET sc_account=?, sc_name=?, sc_phone=?, sc_ref=?, sc_note=?, sc_qr_path=?, sc_qr_text=?, sc_payee_id=? WHERE id=?',
-      [v.account, v.name, v.phone, v.ref, v.note, qr || null, v.qrText, on ? payeeId : null, txId]);
+    db.run('UPDATE cash_transactions SET sc_account=?, sc_name=?, sc_phone=?, sc_ref=?, sc_note=?, sc_qr_path=?, sc_qr_text=?, sc_payee_id=?, pay_method=? WHERE id=?',
+      [v.account, v.name, v.phone, v.ref, v.note, qr || null, v.qrText, on ? payeeId : null, method || (on && (v.account || v.name || qr || v.ref || v.phone) ? 'shamcash' : null), txId]);
   }
 
   function saveShamPayee({ id, name, account_no, phone, note, qr, removeQr, qr_text }) {
@@ -520,7 +523,8 @@ function createServices(db, { removeFile = () => {} } = {}) {
 
   // ---------- Hediyeler ----------
 
-  function saveGift({ id, person, amount, currency, date, description, record_cash = true, newReceipts = [] }) {
+  function saveGift(giftPayload) {
+    const { id, person, amount, currency, date, description, record_cash = true, newReceipts = [] } = giftPayload;
     const personId = resolvePerson(person);
     if (!personId) throw new AppError('ERR_PERSON_REQUIRED');
     const amt = round2(positive(amount));
@@ -542,6 +546,7 @@ function createServices(db, { removeFile = () => {} } = {}) {
       });
       db.run('UPDATE gifts SET cash_transaction_id = ? WHERE id = ?', [txId, giftId]);
       addReceiptRows(txId, newReceipts);
+      saveShamCash(txId, giftPayload);
     } else if (existingTx) {
       db.run('UPDATE gifts SET cash_transaction_id = NULL WHERE id = ?', [giftId]);
       deleteTx(existingTx);
@@ -2110,7 +2115,8 @@ function createServices(db, { removeFile = () => {} } = {}) {
     syncPaymentLinks(payId);
   }
 
-  function saveRecurringPayment({ id, plan_id, date, amount, currency, paid = true, record_cash = false, add_gift = false, note, newFiles = [], removeFileIds = [] }) {
+  function saveRecurringPayment(recPayload) {
+    const { id, plan_id, date, amount, currency, paid = true, record_cash = false, add_gift = false, note, newFiles = [], removeFileIds = [] } = recPayload;
     const d = required(date);
     const amt = amount === '' || amount === null || amount === undefined ? null : nonNegative(amount);
     const cur = amt !== null ? required(currency) : (optText(currency) || null);
@@ -2135,6 +2141,10 @@ function createServices(db, { removeFile = () => {} } = {}) {
       db.run('DELETE FROM recurring_files WHERE id = ?', [fid]);
     }
     applyPaidState(payId, !!paid);
+    {
+      const rtx = db.get('SELECT cash_transaction_id AS t FROM recurring_payments WHERE id = ?', [payId])?.t;
+      if (rtx) saveShamCash(rtx, recPayload);
+    }
     return { id: payId, next_date: db.get('SELECT p.next_date FROM recurring_plans p JOIN recurring_payments x ON x.plan_id = p.id WHERE x.id = ?', [payId])?.next_date ?? null };
   }
 
@@ -2167,6 +2177,148 @@ function createServices(db, { removeFile = () => {} } = {}) {
     return { ok: true };
   }
 
+
+  // ---------- v1.59: Fatura ----------
+  // Fatura kesilirken "kasaya işle" seçilirse tahsilat hemen kasaya giriş olarak yazılır; seçilmezse fatura
+  // "tahsil edilmedi" bekler ve sonradan (bir ya da birkaç kez, kısmi) kasaya işlenir.
+  const INV_PAY_EPS = 0.005;
+  function invoiceNumber(date) {
+    const y = String(date || today()).slice(0, 4);
+    const pre = String(db.get("SELECT value FROM settings WHERE key = 'invoice_prefix'")?.value || 'FAL').trim() || 'FAL';
+    let n = 0;
+    for (const r of db.all('SELECT number FROM invoices WHERE number LIKE ?', [`${pre}-${y}-%`])) {
+      const m = /-(\d+)$/.exec(r.number || '');
+      if (m) n = Math.max(n, Number(m[1]));
+    }
+    return `${pre}-${y}-${String(n + 1).padStart(4, '0')}`;
+  }
+  function invoiceItems(items) {
+    const out = [];
+    for (const it of Array.isArray(items) ? items : []) {
+      const name = optText(it && it.name);
+      if (!name) continue;
+      const qty = Number(it.qty);
+      const price = Number(it.price);
+      if (!Number.isFinite(qty) || qty <= 0) throw new AppError('ERR_INVALID_QUANTITY');
+      if (!Number.isFinite(price) || price < 0) throw new AppError('ERR_INVALID_AMOUNT');
+      out.push({ name, qty, unit: optText(it.unit), price, product_id: optId(it.product_id) });
+    }
+    if (!out.length) throw new AppError('ERR_INVOICE_ITEMS');
+    return out;
+  }
+  function invoiceTotals(items, discount, taxRate, cur) {
+    const r = (n) => roundCur(n, cur);
+    const subtotal = r(items.reduce((s, it) => s + it.qty * it.price, 0));
+    const disc = Math.min(subtotal, r(nonNegative(discount || 0)));
+    const rate = nonNegative(taxRate || 0);
+    if (rate > 100) throw new AppError('ERR_INVALID_AMOUNT');
+    const tax = r(((subtotal - disc) * rate) / 100);
+    return { subtotal, discount: disc, tax_rate: rate, tax, total: r(subtotal - disc + tax) };
+  }
+  function refreshInvoice(id) {
+    const inv = db.get('SELECT * FROM invoices WHERE id = ?', [id]);
+    if (!inv) return;
+    const paid = roundCur(db.get('SELECT COALESCE(SUM(amount), 0) AS s FROM invoice_payments WHERE invoice_id = ?', [id]).s, inv.currency_code);
+    const status = inv.status === 'cancelled' ? 'cancelled' : inv.total > 0 && paid >= inv.total - INV_PAY_EPS ? 'paid' : paid > INV_PAY_EPS ? 'partial' : 'pending';
+    db.run(`UPDATE invoices SET paid=?, status=?, updated_at=${now} WHERE id=?`, [paid, status, id]);
+  }
+  function invoicePay(invoiceId, { amount, date, account_id, note }) {
+    const inv = db.get('SELECT * FROM invoices WHERE id = ?', [invoiceId]);
+    if (!inv) throw new AppError('ERR_NOT_FOUND');
+    if (inv.status === 'cancelled') throw new AppError('ERR_INVOICE_CANCELLED');
+    const amt = roundCur(positive(amount), inv.currency_code);
+    const paid = db.get('SELECT COALESCE(SUM(amount), 0) AS s FROM invoice_payments WHERE invoice_id = ?', [invoiceId]).s;
+    if (amt > inv.total - paid + INV_PAY_EPS) throw new AppError('ERR_INVOICE_OVERPAY');
+    const acc = optId(account_id);
+    if (acc && accountCurrency(acc) !== inv.currency_code) throw new AppError('ERR_INVALID_CURRENCY');
+    const d = optText(date) || today();
+    const payId = db.run(`INSERT INTO invoice_payments (invoice_id, date, amount, account_id, note, updated_at) VALUES (?,?,?,?,?,${now})`,
+      [invoiceId, d, amt, acc, optText(note)]).lastInsertRowid;
+    const txId = upsertLinkedTx(null, {
+      currency: inv.currency_code, accountId: acc, direction: 'in', amount: amt, date: d, category: 'sale', personId: inv.person_id || null,
+      description: `${inv.number} · ${inv.customer_name}` + (optText(note) ? ` · ${optText(note)}` : ''), relatedType: 'invoice', relatedId: payId,
+    });
+    db.run('UPDATE invoice_payments SET cash_transaction_id = ?, account_id = (SELECT account_id FROM cash_transactions WHERE id = ?) WHERE id = ?', [txId, txId, payId]);
+    return payId;
+  }
+  function saveInvoice({ id, number, date, due_date, customer, customer_phone, customer_email, customer_address, customer_tax, currency, items,
+    discount, tax_rate, note, template, lang, record_cash = false, account_id, pay_amount }) {
+    const cur = required(currency);
+    if (!db.get('SELECT code FROM currencies WHERE code = ?', [cur])) throw new AppError('ERR_INVALID_CURRENCY');
+    const d = required(date);
+    const name = required(typeof customer === 'string' ? customer : customer && customer.name, 'ERR_CUSTOMER_REQUIRED');
+    // Müşteri Kişiler listesinde varsa ona bağlanır; yoksa listeye eklenmez
+    const personId = customer && customer.id ? Number(customer.id) : db.get('SELECT id FROM people WHERE lower(name) = lower(?)', [name])?.id ?? null;
+    const its = invoiceItems(items);
+    const tt = invoiceTotals(its, discount, tax_rate, cur);
+    const num = optText(number);
+    const cols = [d, optText(due_date), name, optText(customer_phone), optText(customer_email), optText(customer_address), optText(customer_tax), personId,
+      cur, JSON.stringify(its), tt.subtotal, tt.discount, tt.tax_rate, tt.tax, tt.total, optText(template), optText(lang), optText(note)];
+    let invId = id;
+    if (id) {
+      const old = db.get('SELECT * FROM invoices WHERE id = ?', [id]);
+      if (!old) throw new AppError('ERR_NOT_FOUND');
+      const paid = db.get('SELECT COALESCE(SUM(amount), 0) AS s FROM invoice_payments WHERE invoice_id = ?', [id]).s;
+      if (paid > 0 && old.currency_code !== cur) throw new AppError('ERR_INVOICE_HAS_PAYMENTS');
+      if (paid > tt.total + INV_PAY_EPS) throw new AppError('ERR_INVOICE_BELOW_PAID');
+      const n = num || old.number;
+      if (db.get('SELECT id FROM invoices WHERE number = ? AND id <> ?', [n, id])) throw new AppError('ERR_INVOICE_NUMBER_TAKEN');
+      db.run(`UPDATE invoices SET number=?, date=?, due_date=?, customer_name=?, customer_phone=?, customer_email=?, customer_address=?, customer_tax=?, person_id=?,
+        currency_code=?, items=?, subtotal=?, discount=?, tax_rate=?, tax=?, total=?, template=?, lang=?, note=?, updated_at=${now} WHERE id=?`, [n, ...cols, id]);
+      // Kasaya yazılmış tahsilatların açıklaması fatura bilgisiyle güncel kalır
+      for (const p of db.all('SELECT cash_transaction_id AS t, note FROM invoice_payments WHERE invoice_id = ? AND cash_transaction_id IS NOT NULL', [id])) {
+        db.run('UPDATE cash_transactions SET description = ?, person_id = ? WHERE id = ?', [`${n} · ${name}` + (p.note ? ` · ${p.note}` : ''), personId, p.t]);
+      }
+    } else {
+      const n = num || invoiceNumber(d);
+      if (db.get('SELECT id FROM invoices WHERE number = ?', [n])) throw new AppError('ERR_INVOICE_NUMBER_TAKEN');
+      invId = db.run(`INSERT INTO invoices (number, date, due_date, customer_name, customer_phone, customer_email, customer_address, customer_tax, person_id,
+        currency_code, items, subtotal, discount, tax_rate, tax, total, template, lang, note, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,${now})`, [n, ...cols]).lastInsertRowid;
+      if (record_cash && tt.total > 0) {
+        const amt = pay_amount === undefined || pay_amount === null || pay_amount === '' ? tt.total : Number(pay_amount);
+        if (amt > 0) invoicePay(invId, { amount: amt, date: d, account_id });
+      }
+    }
+    refreshInvoice(invId);
+    return { id: invId, number: db.get('SELECT number FROM invoices WHERE id = ?', [invId]).number };
+  }
+  function addInvoicePayment({ invoice_id, amount, date, account_id, note }) {
+    const id = invoicePay(invoice_id, { amount, date, account_id, note });
+    refreshInvoice(invoice_id);
+    return { id };
+  }
+  function deleteInvoicePayment({ id }) {
+    const p = db.get('SELECT * FROM invoice_payments WHERE id = ?', [id]);
+    if (!p) return { ok: true };
+    db.run('DELETE FROM invoice_payments WHERE id = ?', [id]);
+    deleteTx(p.cash_transaction_id);
+    refreshInvoice(p.invoice_id);
+    return { ok: true };
+  }
+  function setInvoiceCancelled({ id, cancelled }) {
+    const inv = db.get('SELECT * FROM invoices WHERE id = ?', [id]);
+    if (!inv) throw new AppError('ERR_NOT_FOUND');
+    if (cancelled && db.get('SELECT id FROM invoice_payments WHERE invoice_id = ? LIMIT 1', [id])) throw new AppError('ERR_INVOICE_HAS_PAYMENTS');
+    db.run(`UPDATE invoices SET status=?, updated_at=${now} WHERE id=?`, [cancelled ? 'cancelled' : 'pending', id]);
+    refreshInvoice(id);
+    return { ok: true };
+  }
+  function deleteInvoice({ id }) {
+    const inv = db.get('SELECT id FROM invoices WHERE id = ?', [id]);
+    if (!inv) return { ok: true };
+    for (const p of db.all('SELECT cash_transaction_id AS t FROM invoice_payments WHERE invoice_id = ?', [id])) deleteTx(p.t);
+    db.run('DELETE FROM invoice_payments WHERE invoice_id = ?', [id]);
+    db.run('DELETE FROM invoices WHERE id = ?', [id]);
+    return { ok: true };
+  }
+  // Para çıkışının ödeme yöntemi ve Sham Cash bilgileri sonradan da yazılabilir (İnfak, düzenli ödeme, borç ödemesi …)
+  function setTxPayment(p) {
+    const id = optId(p && p.id);
+    if (!id || !db.get('SELECT id FROM cash_transactions WHERE id = ?', [id])) throw new AppError('ERR_NOT_FOUND');
+    saveShamCash(id, p);
+    return { ok: true };
+  }
+
   // ---------- v1.52: Silinenler kutusu (30 gün) ve görevler ----------
   // Her "delete…" işlemi bir "silme paketi" açar: tetikleyiciler o işlemde silinen / değişen bütün satırları
   // local_trash_rows'a yazar; işlem bitince hepsi tek bir trash_items kaydı olur (eşitlenir, her cihazda görünür).
@@ -2183,6 +2335,7 @@ function createServices(db, { removeFile = () => {} } = {}) {
     deleteCashCategory: 'cash_categories', deleteWallet: 'crypto_wallets', deleteInternetPayment: 'internet_payments', deleteInternet: 'internet_services',
     deleteMeter: 'electricity_meters', deleteReading: 'electricity_readings', deleteMaterialPlace: 'material_places', deleteNote: 'notes',
     deleteRecurringPayment: 'recurring_payments', deleteRecurringPlan: 'recurring_plans', deleteTask: 'tasks',
+    deleteInvoice: 'invoices', deleteInvoicePayment: 'invoice_payments',
   };
   const trashQi = (n) => `"${String(n).replace(/"/g, '""')}"`;
   const trashHash = (s) => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); };
@@ -2427,6 +2580,7 @@ function createServices(db, { removeFile = () => {} } = {}) {
     saveShamPayee, deleteShamPayee,
     restoreTrash, purgeTrash, emptyTrash, purgeOldTrash,
     saveTask, setTaskStatus, deleteTask,
+    saveInvoice, addInvoicePayment, deleteInvoicePayment, setInvoiceCancelled, deleteInvoice, setTxPayment,
   };
   const reads = { nextSerial: ({ type }) => ({ serial: SERIAL[type] ? nextSerial(type) : null }), productUnitCost, accountBalance: ({ id }) => ({ balance: accountBalance(id) }), latestRates: () => latestRates(), shareDefaults, listWallets, recentWalletTx, listWalletSwaps, swapCandidates };
 

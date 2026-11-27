@@ -177,3 +177,36 @@ test('güncelleme takası betiği (1.58.2): gizli, takılmaz, Türkçe yol beti�
   assert.ok(!/fcMain\.swapAndRelaunch\(\{\}, st\);\s*return 'restarting'/.test(main), 'çekirdeğin pencereli betiği kullanılmıyor');
   assert.ok(read('.github/workflows/release.yml').includes('node test/win-takas.js'), 'Windows CI testi');
 });
+
+test('fatura (1.59): kalemler, vergi, kasaya giriş yap / yapma, kısmi tahsilat, silme; para çıkışında ödeme yöntemi', async () => {
+  const db = await openDb();
+  const s = require('../electron/services').createServices(db);
+  const r = s.call('saveInvoice', { date: '2026-11-27', customer: { name: 'Ahmet' }, currency: 'USD', items: [{ name: 'Kablo', qty: 2, price: 10.5 }, { name: 'Montaj', qty: 1, price: 30 }], discount: 1, tax_rate: 10, record_cash: true, pay_amount: 20 });
+  let inv = db.get('SELECT * FROM invoices WHERE id = ?', [r.id]);
+  assert.strictEqual(inv.total, 55); assert.strictEqual(inv.paid, 20); assert.strictEqual(inv.status, 'partial');
+  assert.match(inv.number, /^FAL-2026-0001$/);
+  const tx = db.get("SELECT * FROM cash_transactions WHERE related_type = 'invoice'");
+  assert.strictEqual(tx.direction, 'in'); assert.strictEqual(tx.amount, 20); assert.strictEqual(tx.category, 'sale');
+  const r2 = s.call('saveInvoice', { date: '2026-11-27', customer: 'Veli', currency: 'SYP', items: [{ name: 'X', qty: 1, price: 150000 }] });
+  assert.strictEqual(db.get('SELECT status FROM invoices WHERE id = ?', [r2.id]).status, 'pending');
+  assert.strictEqual(db.get("SELECT COUNT(*) AS n FROM cash_transactions WHERE related_type = 'invoice'").n, 1, 'kasaya giriş yapma: kasa değişmez');
+  assert.throws(() => s.call('addInvoicePayment', { invoice_id: r.id, amount: 36 }), /ERR_INVOICE_OVERPAY/);
+  s.call('addInvoicePayment', { invoice_id: r.id, amount: 35, date: '2026-11-28' });
+  assert.strictEqual(db.get('SELECT status FROM invoices WHERE id = ?', [r.id]).status, 'paid');
+  s.call('deleteInvoice', { id: r.id });
+  assert.strictEqual(db.get("SELECT COUNT(*) AS n FROM cash_transactions WHERE related_type = 'invoice'").n, 0);
+  assert.ok(db.get("SELECT COUNT(*) AS n FROM trash_items WHERE kind = 'invoices'").n >= 1, 'silinenler kutusunda');
+  s.call('saveGift', { person: { name: 'Ali' }, amount: 5, currency: 'USD', date: '2026-11-27', pay_method: 'shamcash', sc_account: '123', sc_save_payee: true });
+  assert.strictEqual(db.get("SELECT pay_method FROM cash_transactions WHERE related_type = 'gift'").pay_method, 'shamcash');
+  const acc = db.get("SELECT id FROM cash_accounts WHERE currency_code = 'USD'").id;
+  const c = s.call('saveCashTx', { account_id: acc, direction: 'out', amount: 3, date: '2026-11-27', pay_method: 'bank', sc_ref: 'H-1', sc_account: 'x' });
+  const ct = db.get('SELECT pay_method, sc_ref, sc_account FROM cash_transactions WHERE id = ?', [c.id]);
+  assert.deepStrictEqual([ct.pay_method, ct.sc_ref, ct.sc_account], ['bank', 'H-1', null]);
+});
+
+test('Kullanım Limitleri kartı tek (1.59): arayüz eşitleme kartının yanına başka öğe eklese de çoğalmaz', () => {
+  const src = read('dist/assets/kullanim.js');
+  assert.ok(src.includes("querySelectorAll('.kul-kart[data-kul-yer]')"), 'sayfadaki kopyalar aranır');
+  assert.ok(read('dist/index.html').includes('./assets/fatura-falcon.js'), 'fatura eklentisi yüklenir');
+  assert.ok(read('dist/assets/fatura-falcon.js').includes('window.FalconFatura'));
+});
