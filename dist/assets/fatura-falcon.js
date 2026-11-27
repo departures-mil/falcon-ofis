@@ -240,6 +240,9 @@
       fxDone: '{n} kalem {c} birimine çevrildi',
       statusField: 'Ödeme durumu damgası', statusOn: 'Durum damgası', statusOff: 'Damgasız', statusFieldHint: 'Yalnız bu fatura için. Damgasızda «Ödendi / Ödenmedi / Kısmi ödeme» yazısı faturada görünmez.',
       statusDefault: 'Yeni faturalarda ödeme durumu damgası (Ödendi / Ödenmedi) görünsün',
+      vatField: 'KDV', vatOn: 'KDV\'li', vatOff: 'KDV\'siz', vatFieldHint: 'Yalnız bu fatura için. KDV\'sizde KDV oranı / tutarı sütunları ve toplamdaki KDV satırları faturada hiç görünmez, KDV hesaplanmaz.',
+      vatDefault: 'Yeni faturalar KDV\'li olsun (kapalıysa KDV\'siz başlar)',
+      codeField: 'Kodlar', codeQr: 'Karekod (QR)', codeBc: 'Barkod', codeFieldHint: 'Yalnız bu fatura için; tıklayarak açıp kapatın. Bütün faturalarda kapatmak için: Fatura ayarları → Fatura düzeni.',
       impAllOff: 'Tümünü pasif yap', impAllOn: 'Tümünü aktif yap', impActive: '{a} / {b} aktif', impOffHint: 'Pasif ürünler faturaya ve ürün kayıtlarına girmez; silinmez, tekrar aktif yapılabilir.'
     },
     en: {
@@ -249,6 +252,9 @@
       fxDone: '{n} items converted to {c}',
       statusField: 'Payment status stamp', statusOn: 'Status stamp', statusOff: 'No stamp', statusFieldHint: 'For this invoice only. Without the stamp, «Paid / Unpaid / Partly paid» is not shown on the invoice.',
       statusDefault: 'Show the payment status stamp (Paid / Unpaid) on new invoices',
+      vatField: 'VAT', vatOn: 'With VAT', vatOff: 'No VAT', vatFieldHint: 'For this invoice only. Without VAT, the VAT rate / amount columns and the VAT lines in the totals are not shown at all and no VAT is calculated.',
+      vatDefault: 'New invoices include VAT (when off they start without VAT)',
+      codeField: 'Codes', codeQr: 'QR code', codeBc: 'Barcode', codeFieldHint: 'For this invoice only; click to turn on or off. To turn them off on all invoices: Invoice settings → Invoice layout.',
       impAllOff: 'Deactivate all', impAllOn: 'Activate all', impActive: '{a} / {b} active', impOffHint: 'Inactive items are left out of the invoice and the product records; they are not deleted and can be activated again.'
     },
     ar: {
@@ -258,6 +264,9 @@
       fxDone: 'تم تحويل {n} بند إلى {c}',
       statusField: 'ختم حالة الدفع', statusOn: 'ختم الحالة', statusOff: 'بدون ختم', statusFieldHint: 'لهذه الفاتورة فقط. بدون الختم لا تظهر عبارة «مدفوعة / غير مدفوعة / مدفوعة جزئياً» على الفاتورة.',
       statusDefault: 'إظهار ختم حالة الدفع (مدفوعة / غير مدفوعة) في الفواتير الجديدة',
+      vatField: 'ضريبة القيمة المضافة', vatOn: 'مع الضريبة', vatOff: 'بدون ضريبة', vatFieldHint: 'لهذه الفاتورة فقط. بدون الضريبة لا تظهر أعمدة نسبة الضريبة ومبلغها ولا أسطر الضريبة في الإجمالي، ولا تُحتسب الضريبة.',
+      vatDefault: 'الفواتير الجديدة تتضمن ضريبة القيمة المضافة (عند الإيقاف تبدأ بدون ضريبة)',
+      codeField: 'الرموز', codeQr: 'رمز QR', codeBc: 'الباركود', codeFieldHint: 'لهذه الفاتورة فقط؛ انقر للتشغيل أو الإيقاف. لإيقافها في جميع الفواتير: إعدادات الفاتورة ← تخطيط الفاتورة.',
       impAllOff: 'إلغاء تفعيل الكل', impAllOn: 'تفعيل الكل', impActive: '{a} / {b} مفعّل', impOffHint: 'البنود غير المفعّلة لا تدخل الفاتورة ولا سجلات المنتجات؛ لا تُحذف ويمكن تفعيلها مجدداً.'
     }
   };
@@ -518,12 +527,19 @@
   }
   // Fatura başına imza: şablon alanında saklanır ('falcon' = imzalı, 'falcon|ns' = imzasız) — şema değişmez, eşitlemeyle birlikte gider
   function tplOf(v) { var x = String(v || '').split('|')[0]; return PALETTE[x] ? x : 'falcon'; }
-  // şablon değeri: "<şablon>[|ns][|nd]" — ns: imzasız, nd: durum damgası (Ödendi / Ödenmedi / Kısmi) yok (v1.61.1)
-  function tplFlags(v, sign, status) { return tplOf(v) + (sign ? '' : '|ns') + (status ? '' : '|nd'); }
-  function hasSign(v) { return String(v || '').split('|').indexOf('ns') < 1; }
-  function hasStatus(v) { return String(v || '').split('|').indexOf('nd') < 1; }
-  function withSign(v, on) { return tplFlags(v, on, hasStatus(v)); }
-  function withStatus(v, on) { return tplFlags(v, hasSign(v), on); }
+  // şablon değeri: "<şablon>[|bayrak…]" — ns: imzasız, nd: durum damgası (Ödendi / Ödenmedi / Kısmi) yok (v1.61.1), nv: KDV'siz fatura (v1.61.2)
+  function tplFlagList(v) { return String(v || '').split('|').slice(1).filter(Boolean); }
+  function hasFlagOn(v, f) { return tplFlagList(v).indexOf(f) < 0; }
+  function withFlag(v, f, on) { var fl = tplFlagList(v).filter(function (x) { return x !== f; }); if (!on) fl.push(f); fl.sort(); return [tplOf(v)].concat(fl).join('|'); }
+  function hasSign(v) { return hasFlagOn(v, 'ns'); }
+  function hasStatus(v) { return hasFlagOn(v, 'nd'); }
+  function hasVat(v) { return hasFlagOn(v, 'nv'); }
+  function withSign(v, on) { return withFlag(v, 'ns', on); }
+  function withStatus(v, on) { return withFlag(v, 'nd', on); }
+  function withVat(v, on) { return withFlag(v, 'nv', on); }
+  // v1.61.2: fatura başına karekod (nq) / barkod (nb) kapatma
+  function hasQr(v) { return hasFlagOn(v, 'nq'); }
+  function hasBc(v) { return hasFlagOn(v, 'nb'); }
   function invoiceHtml(inv, cfg, forPdf) {
     var lg = DOC[inv.lang] ? inv.lang : lang();
     var D = DOC[lg], LB = LBL[lg] || LBL.tr, rtl = lg === 'ar', cur = inv.currency_code, tpl = tplOf(inv.template), P = PALETTE[tpl], gib = tpl === 'efatura';
@@ -540,8 +556,9 @@
     var pct = function (v) { return '%' + fmt(num(v), 'X', lg).replace(/[.,]00$/, ''); };
     var pos = c.info_pos === 'top' || c.info_pos === 'bottom' ? c.info_pos : 'both';
     // satır KDV'si: kalemlerde vat varsa (ya da düzende KDV sütunu açıksa) her satırın KDV'si; yoksa fatura geneli oran
-    var perLine = items.some(function (it) { return it.vat != null && it.vat !== ''; });
-    var tt = calcTotals(items, inv.discount, inv.tax_rate, cur, perLine);
+    var noVat = !hasVat(inv.template);
+    var perLine = !noVat && items.some(function (it) { return it.vat != null && it.vat !== ''; });
+    var tt = calcTotals(items, inv.discount, noVat ? 0 : inv.tax_rate, cur, perLine);
     var cols = layOn(cfg, 'cols').filter(function (f) { return perLine || (f.k !== 'vat' && f.k !== 'vat_amount'); });
     var unitCol = cols.some(function (f) { return f.k === 'unit'; });
     var taxLine = [c.tax_office ? esc(D.taxOffice) + ': ' + esc(c.tax_office) : '', c.tax ? esc(D.taxNo) + ': ' + L(c.tax) : ''].filter(Boolean).join(' · ');
@@ -625,19 +642,19 @@
     }).join('');
     var rates = Object.keys(tt.byRate).sort(function (a, b) { return Number(b) - Number(a); });
     var G = LB.gib;
-    var vatRows = perLine ? rates.map(function (r) { return '<tr><td>' + esc(gib || lg === 'tr' ? G.vat : D.tax) + ' (' + pct(r) + ')</td><td class="n">' + M(tt.byRate[r].tax) + '</td></tr>'; }).join('')
+    var vatRows = noVat ? '' : perLine ? rates.map(function (r) { return '<tr><td>' + esc(gib || lg === 'tr' ? G.vat : D.tax) + ' (' + pct(r) + ')</td><td class="n">' + M(tt.byRate[r].tax) + '</td></tr>'; }).join('')
       : (inv.tax_rate ? '<tr><td>' + D.tax + ' (' + pct(inv.tax_rate) + ')</td><td class="n">' + M(inv.tax) + '</td></tr>' : '');
     var totals = gib
       ? '<tr><td>' + esc(G.subtotal) + '</td><td class="n">' + M(inv.subtotal) + '</td></tr><tr><td>' + esc(G.discount) + '</td><td class="n">' + M(inv.discount || 0) + '</td></tr>' + vatRows +
-        '<tr><td>' + esc(G.total) + '</td><td class="n">' + M(inv.total) + '</td></tr>' + (inv.paid > 0 ? '<tr><td>' + D.paid + '</td><td class="n">' + M(inv.paid) + '</td></tr>' : '') +
+        (noVat ? '' : '<tr><td>' + esc(G.total) + '</td><td class="n">' + M(inv.total) + '</td></tr>') + (inv.paid > 0 ? '<tr><td>' + D.paid + '</td><td class="n">' + M(inv.paid) + '</td></tr>' : '') +
         '<tr class="g"><td>' + esc(G.payable) + '</td><td class="n">' + M(inv.paid > 0 ? remaining : inv.total) + '</td></tr>'
       : '<tr><td>' + D.subtotal + '</td><td class="n">' + M(inv.subtotal) + '</td></tr>' +
         (inv.discount ? '<tr><td>' + D.discount + '</td><td class="n">− ' + M(inv.discount) + '</td></tr>' : '') + vatRows +
         '<tr class="g"><td>' + D.grand + '</td><td class="n">' + M(inv.total) + '</td></tr>' +
         (inv.paid > 0 ? '<tr><td>' + D.paid + '</td><td class="n">' + M(inv.paid) + '</td></tr><tr class="r"><td>' + D.remaining + '</td><td class="n">' + M(remaining) + '</td></tr>' : '');
     var lay = cfg.layout || {};
-    var qr = lay.qr !== false ? qrSvg(qrPayload(inv, cfg, tt), '#000') : '';
-    var bc = lay.barcode !== false ? barcodeSvg(meta.ettn || inv.number, '#000') : '';
+    var qr = lay.qr !== false && hasQr(inv.template) ? qrSvg(qrPayload(inv, cfg, tt), '#000') : '';
+    var bc = lay.barcode !== false && hasBc(inv.template) ? barcodeSvg(meta.ettn || inv.number, '#000') : '';
     var font = rtl ? "'Noto Sans Arabic','Segoe UI',Tahoma,Arial,sans-serif" : "'Segoe UI','Inter',Arial,'Noto Sans Arabic',sans-serif";
     var many = cols.length > 7;
     var css =
@@ -978,12 +995,14 @@
           var k = zoom === 'fit' ? Math.min(1, (pv.clientWidth - 28) / full) : 1;
           host.style.transform = 'scale(' + k + ')'; host.style.height = (hh * k) + 'px'; host.style.marginBottom = '0';
         };
-        var tplSel = el('select', { onchange: function (e) { cur.template = withSign(e.target.value, hasSign(cur.template)); render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } },
+        var tplSel = el('select', { onchange: function (e) { cur.template = [e.target.value].concat(tplFlagList(cur.template)).join('|'); render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } },
           TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), tplOf(cur.template) === x); }));
         var sgCb = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withSign(cur.template, e.target.checked); render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } });
         sgCb.checked = hasSign(cur.template);
         var sdCb = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withStatus(cur.template, e.target.checked); render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } });
         sdCb.checked = hasStatus(cur.template);
+        var pvFlag = function (f) { var x = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withFlag(cur.template, f, e.target.checked); render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } }); x.checked = hasFlagOn(cur.template, f); return x; };
+        var pvLay = cfg.layout || {};
         var lgSel = el('select', { onchange: function (e) { cur.lang = e.target.value; render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } },
           [['tr', 'langTr'], ['en', 'langEn'], ['ar', 'langAr']].map(function (x) { return opt(x[0], t(x[1]), (cur.lang || lang()) === x[0]); }));
         var zb = el('button', { type: 'button', class: 'btn small', text: t('zoomFull'), onclick: function () { zoom = zoom === 'fit' ? 'full' : 'fit'; zb.textContent = zoom === 'fit' ? t('zoomFull') : t('zoomFit'); fit(); } });
@@ -991,6 +1010,8 @@
           el('span', { class: 'field-label', text: t('template') }), tplSel, el('span', { class: 'field-label', text: t('lang') }), lgSel,
           el('label', { class: 'check fat-pv-sg' }, [sgCb, el('span', { text: t('signOn') })]),
           el('label', { class: 'check fat-pv-sg' }, [sdCb, el('span', { text: t('statusOn') })]),
+          pvLay.qr !== false ? el('label', { class: 'check fat-pv-sg' }, [pvFlag('nq'), el('span', { text: t('codeQr') })]) : null,
+          pvLay.barcode !== false ? el('label', { class: 'check fat-pv-sg' }, [pvFlag('nb'), el('span', { text: t('codeBc') })]) : null,
           el('span', { class: 'sp' }), opts.tag ? el('span', { class: 'fat-pv-tag', text: opts.tag }) : null, zb
         ]);
         var foot = [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } })];
@@ -1073,7 +1094,7 @@
           customer: inv ? inv.customer_name : '', customer_id: inv ? inv.customer_id || null : null, phone: inv ? inv.customer_phone || '' : '', email: inv ? inv.customer_email || '' : '',
           address: inv ? inv.customer_address || '' : '', tax_no: inv ? inv.customer_tax || '' : '',
           currency: inv ? inv.currency_code : (CUR.indexOf(dft.currency) >= 0 ? dft.currency : 'USD'),
-          template: inv ? inv.template || 'falcon' : withStatus(dft.template || 'falcon', dft.status_stamp !== false), lang: inv ? inv.lang || lang() : (dft.lang || lang()),
+          template: inv ? inv.template || 'falcon' : withVat(withStatus(dft.template || 'falcon', dft.status_stamp !== false), dft.vat_on !== false), lang: inv ? inv.lang || lang() : (dft.lang || lang()),
           items: inv ? jparse(inv.items, []) : [newItem()],
           discount: inv ? inv.discount || '' : '', tax_rate: inv ? inv.tax_rate || '' : (dft.tax_rate != null && dft.tax_rate !== '' ? dft.tax_rate : 0),
           note: inv ? inv.note || '' : '', cash: false, account_id: '', pay_amount: '',
@@ -1095,7 +1116,10 @@
         // satır KDV'si: eski (fatura geneli oranlı) faturada KDV sütunu açıksa kalemlere eski oran yazılır
         if (perLine) st.items.forEach(function (it) { if (it.vat == null || it.vat === '') it.vat = inv && !inv.meta && num(inv.tax_rate) ? num(inv.tax_rate) : dVat; });
         else if (st.items.some(function (it) { return it.vat != null && it.vat !== ''; })) perLine = true;
-        var cols = layOn(cfg, 'cols').filter(function (f) { return perLine || (f.k !== 'vat' && f.k !== 'vat_amount'); });
+        var perLine0 = perLine, vatOn = hasVat(st.template);
+        if (!vatOn) perLine = false;
+        var calcCols = function () { return layOn(cfg, 'cols').filter(function (f) { return perLine || (f.k !== 'vat' && f.k !== 'vat_amount'); }); };
+        var cols = calcCols();
         var unitCol = cols.some(function (f) { return f.k === 'unit'; });
 
         // ---- müşteri ----
@@ -1179,7 +1203,7 @@
           return field(fLabel('meta', f, lang()), x, f.k === 'number' ? { hint: t('invNoHint') } : null);
         });
         var curSel = el('select', { onchange: function (e) { var old = st.currency; st.currency = e.target.value; switchCurrency(old, st.currency); drawCash(); } }, CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], st.currency === c); }));
-        var tplSel = el('select', { onchange: function (e) { st.template = withSign(e.target.value, hasSign(st.template)); } }, TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), tplOf(st.template) === x); }));
+        var tplSel = el('select', { onchange: function (e) { st.template = [e.target.value].concat(tplFlagList(st.template)).join('|'); } }, TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), tplOf(st.template) === x); }));
         var sgBox = el('div', { class: 'fat-seg' });
         var drawSg = function () {
           var on = hasSign(st.template);
@@ -1198,6 +1222,16 @@
           });
         };
         drawSd();
+        var cdBox = el('div', { class: 'fat-seg' });
+        var drawCd = function () {
+          cdBox.innerHTML = '';
+          [['nq', '▦ ' + t('codeQr'), (cfg.layout || {}).qr !== false], ['nb', '▮▯▮ ' + t('codeBc'), (cfg.layout || {}).barcode !== false]].forEach(function (x) {
+            if (!x[2]) return;
+            var on = hasFlagOn(st.template, x[0]);
+            cdBox.appendChild(el('button', { type: 'button', class: on ? 'on' : '', text: (on ? '✓ ' : '⊘ ') + x[1], onclick: function () { st.template = withFlag(st.template, x[0], !on); drawCd(); } }));
+          });
+        };
+        drawCd();
         var lgSel = el('select', { onchange: function (e) { st.lang = e.target.value; } }, [['tr', 'langTr'], ['en', 'langEn'], ['ar', 'langAr']].map(function (x) { return opt(x[0], t(x[1]), st.lang === x[0]); }));
 
         // ---- v1.61: döviz çevirisi ----
@@ -1290,7 +1324,7 @@
         var tbody = el('tbody');
         var totBox = el('div', { class: 'fat-tot' });
         function recalc() {
-          var c = st.currency, tt = calcTotals(st.items, st.discount, st.tax_rate, c, perLine);
+          var c = st.currency, tt = calcTotals(st.items, st.discount, vatOn ? st.tax_rate : 0, c, perLine);
           var k = tt.subtotal > 0 ? (tt.subtotal - tt.discount) / tt.subtotal : 0;
           st.items.forEach(function (it, i) {
             var l = rnd(num(it.qty) * num(it.price), c);
@@ -1386,9 +1420,28 @@
           });
           recalc();
         }
-        var itemsTable = el('table', { class: 'fat-items' }, [el('thead', null, [el('tr', null, cols.map(function (f) {
+        var headTr = function () { return el('tr', null, cols.map(function (f) {
           return el('th', { class: 'h-' + f.k, style: f.k === 'amount' || f.k === 'vat_amount' ? 'text-align:end' : null, text: fLabel('cols', f, lang()) + (f.k === 'qty' && !unitCol ? ' / ' + fLabel('cols', { k: 'unit' }, lang()) : '') });
-        }).concat([el('th')]))]), tbody]);
+        }).concat([el('th')])); };
+        var itemsHead = el('thead', null, [headTr()]);
+        var itemsTable = el('table', { class: 'fat-items' }, [itemsHead, tbody]);
+        // v1.61.2: KDV'li / KDV'siz (yalnız bu fatura; KDV sütunları ve toplamdaki KDV satırları kalkar)
+        var taxField = null;
+        var vtBox = el('div', { class: 'fat-seg' });
+        function setVat(on) {
+          vatOn = on; st.template = withVat(st.template, on); perLine = on && perLine0;
+          if (perLine) st.items.forEach(function (it) { if (it.vat == null || it.vat === '') it.vat = dVat; });
+          cols = calcCols(); itemsHead.innerHTML = ''; itemsHead.appendChild(headTr());
+          if (taxField) taxField.style.display = perLine || !vatOn ? 'none' : '';
+          drawVt(); drawItems();
+        }
+        function drawVt() {
+          vtBox.innerHTML = '';
+          [[true, '％ ' + t('vatOn')], [false, '⊘ ' + t('vatOff')]].forEach(function (x) {
+            vtBox.appendChild(el('button', { type: 'button', class: x[0] === vatOn ? 'on' : '', text: x[1], onclick: function () { if (x[0] !== vatOn) setVat(x[0]); } }));
+          });
+        }
+        drawVt();
 
         // gelir kaydı (yalnız yeni faturada; sonra "Kasaya işle")
         var cashBox = el('div', { class: 'fat-cash span-2' });
@@ -1432,10 +1485,12 @@
           field(t('currency'), curSel), field(t('template'), tplSel), field(t('lang'), lgSel), fxBox,
           field(t('signField'), sgBox, { span: 2, group: true, hint: t('signFieldHint') }),
           field(t('statusField'), sdBox, { span: 2, group: true, hint: t('statusFieldHint') }),
+          field(t('vatField'), vtBox, { span: 2, group: true, hint: t('vatFieldHint') }),
+          (cfg.layout || {}).qr !== false || (cfg.layout || {}).barcode !== false ? field(t('codeField'), cdBox, { span: 2, group: true, hint: t('codeFieldHint') }) : null,
           el('div', { class: 'field span-2' }, [el('span', { class: 'field-label', text: t('items') }), el('div', { class: 'fat-items-wrap' }, [itemsTable]),
             el('div', null, [el('button', { type: 'button', class: 'btn small', text: t('addItem'), onclick: function () { st.items.push(newItem()); drawItems(); var ins = tbody.querySelectorAll('tr:last-child textarea'); if (ins[0]) ins[0].focus(); } })])]),
           field(t('discount'), (discIn = inpS('discount', { type: 'number', step: 'any', min: '0', dir: 'ltr', after: function () { st.discFx = null; recalc(); } }))),
-          perLine ? null : field(t('taxRate'), inpS('tax_rate', { type: 'number', step: 'any', min: '0', max: '100', dir: 'ltr', after: recalc })),
+          (taxField = field(t('taxRate'), inpS('tax_rate', { type: 'number', step: 'any', min: '0', max: '100', dir: 'ltr', after: recalc }))),
           el('div', { class: 'span-2' }, [totBox]),
           field(t('note'), inpS('note', { tag: 'textarea', rows: 2 }), { span: 2 }),
           cashBox
@@ -1471,7 +1526,7 @@
           var payload = {
             id: inv ? inv.id : undefined, number: st.number, date: st.date, due_date: st.due_date, customer: { name: String(st.customer).trim() }, customer_id: st.customer_id || null,
             customer_phone: st.phone, customer_email: st.email, customer_address: st.address, customer_tax: st.tax_no, customer_extra: custExtra(), currency: st.currency, items: items,
-            discount: num(st.discount), tax_rate: perLine ? 0 : num(st.tax_rate), note: st.note, template: st.template, lang: st.lang, meta: metaOut(),
+            discount: num(st.discount), tax_rate: perLine || !vatOn ? 0 : num(st.tax_rate), note: st.note, template: st.template, lang: st.lang, meta: metaOut(),
             record_cash: isNew && st.cash, account_id: st.account_id ? Number(st.account_id) : null, pay_amount: payTouched ? num(st.pay_amount) : ''
           };
           run('saveInvoice', payload, t('saved')).then(function (res) {
@@ -1491,18 +1546,18 @@
         };
         var draftInv = function (no) {
           var c = st.currency, items = itemsOut();
-          var tt = calcTotals(items, st.discount, st.tax_rate, c, perLine);
+          var tt = calcTotals(items, st.discount, vatOn ? st.tax_rate : 0, c, perLine);
           var paid = inv ? inv.paid || 0 : (st.cash ? Math.min(tt.total, payTouched ? rnd(num(st.pay_amount), c) : tt.total) : 0);
           var status = inv && inv.status === 'cancelled' ? 'cancelled' : paid >= tt.total && tt.total > 0 ? 'paid' : paid > 0 ? 'partial' : 'pending';
           return { number: no, date: st.date, due_date: st.due_date, customer_name: String(st.customer).trim() || '—', customer_phone: st.phone, customer_email: st.email,
-            customer_address: st.address, customer_tax: st.tax_no, currency_code: c, items: JSON.stringify(items), subtotal: tt.subtotal, discount: tt.discount, tax_rate: perLine ? 0 : num(st.tax_rate),
+            customer_address: st.address, customer_tax: st.tax_no, currency_code: c, items: JSON.stringify(items), subtotal: tt.subtotal, discount: tt.discount, tax_rate: perLine || !vatOn ? 0 : num(st.tax_rate),
             tax: tt.tax, total: tt.total, paid: paid, status: status, template: st.template, lang: st.lang, note: st.note, meta: JSON.stringify(metaOut()) };
         };
         var showPreview = function () {
           nextNo().then(function (no) {
             openPreview(draftInv(no), {
               tag: '✎ ' + t('previewDraft'),
-              onChange: function (tp, lg) { st.template = tp; st.lang = lg; tplSel.value = tplOf(tp); lgSel.value = lg; drawSg(); drawSd(); },
+              onChange: function (tp, lg) { st.template = tp; st.lang = lg; tplSel.value = tplOf(tp); lgSel.value = lg; drawSg(); drawSd(); drawCd(); },
               extra: function (getM) {
                 return [
                   el('button', { type: 'button', class: 'btn', text: t('save'), onclick: function () { getM().close(); submit(false, b1); } }),
@@ -2025,6 +2080,7 @@
         var dCur = el('select', { onchange: function (e) { d.currency = e.target.value; } }, CUR.map(function (x) { return opt(x, x + ' · ' + SYM[x], d.currency === x); }));
         var dTax = el('input', { type: 'number', step: 'any', min: '0', max: '100', dir: 'ltr', value: String(d.tax_rate || 0), oninput: function (e) { d.tax_rate = num(e.target.value); } });
         var dTpl = el('select', { onchange: function (e) { d.template = e.target.value; } }, TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), d.template === x); }));
+        var dVt = el('input', { type: 'checkbox', onchange: function (e) { d.vat_on = e.target.checked; } }); dVt.checked = d.vat_on !== false;
         var dSd = el('input', { type: 'checkbox', onchange: function (e) { d.status_stamp = e.target.checked; } }); dSd.checked = d.status_stamp !== false;
         var dLg = el('select', { onchange: function (e) { d.lang = e.target.value; } }, [['tr', 'langTr'], ['en', 'langEn'], ['ar', 'langAr']].map(function (x) { return opt(x[0], t(x[1]), d.lang === x[0]); }));
         var posSel = el('select', { onchange: function (e) { c.info_pos = e.target.value; } }, [['top', 'sPosTop'], ['bottom', 'sPosBottom'], ['both', 'sPosBoth']].map(function (x) { return opt(x[0], t(x[1]), (c.info_pos || 'both') === x[0]); }));
@@ -2053,7 +2109,7 @@
             el('div', { class: 'span-2 fat-chks' }, [chk('qr', t('layQr')), chk('barcode', t('layBarcode'))])
           ]),
           el('h3', { class: 'section-title', style: 'margin-top:16px', text: t('sDefaults') }),
-          el('div', { class: 'form' }, [field(t('currency'), dCur), field(t('taxRate'), dTax, { hint: t('dVatHint') }), field(t('template'), dTpl), field(t('lang'), dLg), el('label', { class: 'check span-2' }, [dSd, el('span', { text: t('statusDefault') })]),
+          el('div', { class: 'form' }, [field(t('currency'), dCur), field(t('taxRate'), dTax, { hint: t('dVatHint') }), field(t('template'), dTpl), field(t('lang'), dLg), el('label', { class: 'check span-2' }, [dSd, el('span', { text: t('statusDefault') })]), el('label', { class: 'check span-2' }, [dVt, el('span', { text: t('vatDefault') })]),
             field(fLabel('meta', { k: 'scenario' }, lang()), el('input', { value: d.scenario || '', list: 'fat-dl-sc', oninput: function (e) { d.scenario = e.target.value; } })),
             field(fLabel('meta', { k: 'inv_type' }, lang()), el('input', { value: d.inv_type || '', list: 'fat-dl-it', oninput: function (e) { d.inv_type = e.target.value; } })),
             field(fLabel('meta', { k: 'customization' }, lang()), el('input', { value: d.customization || '', dir: 'ltr', oninput: function (e) { d.customization = e.target.value; } })),
@@ -2090,5 +2146,5 @@
   }
 
   if (document.head) style(); else document.addEventListener('DOMContentLoaded', style);
-  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.61.1' };
+  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.61.3' };
 })();

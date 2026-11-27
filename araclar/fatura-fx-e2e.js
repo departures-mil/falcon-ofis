@@ -104,6 +104,14 @@ fs.mkdirSync(OUT, { recursive: true });
   await page.waitForTimeout(300);
   assert.strictEqual(await hasSt(), false, 'damga kaldırıldı');
   await shot('3b-onizleme-damgasiz');
+  // v1.61.2: karekod / barkod fatura başına kapatılır
+  const codes = () => page.evaluate(() => { const r = document.querySelector('.fat-pv-host').shadowRoot; return [!!r.querySelector('.qr svg, .g-qr svg'), !!r.querySelector('.bc svg, .g-bc svg')]; });
+  assert.deepStrictEqual(await codes(), [true, true], 'kodlar açık');
+  await page.locator('.fat-pv-bar label', { hasText: 'Karekod' }).locator('input').uncheck();
+  await page.locator('.fat-pv-bar label', { hasText: 'Barkod' }).locator('input').uncheck();
+  await page.waitForTimeout(300);
+  assert.deepStrictEqual(await codes(), [false, false], 'kodlar kapalı');
+  await shot('3c-onizleme-kodsuz');
   await page.locator('.fat-modal').last().locator('.modal-footer button', { hasText: /^Kaydet$/ }).click();
   await page.waitForTimeout(1200);
   const db = await page.evaluate(async () => {
@@ -124,6 +132,31 @@ fs.mkdirSync(OUT, { recursive: true });
   const html = await page.evaluate(async () => { const r = await window.falcon.db.all('SELECT * FROM invoices'); return window.FalconFatura.html(r[0], { company: {}, layout: {}, logo: 'falcon' }, true); });
   assert.ok(/Döviz Kuru/.test(html) && /1 USD = 40/.test(html), 'PDF HTML kur satırı');
   fs.writeFileSync(path.join(OUT, 'fatura-usd.html'), html);
+
+  // v1.61.2: KDV'siz fatura — KDV sütunları ve satırları yok, KDV hesaplanmaz
+  await page.click('.fatura-page .toolbar button:has-text("Yeni fatura")');
+  await page.waitForSelector('.fat-items tbody tr');
+  await page.fill('.fat-acw input', 'KDVsiz Müşteri');
+  await page.fill('.fat-items tbody tr:nth-child(1) textarea.nm', 'Hizmet');
+  await page.fill('.fat-items tbody tr:nth-child(1) input.p', '100');
+  assert.ok(await page.$('.fat-items th.h-vat'), 'KDV sütunu önce var');
+  await page.locator('.fat-modal .field', { hasText: /^KDV/ }).locator('button', { hasText: "KDV'siz" }).click();
+  await page.waitForTimeout(300);
+  assert.strictEqual(await page.$('.fat-items th.h-vat'), null, 'KDV sütunu kalktı');
+  await page.evaluate(() => document.querySelector('.fat-tot').scrollIntoView({ block: 'center' }));
+  await shot('6-kdvsiz-duzenleyici');
+  await page.click('.fat-modal .modal-footer button:has-text("Önizle")');
+  await page.waitForSelector('.fat-pv-host', { timeout: 10000 });
+  await page.waitForTimeout(700);
+  const pvTxt = await page.evaluate(() => document.querySelector('.fat-pv-host').shadowRoot.textContent);
+  await shot('7-kdvsiz-onizleme'); fs.writeFileSync(path.join(OUT, 'kdvsiz.txt'), pvTxt);
+  assert.ok(!/KDV (Oranı|Tutarı)|Hesaplanan KDV|Vergi \(|Vergiler Dahil/.test(pvTxt), 'önizlemede KDV yazısı yok');
+  await shot('7-kdvsiz-onizleme');
+  await page.locator('.fat-modal').last().locator('.modal-footer button', { hasText: /^Kaydet$/ }).click();
+  await page.waitForTimeout(1200);
+  const kv = await page.evaluate(() => window.falcon.db.all("SELECT total, tax, template FROM invoices WHERE customer_name = 'KDVsiz Müşteri'"));
+  console.log('kdvsiz', kv);
+  assert.deepStrictEqual([kv[0].total, kv[0].tax], [100, 0]); assert.ok(/\|nv/.test(kv[0].template));
 
   // 6) PDF içe aktarma: toplu pasif / aktif (okuyucu taklit)
   await page.evaluate(() => {
