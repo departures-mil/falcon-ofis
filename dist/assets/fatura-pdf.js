@@ -506,7 +506,8 @@
     var i = t.indexOf('{'), j = t.lastIndexOf('}');
     return JSON.parse(i >= 0 ? t.slice(i, j + 1) : t);
   }
-  var AI_TIMEOUT = 150000;
+  // v1.61.5: gerçek denemede 28 kalemli 2 sayfalık fatura gemini-3.8-flash ile ~2,5 dk sürdü → istek başına 4 dk
+  var AI_TIMEOUT = 240000;
   function viaAi(buf, opts) {
     return Promise.all([setting('ai_gemini_key'), setting('ai_mode')]).then(function (r) {
       var key = r[0].trim();
@@ -549,6 +550,8 @@
       p = p || {}; var r = {};
       ['name', 'address', 'district', 'city', 'postal_code', 'country', 'phone', 'fax', 'email', 'web', 'tax_office', 'tax_no', 'mersis', 'trade_reg'].forEach(function (k) { r[k] = clean(p[k] == null ? '' : p[k]); });
       r.tax_no = r.tax_no.replace(/\D/g, '');
+      // yapay zeka unvanın sonundaki hitabı ("… ŞİRKETİ SN.", "SAYIN") da alabiliyor
+      r.name = r.name.replace(/\s+(sn\.?|sayın|sayin)$/i, '');
       return r;
     };
     var meta = {};
@@ -685,7 +688,7 @@
     });
   }
 
-  var api = { read: read, parseLayout: parseLayout, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, extract: extract, version: '1.61.2' };
+  var api = { read: read, parseLayout: parseLayout, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, extract: extract, version: '1.61.5' };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.FalconFaturaPdf = api;
 })(typeof window !== 'undefined' ? window : globalThis);

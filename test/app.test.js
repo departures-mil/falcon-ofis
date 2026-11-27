@@ -256,6 +256,7 @@ test('fatura (1.61.2): yapay zeka okuması çevrimdışı okumayla teyit edilir'
   const scan = P.normalize({ warnings: ['scanned'] });
   const d = P.verify(ai(), scan);
   assert.deepStrictEqual([d.check.status, d.check.why, d.items.length], ['none', 'scanned', 4]);
+  assert.strictEqual(P.normalize({ buyer: { name: 'İSTANİFY TEKNOLOJİ ANONİM ŞİRKETİ SN.' } }).buyer.name, 'İSTANİFY TEKNOLOJİ ANONİM ŞİRKETİ');
   // 5) çevrimdışı okuma da tutarsızsa karar kullanıcıya bırakılır (farklar işaretlenir)
   const o2 = off(); o2.totals.subtotal = 1; const z = ai(); z.items[3].qty = 21;
   const e = P.verify(z, o2);
