@@ -1,4 +1,5 @@
-/* v1.59: Fatura sekmesi (masaüstü + telefon aynı dosya).
+/* v1.59: Fatura sekmesi (masaüstü + telefon aynı dosya). v1.60: Müşteriler / Ürünler sekmeleri, modüler düzen (sütunlar, fatura bilgileri,
+ * müşteri / ürün alanları), satır KDV'si, e-Fatura şablonu, karekod + barkod, PDF'den doldur (fatura-pdf.js).
  * Arayüz derlenmiş paket olduğundan sayfa burada düz JS ile çizilir; paket yalnız boş bir kutu (FalconInvoicesPage) açar ve
  * window.FalconFatura.mount(kutu, app) çağırır. Kayıtlar ana süreçte: saveInvoice, addInvoicePayment, deleteInvoicePayment,
  * setInvoiceCancelled, deleteInvoice (services.js). Ayarlar `settings` tablosunda (eşitlenir): invoice_company, invoice_defaults,
@@ -11,7 +12,7 @@
   var CUR = ['USD', 'TRY', 'SYP'];
   var SYM = { USD: '$', TRY: '₺', SYP: 'ل.س' };
   var DEC = { USD: 2, TRY: 2, SYP: 0 };
-  var TEMPLATES = ['falcon', 'classic', 'minimal'];
+  var TEMPLATES = ['falcon', 'efatura', 'classic', 'minimal'];
 
   // ---------- çeviriler ----------
   var TX = {
@@ -118,6 +119,88 @@
       langTr: 'التركية', langEn: 'الإنجليزية', langAr: 'العربية', previewTitle: 'معاينة الفاتورة', overdue: 'متأخرة', previewDraft: 'مسودة غير محفوظة', previewSample: 'فاتورة نموذجية', previewSampleCust: 'شركة العميل النموذجي', previewSampleItem1: 'خدمة استشارية', previewSampleItem2: 'تدريب (ساعة)', zoomFit: 'ملاءمة', zoomFull: '100%'
     }
   };
+  // v1.60 metinleri
+  var TX2 = {
+    tr: {
+      tabInv: 'Faturalar', tabCust: 'Müşteriler', tabProd: 'Ürünler', tplEfatura: 'e-Fatura (GİB düzeni)', unitPcs: 'Adet', unitHour: 'Saat',
+      fromPdf: 'PDF\'den doldur', fromPdfHint: 'PDF faturayı okuyup müşteri, fatura bilgileri, ürün ve fiyatları otomatik doldurur (önce yapay zeka, internet yoksa çevrimdışı)',
+      secCustomer: 'Müşteri', secInfo: 'Fatura bilgileri', custLinked: 'Kayıtlı müşteri', custNew: 'Yeni müşteri — kaydedilince listeye eklenir', custFromOld: 'eski faturadan', custPick: 'Kayıtlı müşteriler',
+      ettnNew: 'Yeni ETTN üret', vatCalc: 'Hesaplanan KDV',
+      pdfApplied: 'PDF bilgileri dolduruldu — kontrol edip kaydedin', pdfNoReader: 'PDF okuyucu yüklenemedi.', pdfReading: 'PDF okunuyor…', pdfAi: 'Yapay zeka okuyor…', pdfOffline: 'Çevrimdışı okunuyor…',
+      pdfScanned: 'Bu PDF taranmış resim; çevrimdışı okunamadı. İnternete bağlanıp yapay zeka anahtarıyla deneyin.', pdfNothing: 'PDF\'de fatura bilgisi bulunamadı.', pdfFail: 'PDF okunamadı.',
+      pdfSrcAi: 'Yapay zeka ile okundu', pdfSrcOffline: 'Çevrimdışı okundu', pdfNoNet: 'internet yok', pdfNoKey: 'yapay zeka anahtarı yok (Ayarlar → Asistan)', pdfBadKey: 'yapay zeka anahtarı geçersiz',
+      impTitle: 'PDF\'den okunan bilgiler', impApply: 'Faturaya aktar', impSideBuyer: 'Müşteri = SAYIN (alıcı)', impSideSeller: 'Müşteri = Satıcı',
+      impCustFound: 'Kayıtlı müşteri: {n} — eksik bilgileri tamamlanır', impCustNew: 'Yeni müşteri olarak kaydedilecek', impNewProduct: 'Yeni ürün', impMatch: 'Ürün kaydı',
+      impCurUnknown: 'Para birimi ({c}) desteklenmiyor — faturanın para birimini seçin', impMetaHint: 'İşaretli bilgiler faturaya alınır. Fatura No ve ETTN sizde yeniden üretilir.',
+      impTotals: 'Kalemlerin toplamı {a} · PDF\'deki ara toplam {b}',
+      custSearch: 'Ad, VKN, telefon, il…', custImport: 'Eski faturalardan aktar', custImportHint: 'Eski faturalardaki alıcıları müşteri listesine ekler (aynı VKN / ad bir kez)', custImported: '{n} müşteri eklendi',
+      custNewBtn: 'Yeni müşteri', custEmpty: 'Henüz müşteri yok. Fatura kesildiğinde ya da PDF\'den okunduğunda alıcı otomatik eklenir.', custInvoices: 'Faturalar', custInvoice: 'Fatura kes',
+      custDel: 'Bu müşteri silinsin mi? (Silinenler kutusundan geri alınabilir)', custDelUsed: 'Bu müşterinin {n} faturası var. Faturalar bozulmaz (müşteri bilgisi faturada kayıtlı). Silinsin mi?',
+      custHistory: 'Faturaları', custNoInv: 'Bu müşteriye henüz fatura kesilmedi.',
+      prodSearch: 'Ürün adı, stok kodu, depo…', prodNewBtn: 'Yeni ürün', prodHint: 'Faturaya giren her ürün buraya otomatik kaydedilir; aynı ürün stok kodu ya da adıyla tanınır. Stok sayfasındaki ürünlerle aynı listedir.',
+      prodEmpty: 'Henüz ürün yok.', prodLast: 'Son satış', prodDel: 'Bu ürün silinsin mi?', prodDelUsed: 'Bu ürün {n} faturada geçiyor. Faturalar bozulmaz. Silinsin mi?',
+      prodPrices: 'Fiyat ve satış geçmişi', prodNoHist: 'Henüz fiyat kaydı yok.', prodSource: 'Kaynak', prodManual: 'Elle', prodSold: 'Toplam {q} satıldı · {n} müşteri · {i} fatura satırı', errProdName: 'Ürün adını yazın.',
+      sLogo2: 'İkinci logo (marka / mağaza)', sLogo2Hint: 'Faturanın sağ üstünde fatura bilgilerinin yanında görünür (isteğe bağlı).', logo2None: 'İkinci logo yok.',
+      sLayout: 'Fatura düzeni', sLayoutHint: 'Alanları açıp kapatın, adlarını değiştirin, sıralayın, yeni alan ekleyin. Ad boşsa faturanın dilindeki standart ad yazılır. 🔒 alanlar zorunludur (yalnız adı değişir).',
+      layCols: 'Kalem sütunları', layColsHint: 'KDV sütunu açıksa her satırın KDV oranı ayrı girilir (e-Fatura gibi). Birim sütunu kapalıysa birim miktarın yanına yazılır (5 Adet).',
+      layMeta: 'Fatura bilgileri', layCust: 'Müşteri alanları', layCustHint: 'Faturadaki müşteri bloğu ve müşteri kartı bu alanları kullanır.', layProd: 'Ürün kartı alanları',
+      layQr: 'Faturaya karekod (QR) bas', layBarcode: 'Faturaya barkod bas (ETTN)', layLocked: 'Zorunlu alan', layCustom: 'özel', layReset: 'Standart düzene dön',
+      dVatHint: 'Yeni kalemlerin KDV oranı (ör. 20)'
+    },
+    en: {
+      tabInv: 'Invoices', tabCust: 'Customers', tabProd: 'Products', tplEfatura: 'e-Invoice (GİB layout)', unitPcs: 'pcs', unitHour: 'hours',
+      fromPdf: 'Fill from PDF', fromPdfHint: 'Reads a PDF invoice and fills the customer, invoice details, products and prices (AI first, offline when there is no internet)',
+      secCustomer: 'Customer', secInfo: 'Invoice details', custLinked: 'Saved customer', custNew: 'New customer — added to the list when saved', custFromOld: 'from an old invoice', custPick: 'Saved customers',
+      ettnNew: 'Generate a new ETTN', vatCalc: 'Calculated VAT',
+      pdfApplied: 'Filled from the PDF — check and save', pdfNoReader: 'The PDF reader could not be loaded.', pdfReading: 'Reading the PDF…', pdfAi: 'AI is reading…', pdfOffline: 'Reading offline…',
+      pdfScanned: 'This PDF is a scanned image and cannot be read offline. Connect to the internet and try with an AI key.', pdfNothing: 'No invoice data found in the PDF.', pdfFail: 'The PDF could not be read.',
+      pdfSrcAi: 'Read with AI', pdfSrcOffline: 'Read offline', pdfNoNet: 'no internet', pdfNoKey: 'no AI key (Settings → Assistant)', pdfBadKey: 'invalid AI key',
+      impTitle: 'Data read from the PDF', impApply: 'Apply to invoice', impSideBuyer: 'Customer = bill-to (buyer)', impSideSeller: 'Customer = seller',
+      impCustFound: 'Saved customer: {n} — missing details are completed', impCustNew: 'Will be saved as a new customer', impNewProduct: 'New product', impMatch: 'Product record',
+      impCurUnknown: 'Currency ({c}) is not supported — choose the invoice currency', impMetaHint: 'Ticked details are taken over. The invoice number and ETTN are generated here.',
+      impTotals: 'Lines total {a} · subtotal on the PDF {b}',
+      custSearch: 'Name, tax ID, phone, city…', custImport: 'Import from old invoices', custImportHint: 'Adds the buyers of old invoices to the customer list (same tax ID / name once)', custImported: '{n} customers added',
+      custNewBtn: 'New customer', custEmpty: 'No customers yet. Buyers are added automatically when an invoice is issued or read from a PDF.', custInvoices: 'Invoices', custInvoice: 'New invoice',
+      custDel: 'Delete this customer? (Can be restored from Deleted items)', custDelUsed: 'This customer has {n} invoices. The invoices stay intact (the customer details are stored on them). Delete?',
+      custHistory: 'Invoices', custNoInv: 'No invoice issued to this customer yet.',
+      prodSearch: 'Product name, stock code, warehouse…', prodNewBtn: 'New product', prodHint: 'Every product on an invoice is saved here automatically; the same product is recognised by its stock code or name. It is the same list as the Stock page.',
+      prodEmpty: 'No products yet.', prodLast: 'Last sale', prodDel: 'Delete this product?', prodDelUsed: 'This product appears on {n} invoices. The invoices stay intact. Delete?',
+      prodPrices: 'Price and sales history', prodNoHist: 'No price records yet.', prodSource: 'Source', prodManual: 'Manual', prodSold: '{q} sold in total · {n} customers · {i} invoice lines', errProdName: 'Enter the product name.',
+      sLogo2: 'Second logo (brand / store)', sLogo2Hint: 'Shown at the top right next to the invoice details (optional).', logo2None: 'No second logo.',
+      sLayout: 'Invoice layout', sLayoutHint: 'Turn fields on or off, rename, reorder or add new fields. If the name is empty, the standard name in the invoice language is used. 🔒 fields are required (only the name can change).',
+      layCols: 'Line columns', layColsHint: 'With the VAT column on, each line has its own VAT rate (as on an e-invoice). With the Unit column off, the unit is written next to the quantity (5 pcs).',
+      layMeta: 'Invoice details', layCust: 'Customer fields', layCustHint: 'The customer block on the invoice and the customer card use these fields.', layProd: 'Product card fields',
+      layQr: 'Print a QR code on the invoice', layBarcode: 'Print a barcode on the invoice (ETTN)', layLocked: 'Required field', layCustom: 'custom', layReset: 'Back to the standard layout',
+      dVatHint: 'VAT rate of new lines (e.g. 20)'
+    },
+    ar: {
+      tabInv: 'الفواتير', tabCust: 'العملاء', tabProd: 'المنتجات', tplEfatura: 'فاتورة إلكترونية (نموذج GİB)', unitPcs: 'قطعة', unitHour: 'ساعة',
+      fromPdf: 'التعبئة من PDF', fromPdfHint: 'يقرأ فاتورة PDF ويعبّئ بيانات العميل والفاتورة والمنتجات والأسعار تلقائياً (بالذكاء الاصطناعي أولاً، ودون اتصال عند انقطاع الإنترنت)',
+      secCustomer: 'العميل', secInfo: 'بيانات الفاتورة', custLinked: 'عميل مسجَّل', custNew: 'عميل جديد — يُضاف إلى القائمة عند الحفظ', custFromOld: 'من فاتورة سابقة', custPick: 'العملاء المسجَّلون',
+      ettnNew: 'توليد رقم ETTN جديد', vatCalc: 'ضريبة القيمة المضافة المحتسبة',
+      pdfApplied: 'عُبّئت البيانات من PDF — راجعها ثم احفظ', pdfNoReader: 'تعذّر تحميل قارئ PDF.', pdfReading: 'جارٍ قراءة ملف PDF…', pdfAi: 'الذكاء الاصطناعي يقرأ…', pdfOffline: 'القراءة دون اتصال…',
+      pdfScanned: 'هذا الملف صورة ممسوحة ضوئياً ولا يمكن قراءته دون اتصال. اتصل بالإنترنت وحاول بمفتاح الذكاء الاصطناعي.', pdfNothing: 'لم يُعثر على بيانات فاتورة في الملف.', pdfFail: 'تعذّرت قراءة ملف PDF.',
+      pdfSrcAi: 'قُرئ بالذكاء الاصطناعي', pdfSrcOffline: 'قُرئ دون اتصال', pdfNoNet: 'لا يوجد إنترنت', pdfNoKey: 'لا يوجد مفتاح ذكاء اصطناعي (الإعدادات ← المساعد)', pdfBadKey: 'مفتاح الذكاء الاصطناعي غير صالح',
+      impTitle: 'البيانات المقروءة من PDF', impApply: 'نقل إلى الفاتورة', impSideBuyer: 'العميل = المشتري (السيد/ة)', impSideSeller: 'العميل = البائع',
+      impCustFound: 'عميل مسجَّل: {n} — تُستكمل بياناته الناقصة', impCustNew: 'سيُسجَّل عميلاً جديداً', impNewProduct: 'منتج جديد', impMatch: 'سجل المنتج',
+      impCurUnknown: 'العملة ({c}) غير مدعومة — اختر عملة الفاتورة', impMetaHint: 'تُنقل البيانات المحددة إلى الفاتورة. يُولَّد رقم الفاتورة ورقم ETTN هنا من جديد.',
+      impTotals: 'مجموع البنود {a} · المجموع الفرعي في الملف {b}',
+      custSearch: 'الاسم، الرقم الضريبي، الهاتف، المدينة…', custImport: 'استيراد من الفواتير السابقة', custImportHint: 'يضيف مشتري الفواتير السابقة إلى قائمة العملاء (مرة واحدة لكل رقم ضريبي / اسم)', custImported: 'أُضيف {n} عميل',
+      custNewBtn: 'عميل جديد', custEmpty: 'لا يوجد عملاء بعد. يُضاف المشتري تلقائياً عند إصدار فاتورة أو قراءتها من PDF.', custInvoices: 'الفواتير', custInvoice: 'إصدار فاتورة',
+      custDel: 'حذف هذا العميل؟ (يمكن استعادته من المحذوفات)', custDelUsed: 'لهذا العميل {n} فاتورة. لا تتأثر الفواتير (بيانات العميل محفوظة فيها). هل تريد الحذف؟',
+      custHistory: 'فواتيره', custNoInv: 'لم تُصدر لهذا العميل فاتورة بعد.',
+      prodSearch: 'اسم المنتج، رمز المخزون، المستودع…', prodNewBtn: 'منتج جديد', prodHint: 'يُسجَّل هنا تلقائياً كل منتج يرد في فاتورة، ويُعرف المنتج نفسه برمز المخزون أو الاسم. وهي القائمة نفسها في صفحة المخزون.',
+      prodEmpty: 'لا توجد منتجات بعد.', prodLast: 'آخر بيع', prodDel: 'حذف هذا المنتج؟', prodDelUsed: 'يرد هذا المنتج في {n} فاتورة. لا تتأثر الفواتير. هل تريد الحذف؟',
+      prodPrices: 'سجل الأسعار والمبيعات', prodNoHist: 'لا توجد سجلات أسعار بعد.', prodSource: 'المصدر', prodManual: 'يدوي', prodSold: 'المباع إجمالاً {q} · {n} عميل · {i} بند فاتورة', errProdName: 'اكتب اسم المنتج.',
+      sLogo2: 'الشعار الثاني (العلامة التجارية / المتجر)', sLogo2Hint: 'يظهر أعلى اليمين بجانب بيانات الفاتورة (اختياري).', logo2None: 'لا يوجد شعار ثانٍ.',
+      sLayout: 'تخطيط الفاتورة', sLayoutHint: 'فعّل الحقول أو أوقفها، وغيّر أسماءها وترتيبها، وأضف حقولاً جديدة. إذا تُرك الاسم فارغاً يُكتب الاسم القياسي بلغة الفاتورة. الحقول 🔒 إلزامية (يتغير اسمها فقط).',
+      layCols: 'أعمدة البنود', layColsHint: 'عند تفعيل عمود الضريبة تُدخل نسبة الضريبة لكل بند على حدة (كما في الفاتورة الإلكترونية). عند إيقاف عمود الوحدة تُكتب الوحدة بجانب الكمية (5 قطع).',
+      layMeta: 'بيانات الفاتورة', layCust: 'حقول العميل', layCustHint: 'تستخدم كتلة العميل في الفاتورة وبطاقة العميل هذه الحقول.', layProd: 'حقول بطاقة المنتج',
+      layQr: 'طباعة رمز QR على الفاتورة', layBarcode: 'طباعة باركود على الفاتورة (ETTN)', layLocked: 'حقل إلزامي', layCustom: 'مخصص', layReset: 'العودة إلى التخطيط القياسي',
+      dVatHint: 'نسبة الضريبة للبنود الجديدة (مثلاً 20)'
+    }
+  };
+  ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX2[l]).forEach(function (k) { TX[l][k] = TX2[l][k]; }); });
   // Faturanın kendi dilindeki resmi metinler (PDF)
   var DOC = {
     tr: { title: 'FATURA', no: 'Fatura No', date: 'Fatura Tarihi', due: 'Vade Tarihi', billTo: 'Sayın', desc: 'Açıklama', qty: 'Miktar', unit: 'Birim',
@@ -145,8 +228,115 @@
       ERR_INVOICE_BELOW_PAID: 'لا يمكن أن يكون الإجمالي الجديد أقل من المبلغ المحصّل.', ERR_INVOICE_CANCELLED: 'لا يمكن تسجيل تحصيل لفاتورة ملغاة.' }
   };
 
+  // ---------- v1.60: modüler fatura düzeni ----------
+  // Kalem sütunları (cols), fatura bilgileri (meta), müşteri alanları (cust: fatura + müşteri kartı), ürün kartı alanları (prod).
+  // Ayar `invoice_layout` = { cols: [{k, label, on, del, custom}], meta: […], cust: […], prod: […], qr, barcode }.
+  // Standart alan: adı değiştirilebilir, kapatılabilir / çıkarılabilir (lock = zorunlu, yalnız adı değişir). Özel alan: eklenir, silinir.
+  var LAY_STD = {
+    cols: [['no', 1], ['depot', 1], ['code', 1], ['name', 1, 1], ['qty', 1, 1], ['unit', 0], ['price', 1, 1], ['amount', 1], ['vat', 1], ['vat_amount', 1]],
+    meta: [['date', 1, 1], ['number', 1, 1], ['due_date', 1], ['customization', 1], ['scenario', 1], ['inv_type', 1], ['issue_time', 1], ['ettn', 1], ['order_no', 0], ['waybill_no', 0], ['campaign', 1], ['cargo', 1]],
+    cust: [['tax_office', 1], ['tax_no', 1], ['address', 1], ['district', 1], ['city', 1], ['postal_code', 0], ['country', 0], ['phone', 1], ['email', 1], ['web', 0]],
+    prod: [['code', 1], ['unit', 1], ['price', 1], ['vat', 1], ['depot', 1], ['description', 1]]
+  };
+  var LBL = {
+    tr: {
+      cols: { no: 'Sıra No', depot: 'Depo', code: 'Stok Kodu', name: 'Mal Hizmet', qty: 'Miktar', unit: 'Birim', price: 'Birim Fiyat', amount: 'Mal Hizmet Tutarı', vat: 'KDV Oranı', vat_amount: 'KDV Tutarı' },
+      meta: { date: 'Tarih', number: 'Fatura No', due_date: 'Vade Tarihi', customization: 'Özelleştirme No', scenario: 'Senaryo', inv_type: 'Fatura Tipi', issue_time: 'Oluşma Zamanı', ettn: 'ETTN', order_no: 'Sipariş No', waybill_no: 'İrsaliye No', campaign: 'Kampanya Kodu', cargo: 'Kargo Firması' },
+      cust: { tax_office: 'Vergi Dairesi', tax_no: 'VKN / TCKN', address: 'Adres', district: 'İlçe', city: 'İl', postal_code: 'Posta Kodu', country: 'Ülke', phone: 'Tel', email: 'e-Posta', web: 'Web Sitesi' },
+      prod: { code: 'Stok Kodu', unit: 'Birim', price: 'Satış Fiyatı', vat: 'KDV Oranı (%)', depot: 'Depo', description: 'Açıklama' },
+      gib: { subtotal: 'Mal Hizmet Toplam Tutarı', discount: 'Toplam İskonto', vat: 'Hesaplanan KDV', total: 'Vergiler Dahil Toplam Tutar', payable: 'Ödenecek Tutar', efatura: 'e-Fatura', earsiv: 'e-Arşiv Fatura' }
+    },
+    en: {
+      cols: { no: 'No', depot: 'Warehouse', code: 'Stock Code', name: 'Goods / Services', qty: 'Quantity', unit: 'Unit', price: 'Unit Price', amount: 'Amount', vat: 'VAT Rate', vat_amount: 'VAT Amount' },
+      meta: { date: 'Date', number: 'Invoice No', due_date: 'Due Date', customization: 'Customization ID', scenario: 'Scenario', inv_type: 'Invoice Type', issue_time: 'Issue Time', ettn: 'ETTN (UUID)', order_no: 'Order No', waybill_no: 'Waybill No', campaign: 'Campaign Code', cargo: 'Carrier' },
+      cust: { tax_office: 'Tax Office', tax_no: 'Tax ID', address: 'Address', district: 'District', city: 'City', postal_code: 'Postal Code', country: 'Country', phone: 'Tel', email: 'E-mail', web: 'Website' },
+      prod: { code: 'Stock Code', unit: 'Unit', price: 'Sale Price', vat: 'VAT Rate (%)', depot: 'Warehouse', description: 'Description' },
+      gib: { subtotal: 'Goods / Services Total', discount: 'Total Discount', vat: 'Calculated VAT', total: 'Total Including Taxes', payable: 'Amount Payable', efatura: 'e-Invoice', earsiv: 'e-Archive Invoice' }
+    },
+    ar: {
+      cols: { no: 'الرقم', depot: 'المستودع', code: 'رمز المخزون', name: 'السلع / الخدمات', qty: 'الكمية', unit: 'الوحدة', price: 'سعر الوحدة', amount: 'المبلغ', vat: 'نسبة الضريبة', vat_amount: 'قيمة الضريبة' },
+      meta: { date: 'التاريخ', number: 'رقم الفاتورة', due_date: 'تاريخ الاستحقاق', customization: 'رقم التخصيص', scenario: 'السيناريو', inv_type: 'نوع الفاتورة', issue_time: 'وقت الإنشاء', ettn: 'الرقم الموحد (ETTN)', order_no: 'رقم الطلب', waybill_no: 'رقم إذن التسليم', campaign: 'رمز الحملة', cargo: 'شركة الشحن' },
+      cust: { tax_office: 'دائرة الضرائب', tax_no: 'الرقم الضريبي', address: 'العنوان', district: 'المنطقة', city: 'المدينة', postal_code: 'الرمز البريدي', country: 'البلد', phone: 'الهاتف', email: 'البريد الإلكتروني', web: 'الموقع الإلكتروني' },
+      prod: { code: 'رمز المخزون', unit: 'الوحدة', price: 'سعر البيع', vat: 'نسبة الضريبة (%)', depot: 'المستودع', description: 'الوصف' },
+      gib: { subtotal: 'إجمالي السلع والخدمات', discount: 'إجمالي الخصم', vat: 'ضريبة القيمة المضافة المحتسبة', total: 'الإجمالي شاملاً الضرائب', payable: 'المبلغ المستحق الدفع', efatura: 'فاتورة إلكترونية', earsiv: 'فاتورة أرشيف إلكترونية' }
+    }
+  };
+  function layStd(kind) { return LAY_STD[kind].map(function (x) { return { k: x[0], label: '', on: !!x[1], lock: !!x[2] }; }); }
+  function layOf(cfg, kind) {
+    var saved = cfg && cfg.layout && Array.isArray(cfg.layout[kind]) ? cfg.layout[kind] : null;
+    if (!saved) return layStd(kind);
+    var std = layStd(kind), out = [];
+    saved.forEach(function (f) {
+      if (!f || !f.k || out.some(function (x) { return x.k === f.k; })) return;
+      var s = std.filter(function (x) { return x.k === f.k; })[0];
+      if (s) out.push({ k: f.k, label: String(f.label || ''), on: s.lock ? true : f.on !== false, lock: s.lock, del: s.lock ? false : !!f.del });
+      else if (f.custom) out.push({ k: f.k, label: String(f.label || ''), on: f.on !== false, custom: true });
+    });
+    std.forEach(function (s) { if (!out.some(function (x) { return x.k === s.k; })) out.push(s); }); // sonradan eklenen standart alanlar
+    return out;
+  }
+  function layOn(cfg, kind) { return layOf(cfg, kind).filter(function (f) { return f.on && !f.del; }); }
+  function layHas(cfg, kind, k) { return layOn(cfg, kind).some(function (f) { return f.k === k; }); }
+  // Alanın adı: kullanıcı adı yazdıysa o, yoksa verilen dildeki standart ad
+  function fLabel(kind, f, lg) { var L = LBL[lg] || LBL.tr; return String(f.label || '').trim() || (L[kind] && L[kind][f.k]) || (LBL.tr[kind] && LBL.tr[kind][f.k]) || f.k; }
+  function perLineVat(cfg) { return layHas(cfg, 'cols', 'vat') || layHas(cfg, 'cols', 'vat_amount'); }
+  function uuid() {
+    var b = new Uint8Array(16);
+    try { crypto.getRandomValues(b); } catch (e) { for (var i = 0; i < 16; i++) b[i] = Math.floor(Math.random() * 256); }
+    b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128;
+    var h = Array.prototype.map.call(b, function (x) { return ('0' + x.toString(16)).slice(-2); }).join('').toUpperCase();
+    return h.slice(0, 8) + '-' + h.slice(8, 12) + '-' + h.slice(12, 16) + '-' + h.slice(16, 20) + '-' + h.slice(20);
+  }
+  function nowTime() { var d = new Date(); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2); }
+  // Satır bazında KDV (e-Fatura gibi): her satırın vergisi ayrı yuvarlanır, indirim satırlara oranla dağılır (services.js ile aynı)
+  function calcTotals(items, discount, taxRate, cur, perLine) {
+    var sub = rnd(items.reduce(function (a, it) { return a + rnd(num(it.qty) * num(it.price), cur); }, 0), cur);
+    var disc = Math.min(sub, rnd(num(discount), cur)), k = sub > 0 ? (sub - disc) / sub : 0, byRate = {}, tax = 0;
+    if (perLine) {
+      items.forEach(function (it) { var v = num(it.vat), lt = rnd(num(it.qty) * num(it.price) * k * v / 100, cur); tax += lt; var key = String(v); byRate[key] = byRate[key] || { rate: v, base: 0, tax: 0 }; byRate[key].base += rnd(num(it.qty) * num(it.price) * k, cur); byRate[key].tax += lt; });
+      tax = rnd(tax, cur);
+    } else {
+      tax = rnd((sub - disc) * num(taxRate) / 100, cur);
+      if (num(taxRate)) byRate[String(num(taxRate))] = { rate: num(taxRate), base: sub - disc, tax: tax };
+    }
+    return { subtotal: sub, discount: disc, tax: tax, total: rnd(sub - disc + tax, cur), byRate: byRate };
+  }
+
+  // ---------- QR kod ve barkod (PDF'e gömülür) ----------
+  function qrSvg(text, color) {
+    try {
+      if (typeof window.qrcode !== 'function') return '';
+      var q = window.qrcode(0, 'M'); q.addData(String(text)); q.make();
+      var n = q.getModuleCount(), d = '';
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (q.isDark(r, c)) d += 'M' + c + ' ' + r + 'h1v1h-1z';
+      return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 ' + (n + 4) + ' ' + (n + 4) + '" shape-rendering="crispEdges"><rect x="-2" y="-2" width="' + (n + 4) + '" height="' + (n + 4) + '" fill="#fff"/><path d="' + d + '" fill="' + (color || '#000') + '"/></svg>';
+    } catch (e) { return ''; }
+  }
+  // Code 128-B (desen tablosu: JsBarcode, MIT)
+  var C128 = [11011001100, 11001101100, 11001100110, 10010011000, 10010001100, 10001001100, 10011001000, 10011000100, 10001100100, 11001001000, 11001000100, 11000100100, 10110011100, 10011011100, 10011001110, 10111001100, 10011101100, 10011100110, 11001110010, 11001011100, 11001001110, 11011100100, 11001110100, 11101101110, 11101001100, 11100101100, 11100100110, 11101100100, 11100110100, 11100110010, 11011011000, 11011000110, 11000110110, 10100011000, 10001011000, 10001000110, 10110001000, 10001101000, 10001100010, 11010001000, 11000101000, 11000100010, 10110111000, 10110001110, 10001101110, 10111011000, 10111000110, 10001110110, 11101110110, 11010001110, 11000101110, 11011101000, 11011100010, 11011101110, 11101011000, 11101000110, 11100010110, 11101101000, 11101100010, 11100011010, 11101111010, 11001000010, 11110001010, 10100110000, 10100001100, 10010110000, 10010000110, 10000101100, 10000100110, 10110010000, 10110000100, 10011010000, 10011000010, 10000110100, 10000110010, 11000010010, 11001010000, 11110111010, 11000010100, 10001111010, 10100111100, 10010111100, 10010011110, 10111100100, 10011110100, 10011110010, 11110100100, 11110010100, 11110010010, 11011011110, 11011110110, 11110110110, 10101111000, 10100011110, 10001011110, 10111101000, 10111100010, 11110101000, 11110100010, 10111011110, 10111101110, 11101011110, 11110101110, 11010000100, 11010010000, 11010011100, 1100011101011];
+  function barcodeSvg(text, color) {
+    var s = String(text || '').replace(/[^\x20-\x7e]/g, '');
+    if (!s) return '';
+    var codes = [104], sum = 104;
+    for (var i = 0; i < s.length; i++) { var v = s.charCodeAt(i) - 32; codes.push(v); sum += v * (i + 1); }
+    codes.push(sum % 103); codes.push(106);
+    var bits = codes.map(function (c) { return String(C128[c]); }).join(''), d = '', x = 10;
+    for (var j = 0; j < bits.length; j++) { if (bits[j] === '1') d += 'M' + (x + j) + ' 0h1v40h-1z'; }
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + (bits.length + 20) + ' 40" preserveAspectRatio="none" shape-rendering="crispEdges"><path d="' + d + '" fill="' + (color || '#000') + '"/></svg>';
+  }
+  // GİB karekodundaki gibi JSON: satıcı / alıcı VKN, senaryo, tip, tarih, no, ETTN, para birimi, toplamlar
+  function qrPayload(inv, cfg, tt) {
+    var m = jparse(inv.meta, {}) || {};
+    var o = { vkntckn: (cfg.company || {}).tax || '', avkntckn: inv.customer_tax || '', senaryo: m.scenario || '', tip: m.inv_type || '', tarih: inv.date, no: inv.number, ettn: m.ettn || '',
+      parabirimi: inv.currency_code === 'TRY' ? 'TRY' : inv.currency_code, malhizmettoplam: String(tt.subtotal) };
+    Object.keys(tt.byRate).forEach(function (r) { o['kdvmatrah(' + r + ')'] = String(rnd(tt.byRate[r].base, inv.currency_code)); o['hesaplanankdv(' + r + ')'] = String(rnd(tt.byRate[r].tax, inv.currency_code)); });
+    o.vergidahil = String(tt.total); o.odenecek = String(rnd(tt.total - (inv.paid || 0), inv.currency_code));
+    return JSON.stringify(o);
+  }
+
   function lang() { var l = (document.documentElement.lang || 'tr').slice(0, 2); return TX[l] ? l : 'tr'; }
   function t(k, v) { var s = (TX[lang()][k] || TX.tr[k] || k); if (v) for (var x in v) s = s.split('{' + x + '}').join(v[x]); return s; }
+  function low(s) { return String(s == null ? '' : s).toLocaleLowerCase('tr'); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function today() { var d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10); }
   function num(v) { var n = Number(String(v == null ? '' : v).replace(',', '.')); return isFinite(n) ? n : 0; }
@@ -168,10 +358,10 @@
 
   var CFG = null;
   function loadCfg() {
-    return Promise.all(['invoice_company', 'invoice_defaults', 'invoice_prefix', 'invoice_signature', 'invoice_stamp', 'invoice_logo'].map(sget)).then(function (r) {
+    return Promise.all(['invoice_company', 'invoice_defaults', 'invoice_prefix', 'invoice_signature', 'invoice_stamp', 'invoice_logo', 'invoice_layout', 'invoice_logo2'].map(sget)).then(function (r) {
       CFG = {
         company: jparse(r[0], {}), defaults: jparse(r[1], {}), prefix: r[2] || 'FAL',
-        signature: r[3] || '', stamp: r[4] || '', logo: r[5] || 'falcon'
+        signature: r[3] || '', stamp: r[4] || '', logo: r[5] || 'falcon', layout: jparse(r[6], {}), logo2: r[7] || ''
       };
       if (!CFG.company.name) CFG.company.name = 'Falcon System';
       return CFG;
@@ -256,7 +446,8 @@
   var PALETTE = {
     falcon: { ink: '#13213b', accent: '#c9a227', soft: '#eef2f8', line: '#d5dbe6' },
     classic: { ink: '#1f2937', accent: '#13213b', soft: '#f5f5f5', line: '#c9ced6' },
-    minimal: { ink: '#111827', accent: '#2563eb', soft: '#f8fafc', line: '#e5e7eb' }
+    minimal: { ink: '#111827', accent: '#2563eb', soft: '#f8fafc', line: '#e5e7eb' },
+    efatura: { ink: '#1f2a37', accent: '#1f2a37', soft: '#f6f7f9', line: '#b9c0ca' }
   };
   // çok satırlı ürün adı: ilk satır kalın (ürün), alttakiler özellik satırları
   function itemNameHtml(n) {
@@ -269,8 +460,9 @@
   function withSign(v, on) { return tplOf(v) + (on ? '' : '|ns'); }
   function invoiceHtml(inv, cfg, forPdf) {
     var lg = DOC[inv.lang] ? inv.lang : lang();
-    var D = DOC[lg], rtl = lg === 'ar', cur = inv.currency_code, tpl = tplOf(inv.template), P = PALETTE[tpl];
+    var D = DOC[lg], LB = LBL[lg] || LBL.tr, rtl = lg === 'ar', cur = inv.currency_code, tpl = tplOf(inv.template), P = PALETTE[tpl], gib = tpl === 'efatura';
     var items = jparse(inv.items, []); if (!Array.isArray(items)) items = [];
+    var meta = jparse(inv.meta, {}) || {};
     var c = cfg.company || {};
     var logoSrc = logoSrcOf(cfg.logo, tpl === 'falcon' ? '#ffffff' : P.ink);
     var sign = hasSign(inv.template) ? (cfg.signature || SAMPLE_SIGN) : '';
@@ -279,7 +471,13 @@
     var st = inv.status || 'pending';
     var M = function (n) { return '<span dir="ltr" class="m">' + esc(money(n, cur, lg)) + '</span>'; };
     var L = function (x) { return '<span dir="ltr">' + esc(x) + '</span>'; };
+    var pct = function (v) { return '%' + fmt(num(v), 'X', lg).replace(/[.,]00$/, ''); };
     var pos = c.info_pos === 'top' || c.info_pos === 'bottom' ? c.info_pos : 'both';
+    // satır KDV'si: kalemlerde vat varsa (ya da düzende KDV sütunu açıksa) her satırın KDV'si; yoksa fatura geneli oran
+    var perLine = items.some(function (it) { return it.vat != null && it.vat !== ''; });
+    var tt = calcTotals(items, inv.discount, inv.tax_rate, cur, perLine);
+    var cols = layOn(cfg, 'cols').filter(function (f) { return perLine || (f.k !== 'vat' && f.k !== 'vat_amount'); });
+    var unitCol = cols.some(function (f) { return f.k === 'unit'; });
     var taxLine = [c.tax_office ? esc(D.taxOffice) + ': ' + esc(c.tax_office) : '', c.tax ? esc(D.taxNo) + ': ' + L(c.tax) : ''].filter(Boolean).join(' · ');
     var contact = pos === 'bottom' ? [] : [c.address ? esc(c.address) : '', c.phone ? '☎ ' + L(c.phone) : '', c.email ? '✉ ' + L(c.email) : '', c.web ? L(c.web) : '', taxLine].filter(Boolean);
     var KV = function (k, v, ltr) { return v ? '<div><span class="k">' + esc(k) + ':</span> ' + (ltr ? L(v) : esc(v)) + '</div>' : ''; };
@@ -299,19 +497,82 @@
     var fDef = [D.seller, D.contactH, D.legalH, D.bankH];
     var fcols = colHtml.map(function (x, i) {
       if (!x) return '';
-      var tt = String(fTitles[i] || '').trim(); tt = tt === '-' ? '' : (tt || fDef[i]);
-      return '<div class="fc">' + (tt ? '<h5>' + esc(tt) + '</h5>' : '') + x + '</div>';
+      var tt2 = String(fTitles[i] || '').trim(); tt2 = tt2 === '-' ? '' : (tt2 || fDef[i]);
+      return '<div class="fc">' + (tt2 ? '<h5>' + esc(tt2) + '</h5>' : '') + x + '</div>';
     }).join('');
+    // fatura bilgileri (düzendeki sırayla)
+    var metaVal = function (k) {
+      if (k === 'date') return dmy(inv.date); if (k === 'number') return inv.number; if (k === 'due_date') return inv.due_date ? dmy(inv.due_date) : '';
+      return meta[k] || '';
+    };
+    var LTR_META = { number: 1, ettn: 1, customization: 1, issue_time: 1, order_no: 1, waybill_no: 1, campaign: 1 };
+    var metaRows = layOn(cfg, 'meta').filter(function (f) { return metaVal(f.k); }).map(function (f) { return { k: f.k, label: fLabel('meta', f, lg), v: metaVal(f.k), ltr: LTR_META[f.k] || f.custom }; });
+    // müşteri alanları
+    var custVal = function (k) {
+      if (k === 'tax_no') return inv.customer_tax || ''; if (k === 'address') return inv.customer_address || ''; if (k === 'phone') return inv.customer_phone || ''; if (k === 'email') return inv.customer_email || '';
+      return meta['c.' + k] || '';
+    };
+    var LTR_CUST = { tax_no: 1, phone: 1, email: 1, web: 1, postal_code: 1 };
+    var custF = layOn(cfg, 'cust');
+    var ADDR = { address: 1, district: 1, city: 1, postal_code: 1, country: 1 };
+    var UP = function (x) { return String(x || '').toLocaleUpperCase('tr'); };
+    var custLines = function (withLabels) {
+      var a0 = UP(custVal('address'));
+      // il / ilçe adresin içinde yazıyorsa ikinci kez basılmaz
+      var addr = custF.filter(function (f) { var v = custVal(f.k); return ADDR[f.k] && v && (f.k === 'address' || a0.indexOf(UP(v)) < 0); }).map(function (f) { return esc(custVal(f.k)); });
+      var out = [], placed = false;
+      custF.forEach(function (f) {
+        if (ADDR[f.k]) { if (!placed && addr.length) { out.push('<span class="ad">' + addr.join(' ') + '</span>'); placed = true; } return; }
+        var v = custVal(f.k); if (!v) return;
+        var lb = fLabel('cust', f, lg);
+        out.push((withLabels || (f.k !== 'phone' && f.k !== 'email') ? '<span class="k">' + esc(lb) + ':</span> ' : f.k === 'phone' ? '☎ ' : '✉ ') + (LTR_CUST[f.k] ? L(v) : esc(v)));
+      });
+      return out;
+    };
+    // kalemler
+    var CW = { no: '8mm', depot: '14mm', unit: '13mm', vat: '15mm' };
+    var NUMC = { qty: 1, price: 1, amount: 1, vat: 1, vat_amount: 1 };
+    var thead = '<tr>' + cols.map(function (f) {
+      var cls = NUMC[f.k] ? 'n' : f.k === 'no' || f.k === 'unit' ? 'c' : '';
+      return '<th class="' + cls + '"' + (CW[f.k] ? ' style="width:' + CW[f.k] + '"' : '') + '>' + esc(f.k === 'no' && !f.label && !gib ? '#' : fLabel('cols', f, lg)) + '</th>';
+    }).join('') + '</tr>';
+    var k0 = tt.subtotal > 0 ? (tt.subtotal - tt.discount) / tt.subtotal : 0;
     var rows = items.map(function (it, i) {
-      return '<tr><td class="c">' + (i + 1) + '</td><td class="nm">' + itemNameHtml(it.name) + '</td><td class="n">' + esc(fmt(it.qty, 'X', lg).replace(/[.,]00$/, '')) +
-        '</td><td class="c">' + esc(it.unit || '') + '</td><td class="n">' + M(it.price) + '</td><td class="n">' + M(rnd(it.qty * it.price, cur)) + '</td></tr>';
+      var line = rnd(num(it.qty) * num(it.price), cur), x = it.x || {};
+      var qty = esc(fmt(num(it.qty), 'X', lg).replace(/[.,]00$/, '')) + (!unitCol && it.unit ? ' ' + esc(it.unit) : '');
+      return '<tr>' + cols.map(function (f) {
+        switch (f.k) {
+          case 'no': return '<td class="c">' + (i + 1) + '</td>';
+          case 'depot': return '<td class="cd">' + esc(it.depot || '') + '</td>';
+          case 'code': return '<td class="cd" dir="ltr">' + esc(it.code || '') + '</td>';
+          case 'name': return '<td class="nm">' + itemNameHtml(it.name) + '</td>';
+          case 'qty': return '<td class="n">' + qty + '</td>';
+          case 'unit': return '<td class="c">' + esc(it.unit || '') + '</td>';
+          case 'price': return '<td class="n">' + M(it.price) + '</td>';
+          case 'amount': return '<td class="n">' + M(line) + '</td>';
+          case 'vat': return '<td class="n">' + (it.vat != null && it.vat !== '' ? L(pct(it.vat)) : '') + '</td>';
+          case 'vat_amount': return '<td class="n">' + M(rnd(num(it.qty) * num(it.price) * k0 * num(it.vat) / 100, cur)) + '</td>';
+          default: return '<td>' + esc(x[f.k] || '') + '</td>';
+        }
+      }).join('') + '</tr>';
     }).join('');
-    var totals = '<tr><td>' + D.subtotal + '</td><td class="n">' + M(inv.subtotal) + '</td></tr>' +
-      (inv.discount ? '<tr><td>' + D.discount + '</td><td class="n">− ' + M(inv.discount) + '</td></tr>' : '') +
-      (inv.tax_rate ? '<tr><td>' + D.tax + ' (%' + esc(fmt(inv.tax_rate, 'X', lg).replace(/[.,]00$/, '')) + ')</td><td class="n">' + M(inv.tax) + '</td></tr>' : '') +
-      '<tr class="g"><td>' + D.grand + '</td><td class="n">' + M(inv.total) + '</td></tr>' +
-      (inv.paid > 0 ? '<tr><td>' + D.paid + '</td><td class="n">' + M(inv.paid) + '</td></tr><tr class="r"><td>' + D.remaining + '</td><td class="n">' + M(remaining) + '</td></tr>' : '');
+    var rates = Object.keys(tt.byRate).sort(function (a, b) { return Number(b) - Number(a); });
+    var G = LB.gib;
+    var vatRows = perLine ? rates.map(function (r) { return '<tr><td>' + esc(gib || lg === 'tr' ? G.vat : D.tax) + ' (' + pct(r) + ')</td><td class="n">' + M(tt.byRate[r].tax) + '</td></tr>'; }).join('')
+      : (inv.tax_rate ? '<tr><td>' + D.tax + ' (' + pct(inv.tax_rate) + ')</td><td class="n">' + M(inv.tax) + '</td></tr>' : '');
+    var totals = gib
+      ? '<tr><td>' + esc(G.subtotal) + '</td><td class="n">' + M(inv.subtotal) + '</td></tr><tr><td>' + esc(G.discount) + '</td><td class="n">' + M(inv.discount || 0) + '</td></tr>' + vatRows +
+        '<tr><td>' + esc(G.total) + '</td><td class="n">' + M(inv.total) + '</td></tr>' + (inv.paid > 0 ? '<tr><td>' + D.paid + '</td><td class="n">' + M(inv.paid) + '</td></tr>' : '') +
+        '<tr class="g"><td>' + esc(G.payable) + '</td><td class="n">' + M(inv.paid > 0 ? remaining : inv.total) + '</td></tr>'
+      : '<tr><td>' + D.subtotal + '</td><td class="n">' + M(inv.subtotal) + '</td></tr>' +
+        (inv.discount ? '<tr><td>' + D.discount + '</td><td class="n">− ' + M(inv.discount) + '</td></tr>' : '') + vatRows +
+        '<tr class="g"><td>' + D.grand + '</td><td class="n">' + M(inv.total) + '</td></tr>' +
+        (inv.paid > 0 ? '<tr><td>' + D.paid + '</td><td class="n">' + M(inv.paid) + '</td></tr><tr class="r"><td>' + D.remaining + '</td><td class="n">' + M(remaining) + '</td></tr>' : '');
+    var lay = cfg.layout || {};
+    var qr = lay.qr !== false ? qrSvg(qrPayload(inv, cfg, tt), '#000') : '';
+    var bc = lay.barcode !== false ? barcodeSvg(meta.ettn || inv.number, '#000') : '';
     var font = rtl ? "'Noto Sans Arabic','Segoe UI',Tahoma,Arial,sans-serif" : "'Segoe UI','Inter',Arial,'Noto Sans Arabic',sans-serif";
+    var many = cols.length > 7;
     var css =
       '@page{size:210mm 297mm;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0}table{color:inherit;font-size:inherit;font-family:inherit}' +
       '.inv{width:210mm;min-height:297mm;padding:0 0 16mm;font-family:' + font + ';color:' + P.ink + ';font-size:10.5pt;background:#fff;position:relative;-webkit-print-color-adjust:exact;print-color-adjust:exact;display:flex;flex-direction:column}' +
@@ -319,23 +580,25 @@
       '.brand{display:flex;align-items:center;gap:5mm}.brand img{height:' + (tpl === 'minimal' ? '20mm' : '25mm') + ';width:auto}' +
       '.co{font-size:9pt;line-height:1.55;opacity:.95}.co b{font-size:13pt;display:block;margin-bottom:1mm;letter-spacing:.02em}' +
       '.tt{text-align:' + (rtl ? 'left' : 'right') + '}.tt h1{margin:0;font-size:' + (rtl ? '26pt' : '24pt') + ';letter-spacing:' + (rtl ? '0' : '.14em') + ';font-weight:800;color:' + (tpl === 'falcon' ? '#fff' : P.accent) + '}' +
-      '.tt .o{font-size:8.5pt;opacity:.75;margin-top:1mm}.meta{margin-top:3mm;font-size:9.5pt;line-height:1.6}.meta span{opacity:.75}' +
+      '.tt .o{font-size:8.5pt;opacity:.75;margin-top:1mm}.meta{margin-top:3mm;font-size:9pt;line-height:1.55}.meta span{opacity:.75}.tt .l2{max-height:14mm;max-width:50mm;margin-bottom:2mm}' +
       '.body{padding:8mm 14mm 0;flex:1}' +
       '.parties{display:flex;justify-content:space-between;gap:8mm;margin-bottom:7mm}' +
       '.box{flex:1;background:' + P.soft + ';border-' + (rtl ? 'right' : 'left') + ':3px solid ' + P.accent + ';padding:4mm 5mm;border-radius:2mm;font-size:9.5pt;line-height:1.6}' +
-      '.box h3{margin:0 0 1.5mm;font-size:8.5pt;text-transform:uppercase;letter-spacing:.08em;opacity:.7}.box b{font-size:11.5pt}' +
-      '.stbox{display:flex;flex-direction:column;align-items:' + (rtl ? 'flex-start' : 'flex-end') + ';justify-content:center;gap:2mm;min-width:45mm}' +
+      '.box h3{margin:0 0 1.5mm;font-size:8.5pt;text-transform:uppercase;letter-spacing:.08em;opacity:.7}.box b{font-size:11.5pt}.box .k,.gb .k{opacity:.7}' +
+      '.stbox{display:flex;flex-direction:column;align-items:' + (rtl ? 'flex-start' : 'flex-end') + ';justify-content:center;gap:2.5mm;min-width:45mm}' +
+      '.codes{display:flex;gap:3mm;align-items:center}.codes .qr svg{width:24mm;height:24mm;display:block}.bc svg{width:52mm;height:10mm;display:block}.bc .t{font-size:6.5pt;text-align:center;letter-spacing:.04em;margin-top:.6mm}' +
       '.st{display:inline-block;border:2px solid currentColor;border-radius:2mm;padding:1.5mm 4mm;font-weight:800;letter-spacing:.08em;font-size:11pt;transform:rotate(' + (rtl ? '4' : '-4') + 'deg)}' +
       '.st.paid{color:#15803d}.st.partial{color:#b45309}.st.pending{color:#b91c1c}.st.cancelled{color:#6b7280}' +
-      'table.it{width:100%;border-collapse:collapse;font-size:9.8pt}' +
-      'table.it th{background:' + (tpl === 'minimal' ? 'transparent' : P.ink) + ';color:' + (tpl === 'minimal' ? P.ink : '#fff') + ';font-weight:700;padding:2.6mm 2.5mm;text-align:' + (rtl ? 'right' : 'left') + ';font-size:9pt;' + (tpl === 'minimal' ? 'border-bottom:2px solid ' + P.ink + ';' : '') + '}' +
-      'table.it td{padding:2.4mm 2.5mm;border-bottom:1px solid ' + P.line + ';vertical-align:top}' +
-      (tpl === 'classic' ? 'table.it td,table.it th{border:1px solid ' + P.line + '}' : '') +
-      'table.it tr:nth-child(even) td{background:' + (tpl === 'minimal' ? '#fff' : P.soft) + '}' +
+      'table.it{width:100%;border-collapse:collapse;font-size:' + (many ? '8.4pt' : '9.8pt') + '}' +
+      'table.it th{background:' + (tpl === 'minimal' ? 'transparent' : gib ? '#e9ecf1' : P.ink) + ';color:' + (tpl === 'minimal' || gib ? P.ink : '#fff') + ';font-weight:700;padding:' + (many ? '2mm 1.6mm' : '2.6mm 2.5mm') + ';text-align:' + (rtl ? 'right' : 'left') + ';font-size:' + (many ? '7.8pt' : '9pt') + ';vertical-align:bottom;' + (tpl === 'minimal' ? 'border-bottom:2px solid ' + P.ink + ';' : '') + '}' +
+      'table.it td{padding:' + (many ? '1.8mm 1.6mm' : '2.4mm 2.5mm') + ';border-bottom:1px solid ' + P.line + ';vertical-align:' + (gib ? 'middle' : 'top') + '}' +
+      (tpl === 'classic' || gib ? 'table.it td,table.it th{border:1px solid ' + P.line + '}' : '') +
+      'table.it tr:nth-child(even) td{background:' + (tpl === 'minimal' ? '#fff' : P.soft) + '}table.it td.cd{white-space:nowrap;font-size:.92em}table.it td.nm{min-width:34mm}' +
       '.n,table.it th.n{text-align:' + (rtl ? 'left' : 'right') + ';white-space:nowrap}.c,table.it th.c{text-align:center}.m{unicode-bidi:isolate}' +
       '.sum{display:flex;justify-content:space-between;gap:8mm;margin-top:6mm;align-items:flex-start}' +
       '.notes{flex:1;font-size:9pt;line-height:1.6}.notes h4{margin:0 0 1mm;font-size:8.5pt;text-transform:uppercase;letter-spacing:.06em;opacity:.7}.notes p{margin:0 0 3mm;white-space:pre-wrap}' +
-      'table.tot{width:78mm;border-collapse:collapse;font-size:10pt}table.tot td{padding:1.8mm 2.5mm}table.tot tr+tr td{border-top:1px solid ' + P.line + '}' +
+      'table.tot{width:' + (gib ? '92mm' : '78mm') + ';border-collapse:collapse;font-size:10pt}table.tot td{padding:1.8mm 2.5mm}table.tot tr+tr td{border-top:1px solid ' + P.line + '}' +
+      (gib ? 'table.tot td{border:1px solid ' + P.line + '}table.tot td:first-child{font-weight:700;background:#f3f5f8}' : '') +
       'table.tot tr.g td{background:' + P.ink + ';color:#fff;font-weight:800;font-size:11.5pt}table.tot tr.r td{font-weight:800;color:#b91c1c}' +
       '.sig{display:flex;justify-content:space-between;align-items:flex-end;gap:10mm;margin-top:10mm;page-break-inside:avoid}' +
       '.sg{width:62mm;text-align:center;font-size:9pt}.sg .im{height:26mm;display:flex;align-items:flex-end;justify-content:center}.sg img{max-height:26mm;max-width:60mm}' +
@@ -345,26 +608,64 @@
       '.ft .th{text-align:center;font-style:italic;opacity:.85;margin-bottom:2.5mm;font-size:8.5pt}' +
       '.ft .cols{display:flex;gap:6mm;justify-content:space-between}.ft .fc{flex:1;min-width:0}.ft .fc:first-child{flex:1.25}' +
       '.ft h5{margin:0 0 .8mm;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:' + P.accent + ';' + (tpl === 'falcon' ? 'filter:brightness(.8);' : '') + '}' +
-      '.ft .k{opacity:.65}.ft .ad{white-space:pre-wrap}.inv [dir=ltr]{unicode-bidi:isolate;direction:ltr}' +
+      '.ft .k{opacity:.65}.ft .ad,.ad{white-space:pre-wrap}.inv [dir=ltr]{unicode-bidi:isolate;direction:ltr}' +
       '.ft .bt{display:flex;justify-content:space-between;margin-top:2.5mm;padding-top:1.5mm;border-top:1px dashed ' + P.line + ';font-size:7.5pt;opacity:.7}' +
       '.wm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;font-size:90pt;font-weight:900;color:rgba(185,28,28,.08);transform:rotate(-24deg)}' +
-      '.wmlogo{position:absolute;left:50%;top:52%;width:120mm;transform:translate(-50%,-50%);opacity:.035;pointer-events:none}';
-    var body =
-      '<div class="inv" dir="' + (rtl ? 'rtl' : 'ltr') + '" lang="' + lg + '">' +
-      (tpl !== 'minimal' ? '<img class="wmlogo" src="' + falconLogo(P.ink, false) + '" alt="">' : '') +
-      (st === 'cancelled' ? '<div class="wm">' + esc(D.st_cancelled) + '</div>' : '') +
-      '<div class="hd"><div class="brand"><img src="' + logoSrc + '" alt=""><div class="co"><b>' + esc(c.name || '') + '</b>' + contact.join('<br>') + '</div></div>' +
-      '<div class="tt"><h1>' + esc(D.title) + '</h1><div class="o">' + esc(other) + '</div><div class="meta"><span>' + D.no + ':</span> <b dir="ltr">' + esc(inv.number) + '</b><br><span>' + D.date + ':</span> ' + esc(dmy(inv.date)) +
-      (inv.due_date ? '<br><span>' + D.due + ':</span> ' + esc(dmy(inv.due_date)) : '') + '<br><span>' + D.currency + ':</span> ' + esc(cur) + '</div></div></div>' +
-      '<div class="body"><div class="parties"><div class="box"><h3>' + D.billTo + '</h3><b>' + esc(inv.customer_name) + '</b>' +
-      [inv.customer_address ? esc(inv.customer_address) : '', inv.customer_phone ? '☎ ' + L(inv.customer_phone) : '', inv.customer_email ? '✉ ' + L(inv.customer_email) : '', inv.customer_tax ? esc(D.taxNo) + ': ' + L(inv.customer_tax) : ''].filter(Boolean).map(function (x) { return '<br>' + x; }).join('') +
-      '</div><div class="stbox"><span class="st ' + st + '">' + esc(D['st_' + st] || '') + '</span></div></div>' +
-      '<table class="it"><thead><tr><th class="c" style="width:9mm">#</th><th>' + D.desc + '</th><th class="n" style="width:18mm">' + D.qty + '</th><th class="c" style="width:18mm">' + D.unit + '</th><th class="n" style="width:32mm">' + D.price + '</th><th class="n" style="width:34mm">' + D.amount + '</th></tr></thead><tbody>' + rows + '</tbody></table>' +
-      '<div class="sum"><div class="notes">' + (inv.note ? '<h4>' + D.note + '</h4><p>' + esc(inv.note) + '</p>' : '') + (c.bank ? '<h4>' + D.bank + '</h4><p>' + esc(c.bank) + '</p>' : '') + '</div><table class="tot">' + totals + '</table></div>' +
-      '<div class="sig"><div class="sg"><div class="im">' + (cfg.stamp ? '<img src="' + cfg.stamp + '" alt="">' : '') + '</div><div class="ln">' + D.stamp + '</div></div>' +
-      '<div class="sg"><div class="im">' + (sign ? '<img src="' + sign + '" alt="">' : '') + '</div><div class="ln">' + D.sign + '</div></div></div></div>' +
-      '<div class="ft"><div class="th">' + esc(c.footer || D.thanks) + '</div>' + (fcols && pos !== 'top' ? '<div class="cols">' + fcols + '</div>' : '') +
-      '<div class="bt"><span>' + esc(c.name || '') + '</span><span dir="ltr">' + esc(inv.number) + ' · ' + esc(dmy(inv.date)) + '</span></div></div></div>';
+      '.wmlogo{position:absolute;left:50%;top:52%;width:120mm;transform:translate(-50%,-50%);opacity:.035;pointer-events:none}' +
+      // e-Fatura düzeni (GİB): üstte satıcı | e-Fatura | karekod; altında SAYIN | fatura bilgileri tablosu
+      '.g-top{display:grid;grid-template-columns:1fr 46mm 46mm;gap:6mm;padding:11mm 14mm 0;align-items:start}' +
+      '.g-sel{font-size:8.8pt;line-height:1.5}.g-sel img{max-height:20mm;max-width:70mm;margin-bottom:3mm;display:block}.g-sel b{font-size:10.5pt}' +
+      '.g-mid{text-align:center;padding-top:4mm}.g-badge{display:inline-block;border:2px solid ' + P.ink + ';border-radius:50%;width:26mm;height:26mm;line-height:1.1;font-weight:800;font-size:10pt;display:flex;align-items:center;justify-content:center;margin:0 auto 2mm}' +
+      '.g-mid .t{font-weight:700;font-size:11pt}.g-qr svg{width:40mm;height:40mm;display:block;margin-' + (rtl ? 'right' : 'left') + ':auto}' +
+      '.g-row{display:grid;grid-template-columns:1fr 92mm;gap:8mm;padding:6mm 14mm 0;align-items:start}' +
+      '.gb{font-size:9pt;line-height:1.55}.gb h3{margin:0 0 2mm;font-size:10pt;letter-spacing:.06em}.gb b{font-size:10pt}' +
+      '.gl2{text-align:center;margin-bottom:2mm}.gl2 img{max-height:15mm;max-width:88mm}' +
+      'table.gm{width:100%;border-collapse:collapse;font-size:9pt}table.gm td{border:1px solid ' + P.line + ';padding:1.4mm 2.2mm}table.gm td:first-child{font-weight:700;width:38mm;background:#f3f5f8}' +
+      '.g-bc{margin-top:3mm}.g-bc svg{width:100%;height:14mm;display:block}.g-bc .t{font-size:7pt;text-align:center;letter-spacing:.05em}' +
+      '.g-ettn{padding:3mm 14mm 0;font-size:9pt}.g-st{margin-top:2mm}';
+    var stamp = '<span class="st ' + st + '">' + esc(D['st_' + st] || '') + '</span>';
+    var custBlock = '<b>' + esc(inv.customer_name) + '</b>' + custLines(gib).map(function (x) { return '<br>' + x; }).join('');
+    var body;
+    if (gib) {
+      var earsiv = /ar[sş]iv/i.test(meta.scenario || '');
+      var sel = [c.address ? esc(c.address) : '', c.phone ? esc(D.tel) + ': ' + L(c.phone) : '', c.web ? esc(D.web) + ': ' + L(c.web) : '', c.email ? esc(D.mail) + ': ' + L(c.email) : '',
+        c.tax_office ? esc(D.taxOffice) + ': ' + esc(c.tax_office) : '', c.tax ? esc(lg === 'tr' ? 'VKN' : D.taxNo) + ': ' + L(c.tax) : '', c.mersis ? esc(D.ff.mersis) + ': ' + L(c.mersis) : '', c.trade_reg ? esc(D.ff.trade_reg) + ': ' + L(c.trade_reg) : ''].filter(Boolean);
+      var ettnRow = metaRows.filter(function (r) { return r.k === 'ettn'; });
+      body = '<div class="inv" dir="' + (rtl ? 'rtl' : 'ltr') + '" lang="' + lg + '">' +
+        (st === 'cancelled' ? '<div class="wm">' + esc(D.st_cancelled) + '</div>' : '') +
+        '<div class="g-top"><div class="g-sel"><img src="' + logoSrcOf(cfg.logo, P.ink) + '" alt=""><b>' + esc(c.name || '') + '</b><br>' + sel.join('<br>') + '</div>' +
+        '<div class="g-mid"><div class="g-badge">' + esc(earsiv ? G.earsiv : G.efatura) + '</div><div class="t">' + esc(D.title) + '</div><div class="g-st">' + stamp + '</div></div>' +
+        '<div class="g-qr">' + qr + '</div></div>' +
+        '<div class="g-row"><div class="gb"><h3>' + esc(D.billTo).toLocaleUpperCase(lg) + '</h3>' + custBlock + '</div>' +
+        '<div>' + (cfg.logo2 ? '<div class="gl2"><img src="' + cfg.logo2 + '" alt=""></div>' : '') + '<table class="gm">' + metaRows.filter(function (r) { return ettnRow.indexOf(r) < 0; }).map(function (r) { return '<tr><td>' + esc(r.label) + ':</td><td>' + (r.ltr ? L(r.v) : esc(r.v)) + '</td></tr>'; }).join('') + '</table>' +
+        (bc ? '<div class="g-bc">' + bc + '</div>' : '') + '</div></div>' +
+        (ettnRow.length ? '<div class="g-ettn"><b>' + esc(ettnRow[0].label) + ':</b> ' + L(ettnRow[0].v) + '</div>' : '') +
+        '<div class="body">' +
+        '<table class="it"><thead>' + thead + '</thead><tbody>' + rows + '</tbody></table>' +
+        '<div class="sum"><div class="notes">' + (inv.note ? '<h4>' + D.note + '</h4><p>' + esc(inv.note) + '</p>' : '') + (c.bank ? '<h4>' + D.bank + '</h4><p>' + esc(c.bank) + '</p>' : '') + '</div><table class="tot">' + totals + '</table></div>' +
+        '<div class="sig"><div class="sg"><div class="im">' + (cfg.stamp ? '<img src="' + cfg.stamp + '" alt="">' : '') + '</div><div class="ln">' + D.stamp + '</div></div>' +
+        '<div class="sg"><div class="im">' + (sign ? '<img src="' + sign + '" alt="">' : '') + '</div><div class="ln">' + D.sign + '</div></div></div></div>' +
+        '<div class="ft"><div class="th">' + esc(c.footer || D.thanks) + '</div>' + (fcols && pos !== 'top' ? '<div class="cols">' + fcols + '</div>' : '') +
+        '<div class="bt"><span>' + esc(c.name || '') + '</span><span dir="ltr">' + esc(inv.number) + ' · ' + esc(dmy(inv.date)) + '</span></div></div></div>';
+    } else {
+      body =
+        '<div class="inv" dir="' + (rtl ? 'rtl' : 'ltr') + '" lang="' + lg + '">' +
+        (tpl !== 'minimal' ? '<img class="wmlogo" src="' + falconLogo(P.ink, false) + '" alt="">' : '') +
+        (st === 'cancelled' ? '<div class="wm">' + esc(D.st_cancelled) + '</div>' : '') +
+        '<div class="hd"><div class="brand"><img src="' + logoSrc + '" alt=""><div class="co"><b>' + esc(c.name || '') + '</b>' + contact.join('<br>') + '</div></div>' +
+        '<div class="tt">' + (cfg.logo2 ? '<img class="l2" src="' + cfg.logo2 + '" alt="">' : '') + '<h1>' + esc(D.title) + '</h1><div class="o">' + esc(other) + '</div><div class="meta">' +
+        metaRows.filter(function (r) { return r.k !== 'ettn'; }).map(function (r) { return '<span>' + esc(r.label) + ':</span> ' + (r.ltr ? '<b dir="ltr">' + esc(r.v) + '</b>' : esc(r.v)); }).join('<br>') +
+        '<br><span>' + D.currency + ':</span> ' + esc(cur) + '</div></div></div>' +
+        '<div class="body"><div class="parties"><div class="box"><h3>' + D.billTo + '</h3>' + custBlock + '</div>' +
+        '<div class="stbox">' + stamp + ((qr || bc) ? '<div class="codes">' + (qr ? '<div class="qr">' + qr + '</div>' : '') + '</div>' : '') + (bc ? '<div class="bc">' + bc + '<div class="t" dir="ltr">' + esc(meta.ettn || inv.number) + '</div></div>' : '') + '</div></div>' +
+        metaRows.filter(function (r) { return r.k === 'ettn'; }).map(function (r) { return '<div style="font-size:8.5pt;margin:-4mm 0 4mm"><span style="opacity:.7">' + esc(r.label) + ':</span> ' + L(r.v) + '</div>'; }).join('') +
+        '<table class="it"><thead>' + thead + '</thead><tbody>' + rows + '</tbody></table>' +
+        '<div class="sum"><div class="notes">' + (inv.note ? '<h4>' + D.note + '</h4><p>' + esc(inv.note) + '</p>' : '') + (c.bank ? '<h4>' + D.bank + '</h4><p>' + esc(c.bank) + '</p>' : '') + '</div><table class="tot">' + totals + '</table></div>' +
+        '<div class="sig"><div class="sg"><div class="im">' + (cfg.stamp ? '<img src="' + cfg.stamp + '" alt="">' : '') + '</div><div class="ln">' + D.stamp + '</div></div>' +
+        '<div class="sg"><div class="im">' + (sign ? '<img src="' + sign + '" alt="">' : '') + '</div><div class="ln">' + D.sign + '</div></div></div></div>' +
+        '<div class="ft"><div class="th">' + esc(c.footer || D.thanks) + '</div>' + (fcols && pos !== 'top' ? '<div class="cols">' + fcols + '</div>' : '') +
+        '<div class="bt"><span>' + esc(c.name || '') + '</span><span dir="ltr">' + esc(inv.number) + ' · ' + esc(dmy(inv.date)) + '</span></div></div></div>';
+    }
     if (!forPdf) return { css: css, body: body };
     return '<!doctype html><html lang="' + lg + '" dir="' + (rtl ? 'rtl' : 'ltr') + '"><head><meta charset="utf-8"><title>' + esc(inv.number) + '</title><style>' + css + '</style></head><body>' + body + '</body></html>';
   }
@@ -441,7 +742,22 @@
       '.pm-totals{padding:10px 14px;display:flex;flex-direction:column;gap:6px}.pm-totals-h{font-size:12px;font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.05em}' +
       '.pm-row{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:13px}.pm-chip{border:1px solid var(--border,#334);border-radius:999px;padding:3px 10px;font-variant-numeric:tabular-nums}' +
       '.pm-chip.pm-shamcash{border-color:#22a06b88}.pm-chip.pm-bank{border-color:#0ea5e988}' +
-      '@media (max-width:720px){.fat-items .u{display:none}.fat-items th.uh{display:none}.fat-items .p,.fat-items .l{width:92px}.fat-tbl .hide-m{display:none}.fat-acts{flex-wrap:wrap}.fat-acts .btn{padding:4px 8px}}';
+      // v1.60
+      '.fat-tabs{display:flex;gap:4px;padding:4px;border:1px solid var(--border,#3a4458);border-radius:12px;width:max-content;max-width:100%;overflow-x:auto}.fat-tabs button{border:0;background:none;color:inherit;padding:8px 16px;border-radius:9px;cursor:pointer;font:inherit;font-weight:600;opacity:.72;white-space:nowrap}.fat-tabs button.on{background:#0ea5e926;color:#38bdf8;opacity:1}' +
+      '.fat-sec{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.fat-sec .section-title{margin:0}.fat-sec .sp{flex:1}.fat-pdfbtn{border-color:#0ea5e988}' +
+      '.fat-cust-tag{font-size:12px;border-radius:999px;padding:2px 10px;background:#e2a40022;color:#d69500}.fat-cust-tag:empty{display:none}.fat-cust-tag.ok{background:#22a06b22;color:#22a06b}' +
+      '.fat-acw{position:relative}.fat-acw input{width:100%;padding-inline-end:28px}.fat-acw .fat-sug-b{top:10px}.fat-acw .fat-sug{inset-inline:0;top:100%}.fat-sug .o b{display:block}.fat-sug .o .small{display:block}' +
+      '.fat-inrow{display:flex;gap:6px;align-items:center}.fat-inrow input{flex:1;min-width:0}.fat-inrow select{width:auto}' +
+      '.fat-items-wrap{overflow-x:auto;max-width:100%}.fat-items .dp{width:76px}.fat-items .cd{width:130px}.fat-items .v{width:64px}.fat-items .cx{width:110px}.fat-items td.no{padding-top:12px;opacity:.7;text-align:center;width:28px}' +
+      '.fat-items td.nmc{min-width:220px}.fat-items .p{width:104px}.fat-qu{display:flex;gap:4px}.fat-qu .q{width:70px}.fat-qu .u{width:64px}.fat-items th{white-space:nowrap}' +
+      '.fat-busy{display:flex;align-items:center;gap:12px;font-weight:600;padding:8px 2px}.fat-busy .spin{width:20px;height:20px;border:3px solid #38bdf855;border-top-color:#38bdf8;border-radius:50%;animation:fatspin .8s linear infinite}@keyframes fatspin{to{transform:rotate(360deg)}}' +
+      '.fat-imp-src{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}.fat-imp-st{border-radius:10px;padding:8px 12px;margin:6px 0 10px;font-weight:600}.fat-imp-st.ok{background:#22a06b1f;color:#22a06b}.fat-imp-st.new{background:#0ea5e91f;color:#38bdf8}.fat-imp-st.warn{background:#e2a4001f;color:#d69500}' +
+      '.fat-imp-ms{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px 14px}.fat-imp-m{display:flex;gap:6px;align-items:center;font-size:13px}.fat-imp-m b{overflow-wrap:anywhere}' +
+      '.fat-imp-t .nm2{min-width:240px}.fat-imp-t .cd{width:140px}.fat-imp-t .q{width:70px}.fat-imp-t .u{width:64px}.fat-imp-t .p{width:100px}.fat-imp-t .v{width:56px}.fat-imp-sel{max-width:260px}' +
+      '.fat-click{cursor:pointer}.fat-hist{margin-top:14px}.fat-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}.fat-chks{display:flex;gap:18px;flex-wrap:wrap}' +
+      '.fat-lay .r{grid-template-columns:28px minmax(160px,1fr) 44px 96px}.fat-lay .r .bt{justify-content:flex-end}' +
+      '@media (max-width:720px){.fat-items .u{display:none}.fat-items th.uh{display:none}.fat-items .p,.fat-items .l{width:92px}.fat-tbl .hide-m{display:none}.fat-acts{flex-wrap:wrap}.fat-acts .btn{padding:4px 8px}}' +
+      '@media (max-width:720px){.fat-items .fat-qu .u{display:block}.fat-tabs button{padding:8px 10px}}';
     document.head.appendChild(s);
   }
 
@@ -465,8 +781,26 @@
     var head = el('div', { class: 'toolbar' });
     var sumBox = el('div', { class: 'fat-sum' });
     var listBox = el('div', { class: 'card table-card' });
-    var wrap = el('div', { class: 'stack fatura-page' }, [head, sumBox, listBox]);
+    // v1.60: Faturalar | Müşteriler | Ürünler
+    var tab = 'inv';
+    var tabsBar = el('div', { class: 'fat-tabs', role: 'tablist' });
+    var invBox = el('div', { class: 'stack' }, [head, sumBox, listBox]);
+    var custBox = el('div', { class: 'stack', style: 'display:none' });
+    var prodBox = el('div', { class: 'stack', style: 'display:none' });
+    var wrap = el('div', { class: 'stack fatura-page' }, [tabsBar, invBox, custBox, prodBox]);
     root.innerHTML = ''; root.appendChild(wrap);
+    function drawTabs() {
+      tabsBar.innerHTML = '';
+      [['inv', '🧾 ' + t('tabInv')], ['cust', '👥 ' + t('tabCust')], ['prod', '📦 ' + t('tabProd')]].forEach(function (x) {
+        tabsBar.appendChild(el('button', { type: 'button', role: 'tab', class: tab === x[0] ? 'on' : '', 'aria-selected': tab === x[0] ? 'true' : 'false', text: x[1], onclick: function () { showTab(x[0]); } }));
+      });
+    }
+    function showTab(k) {
+      tab = k; drawTabs();
+      invBox.style.display = k === 'inv' ? '' : 'none'; custBox.style.display = k === 'cust' ? '' : 'none'; prodBox.style.display = k === 'prod' ? '' : 'none';
+      if (k === 'inv') load(); else if (k === 'cust') loadCust(); else loadProd();
+    }
+    function reload() { if (tab === 'cust') return loadCust(); if (tab === 'prod') return loadProd(); return load(); }
 
     function drawHead() {
       head.innerHTML = '';
@@ -478,6 +812,7 @@
       head.appendChild(el('div', { class: 'filters' }, [el('div', { class: 'search' }, [qIn]), stSel, cuSel, fr, to]));
       head.appendChild(el('div', { class: 'actions' }, [
         el('button', { type: 'button', class: 'btn', text: '⚙ ' + t('settings'), onclick: function () { openSettings(); } }),
+        el('button', { type: 'button', class: 'btn', title: t('fromPdfHint'), text: '📄 ' + t('fromPdf'), onclick: function () { pickPdf(function (data) { openEditor(null, data); }); } }),
         el('button', { type: 'button', class: 'btn primary', text: '+ ' + t('newInv'), onclick: function () { openEditor(null); } })
       ]));
     }
@@ -595,12 +930,15 @@
     }
     // Ayarlardaki şirket bilgileriyle örnek fatura
     function sampleInv(cfg, d) {
-      var c = CUR.indexOf(d.currency) >= 0 ? d.currency : 'USD';
-      var items = [{ name: t('previewSampleItem1'), qty: 1, unit: '', price: c === 'SYP' ? 1500000 : c === 'TRY' ? 25000 : 750 }, { name: t('previewSampleItem2'), qty: 4, unit: '', price: c === 'SYP' ? 200000 : c === 'TRY' ? 3000 : 90 }];
-      var sub = rnd(items.reduce(function (a, it) { return a + it.qty * it.price; }, 0), c), tr = num(d.tax_rate), tax = rnd(sub * tr / 100, c);
+      var c = CUR.indexOf(d.currency) >= 0 ? d.currency : 'USD', pl = perLineVat(cfg), tr = num(d.tax_rate);
+      var items = [{ name: t('previewSampleItem1'), code: 'HZM.001', depot: 'D1', qty: 1, unit: t('unitPcs'), price: c === 'SYP' ? 1500000 : c === 'TRY' ? 25000 : 750 },
+        { name: t('previewSampleItem2'), code: 'EGT.002', depot: 'D1', qty: 4, unit: t('unitHour'), price: c === 'SYP' ? 200000 : c === 'TRY' ? 3000 : 90 }];
+      if (pl) items.forEach(function (it) { it.vat = tr; });
+      var tt = calcTotals(items, 0, tr, c, pl);
       return { number: (cfg.prefix || 'FAL') + '-' + today().slice(0, 4) + '-0001', date: today(), due_date: '', customer_name: t('previewSampleCust'),
-        customer_phone: '+90 555 000 00 00', customer_address: '', currency_code: c, items: JSON.stringify(items), subtotal: sub, discount: 0, tax_rate: tr, tax: tax,
-        total: rnd(sub + tax, c), paid: 0, status: 'pending', template: d.template || 'falcon', lang: d.lang || lang(), note: '' };
+        customer_phone: '+90 555 000 00 00', customer_address: 'Örnek Mah. 1. Cad. No: 5', customer_tax: '1234567890', currency_code: c, items: JSON.stringify(items), subtotal: tt.subtotal, discount: 0, tax_rate: pl ? 0 : tr, tax: tt.tax,
+        total: tt.total, paid: 0, status: 'pending', template: d.template || 'falcon', lang: d.lang || lang(), note: '',
+        meta: JSON.stringify({ ettn: uuid(), scenario: d.scenario || 'TEMELFATURA', inv_type: d.inv_type || 'SATIS', customization: d.customization || 'TR1.2', issue_time: nowTime(), 'c.tax_office': 'Örnek V.D.', 'c.city': 'İSTANBUL' }) };
     }
 
     // ----- tahsilat -----
@@ -641,40 +979,130 @@
       });
     }
 
-    // ----- fatura düzenleyici -----
-    function openEditor(inv) {
-      Promise.all([CFG ? Promise.resolve(CFG) : loadCfg(), q('SELECT id, name, unit, sale_price, cost_currency FROM products ORDER BY name COLLATE NOCASE').catch(function () { return []; }),
-        q('SELECT id, name FROM people ORDER BY name COLLATE NOCASE'),
+    // ----- fatura düzeneyici -----
+    // pre: PDF'den / müşteri kartından gelen taslak (st alanlarının üzerine yazılır)
+    function openEditor(inv, pre) {
+      Promise.all([CFG ? Promise.resolve(CFG) : loadCfg(),
+        q('SELECT id, name, code, unit, sale_price, cost_currency, vat_rate, depot FROM products ORDER BY name COLLATE NOCASE').catch(function () { return []; }),
+        q('SELECT * FROM customers ORDER BY name COLLATE NOCASE').catch(function () { return []; }),
         q('SELECT customer_name, customer_phone, customer_email, customer_address, customer_tax FROM invoices ORDER BY id DESC LIMIT 400')]).then(function (r) {
-        var cfg = r[0], products = r[1], people = r[2], past = r[3];
+        var cfg = r[0], products = r[1], customers = r[2], past = r[3];
         var dft = cfg.defaults || {};
         var isNew = !inv;
+        var M0 = inv ? jparse(inv.meta, {}) || {} : {};
+        var perLine = perLineVat(cfg);
+        var dVat = dft.tax_rate != null && dft.tax_rate !== '' ? num(dft.tax_rate) : 0;
+        var newItem = function () { var o = { name: '', qty: 1, unit: '', price: '' }; if (perLine) o.vat = dVat; return o; };
         var st = {
           number: inv ? inv.number : '', date: inv ? inv.date : today(), due_date: inv ? inv.due_date || '' : '',
-          customer: inv ? inv.customer_name : '', phone: inv ? inv.customer_phone || '' : '', email: inv ? inv.customer_email || '' : '',
+          customer: inv ? inv.customer_name : '', customer_id: inv ? inv.customer_id || null : null, phone: inv ? inv.customer_phone || '' : '', email: inv ? inv.customer_email || '' : '',
           address: inv ? inv.customer_address || '' : '', tax_no: inv ? inv.customer_tax || '' : '',
           currency: inv ? inv.currency_code : (CUR.indexOf(dft.currency) >= 0 ? dft.currency : 'USD'),
           template: inv ? inv.template || 'falcon' : (dft.template || 'falcon'), lang: inv ? inv.lang || lang() : (dft.lang || lang()),
-          items: inv ? jparse(inv.items, []) : [{ name: '', qty: 1, unit: '', price: '' }],
+          items: inv ? jparse(inv.items, []) : [newItem()],
           discount: inv ? inv.discount || '' : '', tax_rate: inv ? inv.tax_rate || '' : (dft.tax_rate != null && dft.tax_rate !== '' ? dft.tax_rate : 0),
-          note: inv ? inv.note || '' : '', cash: false, account_id: '', pay_amount: ''
+          note: inv ? inv.note || '' : '', cash: false, account_id: '', pay_amount: '',
+          meta: {}, cx: {}
         };
-        if (!Array.isArray(st.items) || !st.items.length) st.items = [{ name: '', qty: 1, unit: '', price: '' }];
-        var dlP = 'fat-dl-p-' + Date.now(), dlC = 'fat-dl-c-' + Date.now();
-        var names = {}; people.forEach(function (p) { names[p.name] = 1; }); past.forEach(function (p) { names[p.customer_name] = 1; });
-        var dl1 = el('datalist', { id: dlP }, products.map(function (p) { return el('option', { value: p.name }); }));
-        var dl2 = el('datalist', { id: dlC }, Object.keys(names).sort().map(function (n) { return el('option', { value: n }); }));
+        // başlık bilgileri ve müşterinin ek alanları (meta: 'c.<alan>')
+        Object.keys(M0).forEach(function (k) { if (k.slice(0, 2) === 'c.') st.cx[k.slice(2)] = M0[k]; else st.meta[k] = M0[k]; });
+        if (isNew) {
+          if (layHas(cfg, 'meta', 'ettn')) st.meta.ettn = uuid();
+          if (layHas(cfg, 'meta', 'issue_time')) st.meta.issue_time = nowTime();
+          ['scenario', 'inv_type', 'customization'].forEach(function (k) { if (dft[k] && layHas(cfg, 'meta', k)) st.meta[k] = dft[k]; });
+        }
+        if (pre) {
+          Object.keys(pre).forEach(function (k) { if (k !== 'meta' && k !== 'cx' && pre[k] !== undefined) st[k] = pre[k]; });
+          if (pre.meta) Object.keys(pre.meta).forEach(function (k) { if (pre.meta[k]) st.meta[k] = pre.meta[k]; });
+          if (pre.cx) Object.keys(pre.cx).forEach(function (k) { if (pre.cx[k]) st.cx[k] = pre.cx[k]; });
+        }
+        if (!Array.isArray(st.items) || !st.items.length) st.items = [newItem()];
+        // satır KDV'si: eski (fatura geneli oranlı) faturada KDV sütunu açıksa kalemlere eski oran yazılır
+        if (perLine) st.items.forEach(function (it) { if (it.vat == null || it.vat === '') it.vat = inv && !inv.meta && num(inv.tax_rate) ? num(inv.tax_rate) : dVat; });
+        else if (st.items.some(function (it) { return it.vat != null && it.vat !== ''; })) perLine = true;
+        var cols = layOn(cfg, 'cols').filter(function (f) { return perLine || (f.k !== 'vat' && f.k !== 'vat_amount'); });
+        var unitCol = cols.some(function (f) { return f.k === 'unit'; });
 
-        var inp = function (k, attrs) {
-          var a = Object.assign({ value: st[k] == null ? '' : String(st[k]), oninput: function (e) { st[k] = e.target.value; if (attrs && attrs.after) attrs.after(); } }, attrs || {});
-          delete a.after; return el(a.tag || 'input', a);
+        // ---- müşteri ----
+        var custF = layOn(cfg, 'cust');
+        var CMAP = { tax_no: 'tax_no', address: 'address', phone: 'phone', email: 'email' }; // faturanın kendi sütunları; diğerleri st.cx
+        var cget = function (k) { return CMAP[k] ? st[CMAP[k]] : st.cx[k] || ''; };
+        var cset = function (k, v) { if (CMAP[k]) st[CMAP[k]] = v; else st.cx[k] = v; };
+        var cIn = {};
+        var custLbl = el('span', { class: 'fat-cust-tag' });
+        var showCustTag = function () {
+          var c = st.customer_id ? customers.filter(function (x) { return x.id === st.customer_id; })[0] : null;
+          custLbl.textContent = c ? '✓ ' + t('custLinked') : String(st.customer || '').trim() ? '＋ ' + t('custNew') : '';
+          custLbl.className = 'fat-cust-tag' + (c ? ' ok' : '');
         };
-        var custIn = inp('customer', { list: dlC, autocomplete: 'off', required: true, after: function () {
-          var p = null; for (var i = 0; i < past.length; i++) if (past[i].customer_name === st.customer) { p = past[i]; break; }
-          if (p && isNew) { [['phone', 'customer_phone'], ['email', 'customer_email'], ['address', 'customer_address'], ['tax_no', 'customer_tax']].forEach(function (x) { if (!st[x[0]] && p[x[1]]) { st[x[0]] = p[x[1]]; F2[x[0]].value = p[x[1]]; } }); }
-        } });
-        var F2 = { phone: inp('phone', { dir: 'ltr', inputmode: 'tel' }), email: inp('email', { type: 'email', dir: 'ltr' }), address: inp('address', { tag: 'textarea', rows: 2 }), tax_no: inp('tax_no', { dir: 'ltr' }) };
-        F2.address.value = st.address;
+        var fillCustomer = function (c) {
+          st.customer = c.name; st.customer_id = c.id; custIn.value = c.name;
+          var ex = jparse(c.extra, {}) || {};
+          custF.forEach(function (f) {
+            var v = f.custom ? ex[f.k] || '' : c[f.k] || '';
+            cset(f.k, v); if (cIn[f.k]) cIn[f.k].value = v;
+          });
+          showCustTag();
+        };
+        var cSug = el('div', { class: 'fat-sug', hidden: true });
+        var showCSug = function (all) {
+          cSug.innerHTML = '';
+          var qq = low(st.customer).trim();
+          var list = customers.filter(function (c) { return all || !qq || low(c.name).indexOf(qq) >= 0 || String(c.tax_no || '').indexOf(qq) >= 0; }).slice(0, 12);
+          // kayıtlı müşteri yoksa eski faturalardaki adlar önerilir
+          var olds = [];
+          if (qq) { var seen = {}; past.forEach(function (p) { var n = p.customer_name; if (!seen[n] && low(n).indexOf(qq) >= 0 && !customers.some(function (c) { return c.name === n; })) { seen[n] = 1; olds.push(p); } }); }
+          if (!list.length && !olds.length) { cSug.hidden = true; return; }
+          list.forEach(function (c) {
+            cSug.appendChild(el('div', { class: 'o', onmousedown: function (e) { e.preventDefault(); cSug.hidden = true; fillCustomer(c); } }, [
+              el('b', { text: c.name }), el('span', { class: 'muted small', text: [c.tax_no ? 'VKN ' + c.tax_no : '', c.city || '', c.phone || ''].filter(Boolean).join(' · ') })
+            ]));
+          });
+          olds.slice(0, 6).forEach(function (p) {
+            cSug.appendChild(el('div', { class: 'o', onmousedown: function (e) {
+              e.preventDefault(); cSug.hidden = true; st.customer = p.customer_name; custIn.value = p.customer_name; st.customer_id = null;
+              [['phone', 'customer_phone'], ['email', 'customer_email'], ['address', 'customer_address'], ['tax_no', 'customer_tax']].forEach(function (x) { if (p[x[1]]) { cset(x[0], p[x[1]]); if (cIn[x[0]]) cIn[x[0]].value = p[x[1]]; } });
+              showCustTag();
+            } }, [el('span', { text: p.customer_name }), el('span', { class: 'muted small', text: t('custFromOld') })]));
+          });
+          cSug.hidden = false;
+        };
+        var custIn = el('input', { value: st.customer, autocomplete: 'off', required: true,
+          oninput: function (e) { st.customer = e.target.value; st.customer_id = null; showCustTag(); showCSug(false); },
+          onfocus: function () { if (!st.customer) showCSug(true); },
+          onkeydown: function (e) { if (e.key === 'Escape' && !cSug.hidden) { e.stopPropagation(); cSug.hidden = true; } },
+          onblur: function () { setTimeout(function () { cSug.hidden = true; }, 150); } });
+        var custWrap = el('div', { class: 'fat-acw' }, [custIn, customers.length ? el('button', { type: 'button', class: 'fat-sug-b', tabindex: '-1', title: t('custPick'), text: '▾', onmousedown: function (e) { e.preventDefault(); if (cSug.hidden) { custIn.focus(); showCSug(true); } else cSug.hidden = true; } }) : null, cSug]);
+        var custFields = custF.map(function (f) {
+          var ltr = { tax_no: 1, phone: 1, email: 1, web: 1, postal_code: 1 }[f.k];
+          var x = el(f.k === 'address' ? 'textarea' : 'input', { rows: f.k === 'address' ? '2' : null, dir: ltr ? 'ltr' : null, value: cget(f.k), inputmode: f.k === 'phone' ? 'tel' : null,
+            oninput: function (e) { cset(f.k, e.target.value); } });
+          if (f.k === 'address') x.value = cget(f.k);
+          cIn[f.k] = x;
+          return field(fLabel('cust', f, lang()), x, { span: f.k === 'address' ? 2 : 1 });
+        });
+        showCustTag();
+
+        // ---- fatura bilgileri ----
+        var metaF = layOn(cfg, 'meta');
+        var DL = { scenario: ['TEMELFATURA', 'TICARIFATURA', 'EARSIVFATURA', 'IHRACAT', 'KAMU', 'YOLCUBERABERFATURA'], inv_type: ['SATIS', 'IADE', 'TEVKIFAT', 'ISTISNA', 'OZELMATRAH', 'IHRACKAYITLI'], customization: ['TR1.2', 'TR1.2.1'] };
+        var dlId = 'fat-dl-' + Date.now();
+        var dls = [];
+        var metaFields = metaF.map(function (f) {
+          var x;
+          if (f.k === 'date' || f.k === 'due_date') x = el('input', { type: 'date', value: st[f.k] || '', oninput: function (e) { st[f.k] = e.target.value; } });
+          else if (f.k === 'number') x = el('input', { dir: 'ltr', value: st.number, placeholder: (cfg.prefix || 'FAL') + '-…', oninput: function (e) { st.number = e.target.value; } });
+          else {
+            var list = DL[f.k] ? dlId + f.k : null;
+            if (list) dls.push(el('datalist', { id: list }, DL[f.k].map(function (v) { return el('option', { value: v }); })));
+            x = el('input', { value: st.meta[f.k] || '', list: list, dir: { ettn: 1, issue_time: 1, customization: 1, campaign: 1, order_no: 1, waybill_no: 1 }[f.k] ? 'ltr' : null, oninput: function (e) { st.meta[f.k] = e.target.value; } });
+            if (f.k === 'ettn') {
+              var w = el('div', { class: 'fat-inrow' }, [x, el('button', { type: 'button', class: 'btn small', title: t('ettnNew'), text: '↻', onclick: function () { st.meta.ettn = uuid(); x.value = st.meta.ettn; } })]);
+              return field(fLabel('meta', f, lang()), w, { span: 2, group: true });
+            }
+          }
+          return field(fLabel('meta', f, lang()), x, f.k === 'number' ? { hint: t('invNoHint') } : null);
+        });
         var curSel = el('select', { onchange: function (e) { st.currency = e.target.value; drawCash(); recalc(); } }, CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], st.currency === c); }));
         var tplSel = el('select', { onchange: function (e) { st.template = withSign(e.target.value, hasSign(st.template)); } }, TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), tplOf(st.template) === x); }));
         var sgBox = el('div', { class: 'fat-seg' });
@@ -688,45 +1116,59 @@
         drawSg();
         var lgSel = el('select', { onchange: function (e) { st.lang = e.target.value; } }, [['tr', 'langTr'], ['en', 'langEn'], ['ar', 'langAr']].map(function (x) { return opt(x[0], t(x[1]), st.lang === x[0]); }));
 
+        // ---- kalemler ----
         var tbody = el('tbody');
         var totBox = el('div', { class: 'fat-tot' });
         function recalc() {
-          var c = st.currency, sub = 0;
-          st.items.forEach(function (it, i) { var l = rnd(num(it.qty) * num(it.price), c); sub += l; var cell = tbody.querySelector('[data-l="' + i + '"]'); if (cell) cell.textContent = fmt(l, c); });
-          sub = rnd(sub, c);
-          var disc = Math.min(sub, rnd(num(st.discount), c)), tax = rnd((sub - disc) * num(st.tax_rate) / 100, c), tot = rnd(sub - disc + tax, c);
+          var c = st.currency, tt = calcTotals(st.items, st.discount, st.tax_rate, c, perLine);
+          var k = tt.subtotal > 0 ? (tt.subtotal - tt.discount) / tt.subtotal : 0;
+          st.items.forEach(function (it, i) {
+            var l = rnd(num(it.qty) * num(it.price), c);
+            var cell = tbody.querySelector('[data-l="' + i + '"]'); if (cell) cell.textContent = fmt(l, c);
+            var vc = tbody.querySelector('[data-v="' + i + '"]'); if (vc) vc.textContent = fmt(rnd(l * k * num(it.vat) / 100, c), c);
+          });
           totBox.innerHTML = '';
-          totBox.appendChild(el('div', null, [el('span', { text: t('subtotal') }), el('b', { dir: 'ltr', text: money(sub, c) })]));
-          if (disc) totBox.appendChild(el('div', null, [el('span', { text: t('discount') }), el('b', { dir: 'ltr', text: '− ' + money(disc, c) })]));
-          if (num(st.tax_rate)) totBox.appendChild(el('div', null, [el('span', { text: t('tax') + ' (%' + num(st.tax_rate) + ')' }), el('b', { dir: 'ltr', text: money(tax, c) })]));
-          totBox.appendChild(el('div', { class: 'g' }, [el('span', { text: t('grand') }), el('b', { dir: 'ltr', text: money(tot, c) })]));
-          st._total = tot;
-          if (payIn && !payTouched) payIn.value = tot ? String(tot) : '';
+          totBox.appendChild(el('div', null, [el('span', { text: t('subtotal') }), el('b', { dir: 'ltr', text: money(tt.subtotal, c) })]));
+          if (tt.discount) totBox.appendChild(el('div', null, [el('span', { text: t('discount') }), el('b', { dir: 'ltr', text: '− ' + money(tt.discount, c) })]));
+          Object.keys(tt.byRate).sort(function (a, b) { return b - a; }).forEach(function (rt) {
+            if (!tt.byRate[rt].tax && !num(rt)) return;
+            totBox.appendChild(el('div', null, [el('span', { text: (perLine ? t('vatCalc') : t('tax')) + ' (%' + num(rt) + ')' }), el('b', { dir: 'ltr', text: money(tt.byRate[rt].tax, c) })]));
+          });
+          totBox.appendChild(el('div', { class: 'g' }, [el('span', { text: t('grand') }), el('b', { dir: 'ltr', text: money(tt.total, c) })]));
+          st._total = tt.total;
+          if (payIn && !payTouched) payIn.value = tt.total ? String(tt.total) : '';
+        }
+        var prodLabel = function (p) { return (p.code ? p.code + ' · ' : '') + p.name + (p.sale_price != null ? ' · ' + money(p.sale_price, p.cost_currency || st.currency) : ''); };
+        function applyProduct(it, p, refs, force) {
+          it.product_id = p.id;
+          if ((force || !it.code) && p.code) { it.code = p.code; if (refs.code) refs.code.value = p.code; }
+          if ((force || !it.unit) && p.unit && p.unit !== 'pcs') { it.unit = p.unit; if (refs.unit) refs.unit.value = p.unit; }
+          if ((force || !it.depot) && p.depot) { it.depot = p.depot; if (refs.depot) refs.depot.value = p.depot; }
+          if (perLine && p.vat_rate != null && (force || it.vat == null || it.vat === '' || num(it.vat) === dVat)) { it.vat = p.vat_rate; if (refs.vat) refs.vat.value = p.vat_rate; }
+          if ((force || it.price === '' || it.price == null || num(it.price) === 0) && p.sale_price != null && (!p.cost_currency || p.cost_currency === st.currency)) { it.price = p.sale_price; if (refs.price) refs.price.value = p.sale_price; }
+          recalc();
         }
         function drawItems() {
           tbody.innerHTML = '';
           st.items.forEach(function (it, i) {
-            // ürün adı: çok satırlı (Shift+Enter alt satır), kutu yazıya göre büyür; ürün önerileri kendi açılır listesinde
+            var refs = {};
             var sug = el('div', { class: 'fat-sug', hidden: true });
             var fit = function () { nm.style.height = 'auto'; nm.style.height = (nm.scrollHeight + 2) + 'px'; };
+            var first = function () { return String(it.name || '').split('\n')[0].trim(); };
             var matchProduct = function () {
-              var p = null; for (var j = 0; j < products.length; j++) if (products[j].name === it.name) { p = products[j]; break; }
-              if (p) {
-                it.product_id = p.id;
-                if (!it.unit && p.unit) { it.unit = p.unit; un.value = p.unit; }
-                if ((it.price === '' || it.price == null || num(it.price) === 0) && p.sale_price && (!p.cost_currency || p.cost_currency === st.currency)) { it.price = p.sale_price; pr.value = p.sale_price; }
-                recalc();
-              } else it.product_id = null;
+              var p = null, n = low(first());
+              for (var j = 0; j < products.length; j++) if (low(products[j].name) === n) { p = products[j]; break; }
+              if (p) applyProduct(it, p, refs, false); else it.product_id = null;
             };
             var showSug = function (all) {
               sug.innerHTML = '';
-              var q = String(it.name || '').toLocaleLowerCase();
-              if (!all && (!q || q.indexOf('\n') >= 0)) { sug.hidden = true; return; }
-              var list = products.filter(function (p) { var n = String(p.name || ''); return n && n !== it.name && (all || n.toLocaleLowerCase().indexOf(q) >= 0); }).slice(0, 10);
+              var qq = low(first());
+              if (!all && !qq) { sug.hidden = true; return; }
+              var list = products.filter(function (p) { var n = low(p.name); return n && (all || n.indexOf(qq) >= 0 || low(p.code).indexOf(qq) >= 0) && p.name !== it.name; }).slice(0, 12);
               if (!list.length) { sug.hidden = true; return; }
               list.forEach(function (p) {
-                sug.appendChild(el('div', { class: 'o', text: p.name, onmousedown: function (e) {
-                  e.preventDefault(); it.name = p.name; nm.value = p.name; sug.hidden = true; fit(); matchProduct();
+                sug.appendChild(el('div', { class: 'o', text: prodLabel(p), onmousedown: function (e) {
+                  e.preventDefault(); it.name = p.name; nm.value = p.name; sug.hidden = true; fit(); applyProduct(it, p, refs, true);
                 } }));
               });
               sug.hidden = false;
@@ -735,27 +1177,45 @@
               oninput: function (e) { it.name = e.target.value; fit(); matchProduct(); showSug(false); },
               onkeydown: function (e) {
                 if (e.key === 'Escape' && !sug.hidden) { e.stopPropagation(); sug.hidden = true; return; }
-                if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.isComposing) { e.preventDefault(); sug.hidden = true; qt.focus(); try { qt.select(); } catch (x) {} }
+                if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.isComposing) { e.preventDefault(); sug.hidden = true; refs.qty.focus(); try { refs.qty.select(); } catch (x) {} }
               },
-              onblur: function () { setTimeout(function () { sug.hidden = true; }, 120); } });
+              onblur: function () { setTimeout(function () { sug.hidden = true; }, 150); } });
             var sugBtn = products.length ? el('button', { type: 'button', class: 'fat-sug-b', tabindex: '-1', title: t('itemPick'), text: '▾', onmousedown: function (e) {
               e.preventDefault(); if (sug.hidden) { nm.focus(); showSug(true); } else sug.hidden = true;
             } }) : null;
             requestAnimationFrame(fit);
-            var qt = el('input', { class: 'q', type: 'number', step: 'any', min: '0', dir: 'ltr', value: it.qty == null ? '' : String(it.qty), oninput: function (e) { it.qty = e.target.value; recalc(); } });
-            var un = el('input', { class: 'u', value: it.unit || '', oninput: function (e) { it.unit = e.target.value; } });
-            var pr = el('input', { class: 'p', type: 'number', step: 'any', min: '0', dir: 'ltr', value: it.price == null ? '' : String(it.price), oninput: function (e) { it.price = e.target.value; recalc(); } });
-            tbody.appendChild(el('tr', null, [
-              el('td', { class: 'nmc' }, [nm, sugBtn, sug]), el('td', null, [qt]), el('td', { class: 'u' }, [un]), el('td', null, [pr]),
-              el('td', { class: 'l', 'data-l': String(i), dir: 'ltr' }),
-              el('td', null, [el('button', { type: 'button', class: 'icon-btn tiny danger', title: t('removeItem'), text: '✕', onclick: function () { st.items.splice(i, 1); if (!st.items.length) st.items.push({ name: '', qty: 1, unit: '', price: '' }); drawItems(); } })])
-            ]));
+            var numIn = function (key, cls) { var x = el('input', { class: cls, type: 'number', step: 'any', min: '0', dir: 'ltr', value: it[key] == null ? '' : String(it[key]), oninput: function (e) { it[key] = e.target.value; recalc(); } }); refs[key] = x; return x; };
+            var txtIn = function (key, cls, ltr) {
+              var x = el('input', { class: cls, dir: ltr ? 'ltr' : null, value: it[key] || '', oninput: function (e) {
+                it[key] = e.target.value;
+                // stok kodu yazılınca kayıtlı ürün bulunursa bilgileri gelir
+                if (key === 'code') { var v = String(e.target.value).trim(); var p = v && products.filter(function (x2) { return x2.code === v; })[0]; if (p) { if (!String(it.name || '').trim()) { it.name = p.name; nm.value = p.name; fit(); } applyProduct(it, p, refs, false); } }
+              } });
+              refs[key] = x; return x;
+            };
+            var cells = cols.map(function (f) {
+              switch (f.k) {
+                case 'no': return el('td', { class: 'no', text: String(i + 1) });
+                case 'depot': return el('td', null, [txtIn('depot', 'dp')]);
+                case 'code': return el('td', null, [txtIn('code', 'cd', true)]);
+                case 'name': return el('td', { class: 'nmc' }, [nm, sugBtn, sug]);
+                case 'qty': return el('td', null, unitCol ? [numIn('qty', 'q')] : [el('div', { class: 'fat-qu' }, [numIn('qty', 'q'), txtIn('unit', 'u')])]);
+                case 'unit': return el('td', null, [txtIn('unit', 'u')]);
+                case 'price': return el('td', null, [numIn('price', 'p')]);
+                case 'amount': return el('td', { class: 'l', 'data-l': String(i), dir: 'ltr' });
+                case 'vat': return el('td', null, [numIn('vat', 'v')]);
+                case 'vat_amount': return el('td', { class: 'l', 'data-v': String(i), dir: 'ltr' });
+                default: it.x = it.x || {}; return el('td', null, [el('input', { class: 'cx', value: it.x[f.k] || '', oninput: function (e) { it.x = it.x || {}; it.x[f.k] = e.target.value; } })]);
+              }
+            });
+            cells.push(el('td', null, [el('button', { type: 'button', class: 'icon-btn tiny danger', title: t('removeItem'), text: '✕', onclick: function () { st.items.splice(i, 1); if (!st.items.length) st.items.push(newItem()); drawItems(); } })]));
+            tbody.appendChild(el('tr', null, cells));
           });
           recalc();
         }
-        var itemsTable = el('table', { class: 'fat-items' }, [el('thead', null, [el('tr', null, [
-          el('th', { text: t('itemName') }), el('th', { class: 'q', text: t('qty') }), el('th', { class: 'uh', text: t('unit') }), el('th', { text: t('price') }), el('th', { style: 'text-align:end', text: t('line') }), el('th')
-        ])]), tbody]);
+        var itemsTable = el('table', { class: 'fat-items' }, [el('thead', null, [el('tr', null, cols.map(function (f) {
+          return el('th', { class: 'h-' + f.k, style: f.k === 'amount' || f.k === 'vat_amount' ? 'text-align:end' : null, text: fLabel('cols', f, lang()) + (f.k === 'qty' && !unitCol ? ' / ' + fLabel('cols', { k: 'unit' }, lang()) : '') });
+        }).concat([el('th')]))]), tbody]);
 
         // gelir kaydı (yalnız yeni faturada; sonra "Kasaya işle")
         var cashBox = el('div', { class: 'fat-cash span-2' });
@@ -783,31 +1243,59 @@
             } else payIn = null;
           });
         }
-
+        var inpS = function (k, attrs) {
+          var a = Object.assign({ value: st[k] == null ? '' : String(st[k]), oninput: function (e) { st[k] = e.target.value; if (attrs && attrs.after) attrs.after(); } }, attrs || {});
+          delete a.after; var tag = a.tag || 'input'; delete a.tag; var x = el(tag, a); if (tag === 'textarea') x.value = st[k] || ''; return x;
+        };
+        var pdfBtn = el('button', { type: 'button', class: 'btn fat-pdfbtn', text: '📄 ' + t('fromPdf'), title: t('fromPdfHint'), onclick: function () {
+          pickPdf(function (data) { m.close(); openEditor(inv, Object.assign({}, st, data, { meta: Object.assign({}, st.meta, data.meta || {}), cx: Object.assign({}, st.cx, data.cx || {}) })); });
+        } });
         var form = el('div', { class: 'form' }, [
-          field(t('cName'), custIn), field(t('cPhone'), F2.phone), field(t('cEmail'), F2.email), field(t('cTax'), F2.tax_no),
-          field(t('cAddress'), F2.address, { span: 2 }),
-          field(t('date'), inp('date', { type: 'date' })), field(t('due'), inp('due_date', { type: 'date' })),
-          field(t('currency'), curSel), field(t('invNo'), inp('number', { dir: 'ltr', placeholder: 'FAL-…' }), { hint: t('invNoHint') }),
-          field(t('template'), tplSel), field(t('lang'), lgSel),
+          el('div', { class: 'span-2 fat-sec' }, [el('h3', { class: 'section-title', text: t('secCustomer') }), custLbl, el('span', { class: 'sp' }), pdfBtn]),
+          field(t('cName'), custWrap, { span: 2, group: true })
+        ].concat(custFields).concat([
+          el('h3', { class: 'section-title span-2', text: t('secInfo') })
+        ]).concat(metaFields).concat([
+          field(t('currency'), curSel), field(t('template'), tplSel), field(t('lang'), lgSel),
           field(t('signField'), sgBox, { span: 2, group: true, hint: t('signFieldHint') }),
-          el('div', { class: 'field span-2' }, [el('span', { class: 'field-label', text: t('items') }), itemsTable,
-            el('div', null, [el('button', { type: 'button', class: 'btn small', text: t('addItem'), onclick: function () { st.items.push({ name: '', qty: 1, unit: '', price: '' }); drawItems(); var ins = tbody.querySelectorAll('tr:last-child input'); if (ins[0]) ins[0].focus(); } })])]),
-          field(t('discount'), inp('discount', { type: 'number', step: 'any', min: '0', dir: 'ltr', after: recalc })),
-          field(t('taxRate'), inp('tax_rate', { type: 'number', step: 'any', min: '0', max: '100', dir: 'ltr', after: recalc })),
+          el('div', { class: 'field span-2' }, [el('span', { class: 'field-label', text: t('items') }), el('div', { class: 'fat-items-wrap' }, [itemsTable]),
+            el('div', null, [el('button', { type: 'button', class: 'btn small', text: t('addItem'), onclick: function () { st.items.push(newItem()); drawItems(); var ins = tbody.querySelectorAll('tr:last-child textarea'); if (ins[0]) ins[0].focus(); } })])]),
+          field(t('discount'), inpS('discount', { type: 'number', step: 'any', min: '0', dir: 'ltr', after: recalc })),
+          perLine ? null : field(t('taxRate'), inpS('tax_rate', { type: 'number', step: 'any', min: '0', max: '100', dir: 'ltr', after: recalc })),
           el('div', { class: 'span-2' }, [totBox]),
-          field(t('note'), inp('note', { tag: 'textarea', rows: 2 }), { span: 2 }),
-          cashBox, dl1, dl2
-        ]);
+          field(t('note'), inpS('note', { tag: 'textarea', rows: 2 }), { span: 2 }),
+          cashBox
+        ]).concat(dls));
+        var itemsOut = function () {
+          return st.items.filter(function (it) { return String(it.name || '').trim(); }).map(function (it) {
+            var o = { name: it.name, qty: num(it.qty), unit: it.unit || '', price: num(it.price), product_id: it.product_id || null };
+            if (it.code) o.code = it.code; if (it.depot) o.depot = it.depot;
+            if (perLine) o.vat = num(it.vat);
+            if (it.x) { var x = {}; Object.keys(it.x).forEach(function (k) { if (String(it.x[k] || '').trim()) x[k] = it.x[k]; }); if (Object.keys(x).length) o.x = x; }
+            return o;
+          });
+        };
+        var metaOut = function () {
+          var o = {};
+          Object.keys(st.meta).forEach(function (k) { if (String(st.meta[k] || '').trim()) o[k] = String(st.meta[k]).trim(); });
+          Object.keys(st.cx).forEach(function (k) { if (String(st.cx[k] || '').trim()) o['c.' + k] = String(st.cx[k]).trim(); });
+          return o;
+        };
+        var custExtra = function () {
+          var o = { extra: {} };
+          custF.forEach(function (f) { if (CMAP[f.k]) return; var v = String(st.cx[f.k] || '').trim(); if (f.custom) { if (v) o.extra[f.k] = v; } else if (v) o[f.k] = v; });
+          if (!Object.keys(o.extra).length) delete o.extra;
+          return o;
+        };
         var submit = function (withPdf, btn) {
           if (!String(st.customer).trim()) { toast(t('errCustomer'), 'error'); custIn.focus(); return; }
-          var items = st.items.filter(function (it) { return String(it.name || '').trim(); }).map(function (it) { return { name: it.name, qty: num(it.qty), unit: it.unit || '', price: num(it.price), product_id: it.product_id || null }; });
+          var items = itemsOut();
           if (!items.length) { toast(t('errItems'), 'error'); return; }
           btn.disabled = true;
           var payload = {
-            id: inv ? inv.id : undefined, number: st.number, date: st.date, due_date: st.due_date, customer: { name: String(st.customer).trim() },
-            customer_phone: st.phone, customer_email: st.email, customer_address: st.address, customer_tax: st.tax_no, currency: st.currency, items: items,
-            discount: num(st.discount), tax_rate: num(st.tax_rate), note: st.note, template: st.template, lang: st.lang,
+            id: inv ? inv.id : undefined, number: st.number, date: st.date, due_date: st.due_date, customer: { name: String(st.customer).trim() }, customer_id: st.customer_id || null,
+            customer_phone: st.phone, customer_email: st.email, customer_address: st.address, customer_tax: st.tax_no, customer_extra: custExtra(), currency: st.currency, items: items,
+            discount: num(st.discount), tax_rate: perLine ? 0 : num(st.tax_rate), note: st.note, template: st.template, lang: st.lang, meta: metaOut(),
             record_cash: isNew && st.cash, account_id: st.account_id ? Number(st.account_id) : null, pay_amount: payTouched ? num(st.pay_amount) : ''
           };
           run('saveInvoice', payload, t('saved')).then(function (res) {
@@ -819,21 +1307,20 @@
         var nextNo = function () {
           if (String(st.number).trim()) return Promise.resolve(String(st.number).trim());
           if (!isNew) return Promise.resolve(inv.number);
-          var pre = (cfg.prefix || 'FAL') + '-' + String(st.date || today()).slice(0, 4) + '-';
-          return q('SELECT number FROM invoices WHERE number LIKE ?', [pre + '%']).then(function (rs) {
-            var mx = 0; rs.forEach(function (x) { var n = parseInt(String(x.number).slice(pre.length), 10); if (n > mx) mx = n; });
-            return pre + String(mx + 1).padStart(4, '0');
-          }).catch(function () { return pre + '0001'; });
+          var pfx = (cfg.prefix || 'FAL') + '-' + String(st.date || today()).slice(0, 4) + '-';
+          return q('SELECT number FROM invoices WHERE number LIKE ?', [pfx + '%']).then(function (rs) {
+            var mx = 0; rs.forEach(function (x) { var n = parseInt(String(x.number).slice(pfx.length), 10); if (n > mx) mx = n; });
+            return pfx + String(mx + 1).padStart(4, '0');
+          }).catch(function () { return pfx + '0001'; });
         };
         var draftInv = function (no) {
-          var c = st.currency, items = st.items.filter(function (it) { return String(it.name || '').trim(); }).map(function (it) { return { name: it.name, qty: num(it.qty), unit: it.unit || '', price: num(it.price) }; });
-          var sub = rnd(items.reduce(function (a, it) { return a + rnd(it.qty * it.price, c); }, 0), c);
-          var disc = Math.min(sub, rnd(num(st.discount), c)), tax = rnd((sub - disc) * num(st.tax_rate) / 100, c), tot = rnd(sub - disc + tax, c);
-          var paid = inv ? inv.paid || 0 : (st.cash ? Math.min(tot, payTouched ? rnd(num(st.pay_amount), c) : tot) : 0);
-          var status = inv && inv.status === 'cancelled' ? 'cancelled' : paid >= tot && tot > 0 ? 'paid' : paid > 0 ? 'partial' : 'pending';
+          var c = st.currency, items = itemsOut();
+          var tt = calcTotals(items, st.discount, st.tax_rate, c, perLine);
+          var paid = inv ? inv.paid || 0 : (st.cash ? Math.min(tt.total, payTouched ? rnd(num(st.pay_amount), c) : tt.total) : 0);
+          var status = inv && inv.status === 'cancelled' ? 'cancelled' : paid >= tt.total && tt.total > 0 ? 'paid' : paid > 0 ? 'partial' : 'pending';
           return { number: no, date: st.date, due_date: st.due_date, customer_name: String(st.customer).trim() || '—', customer_phone: st.phone, customer_email: st.email,
-            customer_address: st.address, customer_tax: st.tax_no, currency_code: c, items: JSON.stringify(items), subtotal: sub, discount: disc, tax_rate: num(st.tax_rate),
-            tax: tax, total: tot, paid: paid, status: status, template: st.template, lang: st.lang, note: st.note };
+            customer_address: st.address, customer_tax: st.tax_no, currency_code: c, items: JSON.stringify(items), subtotal: tt.subtotal, discount: tt.discount, tax_rate: perLine ? 0 : num(st.tax_rate),
+            tax: tt.tax, total: tt.total, paid: paid, status: status, template: st.template, lang: st.lang, note: st.note, meta: JSON.stringify(metaOut()) };
         };
         var showPreview = function () {
           nextNo().then(function (no) {
@@ -842,8 +1329,8 @@
               onChange: function (tp, lg) { st.template = tp; st.lang = lg; tplSel.value = tplOf(tp); lgSel.value = lg; drawSg(); },
               extra: function (getM) {
                 return [
-                  el('button', { type: 'button', class: 'btn', text: t('save'), onclick: function (e) { getM().close(); submit(false, b1); } }),
-                  el('button', { type: 'button', class: 'btn primary', text: '⬇ ' + t('saveAndPdf'), onclick: function (e) { getM().close(); submit(true, b2); } })
+                  el('button', { type: 'button', class: 'btn', text: t('save'), onclick: function () { getM().close(); submit(false, b1); } }),
+                  el('button', { type: 'button', class: 'btn primary', text: '⬇ ' + t('saveAndPdf'), onclick: function () { getM().close(); submit(true, b2); } })
                 ];
               }
             });
@@ -854,15 +1341,387 @@
         var b2 = el('button', { type: 'button', class: 'btn primary', text: '⬇ ' + t('saveAndPdf'), onclick: function (e) { submit(true, e.target); } });
         var m = modal(isNew ? t('newInv') : t('editInv') + ' · ' + inv.number, [form], [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }), b0, b1, b2], 'xwide');
         drawItems(); drawCash();
-        setTimeout(function () { try { custIn.focus(); } catch (e) {} }, 30);
+        if (pre && pre._fromPdf) toast(t('pdfApplied'));
+        setTimeout(function () { try { if (!st.customer) custIn.focus(); } catch (e) {} }, 30);
       });
+    }
+
+    // ----- PDF'den doldur -----
+    // Dosya seçilir → önce çevrimiçi yapay zeka, olmazsa çevrimdışı okuma → önizleme (düzeltilebilir) → onay → done(taslak)
+    function pickPdf(done) {
+      var inp = el('input', { type: 'file', accept: 'application/pdf,.pdf', style: 'display:none' });
+      document.body.appendChild(inp);
+      var fin = false, end = function () { if (fin) return; fin = true; if (inp.parentNode) inp.parentNode.removeChild(inp); };
+      inp.addEventListener('change', function () { var f = inp.files && inp.files[0]; end(); if (f) readPdf(f, done); });
+      inp.addEventListener('cancel', end);
+      inp.click();
+    }
+    function readPdf(file, done) {
+      if (!window.FalconFaturaPdf) { toast(t('pdfNoReader'), 'error'); return; }
+      var msg = el('div', { class: 'fat-busy' }, [el('span', { class: 'spin' }), el('span', { text: t('pdfReading') })]);
+      var sub = el('div', { class: 'muted small', style: 'margin-top:6px' });
+      var bm = modal('📄 ' + t('fromPdf'), [msg, sub], [], '');
+      window.FalconFaturaPdf.read(file, { onStep: function (step, model) {
+        msg.lastChild.textContent = step === 'ai' ? t('pdfAi') : t('pdfOffline');
+        sub.textContent = step === 'ai' && model ? '✦ ' + model : file.name || '';
+      } }).then(function (r) {
+        bm.close();
+        if (!r.items.length && !r.buyer.name && !r.seller.name) { toast(r.warnings.indexOf('scanned') >= 0 ? t('pdfScanned') : t('pdfNothing'), 'error'); return; }
+        return Promise.all([q('SELECT * FROM customers').catch(function () { return []; }), q('SELECT id, name, code, unit, sale_price, cost_currency, vat_rate, depot FROM products').catch(function () { return []; })])
+          .then(function (x) { importPreview(r, x[0], x[1], done); });
+      }, function (e) { bm.close(); toast(t('pdfFail') + ' ' + String(e && e.message || e), 'error'); });
+    }
+    // Ad benzerliği (0–1): harf ikilileri (Dice)
+    function simil(a, b) {
+      var n = function (s) { return low(s).replace(/[^\p{L}\p{N}]+/gu, ' ').trim(); };
+      a = n(a); b = n(b);
+      if (!a || !b) return 0; if (a === b) return 1;
+      var bg = function (s) { var o = {}; for (var i = 0; i < s.length - 1; i++) { var g = s.substr(i, 2); o[g] = (o[g] || 0) + 1; } return o; };
+      var A = bg(a), B = bg(b), inter = 0, na = 0, nb = 0;
+      Object.keys(A).forEach(function (g) { na += A[g]; if (B[g]) inter += Math.min(A[g], B[g]); });
+      Object.keys(B).forEach(function (g) { nb += B[g]; });
+      return (2 * inter) / (na + nb || 1);
+    }
+    function importPreview(r, customers, products, done) {
+      var cfg = CFG || {};
+      var side = 'buyer';
+      var P = { buyer: Object.assign({}, r.buyer), seller: Object.assign({}, r.seller) };
+      var CK = ['name', 'tax_no', 'tax_office', 'address', 'district', 'city', 'postal_code', 'phone', 'email', 'web'];
+      var cBox = el('div', { class: 'fat-imp-c' });
+      var matchCust = function (p) {
+        var tn = String(p.tax_no || '').replace(/\s/g, '');
+        if (tn) { var c = customers.filter(function (x) { return String(x.tax_no || '').replace(/\s/g, '') === tn; })[0]; if (c) return c; }
+        var nn = low(p.name).replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+        return nn ? customers.filter(function (x) { return low(x.name).replace(/[^\p{L}\p{N}]+/gu, ' ').trim() === nn && (!tn || !x.tax_no); })[0] || null : null;
+      };
+      var drawC = function () {
+        cBox.innerHTML = '';
+        var p = P[side], mc = matchCust(p);
+        cBox.appendChild(el('div', { class: 'fat-seg', style: 'margin-bottom:8px' }, [
+          el('button', { type: 'button', class: side === 'buyer' ? 'on' : '', text: t('impSideBuyer'), onclick: function () { side = 'buyer'; drawC(); } }),
+          el('button', { type: 'button', class: side === 'seller' ? 'on' : '', text: t('impSideSeller'), onclick: function () { side = 'seller'; drawC(); } })
+        ]));
+        cBox.appendChild(el('div', { class: 'fat-imp-st ' + (mc ? 'ok' : 'new'), text: mc ? '✓ ' + t('impCustFound', { n: mc.name }) : '＋ ' + t('impCustNew') }));
+        var g = el('div', { class: 'form' });
+        CK.forEach(function (k) {
+          var lb = k === 'name' ? t('cName') : fLabel('cust', { k: k }, lang());
+          var x = el(k === 'address' ? 'textarea' : 'input', { rows: k === 'address' ? '2' : null, value: p[k] || '', dir: { tax_no: 1, phone: 1, email: 1, web: 1, postal_code: 1 }[k] ? 'ltr' : null, oninput: function (e) { p[k] = e.target.value; } });
+          if (k === 'address') x.value = p[k] || '';
+          g.appendChild(field(lb, x, { span: k === 'address' || k === 'name' ? 2 : 1 }));
+        });
+        cBox.appendChild(g);
+      };
+      // fatura bilgileri: Fatura No ve ETTN bizde üretilir; senaryo / tip / özelleştirme varsayılan olarak alınır
+      var MK = ['date', 'number', 'ettn', 'scenario', 'inv_type', 'customization', 'issue_time', 'campaign', 'cargo', 'order_no', 'waybill_no', 'due_date'];
+      var TAKE = { scenario: 1, inv_type: 1, customization: 1 };
+      var mSel = {};
+      var mRows = MK.filter(function (k) { return r.meta[k]; }).map(function (k) {
+        mSel[k] = !!TAKE[k];
+        var cb = el('input', { type: 'checkbox', onchange: function (e) { mSel[k] = e.target.checked; } }); cb.checked = mSel[k];
+        return el('label', { class: 'check fat-imp-m' }, [cb, el('span', { class: 'muted', text: fLabel('meta', { k: k }, lang()) + ':' }), el('b', { dir: 'ltr', text: r.meta[k] })]);
+      });
+      // kalemler: kayıtlı ürünle eşleşme (stok kodu > ad > benzer ad)
+      var rows = r.items.map(function (it) {
+        var o = { on: true, it: Object.assign({}, it), pick: '' };
+        // satır iskontosu: net birim fiyat (satır tutarı / miktar) alınır, toplam PDF'tekiyle aynı kalır
+        if ((num(it.disc_amount) > 0 || num(it.disc_rate) > 0) && it.amount != null && num(it.qty) > 0) o.it.price = Math.round(it.amount / it.qty * 10000) / 10000;
+        var byCode = it.code ? products.filter(function (p) { return p.code && p.code === it.code; })[0] : null;
+        var ranked = products.map(function (p) { return { p: p, s: simil(p.name, it.name) }; }).filter(function (x) { return x.s >= 0.55; }).sort(function (a, b) { return b.s - a.s; }).slice(0, 4);
+        o.cands = byCode ? [{ p: byCode, s: 1, code: true }].concat(ranked.filter(function (x) { return x.p !== byCode; })) : ranked;
+        o.pick = byCode ? String(byCode.id) : ranked[0] && ranked[0].s >= 0.86 ? String(ranked[0].p.id) : '';
+        return o;
+      });
+      var cur = CUR.indexOf(r.currency) >= 0 ? r.currency : '';
+      var tb = el('tbody', null, rows.map(function (o, i) {
+        var it = o.it;
+        var cb = el('input', { type: 'checkbox', onchange: function (e) { o.on = e.target.checked; } }); cb.checked = true;
+        var sel = el('select', { class: 'fat-imp-sel', onchange: function (e) { o.pick = e.target.value; } }, [opt('', '＋ ' + t('impNewProduct'), !o.pick)].concat(o.cands.map(function (c) {
+          return opt(String(c.p.id), (c.code ? '✓ ' : c.s >= 0.86 ? '✓ ' : '≈ ') + (c.p.code ? c.p.code + ' · ' : '') + c.p.name + (c.code ? '' : ' (%' + Math.round(c.s * 100) + ')'), o.pick === String(c.p.id));
+        })));
+        var ni = function (k, cls) { return el('input', { class: cls, type: 'number', step: 'any', dir: 'ltr', value: it[k] == null ? '' : String(it[k]), oninput: function (e) { it[k] = e.target.value === '' ? null : num(e.target.value); } }); };
+        var ti = function (k, cls) { return el('input', { class: cls, value: it[k] || '', oninput: function (e) { it[k] = e.target.value; } }); };
+        return el('tr', null, [el('td', null, [cb]), el('td', null, [ti('code', 'cd')]), el('td', null, [ti('name', 'nm2')]), el('td', null, [ni('qty', 'q')]), el('td', null, [ti('unit', 'u')]),
+          el('td', null, [ni('price', 'p')]), el('td', null, [ni('vat', 'v')]), el('td', null, [sel])]);
+      }));
+      var itTable = el('div', { class: 'fat-items-wrap' }, [el('table', { class: 'fat-items fat-imp-t' }, [el('thead', null, [el('tr', null, ['', fLabel('cols', { k: 'code' }, lang()), fLabel('cols', { k: 'name' }, lang()), fLabel('cols', { k: 'qty' }, lang()), fLabel('cols', { k: 'unit' }, lang()), fLabel('cols', { k: 'price' }, lang()), '%', t('impMatch')].map(function (h) { return el('th', { text: h }); }))]), tb])]);
+      // toplam denetimi
+      var calc = rows.reduce(function (a, o) { return a + num(o.it.qty) * num(o.it.price); }, 0);
+      var expect = r.totals.subtotal != null ? r.totals.subtotal - (rows.some(function (o) { return num(o.it.disc_amount) > 0 || num(o.it.disc_rate) > 0; }) ? num(r.totals.discount) : 0) : null;
+      var chk = expect != null ? Math.abs(calc - expect) < 0.05 + expect * 0.001 : null;
+      var src = r.source === 'ai' ? '✦ ' + t('pdfSrcAi') + (r.model ? ' · ' + r.model : '') : '⌁ ' + t('pdfSrcOffline') + (r.aiError === 'net' ? ' · ' + t('pdfNoNet') : r.aiError === 'skip' ? ' · ' + t('pdfNoKey') : r.aiError === 'key' ? ' · ' + t('pdfBadKey') : '');
+      var body = [
+        el('div', { class: 'fat-imp-src' }, [el('span', { class: 'fat-pv-tag', text: src }), cur ? el('span', { class: 'muted small', text: t('currency') + ': ' + cur }) : el('span', { class: 'notice error small', text: t('impCurUnknown', { c: r.currency || '?' }) })]),
+        el('h3', { class: 'section-title', text: t('secCustomer') }), cBox,
+        mRows.length ? el('h3', { class: 'section-title', text: t('secInfo') }) : null,
+        mRows.length ? el('div', { class: 'fat-imp-ms' }, mRows) : null,
+        mRows.length ? el('div', { class: 'field-hint', text: t('impMetaHint') }) : null,
+        el('h3', { class: 'section-title', text: t('items') + ' (' + rows.length + ')' }), itTable,
+        expect != null ? el('div', { class: 'fat-imp-st ' + (chk ? 'ok' : 'warn'), text: (chk ? '✓ ' : '⚠ ') + t('impTotals', { a: fmt(calc, cur || 'TRY'), b: fmt(expect, cur || 'TRY') }) }) : null
+      ];
+      drawC();
+      var m = modal('📄 ' + t('impTitle'), body, [
+        el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }),
+        el('button', { type: 'button', class: 'btn primary', text: '✓ ' + t('impApply'), onclick: function () {
+          var p = P[side], mc = matchCust(p);
+          var cx = {};
+          ['tax_office', 'district', 'city', 'postal_code', 'web', 'country'].forEach(function (k) { if (p[k]) cx[k] = p[k]; });
+          var meta = {};
+          Object.keys(mSel).forEach(function (k) { if (mSel[k] && k !== 'date' && k !== 'number' && k !== 'due_date') meta[k] = r.meta[k]; });
+          var items = rows.filter(function (o) { return o.on && String(o.it.name || '').trim(); }).map(function (o) {
+            var it = o.it, x = { name: it.name, qty: it.qty == null ? 1 : it.qty, unit: it.unit || '', price: it.price == null ? '' : it.price, code: it.code || '', depot: it.depot || '' };
+            if (it.vat != null) x.vat = it.vat;
+            if (o.pick) { var pp = products.filter(function (pr) { return String(pr.id) === o.pick; })[0]; if (pp) { x.product_id = pp.id; if (!x.code && pp.code) x.code = pp.code; } }
+            return x;
+          });
+          var data = { _fromPdf: true, customer: p.name, customer_id: mc ? mc.id : null, phone: p.phone || '', email: p.email || '', address: p.address || '', tax_no: p.tax_no || '', cx: cx, meta: meta, items: items };
+          if (mSel.date && r.meta.date) data.date = r.meta.date;
+          if (mSel.number && r.meta.number) data.number = r.meta.number;
+          if (mSel.due_date && r.meta.due_date) data.due_date = r.meta.due_date;
+          if (cur) data.currency = cur;
+          m.close(); done(data);
+        } })
+      ], 'xwide');
+    }
+
+    // ----- Müşteriler -----
+    var cflt = '';
+    function loadCust() {
+      var my = ++seq;
+      return Promise.all([
+        q('SELECT * FROM customers ORDER BY name COLLATE NOCASE LIMIT 5000'),
+        q("SELECT customer_id AS id, currency_code AS cur, COUNT(*) AS n, SUM(total) AS t FROM invoices WHERE customer_id IS NOT NULL AND status <> 'cancelled' GROUP BY customer_id, currency_code"),
+        q('SELECT COUNT(*) AS n FROM invoices WHERE customer_id IS NULL')
+      ]).then(function (r) { if (!alive || my !== seq) return; drawCust(r[0], r[1], r[2][0] ? r[2][0].n : 0); }).catch(function (e) { custBox.textContent = String(e && e.message || e); });
+    }
+    function drawCust(rows, agg, unlinked) {
+      custBox.innerHTML = '';
+      var by = {};
+      agg.forEach(function (a) { var b = by[a.id] || (by[a.id] = { n: 0, t: [] }); b.n += a.n; b.t.push(money(a.t, a.cur)); });
+      var qIn = el('input', { type: 'search', placeholder: t('custSearch'), value: cflt, oninput: function (e) { cflt = e.target.value; paint(); } });
+      custBox.appendChild(el('div', { class: 'toolbar' }, [
+        el('div', { class: 'filters' }, [el('div', { class: 'search' }, [qIn])]),
+        el('div', { class: 'actions' }, [
+          unlinked ? el('button', { type: 'button', class: 'btn', title: t('custImportHint'), text: '⇣ ' + t('custImport') + ' (' + unlinked + ')', onclick: function (e) {
+            e.target.disabled = true;
+            run('importInvoiceCustomers', {}, null).then(function (x) { toast(t('custImported', { n: x && x.added || 0 })); loadCust(); }, function () { e.target.disabled = false; });
+          } }) : null,
+          el('button', { type: 'button', class: 'btn primary', text: '+ ' + t('custNewBtn'), onclick: function () { openCustomer(null); } })
+        ])
+      ]));
+      var box = el('div', { class: 'card table-card' });
+      custBox.appendChild(box);
+      var paint = function () {
+        box.innerHTML = '';
+        var qq = low(cflt).trim();
+        var list = rows.filter(function (c) { return !qq || [c.name, c.tax_no, c.phone, c.email, c.city, c.tax_office].some(function (v) { return low(v).indexOf(qq) >= 0; }); });
+        if (!list.length) { box.appendChild(el('div', { class: 'empty-state', style: 'padding:28px;text-align:center', text: rows.length ? t('noMatch') : t('custEmpty') })); return; }
+        box.appendChild(el('table', { class: 'table fat-tbl' }, [
+          el('thead', null, [el('tr', null, [t('cName'), fLabel('cust', { k: 'tax_no' }, lang()), fLabel('cust', { k: 'phone' }, lang()), fLabel('cust', { k: 'city' }, lang()), t('custInvoices'), ''].map(function (h, i) { return el('th', { class: i === 2 || i === 3 ? 'hide-m' : '', text: h }); }))]),
+          el('tbody', null, list.map(function (c) {
+            var b = by[c.id];
+            return el('tr', { class: 'fat-click', onclick: function (e) { if (!e.target.closest('button')) openCustomer(c); } }, [
+              el('td', null, [el('b', { text: c.name }), c.tax_office ? el('div', { class: 'muted small', text: c.tax_office }) : null]),
+              el('td', { dir: 'ltr', class: 'nowrap', text: c.tax_no || '' }), el('td', { dir: 'ltr', class: 'hide-m', text: c.phone || '' }), el('td', { class: 'hide-m', text: c.city || '' }),
+              el('td', null, b ? [el('span', { text: b.n + ' · ' }), el('span', { class: 'fat-num', dir: 'ltr', text: b.t.join(' + ') })] : [el('span', { class: 'muted', text: '—' })]),
+              el('td', null, [el('div', { class: 'fat-acts' }, [
+                el('button', { type: 'button', class: 'btn', title: t('custInvoice'), text: '🧾', onclick: function () { invoiceFor(c); } }),
+                el('button', { type: 'button', class: 'btn', title: t('edit'), text: '✎', onclick: function () { openCustomer(c); } }),
+                el('button', { type: 'button', class: 'btn danger-soft', title: t('del'), text: '🗑', onclick: function () { delCustomer(c, b ? b.n : 0); } })
+              ])])
+            ]);
+          }))
+        ]));
+      };
+      paint();
+    }
+    function invoiceFor(c) {
+      var ex = jparse(c.extra, {}) || {}, cx = {};
+      layOn(CFG || {}, 'cust').forEach(function (f) { if (f.custom) { if (ex[f.k]) cx[f.k] = ex[f.k]; } else if (['tax_no', 'address', 'phone', 'email'].indexOf(f.k) < 0 && c[f.k]) cx[f.k] = c[f.k]; });
+      showTab('inv');
+      openEditor(null, { customer: c.name, customer_id: c.id, phone: c.phone || '', email: c.email || '', address: c.address || '', tax_no: c.tax_no || '', cx: cx });
+    }
+    function delCustomer(c, n) {
+      confirmBox(n ? t('custDelUsed', { n: n }) : t('custDel')).then(function (ok) { if (ok) run('deleteCustomer', { id: c.id }, t('deleted')).then(loadCust, function () {}); });
+    }
+    function openCustomer(c) {
+      (CFG ? Promise.resolve(CFG) : loadCfg()).then(function (cfg) {
+        var d = c ? Object.assign({}, c) : { name: '' };
+        var ex = jparse(d.extra, {}) || {};
+        var fs = layOn(cfg, 'cust');
+        var kids = [field(t('cName'), el('input', { value: d.name || '', oninput: function (e) { d.name = e.target.value; } }), { span: 2 })];
+        fs.forEach(function (f) {
+          var get = f.custom ? ex[f.k] || '' : d[f.k] || '';
+          var x = el(f.k === 'address' ? 'textarea' : 'input', { rows: f.k === 'address' ? '2' : null, value: get, dir: { tax_no: 1, phone: 1, email: 1, web: 1, postal_code: 1 }[f.k] ? 'ltr' : null,
+            oninput: function (e) { if (f.custom) ex[f.k] = e.target.value; else d[f.k] = e.target.value; } });
+          if (f.k === 'address') x.value = get;
+          kids.push(field(fLabel('cust', f, lang()), x, { span: f.k === 'address' ? 2 : 1 }));
+        });
+        var nt = el('textarea', { rows: '2', oninput: function (e) { d.note = e.target.value; } }); nt.value = d.note || '';
+        kids.push(field(t('note'), nt, { span: 2 }));
+        var hist = el('div', { class: 'fat-hist' });
+        if (c) {
+          q('SELECT id, number, date, total, paid, currency_code, status FROM invoices WHERE customer_id = ? ORDER BY date DESC, id DESC LIMIT 300', [c.id]).then(function (rows) {
+            hist.innerHTML = '';
+            hist.appendChild(el('h3', { class: 'section-title', text: t('custHistory') + ' (' + rows.length + ')' }));
+            if (!rows.length) { hist.appendChild(el('div', { class: 'muted', text: t('custNoInv') })); return; }
+            var by = {};
+            rows.forEach(function (x) { if (x.status === 'cancelled') return; var b = by[x.currency_code] || (by[x.currency_code] = { t: 0, p: 0 }); b.t += x.total; b.p += x.paid; });
+            hist.appendChild(el('div', { class: 'fat-chips' }, Object.keys(by).map(function (k) { return el('span', { class: 'pm-chip', dir: 'ltr', text: money(by[k].t, k) + ' · ' + t('paid') + ' ' + money(by[k].p, k) }); })));
+            hist.appendChild(el('table', { class: 'table fat-tbl' }, [el('tbody', null, rows.map(function (x) {
+              return el('tr', null, [el('td', { class: 'fat-no', dir: 'ltr', text: x.number }), el('td', { text: dmy(x.date) }), el('td', { class: 'num fat-num', dir: 'ltr', text: money(x.total, x.currency_code) }), el('td', null, [el('span', { class: 'fat-st ' + x.status, text: t('st_' + x.status) })]),
+                el('td', null, [el('button', { type: 'button', class: 'btn small', text: '👁', onclick: function () { q('SELECT * FROM invoices WHERE id = ?', [x.id]).then(function (z) { if (z[0]) openPreview(z[0]); }); } })])]);
+            }))]));
+          });
+        }
+        var foot = [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } })];
+        if (c) foot.push(el('button', { type: 'button', class: 'btn', text: '🧾 ' + t('custInvoice'), onclick: function () { m.close(); invoiceFor(c); } }));
+        foot.push(el('button', { type: 'button', class: 'btn primary', text: t('save'), onclick: function (e) {
+          if (!String(d.name || '').trim()) { toast(t('errCustomer'), 'error'); return; }
+          e.target.disabled = true;
+          var p = { id: c ? c.id : undefined, match: false, mode: 'full', extra: ex };
+          ['name', 'tax_office', 'tax_no', 'address', 'district', 'city', 'postal_code', 'country', 'phone', 'email', 'web', 'note'].forEach(function (k) { p[k] = d[k] == null ? '' : String(d[k]); });
+          run('saveCustomer', p, t('saved')).then(function () { m.close(); loadCust(); }, function () { e.target.disabled = false; });
+        } }));
+        var m = modal(c ? c.name : t('custNewBtn'), [el('div', { class: 'form' }, kids), hist], foot, 'wide');
+      });
+    }
+
+    // ----- Ürünler -----
+    var pflt = '';
+    function loadProd() {
+      var my = ++seq;
+      return q("SELECT p.*, (SELECT MAX(x.date) FROM product_prices x WHERE x.product_id = p.id AND x.source = 'invoice') AS last_sale, (SELECT SUM(x.qty) FROM product_prices x WHERE x.product_id = p.id AND x.source = 'invoice') AS sold, (SELECT COUNT(DISTINCT x.invoice_id) FROM product_prices x WHERE x.product_id = p.id AND x.source = 'invoice') AS ninv FROM products p ORDER BY p.name COLLATE NOCASE LIMIT 5000")
+        .then(function (rows) { if (!alive || my !== seq) return; drawProd(rows); }).catch(function (e) { prodBox.textContent = String(e && e.message || e); });
+    }
+    function drawProd(rows) {
+      prodBox.innerHTML = '';
+      var qIn = el('input', { type: 'search', placeholder: t('prodSearch'), value: pflt, oninput: function (e) { pflt = e.target.value; paint(); } });
+      prodBox.appendChild(el('div', { class: 'toolbar' }, [
+        el('div', { class: 'filters' }, [el('div', { class: 'search' }, [qIn])]),
+        el('div', { class: 'actions' }, [el('button', { type: 'button', class: 'btn primary', text: '+ ' + t('prodNewBtn'), onclick: function () { openProduct(null); } })])
+      ]));
+      prodBox.appendChild(el('div', { class: 'field-hint', text: t('prodHint') }));
+      var box = el('div', { class: 'card table-card' });
+      prodBox.appendChild(box);
+      var paint = function () {
+        box.innerHTML = '';
+        var qq = low(pflt).trim();
+        var list = rows.filter(function (p) { return !qq || [p.name, p.code, p.depot, p.description].some(function (v) { return low(v).indexOf(qq) >= 0; }); });
+        if (!list.length) { box.appendChild(el('div', { class: 'empty-state', style: 'padding:28px;text-align:center', text: rows.length ? t('noMatch') : t('prodEmpty') })); return; }
+        box.appendChild(el('table', { class: 'table fat-tbl' }, [
+          el('thead', null, [el('tr', null, [fLabel('prod', { k: 'code' }, lang()), t('itemName'), fLabel('prod', { k: 'price' }, lang()), fLabel('cols', { k: 'vat' }, lang()), fLabel('prod', { k: 'depot' }, lang()), t('prodLast'), ''].map(function (h, i) { return el('th', { class: (i === 2 ? 'num' : '') + (i === 3 || i === 4 || i === 5 ? ' hide-m' : ''), text: h }); }))]),
+          el('tbody', null, list.map(function (p) {
+            return el('tr', { class: 'fat-click', onclick: function (e) { if (!e.target.closest('button')) openProduct(p); } }, [
+              el('td', { dir: 'ltr', class: 'nowrap', text: p.code || '' }),
+              el('td', null, [el('b', { text: p.name }), p.unit && p.unit !== 'pcs' ? el('span', { class: 'muted small', text: ' · ' + p.unit }) : null]),
+              el('td', { class: 'num fat-num', dir: 'ltr', text: p.sale_price != null ? money(p.sale_price, p.cost_currency || 'USD') : '—' }),
+              el('td', { class: 'hide-m', dir: 'ltr', text: p.vat_rate != null ? '%' + num(p.vat_rate) : '' }),
+              el('td', { class: 'hide-m', text: p.depot || '' }),
+              el('td', { class: 'hide-m', text: p.last_sale ? dmy(p.last_sale) + ' · ' + num(p.sold) + ' ' + (p.unit && p.unit !== 'pcs' ? p.unit : '') : '' }),
+              el('td', null, [el('div', { class: 'fat-acts' }, [
+                el('button', { type: 'button', class: 'btn', title: t('edit'), text: '✎', onclick: function () { openProduct(p); } }),
+                el('button', { type: 'button', class: 'btn danger-soft', title: t('del'), text: '🗑', onclick: function () { delProduct(p); } })
+              ])])
+            ]);
+          }))
+        ]));
+      };
+      paint();
+    }
+    function delProduct(p) {
+      confirmBox(p.ninv ? t('prodDelUsed', { n: p.ninv }) : t('prodDel')).then(function (ok) { if (ok) run('deleteProduct', { id: p.id }, t('deleted')).then(loadProd, function () {}); });
+    }
+    function openProduct(p) {
+      (CFG ? Promise.resolve(CFG) : loadCfg()).then(function (cfg) {
+        var d = p ? { name: p.name, code: p.code || '', unit: p.unit && p.unit !== 'pcs' ? p.unit : '', sale_price: p.sale_price == null ? '' : p.sale_price, currency: p.cost_currency || (cfg.defaults || {}).currency || 'USD', vat_rate: p.vat_rate == null ? '' : p.vat_rate, depot: p.depot || '', description: p.description || '' }
+          : { name: '', code: '', unit: '', sale_price: '', currency: (cfg.defaults || {}).currency || 'USD', vat_rate: (cfg.defaults || {}).tax_rate || '', depot: '', description: '' };
+        var ex = jparse(p && p.extra, {}) || {};
+        var inp = function (k, a) { var x = el(a && a.tag || 'input', Object.assign({ value: d[k] == null ? '' : String(d[k]), oninput: function (e) { d[k] = e.target.value; } }, a || {}, { tag: null })); if (a && a.tag === 'textarea') x.value = d[k] || ''; return x; };
+        var kids = [field(t('itemName'), inp('name'), { span: 2 })];
+        layOn(cfg, 'prod').forEach(function (f) {
+          var lb = fLabel('prod', f, lang());
+          if (f.custom) { var x = el('input', { value: ex[f.k] || '', oninput: function (e) { ex[f.k] = e.target.value; } }); kids.push(field(lb, x)); return; }
+          if (f.k === 'price') {
+            kids.push(field(lb, el('div', { class: 'fat-inrow' }, [inp('sale_price', { type: 'number', step: 'any', min: '0', dir: 'ltr' }),
+              el('select', { onchange: function (e) { d.currency = e.target.value; } }, CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], d.currency === c); }))]), { group: true }));
+          } else if (f.k === 'vat') kids.push(field(lb, inp('vat_rate', { type: 'number', step: 'any', min: '0', max: '100', dir: 'ltr' })));
+          else if (f.k === 'description') kids.push(field(lb, inp('description', { tag: 'textarea', rows: '2' }), { span: 2 }));
+          else kids.push(field(lb, inp(f.k, f.k === 'code' ? { dir: 'ltr' } : null)));
+        });
+        var hist = el('div', { class: 'fat-hist' });
+        if (p) {
+          q("SELECT x.*, i.number, i.customer_name FROM product_prices x LEFT JOIN invoices i ON i.id = x.invoice_id WHERE x.product_id = ? ORDER BY x.date DESC, x.id DESC LIMIT 300", [p.id]).then(function (rows) {
+            hist.innerHTML = '';
+            var sales = rows.filter(function (x) { return x.source === 'invoice'; });
+            hist.appendChild(el('h3', { class: 'section-title', text: t('prodPrices') }));
+            if (!rows.length) hist.appendChild(el('div', { class: 'muted', text: t('prodNoHist') }));
+            else hist.appendChild(el('table', { class: 'table fat-tbl' }, [el('thead', null, [el('tr', null, [t('date'), fLabel('prod', { k: 'price' }, lang()), t('prodSource'), t('customer'), t('qty')].map(function (h) { return el('th', { text: h }); }))]),
+              el('tbody', null, rows.map(function (x) {
+                return el('tr', null, [el('td', { text: dmy(x.date) }), el('td', { class: 'fat-num', dir: 'ltr', text: money(x.price, x.currency_code || 'USD') }),
+                  el('td', { dir: x.number ? 'ltr' : null, text: x.source === 'invoice' ? x.number || '—' : t('prodManual') }), el('td', { text: x.customer_name || '' }), el('td', { dir: 'ltr', text: x.qty != null ? String(num(x.qty)) : '' })]);
+              }))]));
+            if (sales.length) {
+              var tq = sales.reduce(function (a, x) { return a + num(x.qty); }, 0), custs = {};
+              sales.forEach(function (x) { if (x.customer_name) custs[x.customer_name] = 1; });
+              hist.appendChild(el('div', { class: 'field-hint', text: t('prodSold', { q: tq, n: Object.keys(custs).length, i: sales.length }) }));
+            }
+          });
+        }
+        var m = modal(p ? p.name : t('prodNewBtn'), [el('div', { class: 'form' }, kids), hist], [
+          el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }),
+          el('button', { type: 'button', class: 'btn primary', text: t('save'), onclick: function (e) {
+            if (!String(d.name || '').trim()) { toast(t('errProdName'), 'error'); return; }
+            e.target.disabled = true;
+            run('saveProductCard', { id: p ? p.id : undefined, name: d.name, code: d.code, unit: d.unit, sale_price: d.sale_price, currency: d.currency, vat_rate: d.vat_rate, depot: d.depot, description: d.description, extra: ex }, t('saved'))
+              .then(function () { m.close(); loadProd(); }, function () { e.target.disabled = false; });
+          } })
+        ], 'wide');
+      });
+    }
+
+    // ----- düzen düzenleyicisi (ayarlarda): sütunlar / fatura bilgileri / müşteri / ürün alanları -----
+    function layEditor(kind, list) {
+      var box = el('div', { class: 'fat-ff fat-lay' });
+      var draw = function () {
+        box.innerHTML = '';
+        list.forEach(function (f, i) {
+          if (f.del) return;
+          var row = el('div', { class: 'r' + (f.on ? '' : ' off') });
+          var cb = el('input', { type: 'checkbox', disabled: f.lock ? true : null, title: f.lock ? t('layLocked') : null, onchange: function (e) { f.on = e.target.checked; row.classList.toggle('off', !f.on); } }); cb.checked = !!f.on;
+          var lb = el('input', { value: f.label || '', placeholder: f.custom ? t('sFFNew') : fLabel(kind, { k: f.k }, lang()), oninput: function (e) { f.label = e.target.value; } });
+          var mv = function (d) { var j = i + d; while (list[j] && list[j].del) j += d; if (j < 0 || j >= list.length) return; var x = list[i]; list[i] = list[j]; list[j] = x; draw(); };
+          row.appendChild(cb); row.appendChild(lb);
+          row.appendChild(el('span', { class: 'muted small', text: f.custom ? t('layCustom') : f.lock ? '🔒' : '' }));
+          row.appendChild(el('div', { class: 'bt' }, [
+            el('button', { type: 'button', class: 'icon-btn tiny', title: t('sFFUp'), text: '↑', onclick: function () { mv(-1); } }),
+            el('button', { type: 'button', class: 'icon-btn tiny', title: t('sFFDown'), text: '↓', onclick: function () { mv(1); } }),
+            f.lock ? null : el('button', { type: 'button', class: 'icon-btn tiny danger', title: t('remove'), text: '✕', onclick: function () { if (f.custom) list.splice(i, 1); else { f.del = true; f.on = false; } draw(); } })
+          ]));
+          box.appendChild(row);
+        });
+        box.appendChild(el('div', { style: 'display:flex;gap:8px;flex-wrap:wrap;margin-top:4px' }, [
+          el('button', { type: 'button', class: 'btn small', text: t('sFFAdd'), onclick: function () {
+            list.push({ k: kind.charAt(0) + '_' + Date.now().toString(36), label: '', on: true, custom: true }); draw();
+            var rs = box.querySelectorAll('.r'); var ins = rs[rs.length - 1].querySelectorAll('input'); if (ins[1]) ins[1].focus();
+          } }),
+          el('button', { type: 'button', class: 'btn small ghost', text: t('layReset'), onclick: function () {
+            var std = layStd(kind), cus = list.filter(function (f) { return f.custom; });
+            list.length = 0; std.concat(cus).forEach(function (f) { list.push(f); }); draw();
+          } })
+        ]));
+      };
+      draw();
+      return box;
     }
 
     // ----- ayarlar -----
     function openSettings() {
       loadCfg().then(function (cfg) {
-        var c = Object.assign({}, cfg.company), d = Object.assign({ currency: 'USD', tax_rate: 0, template: 'falcon', lang: lang() }, cfg.defaults);
-        var img = { signature: cfg.signature, stamp: cfg.stamp, logo: cfg.logo };
+        var c = Object.assign({}, cfg.company), d = Object.assign({ currency: 'USD', tax_rate: 0, template: 'falcon', lang: lang(), scenario: 'TEMELFATURA', inv_type: 'SATIS', customization: 'TR1.2' }, cfg.defaults);
+        var img = { signature: cfg.signature, stamp: cfg.stamp, logo: cfg.logo, logo2: cfg.logo2 || '' };
+        // v1.60: fatura düzeni (sütunlar, fatura bilgileri, müşteri ve ürün alanları), karekod / barkod
+        var lay = { cols: layOf(cfg, 'cols'), meta: layOf(cfg, 'meta'), cust: layOf(cfg, 'cust'), prod: layOf(cfg, 'prod'), qr: (cfg.layout || {}).qr !== false, barcode: (cfg.layout || {}).barcode !== false };
+        var chk = function (k, label) { var x = el('input', { type: 'checkbox', onchange: function (e) { lay[k] = e.target.checked; } }); x.checked = !!lay[k]; return el('label', { class: 'check' }, [x, el('span', { text: label })]); };
         var bound = {};
         var sync = function (k, src) { (bound[k] || []).forEach(function (x) { if (x !== src) x.value = c[k] || ''; }); };
         var ci = function (k, attrs) { var a = Object.assign({ value: c[k] || '', oninput: function (e) { c[k] = e.target.value; sync(k, e.target); } }, attrs || {}); var tag = a.tag || 'input'; delete a.tag; var x = el(tag, a); if (tag === 'textarea') x.value = c[k] || ''; (bound[k] = bound[k] || []).push(x); return x; };
@@ -909,7 +1768,7 @@
           var box = el('div', { class: 'fat-img' });
           var draw = function () {
             box.innerHTML = '';
-            var src = key === 'logo' ? logoSrcOf(img.logo, '#ffffff') : key === 'signature' ? (img.signature || SAMPLE_SIGN) : img.stamp;
+            var src = key === 'logo' ? logoSrcOf(img.logo, '#ffffff') : key === 'signature' ? (img.signature || SAMPLE_SIGN) : img[key];
             box.appendChild(el('div', { class: 'pv' + ((key === 'logo' && builtinLogo(img.logo)) || dark ? ' dark' : '') }, [src ? el('img', { src: src, alt: '' }) : el('span', { class: 'muted small', text: '—' })]));
             if (key === 'logo') {
               [['falcon', 'sLogoFalcon'], ['falcon-cti', 'sLogoFalconCti']].forEach(function (x) {
@@ -917,13 +1776,14 @@
                 box.appendChild(el('button', { type: 'button', class: 'btn small' + (on ? ' primary' : ' ghost'), text: (on ? '✓ ' : '') + t(x[1]), onclick: function () { img.logo = x[0]; draw(); } }));
               });
             }
-            box.appendChild(el('button', { type: 'button', class: 'btn small' + (key === 'logo' && !builtinLogo(img.logo) ? ' primary' : ''), text: (key === 'signature' ? img.signature : key === 'stamp' ? img.stamp : !builtinLogo(img.logo)) ? t('change') : (key === 'logo' ? t('sLogoCustom') : t('upload')), onclick: function () {
+            box.appendChild(el('button', { type: 'button', class: 'btn small' + (key === 'logo' && !builtinLogo(img.logo) ? ' primary' : ''), text: (key === 'logo' ? !builtinLogo(img.logo) : img[key]) ? t('change') : (key === 'logo' ? t('sLogoCustom') : t('upload')), onclick: function () {
               pickImage(transparent).then(function (du) { if (du) { img[key] = du; draw(); } }, function () { toast(t('imgFail'), 'error'); });
             } }));
             var has = key !== 'logo' && !!img[key];
             if (has) box.appendChild(el('button', { type: 'button', class: 'btn small ghost', text: t('remove'), onclick: function () { img[key] = ''; draw(); } }));
             if (key === 'signature') box.appendChild(el('div', { class: 'field-hint', style: 'flex-basis:100%', text: img.signature ? '✓ ' + t('signReal') : '⚠ ' + t('signSample') }));
             if (key === 'stamp' && !img.stamp) box.appendChild(el('span', { class: 'muted small', text: t('stampNone') }));
+            if (key === 'logo2' && !img.logo2) box.appendChild(el('span', { class: 'muted small', text: t('logo2None') }));
           };
           draw(); return box;
         };
@@ -944,17 +1804,32 @@
             field(t('sFFCols'), ffTitleBox, { span: 2, group: true, hint: t('sFFColsHint') }),
             field(t('sLogo'), imgRow('logo', false), { span: 2, group: true }),
             field(t('sSign'), imgRow('signature', true), { span: 2, group: true }),
-            field(t('sStamp'), imgRow('stamp', true), { span: 2, group: true })
+            field(t('sStamp'), imgRow('stamp', true), { span: 2, group: true }),
+            field(t('sLogo2'), imgRow('logo2', false), { span: 2, group: true, hint: t('sLogo2Hint') })
+          ]),
+          el('h3', { class: 'section-title', style: 'margin-top:16px', text: t('sLayout') }),
+          el('div', { class: 'field-hint', style: 'margin-bottom:8px', text: t('sLayoutHint') }),
+          el('div', { class: 'form' }, [
+            field(t('layCols'), layEditor('cols', lay.cols), { span: 2, group: true, hint: t('layColsHint') }),
+            field(t('layMeta'), layEditor('meta', lay.meta), { span: 2, group: true }),
+            field(t('layCust'), layEditor('cust', lay.cust), { span: 2, group: true, hint: t('layCustHint') }),
+            field(t('layProd'), layEditor('prod', lay.prod), { span: 2, group: true }),
+            el('div', { class: 'span-2 fat-chks' }, [chk('qr', t('layQr')), chk('barcode', t('layBarcode'))])
           ]),
           el('h3', { class: 'section-title', style: 'margin-top:16px', text: t('sDefaults') }),
-          el('div', { class: 'form' }, [field(t('currency'), dCur), field(t('taxRate'), dTax), field(t('template'), dTpl), field(t('lang'), dLg)])
+          el('div', { class: 'form' }, [field(t('currency'), dCur), field(t('taxRate'), dTax, { hint: t('dVatHint') }), field(t('template'), dTpl), field(t('lang'), dLg),
+            field(fLabel('meta', { k: 'scenario' }, lang()), el('input', { value: d.scenario || '', list: 'fat-dl-sc', oninput: function (e) { d.scenario = e.target.value; } })),
+            field(fLabel('meta', { k: 'inv_type' }, lang()), el('input', { value: d.inv_type || '', list: 'fat-dl-it', oninput: function (e) { d.inv_type = e.target.value; } })),
+            field(fLabel('meta', { k: 'customization' }, lang()), el('input', { value: d.customization || '', dir: 'ltr', oninput: function (e) { d.customization = e.target.value; } })),
+            el('datalist', { id: 'fat-dl-sc' }, ['TEMELFATURA', 'TICARIFATURA', 'EARSIVFATURA', 'IHRACAT', 'KAMU'].map(function (v) { return el('option', { value: v }); })),
+            el('datalist', { id: 'fat-dl-it' }, ['SATIS', 'IADE', 'TEVKIFAT', 'ISTISNA', 'OZELMATRAH', 'IHRACKAYITLI'].map(function (v) { return el('option', { value: v }); }))])
         ];
         var m = modal(t('sTitle'), body, [
           el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }),
           el('button', { type: 'button', class: 'btn', text: '👁 ' + t('preview'), onclick: function () {
             var co = Object.assign({}, c, { footer_fields: ff, footer_titles: ffTitles }); if (!co.name) co.name = 'Falcon System';
             var px = String(prefix.value || 'FAL').trim().replace(/[^\w-]+/g, '').slice(0, 12) || 'FAL';
-            var tmp = { company: co, defaults: d, prefix: px, signature: img.signature || '', stamp: img.stamp || '', logo: img.logo || 'falcon' };
+            var tmp = { company: co, defaults: d, prefix: px, signature: img.signature || '', stamp: img.stamp || '', logo: img.logo || 'falcon', logo2: img.logo2 || '', layout: lay };
             openPreview(sampleInv(tmp, d), { cfg: tmp, tag: t('previewSample'), extra: function () { return []; } });
           } }),
           el('button', { type: 'button', class: 'btn primary', text: t('save'), onclick: function (e) {
@@ -962,21 +1837,22 @@
             var px = String(prefix.value || 'FAL').trim().replace(/[^\w-]+/g, '').slice(0, 12) || 'FAL';
             c.footer_fields = ff; c.footer_titles = ffTitles;
             Promise.all([sset('invoice_company', JSON.stringify(c)), sset('invoice_defaults', JSON.stringify(d)), sset('invoice_prefix', px),
-              sset('invoice_signature', img.signature || ''), sset('invoice_stamp', img.stamp || ''), sset('invoice_logo', img.logo || 'falcon')])
+              sset('invoice_signature', img.signature || ''), sset('invoice_stamp', img.stamp || ''), sset('invoice_logo', img.logo || 'falcon'),
+              sset('invoice_layout', JSON.stringify(lay)), sset('invoice_logo2', img.logo2 || '')])
               .then(function () { CFG = null; toast(t('saved')); m.close(); }, function (er) { e.target.disabled = false; toast(String(er && er.message || er), 'error'); });
           } })
         ], 'wide');
       });
     }
 
-    drawHead(); load(); loadCfg();
+    drawTabs(); drawHead(); load(); loadCfg();
     var off = null;
-    try { if (F().sync && F().sync.onChanged) off = F().sync.onChanged(function () { CFG = null; load(); }); } catch (e) {}
-    var langObs = new MutationObserver(function () { drawHead(); load(); });
+    try { if (F().sync && F().sync.onChanged) off = F().sync.onChanged(function () { CFG = null; reload(); }); } catch (e) {}
+    var langObs = new MutationObserver(function () { drawTabs(); drawHead(); reload(); });
     try { langObs.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] }); } catch (e) {}
     return function () { alive = false; try { langObs.disconnect(); } catch (e) {} try { if (typeof off === 'function') off(); } catch (e) {} };
   }
 
   if (document.head) style(); else document.addEventListener('DOMContentLoaded', style);
-  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.59.4' };
+  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.60.0' };
 })();

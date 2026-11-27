@@ -204,6 +204,82 @@ test('fatura (1.59): kalemler, vergi, kasaya giriş yap / yapma, kısmi tahsilat
   assert.deepStrictEqual([ct.pay_method, ct.sc_ref, ct.sc_account], ['bank', 'H-1', null]);
 });
 
+test('fatura (1.60): PDF çevrimdışı okuma — e-Fatura düzeni (satıcı, SAYIN, bilgiler, kalemler, toplamlar)', () => {
+  const P = require('../dist/assets/fatura-pdf.js');
+  const r = P.normalize(P.parseLayout(JSON.parse(read('test/fixtures/efatura-sayfa.json'))));
+  assert.strictEqual(r.buyer.name, 'İSTANİFY TEKNOLOJİ ANONİM ŞİRKETİ');
+  assert.strictEqual(r.buyer.tax_no, '4811330402'); assert.strictEqual(r.buyer.tax_office, 'GÜNEŞLİ VERGİ DAİRESİ');
+  assert.strictEqual(r.buyer.city, 'İSTANBUL'); assert.strictEqual(r.buyer.district, 'BAĞCILAR'); assert.strictEqual(r.buyer.email, 'istanify@gmail.com');
+  assert.strictEqual(r.seller.name, 'İNFOTEK ELEKTRONİK SAN.VE TİC.A.Ş.'); assert.strictEqual(r.seller.tax_no, '4781182963'); assert.strictEqual(r.seller.mersis, '0478118296300001');
+  assert.deepStrictEqual([r.meta.date, r.meta.number, r.meta.scenario, r.meta.inv_type, r.meta.customization, r.meta.issue_time], ['2026-11-12', 'ARM2026000030399', 'TEMELFATURA', 'SATIS', 'TR1.2', '15:05:03']);
+  assert.strictEqual(r.meta.ettn, '67104465-1801-4E2A-92F7-5ECE6F290863'); assert.strictEqual(r.meta.campaign, 'MT1211551886'); assert.match(r.meta.cargo, /^MNG KARGO/);
+  assert.strictEqual(r.items.length, 4); assert.strictEqual(r.currency, 'TRY');
+  assert.deepStrictEqual(r.items[0], { name: 'WD19X-P1 19mm Anahtarlı Mandal Buton 2NO+2NC', code: 'BTN.MTL.01.000621', depot: 'K1B04', qty: 5, unit: 'Adet', price: 357, amount: 1785, vat: 20, vat_amount: 357, disc_rate: null, disc_amount: null });
+  assert.strictEqual(r.items[1].price, 291.72); assert.strictEqual(r.items[3].qty, 20);
+  assert.deepStrictEqual(r.totals, { subtotal: 6690.18, discount: 0, vat: 1338.04, total: 8028.22, payable: 8028.22 });
+  const r2 = P.normalize(P.parseLayout(JSON.parse(read('test/fixtures/earsiv-sayfa.json'))));
+  assert.deepStrictEqual(r2.items.map((x) => [x.name, x.qty, x.unit, x.price, x.vat, x.disc_amount]), [['Laptop çantası 15.6" su geçirmez siyah renk', 2, 'Adet', 450, 20, 0], ['USB-C kablo 1m', 10, 'Adet', 35.5, 10, 35.5], ['Kurulum hizmeti', 1.5, 'Saat', 1200, 20, 0]]);
+  assert.deepStrictEqual([r2.buyer.name, r2.buyer.tax_no, r2.buyer.district, r2.seller.name, r2.meta.scenario, r2.meta.date, r2.totals.vat], ['Ahmet Yılmaz', '12345678901', 'KEÇİÖREN', 'ABC BİLİŞİM LTD. ŞTİ.', 'EARSIVFATURA', '2026-10-05', 571.95]);
+  assert.strictEqual(P.num('1.785,00 TL'), 1785); assert.strictEqual(P.num('%20,00'), 20); assert.strictEqual(P.num('1,234.50'), 1234.5);
+  assert.deepStrictEqual(P.rankModels(['gemini-3.8-flash', 'gemini-3.5-pro', 'gemini-3.6-pro-preview', 'gemini-3.6-pro-preview-tts']), ['gemini-3.6-pro-preview', 'gemini-3.5-pro', 'gemini-3.8-flash']);
+  const html = read('dist/index.html');
+  assert.ok(html.indexOf('assets/qrcode-gen.js') < html.indexOf('assets/fatura-falcon.js') && html.includes('./assets/fatura-pdf.js'), 'karekod ve PDF okuyucu yüklenir');
+  assert.ok(fs.existsSync(path.join(ROOT, 'dist/assets/pdfjs/pdf.min.mjs')) && fs.existsSync(path.join(ROOT, 'dist/assets/pdfjs/pdf.worker.min.mjs')), 'pdf.js çevrimdışı okuma için pakette');
+});
+
+test('fatura (1.60): müşteri kaydı (VKN eşleşir), ürün kaydı (stok kodu / ad), fiyat geçmişi, satır KDV, başlık bilgileri', async () => {
+  const db = await openDb();
+  const s = require('../electron/services').createServices(db);
+  const items = [
+    { name: 'WD19X-P1 19mm Anahtarlı Mandal Buton 2NO+2NC', code: 'BTN.MTL.01.000621', depot: 'K1B04', qty: 5, unit: 'Adet', price: 357, vat: 20 },
+    { name: 'TL-W5F2 6-36V 5mm PNP NC Endüktif Mesafe Sensörü', code: 'SNS.CCM.01.000202', depot: 'K1B11', qty: 4, unit: 'Adet', price: 291.72, vat: 20 },
+    { name: '6 Kanal Oto Bıçak Sigorta Kutusu', code: 'KOM.SGT.07.000040', depot: 'K1B14', qty: 2, unit: 'Adet', price: 262.65, vat: 20, x: { brand: 'Ack' } },
+  ];
+  const meta = { ettn: '67104465-1801-4E2A-92F7-5ECE6F290863', scenario: 'TEMELFATURA', inv_type: 'SATIS', customization: 'TR1.2', issue_time: '15:05:03', campaign: 'MT1211551886' };
+  const r = s.call('saveInvoice', { date: '2026-11-12', customer: { name: 'İSTANİFY TEKNOLOJİ ANONİM ŞİRKETİ' }, customer_tax: '4811330402', customer_phone: '5324915586',
+    customer_extra: { tax_office: 'GÜNEŞLİ VERGİ DAİRESİ', city: 'İSTANBUL' }, currency: 'TRY', items, meta });
+  const inv = db.get('SELECT * FROM invoices WHERE id = ?', [r.id]);
+  assert.strictEqual(inv.subtotal, 3477.18);
+  assert.strictEqual(inv.tax, 357 + 233.38 + 105.06, 'satır KDV ayrı yuvarlanır');
+  assert.strictEqual(inv.tax_rate, 20);
+  assert.strictEqual(JSON.parse(inv.meta).ettn, meta.ettn);
+  const its = JSON.parse(inv.items);
+  assert.strictEqual(its[0].code, 'BTN.MTL.01.000621'); assert.strictEqual(its[0].depot, 'K1B04'); assert.strictEqual(its[2].x.brand, 'Ack');
+  assert.ok(its.every((x) => x.product_id), 'kalemler ürüne bağlandı');
+  const c = db.get('SELECT * FROM customers');
+  assert.strictEqual(c.tax_office, 'GÜNEŞLİ VERGİ DAİRESİ'); assert.strictEqual(inv.customer_id, c.id);
+  assert.strictEqual(db.get('SELECT COUNT(*) AS n FROM products').n, 3);
+  const p = db.get("SELECT * FROM products WHERE code = 'SNS.CCM.01.000202'");
+  assert.strictEqual(p.sale_price, 291.72); assert.strictEqual(p.cost_currency, 'TRY'); assert.strictEqual(p.vat_rate, 20); assert.strictEqual(p.depot, 'K1B11');
+  // ikinci fatura: aynı VKN (adı farklı yazılmış) → aynı müşteri; aynı ürün adı (stok kodu yok) → aynı ürün, yeni fiyat
+  const r2 = s.call('saveInvoice', { date: '2026-11-20', customer: { name: 'Istanify Teknoloji A.Ş.' }, customer_tax: '481 133 0402', currency: 'TRY',
+    items: [{ name: 'tl-w5f2 6-36V 5mm PNP NC endüktif mesafe sensörü', qty: 1, price: 300, vat: 20 }], meta: { ettn: 'X' } });
+  assert.strictEqual(db.get('SELECT COUNT(*) AS n FROM customers').n, 1, 'VKN eşleşti: çift kayıt yok');
+  assert.strictEqual(db.get('SELECT tax_office FROM customers').tax_office, 'GÜNEŞLİ VERGİ DAİRESİ', 'eldeki bilgi silinmedi');
+  assert.strictEqual(db.get('SELECT COUNT(*) AS n FROM products').n, 3, 'ad eşleşti: çift ürün yok');
+  assert.strictEqual(db.get('SELECT sale_price FROM products WHERE id = ?', [p.id]).sale_price, 300, 'son fiyat güncel fiyat');
+  assert.strictEqual(db.get('SELECT COUNT(*) AS n FROM product_prices WHERE product_id = ?', [p.id]).n, 2, 'fiyat geçmişi korunur');
+  // eski tarihli faturayı düzenlemek güncel fiyatı geri götürmez
+  s.call('saveInvoice', { id: r.id, date: '2026-11-12', customer: { name: 'İSTANİFY TEKNOLOJİ ANONİM ŞİRKETİ' }, customer_tax: '4811330402', currency: 'TRY', items });
+  assert.strictEqual(db.get('SELECT sale_price FROM products WHERE id = ?', [p.id]).sale_price, 300);
+  assert.strictEqual(JSON.parse(db.get('SELECT meta FROM invoices WHERE id = ?', [r.id]).meta).ettn, meta.ettn, 'meta gönderilmezse korunur');
+  // ürün kartı: elle fiyat → geçmişe yazılır; müşteri silinir, faturası bozulmaz
+  s.call('saveProductCard', { id: p.id, name: p.name, code: p.code, unit: 'Adet', sale_price: 310, currency: 'TRY', vat_rate: 20, depot: 'K1B12', extra: { marka: 'X' } });
+  assert.strictEqual(db.get("SELECT COUNT(*) AS n FROM product_prices WHERE product_id = ? AND source = 'manual'", [p.id]).n, 1);
+  assert.strictEqual(db.get('SELECT depot FROM products WHERE id = ?', [p.id]).depot, 'K1B12');
+  assert.throws(() => s.call('saveProductCard', { name: 'Y', code: p.code }), /ERR_DUPLICATE_CODE/);
+  s.call('deleteCustomer', { id: c.id });
+  assert.ok(db.get('SELECT id FROM invoices WHERE id = ?', [r2.id]));
+  assert.ok(db.get("SELECT COUNT(*) AS n FROM trash_items WHERE kind = 'customers'").n >= 1);
+  // eski faturalardan aktarma
+  db.run('UPDATE invoices SET customer_id = NULL');
+  assert.strictEqual(s.call('importInvoiceCustomers', {}).added, 1);
+  // satır KDV'si olmayan (eski biçim) fatura eskisi gibi hesaplanır
+  const r3 = s.call('saveInvoice', { date: '2026-11-27', customer: 'Veli', currency: 'USD', items: [{ name: 'Z', qty: 1, price: 100 }], tax_rate: 10, save_products: false, save_customer: false });
+  assert.strictEqual(db.get('SELECT total FROM invoices WHERE id = ?', [r3.id]).total, 110);
+});
+
+
 test('Kullanım Limitleri kartı tek (1.59): arayüz eşitleme kartının yanına başka öğe eklese de çoğalmaz', () => {
   const src = read('dist/assets/kullanim.js');
   assert.ok(src.includes("querySelectorAll('.kul-kart[data-kul-yer]')"), 'sayfadaki kopyalar aranır');

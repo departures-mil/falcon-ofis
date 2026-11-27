@@ -921,3 +921,54 @@ migrations.push({
     CREATE INDEX idx_invoice_payments_inv ON invoice_payments(invoice_id);
   `,
 });
+
+migrations.push({
+  version: 29,
+  name: 'v1.60-fatura-musteri-urun',
+  sql: `
+    -- v1.60: Müşteri kayıtları (fatura alıcıları). Aynı VKN / ad ikinci kez açılmaz (servis eşleştirir). extra: kullanıcının eklediği alanlar (JSON).
+    CREATE TABLE customers (
+      id          INTEGER PRIMARY KEY AUTOINCREMENT,
+      name        TEXT NOT NULL,
+      tax_office  TEXT,
+      tax_no      TEXT,
+      address     TEXT,
+      district    TEXT,
+      city        TEXT,
+      postal_code TEXT,
+      country     TEXT,
+      phone       TEXT,
+      email       TEXT,
+      web         TEXT,
+      note        TEXT,
+      extra       TEXT,
+      created_at  TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+      updated_at  TEXT
+    );
+    CREATE INDEX idx_customers_tax ON customers(tax_no);
+    CREATE INDEX idx_customers_name ON customers(name);
+    -- Faturanın müşteri kaydı ve başlık bilgileri (ETTN, senaryo, fatura tipi, özelleştirme no, oluşma zamanı, kampanya kodu, kargo …) JSON
+    ALTER TABLE invoices ADD COLUMN customer_id INTEGER;
+    ALTER TABLE invoices ADD COLUMN meta TEXT;
+    -- Ürün kartı: KDV oranı, depo ve kullanıcının eklediği alanlar (JSON)
+    ALTER TABLE products ADD COLUMN vat_rate REAL;
+    ALTER TABLE products ADD COLUMN depot TEXT;
+    ALTER TABLE products ADD COLUMN extra TEXT;
+    -- Fiyat geçmişi: eski fiyat silinmez. source: invoice (faturadan) | manual (ürün kartından)
+    CREATE TABLE product_prices (
+      id            INTEGER PRIMARY KEY AUTOINCREMENT,
+      product_id    INTEGER NOT NULL,
+      date          TEXT NOT NULL,
+      price         REAL NOT NULL,
+      currency_code TEXT,
+      qty           REAL,
+      invoice_id    INTEGER,
+      customer_id   INTEGER,
+      source        TEXT,
+      created_at    TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+      updated_at    TEXT
+    );
+    CREATE INDEX idx_product_prices_p ON product_prices(product_id, date);
+    CREATE INDEX idx_product_prices_inv ON product_prices(invoice_id);
+  `,
+});

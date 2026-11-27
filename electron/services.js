@@ -2201,7 +2201,22 @@ function createServices(db, { removeFile = () => {} } = {}) {
       const price = Number(it.price);
       if (!Number.isFinite(qty) || qty <= 0) throw new AppError('ERR_INVALID_QUANTITY');
       if (!Number.isFinite(price) || price < 0) throw new AppError('ERR_INVALID_AMOUNT');
-      out.push({ name, qty, unit: optText(it.unit), price, product_id: optId(it.product_id) });
+      const row = { name, qty, unit: optText(it.unit), price, product_id: optId(it.product_id) };
+      const code = optText(it.code === null || it.code === undefined ? '' : String(it.code));
+      if (code) row.code = code;
+      const depot = optText(it.depot === null || it.depot === undefined ? '' : String(it.depot));
+      if (depot) row.depot = depot;
+      if (it.vat !== undefined && it.vat !== null && it.vat !== '') {
+        const v = Number(it.vat);
+        if (!Number.isFinite(v) || v < 0 || v > 100) throw new AppError('ERR_INVALID_AMOUNT');
+        row.vat = v;
+      }
+      if (it.x && typeof it.x === 'object' && !Array.isArray(it.x)) {
+        const x = {};
+        for (const [k, v] of Object.entries(it.x)) { const s = optText(v === null || v === undefined ? '' : String(v)); if (s) x[String(k).slice(0, 40)] = s.slice(0, 500); }
+        if (Object.keys(x).length) row.x = x;
+      }
+      out.push(row);
     }
     if (!out.length) throw new AppError('ERR_INVOICE_ITEMS');
     return out;
@@ -2210,6 +2225,14 @@ function createServices(db, { removeFile = () => {} } = {}) {
     const r = (n) => roundCur(n, cur);
     const subtotal = r(items.reduce((s, it) => s + it.qty * it.price, 0));
     const disc = Math.min(subtotal, r(nonNegative(discount || 0)));
+    if (items.some((it) => it.vat !== undefined)) {
+      const k = subtotal > 0 ? (subtotal - disc) / subtotal : 0;
+      const rates = new Set();
+      let lt = 0;
+      for (const it of items) { const v = it.vat || 0; rates.add(v); lt += r((it.qty * it.price * k * v) / 100); }
+      lt = r(lt);
+      return { subtotal, discount: disc, tax_rate: rates.size === 1 ? [...rates][0] : 0, tax: lt, total: r(subtotal - disc + lt) };
+    }
     const rate = nonNegative(taxRate || 0);
     if (rate > 100) throw new AppError('ERR_INVALID_AMOUNT');
     const tax = r(((subtotal - disc) * rate) / 100);
@@ -2242,7 +2265,7 @@ function createServices(db, { removeFile = () => {} } = {}) {
     return payId;
   }
   function saveInvoice({ id, number, date, due_date, customer, customer_phone, customer_email, customer_address, customer_tax, currency, items,
-    discount, tax_rate, note, template, lang, record_cash = false, account_id, pay_amount }) {
+    discount, tax_rate, note, template, lang, record_cash = false, account_id, pay_amount, customer_id, customer_extra, meta, save_customer, save_products }) {
     const cur = required(currency);
     if (!db.get('SELECT code FROM currencies WHERE code = ?', [cur])) throw new AppError('ERR_INVALID_CURRENCY');
     const d = required(date);
@@ -2250,6 +2273,13 @@ function createServices(db, { removeFile = () => {} } = {}) {
     // Müşteri Kişiler listesinde varsa ona bağlanır; yoksa listeye eklenmez
     const personId = customer && customer.id ? Number(customer.id) : db.get('SELECT id FROM people WHERE lower(name) = lower(?)', [name])?.id ?? null;
     const its = invoiceItems(items);
+    // v1.60: alıcı müşteri listesine yazılır / güncellenir (VKN ya da ad eşleşirse aynı kayıt); kalemler ürün listesine bağlanır
+    let custId = optId(customer_id);
+    if (save_customer !== false) {
+      const ce = customer_extra && typeof customer_extra === 'object' ? customer_extra : {};
+      custId = saveCustomer({ ...ce, id: custId, name, phone: customer_phone, email: customer_email, address: customer_address, tax_no: customer_tax, mode: 'merge' }).id;
+    }
+    if (save_products !== false) linkInvoiceProducts(its, cur);
     const tt = invoiceTotals(its, discount, tax_rate, cur);
     const num = optText(number);
     const cols = [d, optText(due_date), name, optText(customer_phone), optText(customer_email), optText(customer_address), optText(customer_tax), personId,
@@ -2279,6 +2309,10 @@ function createServices(db, { removeFile = () => {} } = {}) {
         if (amt > 0) invoicePay(invId, { amount: amt, date: d, account_id });
       }
     }
+    db.run('UPDATE invoices SET customer_id = ? WHERE id = ?', [custId, invId]);
+    const mj = metaJson(meta);
+    if (mj !== undefined) db.run('UPDATE invoices SET meta = ? WHERE id = ?', [mj, invId]);
+    if (save_products !== false) recordInvoicePrices(invId, its, d, cur, custId);
     refreshInvoice(invId);
     return { id: invId, number: db.get('SELECT number FROM invoices WHERE id = ?', [invId]).number };
   }
@@ -2308,6 +2342,7 @@ function createServices(db, { removeFile = () => {} } = {}) {
     if (!inv) return { ok: true };
     for (const p of db.all('SELECT cash_transaction_id AS t FROM invoice_payments WHERE invoice_id = ?', [id])) deleteTx(p.t);
     db.run('DELETE FROM invoice_payments WHERE invoice_id = ?', [id]);
+    db.run('DELETE FROM product_prices WHERE invoice_id = ?', [id]);
     db.run('DELETE FROM invoices WHERE id = ?', [id]);
     return { ok: true };
   }
@@ -2317,6 +2352,168 @@ function createServices(db, { removeFile = () => {} } = {}) {
     if (!id || !db.get('SELECT id FROM cash_transactions WHERE id = ?', [id])) throw new AppError('ERR_NOT_FOUND');
     saveShamCash(id, p);
     return { ok: true };
+  }
+
+
+  // ---------- v1.60: Müşteriler, ürün kartı, fiyat geçmişi ----------
+  const CUST_COLS = ['name', 'tax_office', 'tax_no', 'address', 'district', 'city', 'postal_code', 'country', 'phone', 'email', 'web', 'note'];
+  // Ad karşılaştırması: büyük / küçük harf, noktalama ve boşluk farkı önemsiz (Türkçe harfler korunur)
+  const normKey = (s) => String(s || '').toLocaleLowerCase('tr').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+  const taxKey = (s) => String(s || '').replace(/\s+/g, '');
+  function extraJson(x) {
+    if (x === undefined) return undefined;
+    if (x === null || x === '') return null;
+    if (typeof x === 'string') { try { x = JSON.parse(x); } catch { return null; } }
+    if (!x || typeof x !== 'object' || Array.isArray(x)) return null;
+    const o = {};
+    for (const [k, v] of Object.entries(x)) {
+      const s = optText(v === null || v === undefined ? '' : String(v));
+      if (s) o[String(k).slice(0, 60)] = s.slice(0, 2000);
+    }
+    return Object.keys(o).length ? JSON.stringify(o) : null;
+  }
+  function findCustomer({ tax_no, name }) {
+    const tn = taxKey(tax_no);
+    if (tn) {
+      const r = db.get("SELECT id FROM customers WHERE replace(COALESCE(tax_no, ''), ' ', '') = ? ORDER BY id LIMIT 1", [tn]);
+      if (r) return r.id;
+    }
+    const nk = normKey(name);
+    if (!nk) return null;
+    for (const r of db.all('SELECT id, name, tax_no FROM customers ORDER BY id')) {
+      if (normKey(r.name) === nk && (!tn || !taxKey(r.tax_no))) return r.id;
+    }
+    return null;
+  }
+  // mode 'merge' (faturadan / PDF'den): eşleşen kayıtta yalnız dolu gelen alanlar yazılır, eldeki bilgi silinmez.
+  // mode 'full' (müşteri kartından): bütün alanlar formdaki gibi yazılır.
+  function saveCustomer(p = {}) {
+    const name = required(p.name, 'ERR_CUSTOMER_REQUIRED');
+    const merge = p.mode === 'merge';
+    let id = optId(p.id);
+    if (id && !db.get('SELECT id FROM customers WHERE id = ?', [id])) id = null;
+    if (!id && (merge || p.match !== false)) id = findCustomer({ tax_no: p.tax_no, name });
+    const vals = {};
+    for (const k of CUST_COLS) vals[k] = k === 'name' ? String(name).trim() : optText(p[k] === null || p[k] === undefined ? '' : String(p[k]));
+    let extra = extraJson(p.extra);
+    if (id) {
+      const old = db.get('SELECT * FROM customers WHERE id = ?', [id]);
+      if (merge) {
+        for (const k of CUST_COLS) if (!vals[k]) vals[k] = old[k];
+        if (extra !== undefined) {
+          let o = {};
+          try { o = JSON.parse(old.extra || '{}') || {}; } catch { o = {}; }
+          if (extra) Object.assign(o, JSON.parse(extra));
+          extra = extraJson(o);
+        } else extra = old.extra;
+      } else if (extra === undefined) extra = old.extra;
+      db.run(`UPDATE customers SET ${CUST_COLS.map((k) => `${k}=?`).join(', ')}, extra=?, updated_at=${now} WHERE id=?`, [...CUST_COLS.map((k) => vals[k]), extra ?? null, id]);
+    } else {
+      id = db.run(`INSERT INTO customers (${CUST_COLS.join(', ')}, extra, updated_at) VALUES (${CUST_COLS.map(() => '?').join(',')},?,${now})`,
+        [...CUST_COLS.map((k) => vals[k]), extra ?? null]).lastInsertRowid;
+    }
+    return { id };
+  }
+  // Faturası olan müşteri silinebilir: faturalar müşteri bilgisinin kopyasını taşır, bozulmaz (Silinenler kutusundan geri alınır)
+  function deleteCustomer({ id }) {
+    db.run('DELETE FROM customers WHERE id = ?', [id]);
+    return { ok: true };
+  }
+  // Eski faturalardaki alıcılar müşteri listesine aktarılır (aynı VKN / ad bir kez)
+  function importInvoiceCustomers() {
+    let n = 0;
+    for (const inv of db.all('SELECT id, customer_name, customer_phone, customer_email, customer_address, customer_tax FROM invoices WHERE customer_id IS NULL ORDER BY date, id')) {
+      if (!optText(inv.customer_name)) continue;
+      const before = db.get('SELECT COUNT(*) AS c FROM customers').c;
+      const cid = saveCustomer({ name: inv.customer_name, phone: inv.customer_phone, email: inv.customer_email, address: inv.customer_address, tax_no: inv.customer_tax, mode: 'merge' }).id;
+      if (db.get('SELECT COUNT(*) AS c FROM customers').c > before) n++;
+      db.run('UPDATE invoices SET customer_id = ? WHERE id = ?', [cid, inv.id]);
+    }
+    return { added: n };
+  }
+  // Fatura kalemi → ürün kaydı: önce ürün no, sonra stok kodu, sonra ad (ilk satır) eşleşir; yoksa yeni ürün açılır
+  function linkInvoiceProducts(its, cur) {
+    for (const it of its) {
+      const first = String(it.name).split('\n')[0].trim();
+      let pid = it.product_id && db.get('SELECT id FROM products WHERE id = ?', [it.product_id]) ? it.product_id : null;
+      if (!pid && it.code) pid = db.get('SELECT id FROM products WHERE code = ?', [it.code])?.id ?? null;
+      if (!pid) {
+        const nk = normKey(first);
+        for (const r of db.all('SELECT id, name FROM products ORDER BY id')) if (normKey(r.name) === nk) { pid = r.id; break; }
+      }
+      if (!pid) {
+        const rest = String(it.name).split('\n').slice(1).join('\n').trim();
+        const code = it.code && !db.get('SELECT id FROM products WHERE code = ?', [it.code]) ? it.code : null;
+        pid = saveProduct({ name: first || it.name, code, unit: it.unit || 'pcs', description: rest || null, sale_price: it.price, cost_currency: cur }).id;
+        db.run('UPDATE products SET vat_rate = ?, depot = ? WHERE id = ?', [it.vat ?? null, it.depot || null, pid]);
+      } else {
+        // eksik bilgiler tamamlanır (var olan bilgi değiştirilmez)
+        const p = db.get('SELECT code, vat_rate, depot FROM products WHERE id = ?', [pid]);
+        if (!p.code && it.code && !db.get('SELECT id FROM products WHERE code = ? AND id <> ?', [it.code, pid])) db.run('UPDATE products SET code = ? WHERE id = ?', [it.code, pid]);
+        if (p.vat_rate === null && it.vat !== undefined) db.run('UPDATE products SET vat_rate = ? WHERE id = ?', [it.vat, pid]);
+        if (!p.depot && it.depot) db.run('UPDATE products SET depot = ? WHERE id = ?', [it.depot, pid]);
+      }
+      it.product_id = pid;
+    }
+  }
+  // Satış fiyatı: ürünün para birimi uyuşuyorsa ürünün güncel fiyatı yazılır (maliyet varsa kâr yüzdesi de)
+  function setProductPrice(pid, price, cur) {
+    const p = db.get('SELECT cost_price, cost_currency FROM products WHERE id = ?', [pid]);
+    if (!p) return;
+    if (p.cost_currency && p.cost_currency !== cur && p.cost_price !== null) return;
+    const pct = p.cost_price > 0 ? (price / p.cost_price - 1) * 100 : null;
+    db.run(`UPDATE products SET sale_price = ?, cost_currency = ?, profit_pct = CASE WHEN ? IS NULL THEN profit_pct ELSE ? END, updated_at = ${now} WHERE id = ?`, [price, cur, pct, pct, pid]);
+  }
+  // Faturanın fiyatları geçmişe yazılır (fatura düzenlenirse kendi satırları yenilenir). Fatura, ürünün en yeni fiyat kaydıysa
+  // ürünün güncel satış fiyatı olur — eski tarihli bir faturayı düzenlemek güncel fiyatı geri götürmez.
+  function recordInvoicePrices(invId, its, date, cur, custId) {
+    db.run('DELETE FROM product_prices WHERE invoice_id = ?', [invId]);
+    const seen = new Set();
+    for (const it of its) {
+      if (!it.product_id) continue;
+      db.run(`INSERT INTO product_prices (product_id, date, price, currency_code, qty, invoice_id, customer_id, source, updated_at) VALUES (?,?,?,?,?,?,?,'invoice',${now})`,
+        [it.product_id, date, it.price, cur, it.qty, invId, custId || null]);
+      if (seen.has(it.product_id)) continue;
+      seen.add(it.product_id);
+      const newer = db.get('SELECT id FROM product_prices WHERE product_id = ? AND date > ? AND (invoice_id IS NULL OR invoice_id <> ?) LIMIT 1', [it.product_id, date, invId]);
+      if (!newer) setProductPrice(it.product_id, it.price, cur);
+    }
+  }
+  function metaJson(m) {
+    if (m === undefined) return undefined;
+    return extraJson(m);
+  }
+  // Ürün kartı (Fatura → Ürünler): ad, stok kodu, birim, fiyat + para birimi, KDV, depo, açıklama, özel alanlar
+  function saveProductCard(p = {}) {
+    const id = optId(p.id);
+    const empty = (v) => v === '' || v === null || v === undefined;
+    const price = empty(p.sale_price) ? null : nonNegative(p.sale_price);
+    const cur = optText(p.currency) || 'USD';
+    if (!db.get('SELECT code FROM currencies WHERE code = ?', [cur])) throw new AppError('ERR_INVALID_CURRENCY');
+    let vat = null;
+    if (!empty(p.vat_rate)) { vat = Number(p.vat_rate); if (!Number.isFinite(vat) || vat < 0 || vat > 100) throw new AppError('ERR_INVALID_AMOUNT'); }
+    let pid = id;
+    if (id) {
+      const old = db.get('SELECT * FROM products WHERE id = ?', [id]);
+      if (!old) throw new AppError('ERR_NOT_FOUND');
+      if (old.cost_price !== null && old.cost_currency && old.cost_currency !== cur && price !== null) throw new AppError('ERR_INVALID_CURRENCY');
+      const c = optText(p.code);
+      if (c && db.get('SELECT id FROM products WHERE code = ? AND id <> ?', [c, id])) throw new AppError('ERR_DUPLICATE_CODE');
+      db.run(`UPDATE products SET name=?, code=?, unit=?, description=?, vat_rate=?, depot=?, updated_at=${now} WHERE id=?`,
+        [required(p.name), c, optText(p.unit) || old.unit || 'pcs', optText(p.description), vat, optText(p.depot), id]);
+      if (p.extra !== undefined) db.run('UPDATE products SET extra = ? WHERE id = ?', [extraJson(p.extra), id]);
+      if (price !== null && (old.sale_price !== price || (old.cost_currency || cur) !== cur)) {
+        setProductPrice(id, price, cur);
+        db.run(`INSERT INTO product_prices (product_id, date, price, currency_code, source, updated_at) VALUES (?,?,?,?,'manual',${now})`, [id, today(), price, cur]);
+      } else if (price === null && old.sale_price !== null) {
+        db.run(`UPDATE products SET sale_price = NULL, updated_at = ${now} WHERE id = ?`, [id]);
+      }
+    } else {
+      pid = saveProduct({ name: p.name, code: p.code, unit: optText(p.unit) || 'pcs', description: p.description, sale_price: price, cost_currency: price === null ? null : cur }).id;
+      db.run('UPDATE products SET vat_rate = ?, depot = ?, extra = ? WHERE id = ?', [vat, optText(p.depot), extraJson(p.extra) ?? null, pid]);
+      if (price !== null) db.run(`INSERT INTO product_prices (product_id, date, price, currency_code, source, updated_at) VALUES (?,?,?,?,'manual',${now})`, [pid, today(), price, cur]);
+    }
+    return { id: pid };
   }
 
   // ---------- v1.52: Silinenler kutusu (30 gün) ve görevler ----------
@@ -2335,7 +2532,7 @@ function createServices(db, { removeFile = () => {} } = {}) {
     deleteCashCategory: 'cash_categories', deleteWallet: 'crypto_wallets', deleteInternetPayment: 'internet_payments', deleteInternet: 'internet_services',
     deleteMeter: 'electricity_meters', deleteReading: 'electricity_readings', deleteMaterialPlace: 'material_places', deleteNote: 'notes',
     deleteRecurringPayment: 'recurring_payments', deleteRecurringPlan: 'recurring_plans', deleteTask: 'tasks',
-    deleteInvoice: 'invoices', deleteInvoicePayment: 'invoice_payments',
+    deleteInvoice: 'invoices', deleteInvoicePayment: 'invoice_payments', deleteCustomer: 'customers',
   };
   const trashQi = (n) => `"${String(n).replace(/"/g, '""')}"`;
   const trashHash = (s) => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); };
@@ -2581,6 +2778,7 @@ function createServices(db, { removeFile = () => {} } = {}) {
     restoreTrash, purgeTrash, emptyTrash, purgeOldTrash,
     saveTask, setTaskStatus, deleteTask,
     saveInvoice, addInvoicePayment, deleteInvoicePayment, setInvoiceCancelled, deleteInvoice, setTxPayment,
+    saveCustomer, deleteCustomer, importInvoiceCustomers, saveProductCard,
   };
   const reads = { nextSerial: ({ type }) => ({ serial: SERIAL[type] ? nextSerial(type) : null }), productUnitCost, accountBalance: ({ id }) => ({ balance: accountBalance(id) }), latestRates: () => latestRates(), shareDefaults, listWallets, recentWalletTx, listWalletSwaps, swapCandidates };
 
