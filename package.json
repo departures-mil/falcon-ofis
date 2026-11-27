@@ -1,7 +1,7 @@
 {
   "name": "falcon-ofis",
   "productName": "Falcon Ofis",
-  "version": "1.59.2",
+  "version": "1.59.3",
   "description": "Falcon Ofis - kasa, stok, malzeme ve demirbaş takip programı",
   "author": "Falcon",
   "main": "electron/main.js",
