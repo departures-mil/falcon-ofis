@@ -208,6 +208,8 @@
       fxNone: 'Kayıtlı kur yok', fxMissing: 'Bu para birimi için kur yok — kuru yazın, fiyatlar hemen çevrilir.',
       fxHint: 'Para birimi değişince fiyatlar orijinal fiyattan bu kurla çevrilir. Ürün kayıtlarındaki fiyatlar değişmez.',
       fxDone: '{n} kalem {c} birimine çevrildi',
+      statusField: 'Ödeme durumu damgası', statusOn: 'Durum damgası', statusOff: 'Damgasız', statusFieldHint: 'Yalnız bu fatura için. Damgasızda «Ödendi / Ödenmedi / Kısmi ödeme» yazısı faturada görünmez.',
+      statusDefault: 'Yeni faturalarda ödeme durumu damgası (Ödendi / Ödenmedi) görünsün',
       impAllOff: 'Tümünü pasif yap', impAllOn: 'Tümünü aktif yap', impActive: '{a} / {b} aktif', impOffHint: 'Pasif ürünler faturaya ve ürün kayıtlarına girmez; silinmez, tekrar aktif yapılabilir.'
     },
     en: {
@@ -215,6 +217,8 @@
       fxNone: 'No saved rate', fxMissing: 'No rate for this currency — enter it and prices are converted at once.',
       fxHint: 'When the currency changes, prices are converted from their original price at this rate. Saved product prices are not changed.',
       fxDone: '{n} items converted to {c}',
+      statusField: 'Payment status stamp', statusOn: 'Status stamp', statusOff: 'No stamp', statusFieldHint: 'For this invoice only. Without the stamp, «Paid / Unpaid / Partly paid» is not shown on the invoice.',
+      statusDefault: 'Show the payment status stamp (Paid / Unpaid) on new invoices',
       impAllOff: 'Deactivate all', impAllOn: 'Activate all', impActive: '{a} / {b} active', impOffHint: 'Inactive items are left out of the invoice and the product records; they are not deleted and can be activated again.'
     },
     ar: {
@@ -222,6 +226,8 @@
       fxNone: 'لا يوجد سعر محفوظ', fxMissing: 'لا يوجد سعر لهذه العملة — أدخل السعر لتُحوَّل الأسعار فوراً.',
       fxHint: 'عند تغيير العملة تُحوَّل الأسعار من سعرها الأصلي بهذا السعر. أسعار المنتجات المحفوظة لا تتغير.',
       fxDone: 'تم تحويل {n} بند إلى {c}',
+      statusField: 'ختم حالة الدفع', statusOn: 'ختم الحالة', statusOff: 'بدون ختم', statusFieldHint: 'لهذه الفاتورة فقط. بدون الختم لا تظهر عبارة «مدفوعة / غير مدفوعة / مدفوعة جزئياً» على الفاتورة.',
+      statusDefault: 'إظهار ختم حالة الدفع (مدفوعة / غير مدفوعة) في الفواتير الجديدة',
       impAllOff: 'إلغاء تفعيل الكل', impAllOn: 'تفعيل الكل', impActive: '{a} / {b} مفعّل', impOffHint: 'البنود غير المفعّلة لا تدخل الفاتورة ولا سجلات المنتجات؛ لا تُحذف ويمكن تفعيلها مجدداً.'
     }
   };
@@ -482,8 +488,12 @@
   }
   // Fatura başına imza: şablon alanında saklanır ('falcon' = imzalı, 'falcon|ns' = imzasız) — şema değişmez, eşitlemeyle birlikte gider
   function tplOf(v) { var x = String(v || '').split('|')[0]; return PALETTE[x] ? x : 'falcon'; }
+  // şablon değeri: "<şablon>[|ns][|nd]" — ns: imzasız, nd: durum damgası (Ödendi / Ödenmedi / Kısmi) yok (v1.61.1)
+  function tplFlags(v, sign, status) { return tplOf(v) + (sign ? '' : '|ns') + (status ? '' : '|nd'); }
   function hasSign(v) { return String(v || '').split('|').indexOf('ns') < 1; }
-  function withSign(v, on) { return tplOf(v) + (on ? '' : '|ns'); }
+  function hasStatus(v) { return String(v || '').split('|').indexOf('nd') < 1; }
+  function withSign(v, on) { return tplFlags(v, on, hasStatus(v)); }
+  function withStatus(v, on) { return tplFlags(v, hasSign(v), on); }
   function invoiceHtml(inv, cfg, forPdf) {
     var lg = DOC[inv.lang] ? inv.lang : lang();
     var D = DOC[lg], LB = LBL[lg] || LBL.tr, rtl = lg === 'ar', cur = inv.currency_code, tpl = tplOf(inv.template), P = PALETTE[tpl], gib = tpl === 'efatura';
@@ -650,7 +660,7 @@
       'table.gm{width:100%;border-collapse:collapse;font-size:9pt}table.gm td{border:1px solid ' + P.line + ';padding:1.4mm 2.2mm}table.gm td:first-child{font-weight:700;width:38mm;background:#f3f5f8}' +
       '.g-bc{margin-top:3mm}.g-bc svg{width:100%;height:14mm;display:block}.g-bc .t{font-size:7pt;text-align:center;letter-spacing:.05em}' +
       '.g-ettn{padding:3mm 14mm 0;font-size:9pt}.g-st{margin-top:2mm}';
-    var stamp = '<span class="st ' + st + '">' + esc(D['st_' + st] || '') + '</span>';
+    var stamp = hasStatus(inv.template) ? '<span class="st ' + st + '">' + esc(D['st_' + st] || '') + '</span>' : '';
     var custBlock = '<b>' + esc(inv.customer_name) + '</b>' + custLines(gib).map(function (x) { return '<br>' + x; }).join('');
     var body;
     if (gib) {
@@ -940,12 +950,15 @@
           TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), tplOf(cur.template) === x); }));
         var sgCb = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withSign(cur.template, e.target.checked); render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } });
         sgCb.checked = hasSign(cur.template);
+        var sdCb = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withStatus(cur.template, e.target.checked); render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } });
+        sdCb.checked = hasStatus(cur.template);
         var lgSel = el('select', { onchange: function (e) { cur.lang = e.target.value; render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } },
           [['tr', 'langTr'], ['en', 'langEn'], ['ar', 'langAr']].map(function (x) { return opt(x[0], t(x[1]), (cur.lang || lang()) === x[0]); }));
         var zb = el('button', { type: 'button', class: 'btn small', text: t('zoomFull'), onclick: function () { zoom = zoom === 'fit' ? 'full' : 'fit'; zb.textContent = zoom === 'fit' ? t('zoomFull') : t('zoomFit'); fit(); } });
         var bar = el('div', { class: 'fat-pv-bar' }, [
           el('span', { class: 'field-label', text: t('template') }), tplSel, el('span', { class: 'field-label', text: t('lang') }), lgSel,
           el('label', { class: 'check fat-pv-sg' }, [sgCb, el('span', { text: t('signOn') })]),
+          el('label', { class: 'check fat-pv-sg' }, [sdCb, el('span', { text: t('statusOn') })]),
           el('span', { class: 'sp' }), opts.tag ? el('span', { class: 'fat-pv-tag', text: opts.tag }) : null, zb
         ]);
         var foot = [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } })];
@@ -1028,7 +1041,7 @@
           customer: inv ? inv.customer_name : '', customer_id: inv ? inv.customer_id || null : null, phone: inv ? inv.customer_phone || '' : '', email: inv ? inv.customer_email || '' : '',
           address: inv ? inv.customer_address || '' : '', tax_no: inv ? inv.customer_tax || '' : '',
           currency: inv ? inv.currency_code : (CUR.indexOf(dft.currency) >= 0 ? dft.currency : 'USD'),
-          template: inv ? inv.template || 'falcon' : (dft.template || 'falcon'), lang: inv ? inv.lang || lang() : (dft.lang || lang()),
+          template: inv ? inv.template || 'falcon' : withStatus(dft.template || 'falcon', dft.status_stamp !== false), lang: inv ? inv.lang || lang() : (dft.lang || lang()),
           items: inv ? jparse(inv.items, []) : [newItem()],
           discount: inv ? inv.discount || '' : '', tax_rate: inv ? inv.tax_rate || '' : (dft.tax_rate != null && dft.tax_rate !== '' ? dft.tax_rate : 0),
           note: inv ? inv.note || '' : '', cash: false, account_id: '', pay_amount: '',
@@ -1144,6 +1157,15 @@
           });
         };
         drawSg();
+        var sdBox = el('div', { class: 'fat-seg' });
+        var drawSd = function () {
+          var on = hasStatus(st.template);
+          sdBox.innerHTML = '';
+          [[true, '▣ ' + t('statusOn')], [false, '⊘ ' + t('statusOff')]].forEach(function (x) {
+            sdBox.appendChild(el('button', { type: 'button', class: x[0] === on ? 'on' : '', text: x[1], onclick: function () { st.template = withStatus(st.template, x[0]); drawSd(); } }));
+          });
+        };
+        drawSd();
         var lgSel = el('select', { onchange: function (e) { st.lang = e.target.value; } }, [['tr', 'langTr'], ['en', 'langEn'], ['ar', 'langAr']].map(function (x) { return opt(x[0], t(x[1]), st.lang === x[0]); }));
 
         // ---- v1.61: döviz çevirisi ----
@@ -1377,6 +1399,7 @@
         ]).concat(metaFields).concat([
           field(t('currency'), curSel), field(t('template'), tplSel), field(t('lang'), lgSel), fxBox,
           field(t('signField'), sgBox, { span: 2, group: true, hint: t('signFieldHint') }),
+          field(t('statusField'), sdBox, { span: 2, group: true, hint: t('statusFieldHint') }),
           el('div', { class: 'field span-2' }, [el('span', { class: 'field-label', text: t('items') }), el('div', { class: 'fat-items-wrap' }, [itemsTable]),
             el('div', null, [el('button', { type: 'button', class: 'btn small', text: t('addItem'), onclick: function () { st.items.push(newItem()); drawItems(); var ins = tbody.querySelectorAll('tr:last-child textarea'); if (ins[0]) ins[0].focus(); } })])]),
           field(t('discount'), (discIn = inpS('discount', { type: 'number', step: 'any', min: '0', dir: 'ltr', after: function () { st.discFx = null; recalc(); } }))),
@@ -1447,7 +1470,7 @@
           nextNo().then(function (no) {
             openPreview(draftInv(no), {
               tag: '✎ ' + t('previewDraft'),
-              onChange: function (tp, lg) { st.template = tp; st.lang = lg; tplSel.value = tplOf(tp); lgSel.value = lg; drawSg(); },
+              onChange: function (tp, lg) { st.template = tp; st.lang = lg; tplSel.value = tplOf(tp); lgSel.value = lg; drawSg(); drawSd(); },
               extra: function (getM) {
                 return [
                   el('button', { type: 'button', class: 'btn', text: t('save'), onclick: function () { getM().close(); submit(false, b1); } }),
@@ -1927,6 +1950,7 @@
         var dCur = el('select', { onchange: function (e) { d.currency = e.target.value; } }, CUR.map(function (x) { return opt(x, x + ' · ' + SYM[x], d.currency === x); }));
         var dTax = el('input', { type: 'number', step: 'any', min: '0', max: '100', dir: 'ltr', value: String(d.tax_rate || 0), oninput: function (e) { d.tax_rate = num(e.target.value); } });
         var dTpl = el('select', { onchange: function (e) { d.template = e.target.value; } }, TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), d.template === x); }));
+        var dSd = el('input', { type: 'checkbox', onchange: function (e) { d.status_stamp = e.target.checked; } }); dSd.checked = d.status_stamp !== false;
         var dLg = el('select', { onchange: function (e) { d.lang = e.target.value; } }, [['tr', 'langTr'], ['en', 'langEn'], ['ar', 'langAr']].map(function (x) { return opt(x[0], t(x[1]), d.lang === x[0]); }));
         var posSel = el('select', { onchange: function (e) { c.info_pos = e.target.value; } }, [['top', 'sPosTop'], ['bottom', 'sPosBottom'], ['both', 'sPosBoth']].map(function (x) { return opt(x[0], t(x[1]), (c.info_pos || 'both') === x[0]); }));
         drawFF();
@@ -1954,7 +1978,7 @@
             el('div', { class: 'span-2 fat-chks' }, [chk('qr', t('layQr')), chk('barcode', t('layBarcode'))])
           ]),
           el('h3', { class: 'section-title', style: 'margin-top:16px', text: t('sDefaults') }),
-          el('div', { class: 'form' }, [field(t('currency'), dCur), field(t('taxRate'), dTax, { hint: t('dVatHint') }), field(t('template'), dTpl), field(t('lang'), dLg),
+          el('div', { class: 'form' }, [field(t('currency'), dCur), field(t('taxRate'), dTax, { hint: t('dVatHint') }), field(t('template'), dTpl), field(t('lang'), dLg), el('label', { class: 'check span-2' }, [dSd, el('span', { text: t('statusDefault') })]),
             field(fLabel('meta', { k: 'scenario' }, lang()), el('input', { value: d.scenario || '', list: 'fat-dl-sc', oninput: function (e) { d.scenario = e.target.value; } })),
             field(fLabel('meta', { k: 'inv_type' }, lang()), el('input', { value: d.inv_type || '', list: 'fat-dl-it', oninput: function (e) { d.inv_type = e.target.value; } })),
             field(fLabel('meta', { k: 'customization' }, lang()), el('input', { value: d.customization || '', dir: 'ltr', oninput: function (e) { d.customization = e.target.value; } })),
@@ -1991,5 +2015,5 @@
   }
 
   if (document.head) style(); else document.addEventListener('DOMContentLoaded', style);
-  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.61.0' };
+  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.61.1' };
 })();

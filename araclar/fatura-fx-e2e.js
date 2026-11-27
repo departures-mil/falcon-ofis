@@ -97,6 +97,13 @@ fs.mkdirSync(OUT, { recursive: true });
   await page.waitForSelector('.fat-pv-host', { timeout: 10000 });
   await page.waitForTimeout(800);
   await shot('3-onizleme');
+  // v1.61.1: durum damgası (Ödenmedi) kaldırılabilir
+  const hasSt = () => page.evaluate(() => !!document.querySelector('.fat-pv-host').shadowRoot.querySelector('.st'));
+  assert.strictEqual(await hasSt(), true, 'damga varsayılan açık');
+  await page.locator('.fat-pv-bar label', { hasText: 'Durum damgası' }).locator('input').uncheck();
+  await page.waitForTimeout(300);
+  assert.strictEqual(await hasSt(), false, 'damga kaldırıldı');
+  await shot('3b-onizleme-damgasiz');
   await page.locator('.fat-modal').last().locator('.modal-footer button', { hasText: /^Kaydet$/ }).click();
   await page.waitForTimeout(1200);
   const db = await page.evaluate(async () => {
@@ -107,6 +114,7 @@ fs.mkdirSync(OUT, { recursive: true });
   console.log('kayıt', inv.currency_code, inv.total, items.map((x) => [x.price, x.fx]), meta.fx_rate, db.prod);
   assert.strictEqual(inv.currency_code, 'USD');
   assert.deepStrictEqual(items[0].fx, { p: 420, c: 'TRY' });
+  assert.ok(/\|nd/.test(inv.template), 'damgasız kaydedildi: ' + inv.template);
   assert.strictEqual(items[1].fx, undefined, 'elle fiyat → fx yok');
   assert.ok(/1 USD = 40[.,]00 TRY/.test(meta.fx_rate), 'meta kur: ' + meta.fx_rate);
   const sensor = db.prod.find((p) => p.name === 'Kayıtlı Sensör');

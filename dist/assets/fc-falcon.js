@@ -15,6 +15,11 @@
   var APP = 'falcon-ofis', LANGS = ['tr', 'en', 'ar'];
 
   var NEWS = {
+    '1.61.1': {
+      tr: "- Fatura: «Ödendi / Ödenmedi / Kısmi ödeme» damgası kaldırılabilir. Düzenleyicide «Ödeme durumu damgası: Durum damgası / Damgasız», önizlemede «Durum damgası» kutusu var. Fatura ayarlarından yeni faturalar için varsayılanı seçebilirsiniz.",
+      en: "- Invoice: the «Paid / Unpaid / Partly paid» stamp can be removed. The editor has «Payment status stamp: Status stamp / No stamp» and the preview has a «Status stamp» box. The default for new invoices is set in the invoice settings.",
+      ar: "- الفاتورة: يمكن إزالة ختم «مدفوعة / غير مدفوعة / مدفوعة جزئياً». في المحرر خيار «ختم حالة الدفع: ختم الحالة / بدون ختم»، وفي المعاينة خانة «ختم الحالة». ويُحدَّد الإعداد الافتراضي للفواتير الجديدة من إعدادات الفاتورة."
+    },
     '1.61.0': {
       tr: "- Fatura: para birimi değişince bütün fiyatlar o birime çevrilir (USD, TL, Suriye lirası arasında her yönde). Çeviri her seferinde orijinal fiyattan yapılır; ilk para birimine dönünce fiyatlar aynen geri gelir.\n- Kur internetten alınır, internet yoksa son kayıtlı kur kullanılır. «Döviz kuru» kutusundan kuru elle düzeltebilirsiniz. Kullanılan kur faturaya ve PDF'e «Döviz Kuru: 1 USD = … TRY» olarak yazılır.\n- Ürün kayıtlarındaki fiyatlar değişmez; kayıtlı bir ürünü başka para birimindeki faturaya eklediğinizde fiyatı otomatik çevrilir.\n- PDF'den doldur: «Tümünü pasif yap» / «Tümünü aktif yap» düğmeleri ve tek tek aç/kapa. Pasif ürünler faturaya ve ürün kayıtlarına girmez, silinmez.",
       en: "- Invoice: when the currency changes, all prices are converted to it (USD, TRY, Syrian pound, in every direction). Each conversion starts from the original price; switching back to the first currency restores the prices exactly.\n- The rate is fetched from the internet; offline the last saved rate is used. You can correct it in the «Exchange rate» box. The rate used is printed on the invoice and PDF as «Exchange Rate: 1 USD = … TRY».\n- Saved product prices are not changed; a saved product added to an invoice in another currency is converted automatically.\n- Fill from PDF: «Deactivate all» / «Activate all» buttons and per-line toggles. Inactive items are left out of the invoice and the product records and are not deleted.",
