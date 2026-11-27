@@ -64,7 +64,7 @@ fs.mkdirSync(OUT, { recursive: true });
   assert.deepStrictEqual(await prices(), ['420', '84.5', '840'], 'TL fiyatlar');
   const discIn = page.locator('.fat-modal .field', { hasText: /^İndirim/ }).locator('input');
   await discIn.fill('42');
-  const curSel = page.locator('.fat-modal .field', { hasText: 'Para birimi' }).locator('select');
+  const curSel = page.locator('.fat-modal .field', { hasText: /^Para birimi/ }).locator('select');
   // 2) USD: hepsi çevrilir
   await curSel.selectOption('USD');
   await page.waitForTimeout(500);
@@ -173,10 +173,21 @@ fs.mkdirSync(OUT, { recursive: true });
   await page.click('.fat-imp-t tbody tr:nth-child(2) input[type=checkbox]');
   assert.ok(/1 \/ 3 aktif/.test(await page.textContent('.fat-imp-bulk')));
   await shot('4-ice-aktar-pasif');
+  // v1.61.4: PDF TL, fatura USD → aktarırken çevrilir
+  await page.locator('.fat-modal .fat-fx-cv select').nth(1).selectOption('USD');
   await page.click('button:has-text("Faturaya aktar")');
   await page.waitForTimeout(600);
   const names = await page.$$eval('.fat-items tbody textarea.nm', (xs) => xs.map((x) => x.value));
   assert.deepStrictEqual(names, ['P2'], 'yalnız aktif kalem: ' + names);
+  await page.waitForTimeout(500);
+  assert.deepStrictEqual(await prices(), ['2.381'], 'PDF TL fiyatı USD’ye çevrildi');
+  // kur kutusundan tek tuş: fiyat TL yazıldı, fatura USD → hepsini USD'ye çevir
+  await page.fill('.fat-items tbody tr:nth-child(1) input.p', '84');
+  await page.locator('.fat-fx .fat-fx-cv select').selectOption('TRY');
+  await page.click('.fat-fx .fat-fx-cv button');
+  await page.waitForTimeout(300);
+  assert.deepStrictEqual(await prices(), ['2'], 'tek tuş çeviri');
+  await page.evaluate(() => document.querySelector('.fat-fx').scrollIntoView({ block: 'center' }));
   await shot('5-yalniz-aktif');
   // arayüz İngilizce / Arapça metinler
   await app.close();

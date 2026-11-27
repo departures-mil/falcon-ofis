@@ -238,6 +238,8 @@
       fxNone: 'Kayıtlı kur yok', fxMissing: 'Bu para birimi için kur yok — kuru yazın, fiyatlar hemen çevrilir.',
       fxHint: 'Para birimi değişince fiyatlar orijinal fiyattan bu kurla çevrilir. Ürün kayıtlarındaki fiyatlar değişmez.',
       fxDone: '{n} kalem {c} birimine çevrildi',
+      fxFromLbl: 'Fiyatlar şu birimde girildiyse:', fxConvertTo: 'Hepsini {c} birimine çevir',
+      impSrcCur: 'PDF\'teki fiyatların para birimi', impDstCur: 'Fatura para birimi', impCurHint: 'Farklı seçerseniz bütün fiyatlar aktarılırken güncel kurla çevrilir (orijinal fiyat saklanır).',
       statusField: 'Ödeme durumu damgası', statusOn: 'Durum damgası', statusOff: 'Damgasız', statusFieldHint: 'Yalnız bu fatura için. Damgasızda «Ödendi / Ödenmedi / Kısmi ödeme» yazısı faturada görünmez.',
       statusDefault: 'Yeni faturalarda ödeme durumu damgası (Ödendi / Ödenmedi) görünsün',
       vatField: 'KDV', vatOn: 'KDV\'li', vatOff: 'KDV\'siz', vatFieldHint: 'Yalnız bu fatura için. KDV\'sizde KDV oranı / tutarı sütunları ve toplamdaki KDV satırları faturada hiç görünmez, KDV hesaplanmaz.',
@@ -250,6 +252,8 @@
       fxNone: 'No saved rate', fxMissing: 'No rate for this currency — enter it and prices are converted at once.',
       fxHint: 'When the currency changes, prices are converted from their original price at this rate. Saved product prices are not changed.',
       fxDone: '{n} items converted to {c}',
+      fxFromLbl: 'If the prices were entered in:', fxConvertTo: 'Convert all to {c}',
+      impSrcCur: 'Currency of the prices in the PDF', impDstCur: 'Invoice currency', impCurHint: 'If different, all prices are converted at the current rate while importing (the original price is kept).',
       statusField: 'Payment status stamp', statusOn: 'Status stamp', statusOff: 'No stamp', statusFieldHint: 'For this invoice only. Without the stamp, «Paid / Unpaid / Partly paid» is not shown on the invoice.',
       statusDefault: 'Show the payment status stamp (Paid / Unpaid) on new invoices',
       vatField: 'VAT', vatOn: 'With VAT', vatOff: 'No VAT', vatFieldHint: 'For this invoice only. Without VAT, the VAT rate / amount columns and the VAT lines in the totals are not shown at all and no VAT is calculated.',
@@ -262,6 +266,8 @@
       fxNone: 'لا يوجد سعر محفوظ', fxMissing: 'لا يوجد سعر لهذه العملة — أدخل السعر لتُحوَّل الأسعار فوراً.',
       fxHint: 'عند تغيير العملة تُحوَّل الأسعار من سعرها الأصلي بهذا السعر. أسعار المنتجات المحفوظة لا تتغير.',
       fxDone: 'تم تحويل {n} بند إلى {c}',
+      fxFromLbl: 'إذا أُدخلت الأسعار بعملة:', fxConvertTo: 'تحويل الكل إلى {c}',
+      impSrcCur: 'عملة الأسعار في ملف PDF', impDstCur: 'عملة الفاتورة', impCurHint: 'عند اختيار عملة مختلفة تُحوَّل جميع الأسعار بسعر الصرف الحالي أثناء الاستيراد (يُحفظ السعر الأصلي).',
       statusField: 'ختم حالة الدفع', statusOn: 'ختم الحالة', statusOff: 'بدون ختم', statusFieldHint: 'لهذه الفاتورة فقط. بدون الختم لا تظهر عبارة «مدفوعة / غير مدفوعة / مدفوعة جزئياً» على الفاتورة.',
       statusDefault: 'إظهار ختم حالة الدفع (مدفوعة / غير مدفوعة) في الفواتير الجديدة',
       vatField: 'ضريبة القيمة المضافة', vatOn: 'مع الضريبة', vatOff: 'بدون ضريبة', vatFieldHint: 'لهذه الفاتورة فقط. بدون الضريبة لا تظهر أعمدة نسبة الضريبة ومبلغها ولا أسطر الضريبة في الإجمالي، ولا تُحتسب الضريبة.',
@@ -841,6 +847,7 @@
       '.fat-imp-ms{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px 14px}.fat-imp-m{display:flex;gap:6px;align-items:center;font-size:13px}.fat-imp-m b{overflow-wrap:anywhere}' +
       '.fat-fx{border:1px solid var(--border,#ffffff1f);border-radius:12px;padding:10px 12px}.fat-fx-h{display:flex;align-items:center;gap:8px;margin-bottom:6px}.fat-fx-h .sp{flex:1}' +
       '.fat-fx-r{display:flex;flex-wrap:wrap;gap:10px 18px}.fat-fx-i{display:flex;align-items:center;gap:6px;font-weight:600;white-space:nowrap}.fat-fx-i input{width:130px}.fat-fx-i input.bad{border-color:#e5484d}' +
+      '.fat-fx-cv{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}.fat-fx-cv select{width:auto;min-width:120px}' +
       '.fat-imp-bulk{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:4px 0 8px}.fat-imp-bulk .sp{flex:1}.fat-imp-t tr.off td{opacity:.45}.fat-imp-t tr.off td:first-child{opacity:1}' +
       '.fat-imp-t .nm2{min-width:240px}.fat-imp-t .cd{width:140px}.fat-imp-t .q{width:70px}.fat-imp-t .u{width:64px}.fat-imp-t .p{width:100px}.fat-imp-t .v{width:56px}.fat-imp-sel{max-width:260px}' +
       '.fat-click{cursor:pointer}.fat-hist{margin-top:14px}.fat-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}.fat-chks{display:flex;gap:18px;flex-wrap:wrap}' +
@@ -1202,7 +1209,7 @@
           }
           return field(fLabel('meta', f, lang()), x, f.k === 'number' ? { hint: t('invNoHint') } : null);
         });
-        var curSel = el('select', { onchange: function (e) { var old = st.currency; st.currency = e.target.value; switchCurrency(old, st.currency); drawCash(); } }, CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], st.currency === c); }));
+        var curSel = el('select', { onchange: function (e) { var old = st.currency; st.currency = e.target.value; switchCurrency(old, st.currency); drawFx(); drawCash(); } }, CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], st.currency === c); }));
         var tplSel = el('select', { onchange: function (e) { st.template = [e.target.value].concat(tplFlagList(st.template)).join('|'); } }, TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), tplOf(st.template) === x); }));
         var sgBox = el('div', { class: 'fat-seg' });
         var drawSg = function () {
@@ -1298,6 +1305,15 @@
           // internetten güncel kur (oturumda bir kez); kur değiştiyse fiyatlar orijinalden yeniden çevrilir
           if (!FX.fetched) fetchFx().then(function (ch) { if (ch) fxApply(true); });
         }
+        // v1.61.4: fiyatlar başka para birimindeyse (ör. PDF'ten TL geldi, fatura USD) tek tuşla çevrilir
+        var fxFrom = st.currency === 'TRY' ? 'USD' : 'TRY';
+        function convertFrom(src) {
+          if (!src || src === st.currency) return;
+          st.items.forEach(function (it) { if (!it.fx && it.price !== '' && it.price != null && num(it.price) !== 0) it.fx = { p: num(it.price), c: src }; });
+          if (!st.discFx && num(st.discount) > 0) st.discFx = { p: num(st.discount), c: src };
+          fxApply(false);
+          if (!FX.fetched) fetchFx().then(function (ch) { if (ch) fxApply(true); });
+        }
         function drawFx(miss) {
           fxBox.innerHTML = '';
           var head = el('div', { class: 'fat-fx-h' }, [el('span', { class: 'field-label', text: t('fxTitle') }), el('span', { class: 'sp' }),
@@ -1311,13 +1327,18 @@
             row.appendChild(el('label', { class: 'fat-fx-i' }, [el('span', { text: '1 USD =' }), x, el('span', { text: c }), el('span', { dir: 'rtl', text: SYM[c] })]));
           });
           fxBox.appendChild(row);
+          var srcSel = el('select', { onchange: function (e) { fxFrom = e.target.value; } }, CUR.filter(function (c) { return c !== st.currency; }).map(function (c) { return opt(c, c + ' · ' + SYM[c], fxFrom === c); }));
+          if (fxFrom === st.currency) fxFrom = srcSel.value;
+          fxBox.appendChild(el('div', { class: 'fat-fx-cv' }, [el('span', { text: t('fxFromLbl') }), srcSel,
+            el('button', { type: 'button', class: 'btn small primary', text: '⇄ ' + t('fxConvertTo', { c: st.currency }), onclick: function () { convertFrom(srcSel.value); } })]));
           var hasMan = Object.keys(FX.man).length > 0;
           var srcTxt = hasMan ? t('fxManual') : !FX.at ? t('fxNone') : (FX.online ? t('fxOnline') : t('fxStored')) + ' · ' + dmy(FX.at) + (FX.at.length > 10 ? ' ' + (FX.online ? new Date(FX.at).toTimeString().slice(0, 5) : FX.at.slice(11, 16)) : '');
           fxBox.appendChild(el('div', { class: 'field-hint' }, [el('b', { text: srcTxt }), el('span', { text: ' — ' + t('fxHint') })]));
           if (miss) fxBox.appendChild(el('div', { class: 'notice error small', text: t('fxMissing') }));
         }
         var discIn = null;
-        loadFx().then(function () { drawFx(); });
+        var pdfFrom = st._fxFrom; delete st._fxFrom;
+        loadFx().then(function () { drawFx(); if (pdfFrom && pdfFrom !== st.currency) convertFrom(pdfFrom); });
         drawFx();
 
         // ---- kalemler ----
@@ -1672,6 +1693,11 @@
         return o;
       });
       var cur = CUR.indexOf(r.currency) >= 0 ? r.currency : '';
+      // v1.61.4: PDF'teki fiyatların para birimi (okunamadıysa TRY) ve faturanın para birimi; farklıysa fiyatlar aktarılırken çevrilir
+      var srcCur = cur || 'TRY', dstCur = srcCur;
+      var dstSel = el('select', { onchange: function (e) { dstCur = e.target.value; } }, CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], dstCur === c); }));
+      var srcSel = el('select', { onchange: function (e) { srcCur = e.target.value; } }, CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], srcCur === c); }));
+      var curRow = el('div', { class: 'fat-fx-cv' }, [el('span', { text: t('impSrcCur') }), srcSel, el('span', { text: '→ ' + t('impDstCur') }), dstSel]);
       // v1.61.2: çevrimdışı teyit — farklı satırlar işaretlenir
       var ck = r.check || null, diffRows = {};
       if (ck && ck.status === 'diff') ck.diffs.forEach(function (d) { if (d.f === 'item') diffRows[d.i] = 1; });
@@ -1745,7 +1771,7 @@
         mRows.length ? el('h3', { class: 'section-title', text: t('secInfo') }) : null,
         mRows.length ? el('div', { class: 'fat-imp-ms' }, mRows) : null,
         mRows.length ? el('div', { class: 'field-hint', text: t('impMetaHint') }) : null,
-        el('h3', { class: 'section-title', text: t('items') + ' (' + rows.length + ')' }), bulk, itTable, el('div', { class: 'field-hint', text: t('impOffHint') }),
+        el('h3', { class: 'section-title', text: t('items') + ' (' + rows.length + ')' }), curRow, el('div', { class: 'field-hint', text: t('impCurHint') }), bulk, itTable, el('div', { class: 'field-hint', text: t('impOffHint') }),
         expect != null ? el('div', { class: 'fat-imp-st ' + (chk ? 'ok' : 'warn'), text: (chk ? '✓ ' : '⚠ ') + t('impTotals', { a: fmt(calc, cur || 'TRY'), b: fmt(expect, cur || 'TRY') }) }) : null
       ];
       drawC();
@@ -1767,7 +1793,8 @@
           if (mSel.date && r.meta.date) data.date = r.meta.date;
           if (mSel.number && r.meta.number) data.number = r.meta.number;
           if (mSel.due_date && r.meta.due_date) data.due_date = r.meta.due_date;
-          if (cur) data.currency = cur;
+          data.currency = dstCur;
+          if (srcCur !== dstCur) data._fxFrom = srcCur;
           m.close(); done(data);
         } })
       ], 'xwide');
@@ -2146,5 +2173,5 @@
   }
 
   if (document.head) style(); else document.addEventListener('DOMContentLoaded', style);
-  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.61.3' };
+  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.61.4' };
 })();
