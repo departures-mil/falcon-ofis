@@ -1,10 +1,10 @@
 {
- "version": "1.59.4",
- "notes": "- Fatura başına imza: «Yeni fatura» / düzenleme penceresinde «✍ İmza ekle» ya da «⊘ İmzasız» seçilir; önizleme çubuğunda da aç/kapa vardır. İmzasız faturada imza alanı boş kalır, elle imzalanabilir. Seçim yalnız o faturaya uygulanır ve faturayla birlikte eşitlenir.\n- Yeni standart Falcon logosu: «CTI» yazısı kaldırıldı; faturalarda artık varsayılan olarak bu logo kullanılır.\n- Fatura ayarları → Logo: «Falcon (standart)», «Falcon CTI (eski)» ya da «Kendi logom» seçilebilir.\n- Fatura kalemlerinde uzun ürün adı: Shift+Enter ile alt satıra geçilir, kutu yazıya göre büyür ve tüm metin tek kutuda görünür (Enter miktara geçer). PDF'te ilk satır kalın, alttaki özellik satırları aynen basılır.\n- Kayıtlı ürünler ▾ düğmesiyle ya da yazarken açılan listeden seçilir.",
- "size": 3071468,
- "sha256": "74c649a357bf19b6940443bd3514f65f362c4632b5e87a04fae619d7e1efe15b",
- "sig": "MEUCIEt2ee2ZEqP6rEpD3V6g4xQYq1j0lQ8Pgl/UY0P2Je/QAiEA64UQZu3c5Vsw1y58whep4Mau8V8Vs4s1F2dpO797ah4=",
- "file": "telefon-1.59.4.fopk",
+ "version": "1.60.0",
+ "notes": "Fatura: PDF'den doldur (yapay zeka + çevrimdışı), Müşteriler ve Ürünler sekmeleri, yeni standart sütunlar (Depo, Stok Kodu, KDV Oranı/Tutarı), fatura bilgileri (ETTN, Senaryo, Fatura Tipi…), modüler fatura düzeni, e-Fatura şablonu, QR ve barkod.",
+ "size": 3658060,
+ "sha256": "ee020ab0f74fefe8c9bec0d849fbf4bee69df2804c60fa3fffb0df39918ee23f",
+ "sig": "MEYCIQDdp1ZPTXZad/DLrOJaRRdGw5gYO1esS3Q37z09GPvvDwIhAPjESSoNo0MgzNdberMGCPUXPpJ4ayNog1P6rTlTiVgD",
+ "file": "telefon-1.60.0.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-27T16:25:15.347Z"
+ "publishedAt": "2026-11-27T17:22:40.397Z"
 }
