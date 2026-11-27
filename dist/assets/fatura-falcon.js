@@ -28,7 +28,7 @@
       editInv: 'Faturayı düzenle', invNo: 'Fatura no', invNoHint: 'Boş bırakılırsa otomatik verilir',
       cName: 'Müşteri adı', cPhone: 'Telefon', cEmail: 'E-posta', cAddress: 'Adres', cTax: 'Vergi / kimlik no',
       currency: 'Para birimi', template: 'Şablon', lang: 'Fatura dili',
-      items: 'Ürün / hizmet kalemleri', itemName: 'Ürün / hizmet', itemNameHint: 'Shift+Enter: alt satır · Enter: miktara geç', itemPick: 'Kayıtlı ürünler', qty: 'Miktar', unit: 'Birim', price: 'Birim fiyat', line: 'Tutar',
+      items: 'Ürün / hizmet kalemleri', itemName: 'Ürün / hizmet', signField: 'İmza', signOn: 'İmza ekle', signOff: 'İmzasız', signFieldHint: 'Yalnız bu fatura için. İmzasızda imza alanı boş kalır (elle imzalanabilir).', itemNameHint: 'Shift+Enter: alt satır · Enter: miktara geç', itemPick: 'Kayıtlı ürünler', qty: 'Miktar', unit: 'Birim', price: 'Birim fiyat', line: 'Tutar',
       addItem: '+ Kalem ekle', removeItem: 'Kalemi sil', discount: 'İndirim', taxRate: 'Vergi oranı (%)', note: 'Not',
       subtotal: 'Ara toplam', tax: 'Vergi', grand: 'Genel toplam',
       cashTitle: 'Gelir kaydı', cashYes: 'Kasaya giriş yap', cashNo: 'Kasaya giriş yapma (tahsil edilmedi)',
@@ -62,7 +62,7 @@
       editInv: 'Edit invoice', invNo: 'Invoice no', invNoHint: 'Assigned automatically if left empty',
       cName: 'Customer name', cPhone: 'Phone', cEmail: 'E-mail', cAddress: 'Address', cTax: 'Tax / ID no',
       currency: 'Currency', template: 'Template', lang: 'Invoice language',
-      items: 'Products / services', itemName: 'Product / service', itemNameHint: 'Shift+Enter: new line · Enter: go to quantity', itemPick: 'Saved products', qty: 'Qty', unit: 'Unit', price: 'Unit price', line: 'Amount',
+      items: 'Products / services', itemName: 'Product / service', signField: 'Signature', signOn: 'Add signature', signOff: 'No signature', signFieldHint: 'For this invoice only. Without a signature the signature box is left blank (can be signed by hand).', itemNameHint: 'Shift+Enter: new line · Enter: go to quantity', itemPick: 'Saved products', qty: 'Qty', unit: 'Unit', price: 'Unit price', line: 'Amount',
       addItem: '+ Add line', removeItem: 'Remove line', discount: 'Discount', taxRate: 'Tax rate (%)', note: 'Note',
       subtotal: 'Subtotal', tax: 'Tax', grand: 'Grand total',
       cashTitle: 'Income record', cashYes: 'Post to cash box', cashNo: 'Do not post to cash (not collected)',
@@ -96,7 +96,7 @@
       editInv: 'تعديل الفاتورة', invNo: 'رقم الفاتورة', invNoHint: 'يُعطى تلقائياً إذا تُرك فارغاً',
       cName: 'اسم العميل', cPhone: 'الهاتف', cEmail: 'البريد الإلكتروني', cAddress: 'العنوان', cTax: 'الرقم الضريبي / الهوية',
       currency: 'العملة', template: 'القالب', lang: 'لغة الفاتورة',
-      items: 'المنتجات / الخدمات', itemName: 'المنتج / الخدمة', itemNameHint: 'Shift+Enter: سطر جديد · Enter: الانتقال إلى الكمية', itemPick: 'المنتجات المحفوظة', qty: 'الكمية', unit: 'الوحدة', price: 'سعر الوحدة', line: 'المبلغ',
+      items: 'المنتجات / الخدمات', itemName: 'المنتج / الخدمة', signField: 'التوقيع', signOn: 'إضافة التوقيع', signOff: 'بدون توقيع', signFieldHint: 'لهذه الفاتورة فقط. عند عدم إضافة التوقيع يبقى حقل التوقيع فارغاً (يمكن التوقيع يدوياً).', itemNameHint: 'Shift+Enter: سطر جديد · Enter: الانتقال إلى الكمية', itemPick: 'المنتجات المحفوظة', qty: 'الكمية', unit: 'الوحدة', price: 'سعر الوحدة', line: 'المبلغ',
       addItem: '+ إضافة بند', removeItem: 'حذف البند', discount: 'الخصم', taxRate: 'نسبة الضريبة (%)', note: 'ملاحظة',
       subtotal: 'المجموع الفرعي', tax: 'الضريبة', grand: 'الإجمالي',
       cashTitle: 'تسجيل الإيراد', cashYes: 'تسجيل في الصندوق', cashNo: 'عدم التسجيل في الصندوق (لم تُحصَّل)',
@@ -263,13 +263,17 @@
     var ls = String(n || '').replace(/\r/g, '').trim().split('\n');
     return ls.length > 1 ? '<b>' + esc(ls[0]) + '</b><br>' + ls.slice(1).map(esc).join('<br>') : esc(ls[0]);
   }
+  // Fatura başına imza: şablon alanında saklanır ('falcon' = imzalı, 'falcon|ns' = imzasız) — şema değişmez, eşitlemeyle birlikte gider
+  function tplOf(v) { var x = String(v || '').split('|')[0]; return PALETTE[x] ? x : 'falcon'; }
+  function hasSign(v) { return String(v || '').split('|').indexOf('ns') < 1; }
+  function withSign(v, on) { return tplOf(v) + (on ? '' : '|ns'); }
   function invoiceHtml(inv, cfg, forPdf) {
     var lg = DOC[inv.lang] ? inv.lang : lang();
-    var D = DOC[lg], rtl = lg === 'ar', cur = inv.currency_code, tpl = PALETTE[inv.template] ? inv.template : 'falcon', P = PALETTE[tpl];
+    var D = DOC[lg], rtl = lg === 'ar', cur = inv.currency_code, tpl = tplOf(inv.template), P = PALETTE[tpl];
     var items = jparse(inv.items, []); if (!Array.isArray(items)) items = [];
     var c = cfg.company || {};
     var logoSrc = logoSrcOf(cfg.logo, tpl === 'falcon' ? '#ffffff' : P.ink);
-    var sign = cfg.signature || SAMPLE_SIGN;
+    var sign = hasSign(inv.template) ? (cfg.signature || SAMPLE_SIGN) : '';
     var other = ['tr', 'en', 'ar'].filter(function (x) { return x !== lg; }).map(function (x) { return DOC[x].title; }).join(' · ');
     var remaining = rnd((inv.total || 0) - (inv.paid || 0), cur);
     var st = inv.status || 'pending';
@@ -358,7 +362,7 @@
       '<table class="it"><thead><tr><th class="c" style="width:9mm">#</th><th>' + D.desc + '</th><th class="n" style="width:18mm">' + D.qty + '</th><th class="c" style="width:18mm">' + D.unit + '</th><th class="n" style="width:32mm">' + D.price + '</th><th class="n" style="width:34mm">' + D.amount + '</th></tr></thead><tbody>' + rows + '</tbody></table>' +
       '<div class="sum"><div class="notes">' + (inv.note ? '<h4>' + D.note + '</h4><p>' + esc(inv.note) + '</p>' : '') + (c.bank ? '<h4>' + D.bank + '</h4><p>' + esc(c.bank) + '</p>' : '') + '</div><table class="tot">' + totals + '</table></div>' +
       '<div class="sig"><div class="sg"><div class="im">' + (cfg.stamp ? '<img src="' + cfg.stamp + '" alt="">' : '') + '</div><div class="ln">' + D.stamp + '</div></div>' +
-      '<div class="sg"><div class="im"><img src="' + sign + '" alt=""></div><div class="ln">' + D.sign + '</div></div></div></div>' +
+      '<div class="sg"><div class="im">' + (sign ? '<img src="' + sign + '" alt="">' : '') + '</div><div class="ln">' + D.sign + '</div></div></div></div>' +
       '<div class="ft"><div class="th">' + esc(c.footer || D.thanks) + '</div>' + (fcols && pos !== 'top' ? '<div class="cols">' + fcols + '</div>' : '') +
       '<div class="bt"><span>' + esc(c.name || '') + '</span><span dir="ltr">' + esc(inv.number) + ' · ' + esc(dmy(inv.date)) + '</span></div></div></div>';
     if (!forPdf) return { css: css, body: body };
@@ -416,7 +420,7 @@
       '.fat-st.paid{background:#22a06b26;color:#22a06b}.fat-st.partial{background:#e2a40026;color:#d69500}.fat-st.pending{background:#e5484d22;color:#e5484d}.fat-st.cancelled{background:#94a3b833;color:#94a3b8;text-decoration:line-through}' +
       '.fat-acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:340px;margin-inline-start:auto}.fat-acts .btn{padding:5px 10px;font-size:12.5px}' +
       '.fat-num{font-variant-numeric:tabular-nums;white-space:nowrap}.fat-no{font-weight:700;white-space:nowrap}' +
-      '.fat-items{width:100%;border-collapse:collapse}.fat-items th{font-size:12px;text-align:start;opacity:.75;padding:4px 4px;font-weight:600}' +
+      '.fat-seg{display:flex;gap:4px;padding:4px;border:1px solid var(--border,#3a4458);border-radius:10px}.fat-seg button{flex:1;border:0;background:none;color:inherit;padding:8px 10px;border-radius:7px;cursor:pointer;font:inherit;opacity:.75}.fat-seg button.on{background:#0ea5e926;color:#38bdf8;font-weight:700;opacity:1}.fat-pv-sg{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}.fat-items{width:100%;border-collapse:collapse}.fat-items th{font-size:12px;text-align:start;opacity:.75;padding:4px 4px;font-weight:600}' +
       '.fat-items td{padding:3px 4px;vertical-align:top}.fat-items td.l{padding-top:12px}.fat-items td:last-child{padding-top:6px}.fat-items .nmc{position:relative}.fat-items textarea.nm{width:100%;min-width:0;display:block;resize:none;overflow:hidden;line-height:1.4;min-height:38px;padding-inline-end:26px;white-space:pre-wrap;font:inherit}.fat-sug-b{position:absolute;inset-inline-end:10px;top:11px;border:0;background:none;color:inherit;opacity:.6;cursor:pointer;font-size:12px;padding:2px}.fat-sug-b:hover{opacity:1}.fat-sug{position:absolute;z-index:30;inset-inline:4px;top:calc(100% - 2px);max-height:240px;overflow:auto;background:var(--surface,var(--card,#1b2333));border:1px solid var(--border,#3a4458);border-radius:8px;box-shadow:0 8px 24px #0006;padding:4px}.fat-sug[hidden]{display:none}.fat-sug .o{padding:6px 10px;border-radius:6px;cursor:pointer;white-space:pre-line;font-size:13.5px}.fat-sug .o:hover{background:#ffffff14}.fat-items input{width:100%;min-width:0}.fat-items .q{width:76px}.fat-items .u{width:80px}.fat-items .p{width:120px}.fat-items .l{width:120px;text-align:end;font-variant-numeric:tabular-nums;white-space:nowrap}' +
       '.fat-tot{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:14px}.fat-tot div{display:flex;gap:18px;justify-content:space-between;min-width:260px}.fat-tot .g{font-weight:800;font-size:16px;border-top:1px solid var(--border,#334);padding-top:6px}' +
       '.fat-cash{border:1px solid var(--border,#334);border-radius:12px;padding:12px 14px}.fat-cash .segmented{margin:6px 0 8px;flex-wrap:wrap}.fat-cash .segmented button{flex:1;min-width:140px}' +
@@ -567,13 +571,16 @@
           var k = zoom === 'fit' ? Math.min(1, (pv.clientWidth - 28) / full) : 1;
           host.style.transform = 'scale(' + k + ')'; host.style.height = (hh * k) + 'px'; host.style.marginBottom = '0';
         };
-        var tplSel = el('select', { onchange: function (e) { cur.template = e.target.value; render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } },
-          TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), (cur.template || 'falcon') === x); }));
+        var tplSel = el('select', { onchange: function (e) { cur.template = withSign(e.target.value, hasSign(cur.template)); render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } },
+          TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), tplOf(cur.template) === x); }));
+        var sgCb = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withSign(cur.template, e.target.checked); render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } });
+        sgCb.checked = hasSign(cur.template);
         var lgSel = el('select', { onchange: function (e) { cur.lang = e.target.value; render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } },
           [['tr', 'langTr'], ['en', 'langEn'], ['ar', 'langAr']].map(function (x) { return opt(x[0], t(x[1]), (cur.lang || lang()) === x[0]); }));
         var zb = el('button', { type: 'button', class: 'btn small', text: t('zoomFull'), onclick: function () { zoom = zoom === 'fit' ? 'full' : 'fit'; zb.textContent = zoom === 'fit' ? t('zoomFull') : t('zoomFit'); fit(); } });
         var bar = el('div', { class: 'fat-pv-bar' }, [
           el('span', { class: 'field-label', text: t('template') }), tplSel, el('span', { class: 'field-label', text: t('lang') }), lgSel,
+          el('label', { class: 'check fat-pv-sg' }, [sgCb, el('span', { text: t('signOn') })]),
           el('span', { class: 'sp' }), opts.tag ? el('span', { class: 'fat-pv-tag', text: opts.tag }) : null, zb
         ]);
         var foot = [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } })];
@@ -669,7 +676,16 @@
         var F2 = { phone: inp('phone', { dir: 'ltr', inputmode: 'tel' }), email: inp('email', { type: 'email', dir: 'ltr' }), address: inp('address', { tag: 'textarea', rows: 2 }), tax_no: inp('tax_no', { dir: 'ltr' }) };
         F2.address.value = st.address;
         var curSel = el('select', { onchange: function (e) { st.currency = e.target.value; drawCash(); recalc(); } }, CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], st.currency === c); }));
-        var tplSel = el('select', { onchange: function (e) { st.template = e.target.value; } }, TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), st.template === x); }));
+        var tplSel = el('select', { onchange: function (e) { st.template = withSign(e.target.value, hasSign(st.template)); } }, TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), tplOf(st.template) === x); }));
+        var sgBox = el('div', { class: 'fat-seg' });
+        var drawSg = function () {
+          var on = hasSign(st.template);
+          sgBox.innerHTML = '';
+          [[true, '✍ ' + t('signOn')], [false, '⊘ ' + t('signOff')]].forEach(function (x) {
+            sgBox.appendChild(el('button', { type: 'button', class: x[0] === on ? 'on' : '', text: x[1], onclick: function () { st.template = withSign(st.template, x[0]); drawSg(); } }));
+          });
+        };
+        drawSg();
         var lgSel = el('select', { onchange: function (e) { st.lang = e.target.value; } }, [['tr', 'langTr'], ['en', 'langEn'], ['ar', 'langAr']].map(function (x) { return opt(x[0], t(x[1]), st.lang === x[0]); }));
 
         var tbody = el('tbody');
@@ -774,6 +790,7 @@
           field(t('date'), inp('date', { type: 'date' })), field(t('due'), inp('due_date', { type: 'date' })),
           field(t('currency'), curSel), field(t('invNo'), inp('number', { dir: 'ltr', placeholder: 'FAL-…' }), { hint: t('invNoHint') }),
           field(t('template'), tplSel), field(t('lang'), lgSel),
+          field(t('signField'), sgBox, { span: 2, group: true, hint: t('signFieldHint') }),
           el('div', { class: 'field span-2' }, [el('span', { class: 'field-label', text: t('items') }), itemsTable,
             el('div', null, [el('button', { type: 'button', class: 'btn small', text: t('addItem'), onclick: function () { st.items.push({ name: '', qty: 1, unit: '', price: '' }); drawItems(); var ins = tbody.querySelectorAll('tr:last-child input'); if (ins[0]) ins[0].focus(); } })])]),
           field(t('discount'), inp('discount', { type: 'number', step: 'any', min: '0', dir: 'ltr', after: recalc })),
@@ -822,7 +839,7 @@
           nextNo().then(function (no) {
             openPreview(draftInv(no), {
               tag: '✎ ' + t('previewDraft'),
-              onChange: function (tp, lg) { st.template = tp; st.lang = lg; tplSel.value = tp; lgSel.value = lg; },
+              onChange: function (tp, lg) { st.template = tp; st.lang = lg; tplSel.value = tplOf(tp); lgSel.value = lg; drawSg(); },
               extra: function (getM) {
                 return [
                   el('button', { type: 'button', class: 'btn', text: t('save'), onclick: function (e) { getM().close(); submit(false, b1); } }),
@@ -961,5 +978,5 @@
   }
 
   if (document.head) style(); else document.addEventListener('DOMContentLoaded', style);
-  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.59.3' };
+  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.59.4' };
 })();
