@@ -1,10 +1,10 @@
 {
- "version": "1.61.5",
- "notes": "PDF'den doldur: yapay zeka bekleme süresi 4 dk, müşteri adındaki SN./SAYIN atılır. Ayrıca 1.61.3–1.61.4: KDV'siz fatura, karekod/barkod aç-kapa, fiyatları tek tuşla başka para biriminden çevirme.",
- "size": 3669530,
- "sha256": "b16d8b91ad171ca7a72856ef4c788dcfda82955d0fe973e499855040daef4b2e",
- "sig": "MEUCIQCm7plZZmoeWpLRB96YNdLICGRfZn06FT9pLiK2Fgt+egIgIK//HKG8OGAL3K/OjHG9y+ztzdcxmDjjAEjX//OHBl8=",
- "file": "telefon-1.61.5.fopk",
+ "version": "1.62.0",
+ "notes": "Fatura: kâr ekleme — toplu (Kâr ekle kutusu, Tüm kalemlere uygula) ve tekli (fiyatın yanındaki ％ düğmesi). Kâr kârsız fiyattan hesaplanır, üst üste binmez; ürün fiyatları değişmez.",
+ "size": 3672475,
+ "sha256": "714cbb06fb63d411a5b302335ed9f0afc59b053c4accb19ddf098c796f702897",
+ "sig": "MEYCIQC8PP2sEOYGxuPe8e8deN+p9x98GRmNquV0g5xwxNMRdAIhAPcRn0J4mN0R0asZ0QlSO4fGuZxZodedV2XD8ZJWEkEf",
+ "file": "telefon-1.62.0.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-27T18:37:54.116Z"
+ "publishedAt": "2026-11-27T19:19:18.732Z"
 }
