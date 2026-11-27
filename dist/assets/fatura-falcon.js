@@ -39,7 +39,7 @@
       confirmDel: 'Bu fatura silinsin mi? Kasaya işlenmiş tahsilatları da kasadan silinir (Silinenler kutusundan geri alınabilir).',
       confirmCancel: 'Fatura iptal edilsin mi?', confirmPayDel: 'Bu tahsilat silinsin mi? Kasadaki girişi de silinir.',
       sTitle: 'Fatura ayarları', sCompany: 'Firma bilgileri', sName: 'Firma adı', sAddress: 'Adres', sPhone: 'Telefon', sEmail: 'E-posta',
-      sWeb: 'Web sitesi', sTax: 'Vergi no', sBank: 'Banka / ödeme bilgisi', sFooter: 'Alt not (her faturada)',
+      sWeb: 'Web sitesi', sTax: 'Vergi no', sTaxOffice: 'Vergi dairesi', sMersis: 'MERSİS / Ticaret sicil no', sBank: 'Banka / ödeme bilgisi', sFooter: 'Teşekkür / alt not (her faturada)', sFF: 'Alt bilgi alanları', sFFHint: 'Faturanın altında görünür. Adı boş bırakılırsa faturanın dilindeki standart ad yazılır. Kutucuk kapalıysa alan basılmaz.', sFFAdd: '+ Alan ekle', sFFLabel: 'Ad', sFFValue: 'Değer', sFFCol: 'Sütun', sFFNew: 'Yeni alan', sFFCols: 'Sütun başlıkları', sFFColsHint: 'Boş = standart başlık; başlık istemezseniz - yazın.', sFFReset: 'Standart alanlara dön', sPos: 'Firma bilgilerinin yeri', sPosTop: 'Üstte (antette)', sPosBottom: 'Altta (alt bilgide)', sPosBoth: 'Üstte ve altta', sFFUp: 'Yukarı', sFFDown: 'Aşağı',
       sDefaults: 'Varsayılanlar', sPrefix: 'Fatura no ön eki', sLogo: 'Logo', sLogoFalcon: 'Falcon logosu', sLogoCustom: 'Kendi logom',
       sSign: 'İmza', sStamp: 'Kaşe / mühür', upload: 'Yükle', change: 'Değiştir', remove: 'Kaldır',
       signSample: 'Şu an ÖRNEK imza kullanılıyor. Orijinal imzanızı yükleyin (şeffaf PNG en iyisi; beyaz zemin otomatik şeffaflaşır).',
@@ -47,7 +47,7 @@
       tplFalcon: 'Falcon System (kurumsal)', tplClassic: 'Klasik', tplMinimal: 'Sade',
       saved: 'Kaydedildi', deleted: 'Silindi', pdfSaved: 'PDF hazırlandı', product: 'Ürün listesinden seç',
       errItems: 'En az bir kalem girin (ürün / hizmet adı).', errCustomer: 'Müşteri adını yazın.',
-      langTr: 'Türkçe', langEn: 'İngilizce', langAr: 'Arapça', previewTitle: 'Fatura önizleme', overdue: 'vadesi geçti'
+      langTr: 'Türkçe', langEn: 'İngilizce', langAr: 'Arapça', previewTitle: 'Fatura önizleme', overdue: 'vadesi geçti', previewDraft: 'Kaydedilmemiş taslak', previewSample: 'Örnek fatura', previewSampleCust: 'Örnek Müşteri Ltd.', previewSampleItem1: 'Danışmanlık hizmeti', previewSampleItem2: 'Eğitim (saat)', zoomFit: 'Sığdır', zoomFull: '%100'
     },
     en: {
       intro: 'Invoice product and service sales, export them as PDF and post the payment to the cash box now or later.',
@@ -73,7 +73,7 @@
       confirmDel: 'Delete this invoice? Its payments posted to the cash box are removed too (can be restored from Deleted items).',
       confirmCancel: 'Cancel this invoice?', confirmPayDel: 'Delete this payment? Its cash entry is deleted too.',
       sTitle: 'Invoice settings', sCompany: 'Company details', sName: 'Company name', sAddress: 'Address', sPhone: 'Phone', sEmail: 'E-mail',
-      sWeb: 'Website', sTax: 'Tax no', sBank: 'Bank / payment details', sFooter: 'Footer note (on every invoice)',
+      sWeb: 'Website', sTax: 'Tax no', sTaxOffice: 'Tax office', sMersis: 'Trade registry / MERSIS no', sBank: 'Bank / payment details', sFooter: 'Thank-you / footer note (on every invoice)', sFF: 'Footer fields', sFFHint: 'Shown at the bottom of the invoice. If the name is left empty, the standard name in the invoice language is used. Unticked fields are not printed.', sFFAdd: '+ Add field', sFFLabel: 'Name', sFFValue: 'Value', sFFCol: 'Column', sFFNew: 'New field', sFFCols: 'Column titles', sFFColsHint: 'Empty = standard title; type - for no title.', sFFReset: 'Back to standard fields', sPos: 'Position of company details', sPosTop: 'Top (letterhead)', sPosBottom: 'Bottom (footer)', sPosBoth: 'Top and bottom', sFFUp: 'Up', sFFDown: 'Down',
       sDefaults: 'Defaults', sPrefix: 'Invoice number prefix', sLogo: 'Logo', sLogoFalcon: 'Falcon logo', sLogoCustom: 'My own logo',
       sSign: 'Signature', sStamp: 'Company stamp', upload: 'Upload', change: 'Change', remove: 'Remove',
       signSample: 'A SAMPLE signature is in use. Upload your original signature (transparent PNG is best; a white background is made transparent).',
@@ -81,7 +81,7 @@
       tplFalcon: 'Falcon System (corporate)', tplClassic: 'Classic', tplMinimal: 'Minimal',
       saved: 'Saved', deleted: 'Deleted', pdfSaved: 'PDF ready', product: 'Pick from products',
       errItems: 'Enter at least one line (product / service name).', errCustomer: 'Enter the customer name.',
-      langTr: 'Turkish', langEn: 'English', langAr: 'Arabic', previewTitle: 'Invoice preview', overdue: 'overdue'
+      langTr: 'Turkish', langEn: 'English', langAr: 'Arabic', previewTitle: 'Invoice preview', overdue: 'overdue', previewDraft: 'Unsaved draft', previewSample: 'Sample invoice', previewSampleCust: 'Sample Customer Ltd.', previewSampleItem1: 'Consulting service', previewSampleItem2: 'Training (hours)', zoomFit: 'Fit', zoomFull: '100%'
     },
     ar: {
       intro: 'أصدر فواتير مبيعات المنتجات والخدمات وصدّرها بصيغة PDF، وسجّل التحصيل في الصندوق فوراً أو لاحقاً.',
@@ -107,7 +107,7 @@
       confirmDel: 'حذف هذه الفاتورة؟ تُحذف أيضاً تحصيلاتها المسجلة في الصندوق (يمكن استعادتها من المحذوفات).',
       confirmCancel: 'إلغاء هذه الفاتورة؟', confirmPayDel: 'حذف هذا التحصيل؟ يُحذف قيده في الصندوق أيضاً.',
       sTitle: 'إعدادات الفواتير', sCompany: 'بيانات الشركة', sName: 'اسم الشركة', sAddress: 'العنوان', sPhone: 'الهاتف', sEmail: 'البريد الإلكتروني',
-      sWeb: 'الموقع الإلكتروني', sTax: 'الرقم الضريبي', sBank: 'بيانات البنك / الدفع', sFooter: 'ملاحظة التذييل (في كل فاتورة)',
+      sWeb: 'الموقع الإلكتروني', sTax: 'الرقم الضريبي', sTaxOffice: 'دائرة الضرائب', sMersis: 'رقم السجل التجاري', sBank: 'بيانات البنك / الدفع', sFooter: 'عبارة الشكر / ملاحظة التذييل (في كل فاتورة)', sFF: 'حقول التذييل', sFFHint: 'تظهر أسفل الفاتورة. إذا تُرك الاسم فارغاً يُكتب الاسم القياسي بلغة الفاتورة. الحقل غير المحدد لا يُطبع.', sFFAdd: '+ إضافة حقل', sFFLabel: 'الاسم', sFFValue: 'القيمة', sFFCol: 'العمود', sFFNew: 'حقل جديد', sFFCols: 'عناوين الأعمدة', sFFColsHint: 'فارغ = العنوان القياسي؛ اكتب - لإخفاء العنوان.', sFFReset: 'العودة إلى الحقول القياسية', sPos: 'موضع بيانات الشركة', sPosTop: 'في الأعلى (الترويسة)', sPosBottom: 'في الأسفل (التذييل)', sPosBoth: 'في الأعلى والأسفل', sFFUp: 'أعلى', sFFDown: 'أسفل',
       sDefaults: 'الإعدادات الافتراضية', sPrefix: 'بادئة رقم الفاتورة', sLogo: 'الشعار', sLogoFalcon: 'شعار فالكون', sLogoCustom: 'شعاري الخاص',
       sSign: 'التوقيع', sStamp: 'ختم الشركة', upload: 'رفع', change: 'تغيير', remove: 'إزالة',
       signSample: 'يُستخدم الآن توقيع «نموذج». ارفع توقيعك الأصلي (PNG شفاف هو الأفضل؛ الخلفية البيضاء تُجعل شفافة تلقائياً).',
@@ -115,7 +115,7 @@
       tplFalcon: 'Falcon System (مؤسسي)', tplClassic: 'كلاسيكي', tplMinimal: 'بسيط',
       saved: 'تم الحفظ', deleted: 'تم الحذف', pdfSaved: 'ملف PDF جاهز', product: 'اختر من المنتجات',
       errItems: 'أدخل بنداً واحداً على الأقل (اسم المنتج / الخدمة).', errCustomer: 'اكتب اسم العميل.',
-      langTr: 'التركية', langEn: 'الإنجليزية', langAr: 'العربية', previewTitle: 'معاينة الفاتورة', overdue: 'متأخرة'
+      langTr: 'التركية', langEn: 'الإنجليزية', langAr: 'العربية', previewTitle: 'معاينة الفاتورة', overdue: 'متأخرة', previewDraft: 'مسودة غير محفوظة', previewSample: 'فاتورة نموذجية', previewSampleCust: 'شركة العميل النموذجي', previewSampleItem1: 'خدمة استشارية', previewSampleItem2: 'تدريب (ساعة)', zoomFit: 'ملاءمة', zoomFull: '100%'
     }
   };
   // Faturanın kendi dilindeki resmi metinler (PDF)
@@ -123,15 +123,15 @@
     tr: { title: 'FATURA', no: 'Fatura No', date: 'Fatura Tarihi', due: 'Vade Tarihi', billTo: 'Sayın', desc: 'Açıklama', qty: 'Miktar', unit: 'Birim',
       price: 'Birim Fiyat', amount: 'Tutar', subtotal: 'Ara Toplam', discount: 'İndirim', tax: 'Vergi', grand: 'Genel Toplam', paid: 'Ödenen',
       remaining: 'Kalan', sign: 'Yetkili İmza', stamp: 'Kaşe / Mühür', note: 'Not', bank: 'Ödeme Bilgisi', currency: 'Para Birimi',
-      st_paid: 'ÖDENDİ', st_partial: 'KISMİ ÖDEME', st_pending: 'ÖDENMEDİ', st_cancelled: 'İPTAL', taxNo: 'Vergi No', thanks: 'Bizi tercih ettiğiniz için teşekkür ederiz.', page: 'Sayfa' },
+      st_paid: 'ÖDENDİ', st_partial: 'KISMİ ÖDEME', st_pending: 'ÖDENMEDİ', st_cancelled: 'İPTAL', taxNo: 'Vergi No', taxOffice: 'Vergi Dairesi', mersis: 'MERSİS / Sicil No', seller: 'Satıcı', contactH: 'İletişim', legalH: 'Vergi ve Sicil', bankH: 'Banka Bilgileri', ff: { name: 'Ünvan', address: 'Adres', phone: 'Tel', fax: 'Faks', email: 'E-posta', web: 'Web', tax_office: 'Vergi Dairesi', tax: 'Vergi No', mersis: 'MERSİS No', trade_reg: 'Ticaret Sicil No', bank_name: 'Banka', iban: 'IBAN' }, tel: 'Tel', mail: 'E-posta', web: 'Web', thanks: 'Bizi tercih ettiğiniz için teşekkür ederiz.', page: 'Sayfa' },
     en: { title: 'INVOICE', no: 'Invoice No', date: 'Invoice Date', due: 'Due Date', billTo: 'Bill To', desc: 'Description', qty: 'Qty', unit: 'Unit',
       price: 'Unit Price', amount: 'Amount', subtotal: 'Subtotal', discount: 'Discount', tax: 'Tax', grand: 'Grand Total', paid: 'Paid',
       remaining: 'Balance Due', sign: 'Authorized Signature', stamp: 'Company Stamp', note: 'Note', bank: 'Payment Details', currency: 'Currency',
-      st_paid: 'PAID', st_partial: 'PARTLY PAID', st_pending: 'UNPAID', st_cancelled: 'CANCELLED', taxNo: 'Tax No', thanks: 'Thank you for your business.', page: 'Page' },
+      st_paid: 'PAID', st_partial: 'PARTLY PAID', st_pending: 'UNPAID', st_cancelled: 'CANCELLED', taxNo: 'Tax No', taxOffice: 'Tax Office', mersis: 'Trade Reg. No', seller: 'Seller', contactH: 'Contact', legalH: 'Tax & Registry', bankH: 'Bank Details', ff: { name: 'Company', address: 'Address', phone: 'Tel', fax: 'Fax', email: 'E-mail', web: 'Web', tax_office: 'Tax Office', tax: 'Tax No', mersis: 'MERSIS No', trade_reg: 'Trade Reg. No', bank_name: 'Bank', iban: 'IBAN' }, tel: 'Tel', mail: 'E-mail', web: 'Web', thanks: 'Thank you for your business.', page: 'Page' },
     ar: { title: 'فاتورة', no: 'رقم الفاتورة', date: 'تاريخ الفاتورة', due: 'تاريخ الاستحقاق', billTo: 'فاتورة إلى', desc: 'البيان', qty: 'الكمية', unit: 'الوحدة',
       price: 'سعر الوحدة', amount: 'المبلغ', subtotal: 'المجموع الفرعي', discount: 'الخصم', tax: 'الضريبة', grand: 'الإجمالي', paid: 'المدفوع',
       remaining: 'المبلغ المستحق', sign: 'التوقيع المعتمد', stamp: 'الختم', note: 'ملاحظة', bank: 'بيانات الدفع', currency: 'العملة',
-      st_paid: 'مدفوعة', st_partial: 'مدفوعة جزئياً', st_pending: 'غير مدفوعة', st_cancelled: 'ملغاة', taxNo: 'الرقم الضريبي', thanks: 'شكراً لتعاملكم معنا.', page: 'صفحة' }
+      st_paid: 'مدفوعة', st_partial: 'مدفوعة جزئياً', st_pending: 'غير مدفوعة', st_cancelled: 'ملغاة', taxNo: 'الرقم الضريبي', taxOffice: 'دائرة الضرائب', mersis: 'رقم السجل التجاري', seller: 'البائع', contactH: 'الاتصال', legalH: 'الضريبة والسجل', bankH: 'البيانات المصرفية', ff: { name: 'الاسم التجاري', address: 'العنوان', phone: 'هاتف', fax: 'فاكس', email: 'البريد الإلكتروني', web: 'الموقع', tax_office: 'دائرة الضرائب', tax: 'الرقم الضريبي', mersis: 'رقم MERSIS', trade_reg: 'رقم السجل التجاري', bank_name: 'البنك', iban: 'IBAN' }, tel: 'هاتف', mail: 'البريد الإلكتروني', web: 'الموقع', thanks: 'شكراً لتعاملكم معنا.', page: 'صفحة' }
   };
   var ERR = {
     tr: { ERR_INVOICE_ITEMS: 'En az bir kalem girin.', ERR_CUSTOMER_REQUIRED: 'Müşteri adını yazın.', ERR_INVOICE_OVERPAY: 'Tahsilat kalan tutardan büyük olamaz.',
@@ -239,6 +239,15 @@
     });
   }
 
+  // ---------- alt bilgi alanları (modüler) ----------
+  // company.footer_fields = [{ k: hazır anahtar | 'custom', label: '' (boş = standart ad), value: (yalnız custom), col: 1-4, on: true }]
+  // hazır anahtarların değeri company[k]'dan gelir; company.footer_titles = ['', '', '', ''] ('' = standart, '-' = başlıksız)
+  var FF_KEYS = ['name', 'address', 'phone', 'fax', 'email', 'web', 'tax_office', 'tax', 'mersis', 'trade_reg', 'bank_name', 'iban'];
+  var FF_COL = { name: 1, address: 1, phone: 2, fax: 2, email: 2, web: 2, tax_office: 3, tax: 3, mersis: 3, trade_reg: 3, bank_name: 4, iban: 4 };
+  var FF_LTR = { phone: 1, fax: 1, email: 1, web: 1, tax: 1, mersis: 1, trade_reg: 1, iban: 1 };
+  function ffDefault() { return FF_KEYS.map(function (k) { return { k: k, label: '', col: FF_COL[k], on: true }; }); }
+  function ffList(c) { var l = c && Array.isArray(c.footer_fields) ? c.footer_fields : null; return l ? l : ffDefault(); }
+
   // ---------- PDF / önizleme HTML ----------
   var PALETTE = {
     falcon: { ink: '#13213b', accent: '#c9a227', soft: '#eef2f8', line: '#d5dbe6' },
@@ -257,7 +266,29 @@
     var st = inv.status || 'pending';
     var M = function (n) { return '<span dir="ltr" class="m">' + esc(money(n, cur, lg)) + '</span>'; };
     var L = function (x) { return '<span dir="ltr">' + esc(x) + '</span>'; };
-    var contact = [c.address ? esc(c.address) : '', c.phone ? '☎ ' + L(c.phone) : '', c.email ? '✉ ' + L(c.email) : '', c.web ? L(c.web) : '', c.tax ? esc(D.taxNo) + ': ' + L(c.tax) : ''].filter(Boolean);
+    var pos = c.info_pos === 'top' || c.info_pos === 'bottom' ? c.info_pos : 'both';
+    var taxLine = [c.tax_office ? esc(D.taxOffice) + ': ' + esc(c.tax_office) : '', c.tax ? esc(D.taxNo) + ': ' + L(c.tax) : ''].filter(Boolean).join(' · ');
+    var contact = pos === 'bottom' ? [] : [c.address ? esc(c.address) : '', c.phone ? '☎ ' + L(c.phone) : '', c.email ? '✉ ' + L(c.email) : '', c.web ? L(c.web) : '', taxLine].filter(Boolean);
+    var KV = function (k, v, ltr) { return v ? '<div><span class="k">' + esc(k) + ':</span> ' + (ltr ? L(v) : esc(v)) + '</div>' : ''; };
+    var colHtml = ['', '', '', ''], fTitles = Array.isArray(c.footer_titles) ? c.footer_titles : [];
+    ffList(c).forEach(function (f) {
+      if (!f || f.on === false) return;
+      var custom = f.k === 'custom' || FF_KEYS.indexOf(f.k) < 0;
+      var v = String((custom ? f.value : c[f.k]) || '').trim(); if (!v) return;
+      var lb = String(f.label || '').trim() || (custom ? '' : D.ff[f.k]);
+      var ci2 = Math.min(4, Math.max(1, Number(f.col) || 1)) - 1, ltr = !custom && FF_LTR[f.k];
+      var h;
+      if (!custom && !String(f.label || '').trim() && f.k === 'name') h = '<div><b>' + esc(v) + '</b></div>';
+      else if (!custom && !String(f.label || '').trim() && f.k === 'address') h = '<div class="ad">' + esc(v) + '</div>';
+      else h = lb ? KV(lb, v, ltr) : '<div class="ad">' + esc(v) + '</div>';
+      colHtml[ci2] += h;
+    });
+    var fDef = [D.seller, D.contactH, D.legalH, D.bankH];
+    var fcols = colHtml.map(function (x, i) {
+      if (!x) return '';
+      var tt = String(fTitles[i] || '').trim(); tt = tt === '-' ? '' : (tt || fDef[i]);
+      return '<div class="fc">' + (tt ? '<h5>' + esc(tt) + '</h5>' : '') + x + '</div>';
+    }).join('');
     var rows = items.map(function (it, i) {
       return '<tr><td class="c">' + (i + 1) + '</td><td>' + esc(it.name) + '</td><td class="n">' + esc(fmt(it.qty, 'X', lg).replace(/[.,]00$/, '')) +
         '</td><td class="c">' + esc(it.unit || '') + '</td><td class="n">' + M(it.price) + '</td><td class="n">' + M(rnd(it.qty * it.price, cur)) + '</td></tr>';
@@ -269,7 +300,7 @@
       (inv.paid > 0 ? '<tr><td>' + D.paid + '</td><td class="n">' + M(inv.paid) + '</td></tr><tr class="r"><td>' + D.remaining + '</td><td class="n">' + M(remaining) + '</td></tr>' : '');
     var font = rtl ? "'Noto Sans Arabic','Segoe UI',Tahoma,Arial,sans-serif" : "'Segoe UI','Inter',Arial,'Noto Sans Arabic',sans-serif";
     var css =
-      '@page{size:210mm 297mm;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0}' +
+      '@page{size:210mm 297mm;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0}table{color:inherit;font-size:inherit;font-family:inherit}' +
       '.inv{width:210mm;min-height:297mm;padding:0 0 16mm;font-family:' + font + ';color:' + P.ink + ';font-size:10.5pt;background:#fff;position:relative;-webkit-print-color-adjust:exact;print-color-adjust:exact;display:flex;flex-direction:column}' +
       '.hd{display:flex;justify-content:space-between;align-items:center;gap:10mm;padding:12mm 14mm 9mm;' + (tpl === 'falcon' ? 'background:' + P.ink + ';color:#fff;border-bottom:3px solid ' + P.accent + ';' : tpl === 'classic' ? 'border-bottom:2px solid ' + P.ink + ';margin:0 14mm;padding:12mm 0 7mm;' : 'border-bottom:1px solid ' + P.line + ';margin:0 14mm;padding:12mm 0 7mm;') + '}' +
       '.brand{display:flex;align-items:center;gap:5mm}.brand img{height:' + (tpl === 'minimal' ? '20mm' : '25mm') + ';width:auto}' +
@@ -296,8 +327,13 @@
       '.sig{display:flex;justify-content:space-between;align-items:flex-end;gap:10mm;margin-top:10mm;page-break-inside:avoid}' +
       '.sg{width:62mm;text-align:center;font-size:9pt}.sg .im{height:26mm;display:flex;align-items:flex-end;justify-content:center}.sg img{max-height:26mm;max-width:60mm}' +
       '.sg .ln{border-top:1px solid ' + P.ink + ';margin-top:1.5mm;padding-top:1.5mm;font-weight:700}' +
-      '.ft{margin:6mm 14mm 0;padding-top:3mm;border-top:1px solid ' + P.line + ';font-size:8.5pt;display:flex;justify-content:space-between;gap:6mm;opacity:.85}' +
+      '.ft{margin:6mm 14mm 0;padding-top:3mm;border-top:1px solid ' + P.line + ';font-size:8pt;line-height:1.5;page-break-inside:avoid}' +
       (tpl === 'falcon' ? '.ft{border-top:2px solid ' + P.accent + '}' : '') +
+      '.ft .th{text-align:center;font-style:italic;opacity:.85;margin-bottom:2.5mm;font-size:8.5pt}' +
+      '.ft .cols{display:flex;gap:6mm;justify-content:space-between}.ft .fc{flex:1;min-width:0}.ft .fc:first-child{flex:1.25}' +
+      '.ft h5{margin:0 0 .8mm;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:' + P.accent + ';' + (tpl === 'falcon' ? 'filter:brightness(.8);' : '') + '}' +
+      '.ft .k{opacity:.65}.ft .ad{white-space:pre-wrap}.inv [dir=ltr]{unicode-bidi:isolate;direction:ltr}' +
+      '.ft .bt{display:flex;justify-content:space-between;margin-top:2.5mm;padding-top:1.5mm;border-top:1px dashed ' + P.line + ';font-size:7.5pt;opacity:.7}' +
       '.wm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;font-size:90pt;font-weight:900;color:rgba(185,28,28,.08);transform:rotate(-24deg)}' +
       '.wmlogo{position:absolute;left:50%;top:52%;width:120mm;transform:translate(-50%,-50%);opacity:.035;pointer-events:none}';
     var body =
@@ -314,7 +350,8 @@
       '<div class="sum"><div class="notes">' + (inv.note ? '<h4>' + D.note + '</h4><p>' + esc(inv.note) + '</p>' : '') + (c.bank ? '<h4>' + D.bank + '</h4><p>' + esc(c.bank) + '</p>' : '') + '</div><table class="tot">' + totals + '</table></div>' +
       '<div class="sig"><div class="sg"><div class="im">' + (cfg.stamp ? '<img src="' + cfg.stamp + '" alt="">' : '') + '</div><div class="ln">' + D.stamp + '</div></div>' +
       '<div class="sg"><div class="im"><img src="' + sign + '" alt=""></div><div class="ln">' + D.sign + '</div></div></div></div>' +
-      '<div class="ft"><span>' + esc(c.footer || D.thanks) + '</span><span dir="ltr">' + esc(inv.number) + '</span></div></div>';
+      '<div class="ft"><div class="th">' + esc(c.footer || D.thanks) + '</div>' + (fcols && pos !== 'top' ? '<div class="cols">' + fcols + '</div>' : '') +
+      '<div class="bt"><span>' + esc(c.name || '') + '</span><span dir="ltr">' + esc(inv.number) + ' · ' + esc(dmy(inv.date)) + '</span></div></div></div>';
     if (!forPdf) return { css: css, body: body };
     return '<!doctype html><html lang="' + lg + '" dir="' + (rtl ? 'rtl' : 'ltr') + '"><head><meta charset="utf-8"><title>' + esc(inv.number) + '</title><style>' + css + '</style></head><body>' + body + '</body></html>';
   }
@@ -375,8 +412,14 @@
       '.fat-tot{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:14px}.fat-tot div{display:flex;gap:18px;justify-content:space-between;min-width:260px}.fat-tot .g{font-weight:800;font-size:16px;border-top:1px solid var(--border,#334);padding-top:6px}' +
       '.fat-cash{border:1px solid var(--border,#334);border-radius:12px;padding:12px 14px}.fat-cash .segmented{margin:6px 0 8px;flex-wrap:wrap}.fat-cash .segmented button{flex:1;min-width:140px}' +
       '.fat-pv{background:#7d8595;border-radius:10px;padding:14px;overflow:auto;max-height:70vh}.fat-pv-host{transform-origin:top left;margin:0 auto}' +
+      '.fat-pv-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.fat-pv-bar select{width:auto;min-width:150px}.fat-pv-bar .sp{flex:1}' +
+      '.fat-pv-tag{display:inline-block;border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:700;background:#e2a40026;color:#d69500}' +
       '.fat-img{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.fat-img .pv{width:170px;height:80px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid var(--border,#334)}.fat-img .pv img{max-width:160px;max-height:72px}' +
       '.fat-img .pv.dark{background:#13213b}' +
+      '.fat-ff{display:flex;flex-direction:column;gap:6px}.fat-ff .r{display:grid;grid-template-columns:28px minmax(110px,1fr) minmax(140px,2fr) 70px auto;gap:6px;align-items:center}' +
+      '.fat-ff .r.off input:not([type=checkbox]){opacity:.5}.fat-ff .r .bt{display:flex;gap:2px}.fat-ff .hd{font-size:12px;opacity:.7;font-weight:600}.fat-ff select{width:auto}' +
+      '.fat-ff-t{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}' +
+      '@media (max-width:720px){.fat-ff .r{grid-template-columns:26px 1fr 1fr;}.fat-ff .r select,.fat-ff .r .bt{grid-column:auto}.fat-ff-t{grid-template-columns:1fr 1fr}}' +
       '.fat-pays{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.fat-pays .row{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--border,#334);border-radius:10px;padding:8px 10px}' +
       '.fat-overdue{color:#e5484d;font-size:11.5px;display:block}' +
       '.pm-pick{display:flex;flex-direction:column;gap:6px}.pm-seg{flex-wrap:wrap}.pm-seg button{flex:1;min-width:92px}' +
@@ -496,20 +539,52 @@
     }
 
     // ----- önizleme -----
-    function openPreview(inv) {
-      (CFG ? Promise.resolve(CFG) : loadCfg()).then(function (cfg) {
-        var h = invoiceHtml(inv, cfg, false);
+    // opts: { tag: rozet metni, onChange(template, lang): düzenleyiciye geri yazar, extra: ek alt düğmeler (function(m) → [düğme]), cfg: ayarlar yerine kullanılacak }
+    function openPreview(inv, opts) {
+      opts = opts || {};
+      (opts.cfg ? Promise.resolve(opts.cfg) : CFG ? Promise.resolve(CFG) : loadCfg()).then(function (cfg) {
+        var cur = Object.assign({}, inv);
         var host = el('div', { class: 'fat-pv-host', style: 'width:210mm' });
         var sr = host.attachShadow ? host.attachShadow({ mode: 'open' }) : host;
-        sr.innerHTML = '<style>' + h.css.replace('@page{size:210mm 297mm;margin:0}', '') + '.inv{box-shadow:0 6px 30px rgba(0,0,0,.35)}</style>' + h.body;
         var pv = el('div', { class: 'fat-pv' }, [host]);
-        var m = modal(t('previewTitle') + ' · ' + inv.number, [pv], [
-          el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }),
-          el('button', { type: 'button', class: 'btn primary', text: '⬇ ' + t('pdf'), onclick: function () { savePdf(inv).then(function (x) { if (x !== null) toast(t('pdfSaved')); }); } })
-        ], 'xwide');
-        var fit = function () { var w = pv.clientWidth - 28; var full = host.offsetWidth || 794; var k = Math.min(1, w / full); host.style.transform = 'scale(' + k + ')'; host.style.height = (1123 * k) + 'px'; host.style.marginBottom = '0'; };
-        setTimeout(fit, 0);
+        var zoom = 'fit';
+        var render = function () {
+          var h = invoiceHtml(cur, cfg, false);
+          sr.innerHTML = '<style>' + h.css.replace('@page{size:210mm 297mm;margin:0}', '') + '.inv{box-shadow:0 6px 30px rgba(0,0,0,.35)}</style>' + h.body;
+          setTimeout(fit, 0);
+        };
+        var fit = function () {
+          var full = host.offsetWidth || 794, hh = Math.max(1123, (sr.firstElementChild && sr.querySelector('.inv') ? sr.querySelector('.inv').offsetHeight : 1123));
+          var k = zoom === 'fit' ? Math.min(1, (pv.clientWidth - 28) / full) : 1;
+          host.style.transform = 'scale(' + k + ')'; host.style.height = (hh * k) + 'px'; host.style.marginBottom = '0';
+        };
+        var tplSel = el('select', { onchange: function (e) { cur.template = e.target.value; render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } },
+          TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), (cur.template || 'falcon') === x); }));
+        var lgSel = el('select', { onchange: function (e) { cur.lang = e.target.value; render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } },
+          [['tr', 'langTr'], ['en', 'langEn'], ['ar', 'langAr']].map(function (x) { return opt(x[0], t(x[1]), (cur.lang || lang()) === x[0]); }));
+        var zb = el('button', { type: 'button', class: 'btn small', text: t('zoomFull'), onclick: function () { zoom = zoom === 'fit' ? 'full' : 'fit'; zb.textContent = zoom === 'fit' ? t('zoomFull') : t('zoomFit'); fit(); } });
+        var bar = el('div', { class: 'fat-pv-bar' }, [
+          el('span', { class: 'field-label', text: t('template') }), tplSel, el('span', { class: 'field-label', text: t('lang') }), lgSel,
+          el('span', { class: 'sp' }), opts.tag ? el('span', { class: 'fat-pv-tag', text: opts.tag }) : null, zb
+        ]);
+        var foot = [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } })];
+        var m;
+        if (opts.extra) foot = foot.concat(opts.extra(function () { return m; }, cur));
+        else foot.push(el('button', { type: 'button', class: 'btn primary', text: '⬇ ' + t('pdf'), onclick: function () { savePdf(cur).then(function (x) { if (x !== null) toast(t('pdfSaved')); }); } }));
+        m = modal(t('previewTitle') + (cur.number ? ' · ' + cur.number : ''), [bar, pv], foot, 'xwide');
+        var onRs = function () { if (!pv.isConnected) { window.removeEventListener('resize', onRs); return; } fit(); };
+        window.addEventListener('resize', onRs);
+        render();
       });
+    }
+    // Ayarlardaki şirket bilgileriyle örnek fatura
+    function sampleInv(cfg, d) {
+      var c = CUR.indexOf(d.currency) >= 0 ? d.currency : 'USD';
+      var items = [{ name: t('previewSampleItem1'), qty: 1, unit: '', price: c === 'SYP' ? 1500000 : c === 'TRY' ? 25000 : 750 }, { name: t('previewSampleItem2'), qty: 4, unit: '', price: c === 'SYP' ? 200000 : c === 'TRY' ? 3000 : 90 }];
+      var sub = rnd(items.reduce(function (a, it) { return a + it.qty * it.price; }, 0), c), tr = num(d.tax_rate), tax = rnd(sub * tr / 100, c);
+      return { number: (cfg.prefix || 'FAL') + '-' + today().slice(0, 4) + '-0001', date: today(), due_date: '', customer_name: t('previewSampleCust'),
+        customer_phone: '+90 555 000 00 00', customer_address: '', currency_code: c, items: JSON.stringify(items), subtotal: sub, discount: 0, tax_rate: tr, tax: tax,
+        total: rnd(sub + tax, c), paid: 0, status: 'pending', template: d.template || 'falcon', lang: d.lang || lang(), note: '' };
     }
 
     // ----- tahsilat -----
@@ -688,9 +763,44 @@
             if (withPdf && res && res.id) q('SELECT * FROM invoices WHERE id = ?', [res.id]).then(function (x) { if (x[0]) return savePdf(x[0]); });
           }, function () { btn.disabled = false; });
         };
+        // kaydetmeden önizleme: düzenleyicideki bilgilerden taslak fatura
+        var nextNo = function () {
+          if (String(st.number).trim()) return Promise.resolve(String(st.number).trim());
+          if (!isNew) return Promise.resolve(inv.number);
+          var pre = (cfg.prefix || 'FAL') + '-' + String(st.date || today()).slice(0, 4) + '-';
+          return q('SELECT number FROM invoices WHERE number LIKE ?', [pre + '%']).then(function (rs) {
+            var mx = 0; rs.forEach(function (x) { var n = parseInt(String(x.number).slice(pre.length), 10); if (n > mx) mx = n; });
+            return pre + String(mx + 1).padStart(4, '0');
+          }).catch(function () { return pre + '0001'; });
+        };
+        var draftInv = function (no) {
+          var c = st.currency, items = st.items.filter(function (it) { return String(it.name || '').trim(); }).map(function (it) { return { name: it.name, qty: num(it.qty), unit: it.unit || '', price: num(it.price) }; });
+          var sub = rnd(items.reduce(function (a, it) { return a + rnd(it.qty * it.price, c); }, 0), c);
+          var disc = Math.min(sub, rnd(num(st.discount), c)), tax = rnd((sub - disc) * num(st.tax_rate) / 100, c), tot = rnd(sub - disc + tax, c);
+          var paid = inv ? inv.paid || 0 : (st.cash ? Math.min(tot, payTouched ? rnd(num(st.pay_amount), c) : tot) : 0);
+          var status = inv && inv.status === 'cancelled' ? 'cancelled' : paid >= tot && tot > 0 ? 'paid' : paid > 0 ? 'partial' : 'pending';
+          return { number: no, date: st.date, due_date: st.due_date, customer_name: String(st.customer).trim() || '—', customer_phone: st.phone, customer_email: st.email,
+            customer_address: st.address, customer_tax: st.tax_no, currency_code: c, items: JSON.stringify(items), subtotal: sub, discount: disc, tax_rate: num(st.tax_rate),
+            tax: tax, total: tot, paid: paid, status: status, template: st.template, lang: st.lang, note: st.note };
+        };
+        var showPreview = function () {
+          nextNo().then(function (no) {
+            openPreview(draftInv(no), {
+              tag: '✎ ' + t('previewDraft'),
+              onChange: function (tp, lg) { st.template = tp; st.lang = lg; tplSel.value = tp; lgSel.value = lg; },
+              extra: function (getM) {
+                return [
+                  el('button', { type: 'button', class: 'btn', text: t('save'), onclick: function (e) { getM().close(); submit(false, b1); } }),
+                  el('button', { type: 'button', class: 'btn primary', text: '⬇ ' + t('saveAndPdf'), onclick: function (e) { getM().close(); submit(true, b2); } })
+                ];
+              }
+            });
+          });
+        };
+        var b0 = el('button', { type: 'button', class: 'btn', text: '👁 ' + t('preview'), onclick: function () { showPreview(); } });
         var b1 = el('button', { type: 'button', class: 'btn', text: t('save'), onclick: function (e) { submit(false, e.target); } });
         var b2 = el('button', { type: 'button', class: 'btn primary', text: '⬇ ' + t('saveAndPdf'), onclick: function (e) { submit(true, e.target); } });
-        var m = modal(isNew ? t('newInv') : t('editInv') + ' · ' + inv.number, [form], [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }), b1, b2], 'xwide');
+        var m = modal(isNew ? t('newInv') : t('editInv') + ' · ' + inv.number, [form], [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }), b0, b1, b2], 'xwide');
         drawItems(); drawCash();
         setTimeout(function () { try { custIn.focus(); } catch (e) {} }, 30);
       });
@@ -701,7 +811,47 @@
       loadCfg().then(function (cfg) {
         var c = Object.assign({}, cfg.company), d = Object.assign({ currency: 'USD', tax_rate: 0, template: 'falcon', lang: lang() }, cfg.defaults);
         var img = { signature: cfg.signature, stamp: cfg.stamp, logo: cfg.logo };
-        var ci = function (k, attrs) { var a = Object.assign({ value: c[k] || '', oninput: function (e) { c[k] = e.target.value; } }, attrs || {}); var tag = a.tag || 'input'; delete a.tag; var x = el(tag, a); if (tag === 'textarea') x.value = c[k] || ''; return x; };
+        var bound = {};
+        var sync = function (k, src) { (bound[k] || []).forEach(function (x) { if (x !== src) x.value = c[k] || ''; }); };
+        var ci = function (k, attrs) { var a = Object.assign({ value: c[k] || '', oninput: function (e) { c[k] = e.target.value; sync(k, e.target); } }, attrs || {}); var tag = a.tag || 'input'; delete a.tag; var x = el(tag, a); if (tag === 'textarea') x.value = c[k] || ''; (bound[k] = bound[k] || []).push(x); return x; };
+        // alt bilgi alanları düzenleyicisi
+        var ff = ffList(c).map(function (f) { return Object.assign({}, f); });
+        var ffTitles = (Array.isArray(c.footer_titles) ? c.footer_titles : []).slice(0, 4); while (ffTitles.length < 4) ffTitles.push('');
+        var FL = DOC[lang()] ? DOC[lang()].ff : DOC.tr.ff;
+        var ffBox = el('div', { class: 'fat-ff' });
+        var drawFF = function () {
+          ffBox.innerHTML = '';
+          Object.keys(bound).forEach(function (k) { bound[k] = bound[k].filter(function (x) { return !x._ff; }); });
+          ffBox.appendChild(el('div', { class: 'r hd' }, [el('span'), el('span', { text: t('sFFLabel') }), el('span', { text: t('sFFValue') }), el('span', { text: t('sFFCol') }), el('span')]));
+          ff.forEach(function (f, i) {
+            var custom = f.k === 'custom' || FF_KEYS.indexOf(f.k) < 0;
+            var row = el('div', { class: 'r' + (f.on === false ? ' off' : '') });
+            var cb = el('input', { type: 'checkbox', onchange: function (e) { f.on = e.target.checked; row.classList.toggle('off', !f.on); } }); cb.checked = f.on !== false;
+            var lb = el('input', { value: f.label || '', placeholder: custom ? t('sFFNew') : FL[f.k], oninput: function (e) { f.label = e.target.value; } });
+            var val;
+            if (custom) val = el('input', { value: f.value || '', oninput: function (e) { f.value = e.target.value; } });
+            else { val = ci(f.k, FF_LTR[f.k] ? { dir: 'ltr' } : null); val._ff = 1; }
+            var col = el('select', { onchange: function (e) { f.col = Number(e.target.value); } }, [1, 2, 3, 4].map(function (n) { return opt(n, String(n), Number(f.col) === n); }));
+            var mv = function (d) { var j = i + d; if (j < 0 || j >= ff.length) return; var x = ff[i]; ff[i] = ff[j]; ff[j] = x; drawFF(); };
+            row.appendChild(cb); row.appendChild(lb); row.appendChild(val); row.appendChild(col);
+            row.appendChild(el('div', { class: 'bt' }, [
+              el('button', { type: 'button', class: 'icon-btn tiny', title: t('sFFUp'), text: '↑', onclick: function () { mv(-1); } }),
+              el('button', { type: 'button', class: 'icon-btn tiny', title: t('sFFDown'), text: '↓', onclick: function () { mv(1); } }),
+              el('button', { type: 'button', class: 'icon-btn tiny danger', title: t('remove'), text: '✕', onclick: function () { ff.splice(i, 1); drawFF(); } })
+            ]));
+            ffBox.appendChild(row);
+          });
+          ffBox.appendChild(el('div', { style: 'display:flex;gap:8px;flex-wrap:wrap;margin-top:4px' }, [
+            el('button', { type: 'button', class: 'btn small', text: t('sFFAdd'), onclick: function () { ff.push({ k: 'custom', label: '', value: '', col: 1, on: true }); drawFF(); var rs = ffBox.querySelectorAll('.r'); var ins = rs[rs.length - 1].querySelectorAll('input'); if (ins[1]) ins[1].focus(); } }),
+            el('button', { type: 'button', class: 'btn small ghost', text: t('sFFReset'), onclick: function () {
+              ff = ffDefault().concat(ff.filter(function (f) { return f.k === 'custom'; })); drawFF();
+            } })
+          ]));
+        };
+        var ffTitleBox = el('div', { class: 'fat-ff-t' }, [0, 1, 2, 3].map(function (i) {
+          var D0 = DOC[lang()] || DOC.tr;
+          return el('input', { value: ffTitles[i], placeholder: (i + 1) + ' · ' + [D0.seller, D0.contactH, D0.legalH, D0.bankH][i], oninput: function (e) { ffTitles[i] = e.target.value; } });
+        }));
         var prefix = el('input', { value: cfg.prefix || 'FAL', dir: 'ltr', maxlength: '12' });
         var imgRow = function (key, transparent, dark) {
           var box = el('div', { class: 'fat-img' });
@@ -723,12 +873,17 @@
         var dTax = el('input', { type: 'number', step: 'any', min: '0', max: '100', dir: 'ltr', value: String(d.tax_rate || 0), oninput: function (e) { d.tax_rate = num(e.target.value); } });
         var dTpl = el('select', { onchange: function (e) { d.template = e.target.value; } }, TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), d.template === x); }));
         var dLg = el('select', { onchange: function (e) { d.lang = e.target.value; } }, [['tr', 'langTr'], ['en', 'langEn'], ['ar', 'langAr']].map(function (x) { return opt(x[0], t(x[1]), d.lang === x[0]); }));
+        var posSel = el('select', { onchange: function (e) { c.info_pos = e.target.value; } }, [['top', 'sPosTop'], ['bottom', 'sPosBottom'], ['both', 'sPosBoth']].map(function (x) { return opt(x[0], t(x[1]), (c.info_pos || 'both') === x[0]); }));
+        drawFF();
         var body = [
           el('h3', { class: 'section-title', text: t('sCompany') }),
           el('div', { class: 'form' }, [
             field(t('sName'), ci('name')), field(t('sTax'), ci('tax', { dir: 'ltr' })), field(t('sPhone'), ci('phone', { dir: 'ltr', inputmode: 'tel' })), field(t('sEmail'), ci('email', { type: 'email', dir: 'ltr' })),
             field(t('sAddress'), ci('address', { tag: 'textarea', rows: 2 }), { span: 2 }), field(t('sWeb'), ci('web', { dir: 'ltr' })), field(t('sPrefix'), prefix),
             field(t('sBank'), ci('bank', { tag: 'textarea', rows: 2 }), { span: 2 }), field(t('sFooter'), ci('footer'), { span: 2 }),
+            field(t('sPos'), posSel),
+            field(t('sFF'), ffBox, { span: 2, group: true, hint: t('sFFHint') }),
+            field(t('sFFCols'), ffTitleBox, { span: 2, group: true, hint: t('sFFColsHint') }),
             field(t('sLogo'), imgRow('logo', false), { span: 2, group: true }),
             field(t('sSign'), imgRow('signature', true), { span: 2, group: true }),
             field(t('sStamp'), imgRow('stamp', true), { span: 2, group: true })
@@ -738,9 +893,16 @@
         ];
         var m = modal(t('sTitle'), body, [
           el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }),
+          el('button', { type: 'button', class: 'btn', text: '👁 ' + t('preview'), onclick: function () {
+            var co = Object.assign({}, c, { footer_fields: ff, footer_titles: ffTitles }); if (!co.name) co.name = 'Falcon CTI';
+            var px = String(prefix.value || 'FAL').trim().replace(/[^\w-]+/g, '').slice(0, 12) || 'FAL';
+            var tmp = { company: co, defaults: d, prefix: px, signature: img.signature || '', stamp: img.stamp || '', logo: img.logo || 'falcon' };
+            openPreview(sampleInv(tmp, d), { cfg: tmp, tag: t('previewSample'), extra: function () { return []; } });
+          } }),
           el('button', { type: 'button', class: 'btn primary', text: t('save'), onclick: function (e) {
             e.target.disabled = true;
             var px = String(prefix.value || 'FAL').trim().replace(/[^\w-]+/g, '').slice(0, 12) || 'FAL';
+            c.footer_fields = ff; c.footer_titles = ffTitles;
             Promise.all([sset('invoice_company', JSON.stringify(c)), sset('invoice_defaults', JSON.stringify(d)), sset('invoice_prefix', px),
               sset('invoice_signature', img.signature || ''), sset('invoice_stamp', img.stamp || ''), sset('invoice_logo', img.logo || 'falcon')])
               .then(function () { CFG = null; toast(t('saved')); m.close(); }, function (er) { e.target.disabled = false; toast(String(er && er.message || er), 'error'); });
@@ -758,5 +920,5 @@
   }
 
   if (document.head) style(); else document.addEventListener('DOMContentLoaded', style);
-  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.59.0' };
+  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.59.2' };
 })();
