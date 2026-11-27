@@ -201,6 +201,31 @@
     }
   };
   ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX2[l]).forEach(function (k) { TX[l][k] = TX2[l][k]; }); });
+  // v1.61: döviz çevirisi + PDF içe aktarmada toplu aktif / pasif
+  var TX3 = {
+    tr: {
+      fxTitle: 'Döviz kuru', fxRefresh: 'Kuru internetten güncelle', fxBusy: 'Kur alınıyor…', fxOnline: 'internet', fxStored: 'son kayıt', fxManual: 'elle girildi',
+      fxNone: 'Kayıtlı kur yok', fxMissing: 'Bu para birimi için kur yok — kuru yazın, fiyatlar hemen çevrilir.',
+      fxHint: 'Para birimi değişince fiyatlar orijinal fiyattan bu kurla çevrilir. Ürün kayıtlarındaki fiyatlar değişmez.',
+      fxDone: '{n} kalem {c} birimine çevrildi',
+      impAllOff: 'Tümünü pasif yap', impAllOn: 'Tümünü aktif yap', impActive: '{a} / {b} aktif', impOffHint: 'Pasif ürünler faturaya ve ürün kayıtlarına girmez; silinmez, tekrar aktif yapılabilir.'
+    },
+    en: {
+      fxTitle: 'Exchange rate', fxRefresh: 'Update the rate from the internet', fxBusy: 'Fetching the rate…', fxOnline: 'internet', fxStored: 'last saved', fxManual: 'entered manually',
+      fxNone: 'No saved rate', fxMissing: 'No rate for this currency — enter it and prices are converted at once.',
+      fxHint: 'When the currency changes, prices are converted from their original price at this rate. Saved product prices are not changed.',
+      fxDone: '{n} items converted to {c}',
+      impAllOff: 'Deactivate all', impAllOn: 'Activate all', impActive: '{a} / {b} active', impOffHint: 'Inactive items are left out of the invoice and the product records; they are not deleted and can be activated again.'
+    },
+    ar: {
+      fxTitle: 'سعر الصرف', fxRefresh: 'تحديث السعر من الإنترنت', fxBusy: 'جارٍ جلب السعر…', fxOnline: 'الإنترنت', fxStored: 'آخر سعر محفوظ', fxManual: 'أُدخل يدوياً',
+      fxNone: 'لا يوجد سعر محفوظ', fxMissing: 'لا يوجد سعر لهذه العملة — أدخل السعر لتُحوَّل الأسعار فوراً.',
+      fxHint: 'عند تغيير العملة تُحوَّل الأسعار من سعرها الأصلي بهذا السعر. أسعار المنتجات المحفوظة لا تتغير.',
+      fxDone: 'تم تحويل {n} بند إلى {c}',
+      impAllOff: 'إلغاء تفعيل الكل', impAllOn: 'تفعيل الكل', impActive: '{a} / {b} مفعّل', impOffHint: 'البنود غير المفعّلة لا تدخل الفاتورة ولا سجلات المنتجات؛ لا تُحذف ويمكن تفعيلها مجدداً.'
+    }
+  };
+  ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX3[l]).forEach(function (k) { TX[l][k] = TX3[l][k]; }); });
   // Faturanın kendi dilindeki resmi metinler (PDF)
   var DOC = {
     tr: { title: 'FATURA', no: 'Fatura No', date: 'Fatura Tarihi', due: 'Vade Tarihi', billTo: 'Sayın', desc: 'Açıklama', qty: 'Miktar', unit: 'Birim',
@@ -216,6 +241,7 @@
       remaining: 'المبلغ المستحق', sign: 'التوقيع المعتمد', stamp: 'الختم', note: 'ملاحظة', bank: 'بيانات الدفع', currency: 'العملة',
       st_paid: 'مدفوعة', st_partial: 'مدفوعة جزئياً', st_pending: 'غير مدفوعة', st_cancelled: 'ملغاة', taxNo: 'الرقم الضريبي', taxOffice: 'دائرة الضرائب', mersis: 'رقم السجل التجاري', seller: 'البائع', contactH: 'الاتصال', legalH: 'الضريبة والسجل', bankH: 'البيانات المصرفية', ff: { name: 'الاسم التجاري', address: 'العنوان', phone: 'هاتف', fax: 'فاكس', email: 'البريد الإلكتروني', web: 'الموقع', tax_office: 'دائرة الضرائب', tax: 'الرقم الضريبي', mersis: 'رقم MERSIS', trade_reg: 'رقم السجل التجاري', bank_name: 'البنك', iban: 'IBAN' }, tel: 'هاتف', mail: 'البريد الإلكتروني', web: 'الموقع', thanks: 'شكراً لتعاملكم معنا.', page: 'صفحة' }
   };
+  DOC.tr.fxRate = 'Döviz Kuru'; DOC.en.fxRate = 'Exchange Rate'; DOC.ar.fxRate = 'سعر الصرف';
   var ERR = {
     tr: { ERR_INVOICE_ITEMS: 'En az bir kalem girin.', ERR_CUSTOMER_REQUIRED: 'Müşteri adını yazın.', ERR_INVOICE_OVERPAY: 'Tahsilat kalan tutardan büyük olamaz.',
       ERR_INVOICE_NUMBER_TAKEN: 'Bu fatura numarası zaten kullanılıyor.', ERR_INVOICE_HAS_PAYMENTS: 'Tahsilatı olan faturada bu yapılamaz — önce tahsilatları silin.',
@@ -507,6 +533,7 @@
     };
     var LTR_META = { number: 1, ettn: 1, customization: 1, issue_time: 1, order_no: 1, waybill_no: 1, campaign: 1 };
     var metaRows = layOn(cfg, 'meta').filter(function (f) { return metaVal(f.k); }).map(function (f) { return { k: f.k, label: fLabel('meta', f, lg), v: metaVal(f.k), ltr: LTR_META[f.k] || f.custom }; });
+    if (meta.fx_rate) metaRows.push({ k: 'fx_rate', label: D.fxRate, v: meta.fx_rate, ltr: true }); // v1.61: çeviride kullanılan kur
     // müşteri alanları
     var custVal = function (k) {
       if (k === 'tax_no') return inv.customer_tax || ''; if (k === 'address') return inv.customer_address || ''; if (k === 'phone') return inv.customer_phone || ''; if (k === 'email') return inv.customer_email || '';
@@ -753,6 +780,9 @@
       '.fat-busy{display:flex;align-items:center;gap:12px;font-weight:600;padding:8px 2px}.fat-busy .spin{width:20px;height:20px;border:3px solid #38bdf855;border-top-color:#38bdf8;border-radius:50%;animation:fatspin .8s linear infinite}@keyframes fatspin{to{transform:rotate(360deg)}}' +
       '.fat-imp-src{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}.fat-imp-st{border-radius:10px;padding:8px 12px;margin:6px 0 10px;font-weight:600}.fat-imp-st.ok{background:#22a06b1f;color:#22a06b}.fat-imp-st.new{background:#0ea5e91f;color:#38bdf8}.fat-imp-st.warn{background:#e2a4001f;color:#d69500}' +
       '.fat-imp-ms{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px 14px}.fat-imp-m{display:flex;gap:6px;align-items:center;font-size:13px}.fat-imp-m b{overflow-wrap:anywhere}' +
+      '.fat-fx{border:1px solid var(--border,#ffffff1f);border-radius:12px;padding:10px 12px}.fat-fx-h{display:flex;align-items:center;gap:8px;margin-bottom:6px}.fat-fx-h .sp{flex:1}' +
+      '.fat-fx-r{display:flex;flex-wrap:wrap;gap:10px 18px}.fat-fx-i{display:flex;align-items:center;gap:6px;font-weight:600;white-space:nowrap}.fat-fx-i input{width:130px}.fat-fx-i input.bad{border-color:#e5484d}' +
+      '.fat-imp-bulk{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:4px 0 8px}.fat-imp-bulk .sp{flex:1}.fat-imp-t tr.off td{opacity:.45}.fat-imp-t tr.off td:first-child{opacity:1}' +
       '.fat-imp-t .nm2{min-width:240px}.fat-imp-t .cd{width:140px}.fat-imp-t .q{width:70px}.fat-imp-t .u{width:64px}.fat-imp-t .p{width:100px}.fat-imp-t .v{width:56px}.fat-imp-sel{max-width:260px}' +
       '.fat-click{cursor:pointer}.fat-hist{margin-top:14px}.fat-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}.fat-chks{display:flex;gap:18px;flex-wrap:wrap}' +
       '.fat-lay .r{grid-template-columns:28px minmax(160px,1fr) 44px 96px}.fat-lay .r .bt{justify-content:flex-end}' +
@@ -1103,7 +1133,7 @@
           }
           return field(fLabel('meta', f, lang()), x, f.k === 'number' ? { hint: t('invNoHint') } : null);
         });
-        var curSel = el('select', { onchange: function (e) { st.currency = e.target.value; drawCash(); recalc(); } }, CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], st.currency === c); }));
+        var curSel = el('select', { onchange: function (e) { var old = st.currency; st.currency = e.target.value; switchCurrency(old, st.currency); drawCash(); } }, CUR.map(function (c) { return opt(c, c + ' · ' + SYM[c], st.currency === c); }));
         var tplSel = el('select', { onchange: function (e) { st.template = withSign(e.target.value, hasSign(st.template)); } }, TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), tplOf(st.template) === x); }));
         var sgBox = el('div', { class: 'fat-seg' });
         var drawSg = function () {
@@ -1115,6 +1145,92 @@
         };
         drawSg();
         var lgSel = el('select', { onchange: function (e) { st.lang = e.target.value; } }, [['tr', 'langTr'], ['en', 'langEn'], ['ar', 'langAr']].map(function (x) { return opt(x[0], t(x[1]), st.lang === x[0]); }));
+
+        // ---- v1.61: döviz çevirisi ----
+        // Kur: exchange_rates (1 USD = rate birim). Kalem ilk çevrildiğinde orijinal fiyatı it.fx = {p, c} olarak saklanır; her çeviri
+        // orijinalden yapılır (gidip gelince yuvarlama birikmez), orijinal para birimine dönülünce fiyat aynen geri gelir.
+        // Fiyat elle değiştirilirse it.fx silinir (yeni fiyat esas olur). Ürün kayıtlarının fiyatı değişmez (services.js v1.61 fx).
+        var FX = { r: { USD: 1 }, man: {}, at: '', online: false, busy: false, fetched: false };
+        var fxBox = el('div', { class: 'field span-2 fat-fx' });
+        var fxRate = function (c) { return c === 'USD' ? 1 : num(FX.man[c]) > 0 ? num(FX.man[c]) : num(FX.r[c]) > 0 ? num(FX.r[c]) : 0; };
+        var fxConv = function (a, from, to) { if (from === to) return a; var rf = fxRate(from), rt = fxRate(to); return rf > 0 && rt > 0 ? a / rf * rt : null; };
+        var fxPrice = function (n, c) { var p = Math.pow(10, DEC[c] === 0 ? 0 : 4); return Math.round(n * p) / p; };
+        var fxUsed = function () {
+          var u = {}; st.items.forEach(function (it) { if (it.fx && it.fx.c !== st.currency) u[it.fx.c] = 1; });
+          if (st.discFx && st.discFx.c !== st.currency) u[st.discFx.c] = 1;
+          return Object.keys(u);
+        };
+        var fxText = function () {
+          var used = fxUsed(); if (!used.length) return '';
+          var cs = {}; used.concat([st.currency]).forEach(function (c) { if (c !== 'USD') cs[c] = 1; });
+          return Object.keys(cs).filter(function (c) { return fxRate(c) > 0; }).map(function (c) { return '1 USD = ' + fmt(fxRate(c), c === 'SYP' ? 'SYP' : 'X', st.lang) + ' ' + c; }).join(' · ');
+        };
+        var loadFx = function () {
+          return q('SELECT currency_code AS c, rate, created_at AS at FROM exchange_rates r WHERE id = (SELECT MAX(id) FROM exchange_rates WHERE currency_code = r.currency_code)').then(function (rows) {
+            var m = { USD: 1 }, at = '';
+            rows.forEach(function (x) { if (CUR.indexOf(x.c) >= 0 && x.c !== 'USD' && x.rate > 0) { m[x.c] = x.rate; if (String(x.at || '') > at) at = String(x.at || ''); } });
+            var ch = CUR.some(function (c) { return num(m[c]) !== num(FX.r[c]); });
+            FX.r = m; FX.at = at; return ch;
+          }).catch(function () { return false; });
+        };
+        var fetchFx = function () {
+          var api = F().rates && F().rates.fetchOnline;
+          FX.fetched = true;
+          if (!api) return loadFx();
+          FX.busy = true; drawFx();
+          return Promise.race([Promise.resolve().then(api), new Promise(function (res) { setTimeout(function () { res(null); }, 9000); })])
+            .then(function (r) { FX.online = !!(r && r.ok); if (FX.online) FX.at = new Date().toISOString(); }, function () { FX.online = false; })
+            .then(function () { var keep = FX.online ? FX.at : ''; return loadFx().then(function (ch) { if (keep) FX.at = keep; return ch; }); })
+            .then(function (ch) { FX.busy = false; drawFx(); return ch; });
+        };
+        // çevrilmiş tüm kalemleri (ve indirimi) güncel kurla yeniden hesaplar
+        function fxApply(quiet) {
+          var n = 0, miss = false, c = st.currency;
+          st.items.forEach(function (it) {
+            if (!it.fx) return;
+            if (it.fx.c === c) { it.price = it.fx.p; delete it.fx; n++; return; }
+            var v = fxConv(it.fx.p, it.fx.c, c); if (v == null) { miss = true; return; }
+            it.price = fxPrice(v, c); n++;
+          });
+          if (st.discFx) {
+            if (st.discFx.c === c) { st.discount = st.discFx.p; st.discFx = null; }
+            else { var dv = fxConv(st.discFx.p, st.discFx.c, c); if (dv == null) miss = true; else st.discount = rnd(dv, c); }
+            if (discIn) discIn.value = st.discount === '' || st.discount == null ? '' : String(st.discount);
+          }
+          st.fxTxt = fxText();
+          drawItems(); drawFx(miss);
+          if (n && !quiet && !miss) toast(t('fxDone', { n: n, c: c }));
+          return miss;
+        }
+        function switchCurrency(from, to) {
+          if (from === to) return;
+          st.items.forEach(function (it) { if (!it.fx && it.price !== '' && it.price != null && num(it.price) !== 0) it.fx = { p: num(it.price), c: from }; });
+          if (!st.discFx && num(st.discount) > 0) st.discFx = { p: num(st.discount), c: from };
+          fxApply(false);
+          // internetten güncel kur (oturumda bir kez); kur değiştiyse fiyatlar orijinalden yeniden çevrilir
+          if (!FX.fetched) fetchFx().then(function (ch) { if (ch) fxApply(true); });
+        }
+        function drawFx(miss) {
+          fxBox.innerHTML = '';
+          var head = el('div', { class: 'fat-fx-h' }, [el('span', { class: 'field-label', text: t('fxTitle') }), el('span', { class: 'sp' }),
+            el('button', { type: 'button', class: 'btn small', disabled: FX.busy || null, title: t('fxRefresh'), text: FX.busy ? '⏳ ' + t('fxBusy') : '↻ ' + t('fxRefresh'),
+              onclick: function () { fetchFx().then(function (ch) { if (ch) fxApply(true); }); } })]);
+          fxBox.appendChild(head);
+          var row = el('div', { class: 'fat-fx-r', dir: 'ltr' });
+          CUR.filter(function (c) { return c !== 'USD'; }).forEach(function (c) {
+            var x = el('input', { type: 'number', step: 'any', min: '0', dir: 'ltr', value: fxRate(c) > 0 ? String(fxRate(c)) : '', class: miss && !(fxRate(c) > 0) ? 'bad' : null,
+              onchange: function (e) { var v = num(e.target.value); if (v > 0 && v !== num(FX.r[c])) FX.man[c] = v; else delete FX.man[c]; fxApply(true); } });
+            row.appendChild(el('label', { class: 'fat-fx-i' }, [el('span', { text: '1 USD =' }), x, el('span', { text: c }), el('span', { dir: 'rtl', text: SYM[c] })]));
+          });
+          fxBox.appendChild(row);
+          var hasMan = Object.keys(FX.man).length > 0;
+          var srcTxt = hasMan ? t('fxManual') : !FX.at ? t('fxNone') : (FX.online ? t('fxOnline') : t('fxStored')) + ' · ' + dmy(FX.at) + (FX.at.length > 10 ? ' ' + (FX.online ? new Date(FX.at).toTimeString().slice(0, 5) : FX.at.slice(11, 16)) : '');
+          fxBox.appendChild(el('div', { class: 'field-hint' }, [el('b', { text: srcTxt }), el('span', { text: ' — ' + t('fxHint') })]));
+          if (miss) fxBox.appendChild(el('div', { class: 'notice error small', text: t('fxMissing') }));
+        }
+        var discIn = null;
+        loadFx().then(function () { drawFx(); });
+        drawFx();
 
         // ---- kalemler ----
         var tbody = el('tbody');
@@ -1145,7 +1261,10 @@
           if ((force || !it.unit) && p.unit && p.unit !== 'pcs') { it.unit = p.unit; if (refs.unit) refs.unit.value = p.unit; }
           if ((force || !it.depot) && p.depot) { it.depot = p.depot; if (refs.depot) refs.depot.value = p.depot; }
           if (perLine && p.vat_rate != null && (force || it.vat == null || it.vat === '' || num(it.vat) === dVat)) { it.vat = p.vat_rate; if (refs.vat) refs.vat.value = p.vat_rate; }
-          if ((force || it.price === '' || it.price == null || num(it.price) === 0) && p.sale_price != null && (!p.cost_currency || p.cost_currency === st.currency)) { it.price = p.sale_price; if (refs.price) refs.price.value = p.sale_price; }
+          if ((force || it.price === '' || it.price == null || num(it.price) === 0) && p.sale_price != null) {
+            if (!p.cost_currency || p.cost_currency === st.currency) { it.price = p.sale_price; delete it.fx; if (refs.price) refs.price.value = p.sale_price; }
+            else { var pv = fxConv(num(p.sale_price), p.cost_currency, st.currency); if (pv != null) { it.fx = { p: num(p.sale_price), c: p.cost_currency }; it.price = fxPrice(pv, st.currency); st.fxTxt = fxText(); if (refs.price) refs.price.value = it.price; } }
+          }
           recalc();
         }
         function drawItems() {
@@ -1184,7 +1303,7 @@
               e.preventDefault(); if (sug.hidden) { nm.focus(); showSug(true); } else sug.hidden = true;
             } }) : null;
             requestAnimationFrame(fit);
-            var numIn = function (key, cls) { var x = el('input', { class: cls, type: 'number', step: 'any', min: '0', dir: 'ltr', value: it[key] == null ? '' : String(it[key]), oninput: function (e) { it[key] = e.target.value; recalc(); } }); refs[key] = x; return x; };
+            var numIn = function (key, cls) { var x = el('input', { class: cls, type: 'number', step: 'any', min: '0', dir: 'ltr', value: it[key] == null ? '' : String(it[key]), oninput: function (e) { it[key] = e.target.value; if (key === 'price') delete it.fx; recalc(); } }); refs[key] = x; return x; };
             var txtIn = function (key, cls, ltr) {
               var x = el('input', { class: cls, dir: ltr ? 'ltr' : null, value: it[key] || '', oninput: function (e) {
                 it[key] = e.target.value;
@@ -1256,11 +1375,11 @@
         ].concat(custFields).concat([
           el('h3', { class: 'section-title span-2', text: t('secInfo') })
         ]).concat(metaFields).concat([
-          field(t('currency'), curSel), field(t('template'), tplSel), field(t('lang'), lgSel),
+          field(t('currency'), curSel), field(t('template'), tplSel), field(t('lang'), lgSel), fxBox,
           field(t('signField'), sgBox, { span: 2, group: true, hint: t('signFieldHint') }),
           el('div', { class: 'field span-2' }, [el('span', { class: 'field-label', text: t('items') }), el('div', { class: 'fat-items-wrap' }, [itemsTable]),
             el('div', null, [el('button', { type: 'button', class: 'btn small', text: t('addItem'), onclick: function () { st.items.push(newItem()); drawItems(); var ins = tbody.querySelectorAll('tr:last-child textarea'); if (ins[0]) ins[0].focus(); } })])]),
-          field(t('discount'), inpS('discount', { type: 'number', step: 'any', min: '0', dir: 'ltr', after: recalc })),
+          field(t('discount'), (discIn = inpS('discount', { type: 'number', step: 'any', min: '0', dir: 'ltr', after: function () { st.discFx = null; recalc(); } }))),
           perLine ? null : field(t('taxRate'), inpS('tax_rate', { type: 'number', step: 'any', min: '0', max: '100', dir: 'ltr', after: recalc })),
           el('div', { class: 'span-2' }, [totBox]),
           field(t('note'), inpS('note', { tag: 'textarea', rows: 2 }), { span: 2 }),
@@ -1271,13 +1390,15 @@
             var o = { name: it.name, qty: num(it.qty), unit: it.unit || '', price: num(it.price), product_id: it.product_id || null };
             if (it.code) o.code = it.code; if (it.depot) o.depot = it.depot;
             if (perLine) o.vat = num(it.vat);
+            if (it.fx && it.fx.c !== st.currency) o.fx = { p: num(it.fx.p), c: it.fx.c };
             if (it.x) { var x = {}; Object.keys(it.x).forEach(function (k) { if (String(it.x[k] || '').trim()) x[k] = it.x[k]; }); if (Object.keys(x).length) o.x = x; }
             return o;
           });
         };
         var metaOut = function () {
           var o = {};
-          Object.keys(st.meta).forEach(function (k) { if (String(st.meta[k] || '').trim()) o[k] = String(st.meta[k]).trim(); });
+          Object.keys(st.meta).forEach(function (k) { if (k !== 'fx_rate' && String(st.meta[k] || '').trim()) o[k] = String(st.meta[k]).trim(); });
+          if (fxUsed().length) { var fxs = st.fxTxt || st.meta.fx_rate || fxText(); if (fxs) o.fx_rate = fxs; }
           Object.keys(st.cx).forEach(function (k) { if (String(st.cx[k] || '').trim()) o['c.' + k] = String(st.cx[k]).trim(); });
           return o;
         };
@@ -1434,16 +1555,32 @@
       var cur = CUR.indexOf(r.currency) >= 0 ? r.currency : '';
       var tb = el('tbody', null, rows.map(function (o, i) {
         var it = o.it;
-        var cb = el('input', { type: 'checkbox', onchange: function (e) { o.on = e.target.checked; } }); cb.checked = true;
+        var cb = el('input', { type: 'checkbox', onchange: function (e) { o.on = e.target.checked; syncOn(); } }); cb.checked = o.on; o.cb = cb;
         var sel = el('select', { class: 'fat-imp-sel', onchange: function (e) { o.pick = e.target.value; } }, [opt('', '＋ ' + t('impNewProduct'), !o.pick)].concat(o.cands.map(function (c) {
           return opt(String(c.p.id), (c.code ? '✓ ' : c.s >= 0.86 ? '✓ ' : '≈ ') + (c.p.code ? c.p.code + ' · ' : '') + c.p.name + (c.code ? '' : ' (%' + Math.round(c.s * 100) + ')'), o.pick === String(c.p.id));
         })));
         var ni = function (k, cls) { return el('input', { class: cls, type: 'number', step: 'any', dir: 'ltr', value: it[k] == null ? '' : String(it[k]), oninput: function (e) { it[k] = e.target.value === '' ? null : num(e.target.value); } }); };
         var ti = function (k, cls) { return el('input', { class: cls, value: it[k] || '', oninput: function (e) { it[k] = e.target.value; } }); };
-        return el('tr', null, [el('td', null, [cb]), el('td', null, [ti('code', 'cd')]), el('td', null, [ti('name', 'nm2')]), el('td', null, [ni('qty', 'q')]), el('td', null, [ti('unit', 'u')]),
-          el('td', null, [ni('price', 'p')]), el('td', null, [ni('vat', 'v')]), el('td', null, [sel])]);
+        return (o.tr = el('tr', null, [el('td', null, [cb]), el('td', null, [ti('code', 'cd')]), el('td', null, [ti('name', 'nm2')]), el('td', null, [ni('qty', 'q')]), el('td', null, [ti('unit', 'u')]),
+          el('td', null, [ni('price', 'p')]), el('td', null, [ni('vat', 'v')]), el('td', null, [sel])]));
       }));
-      var itTable = el('div', { class: 'fat-items-wrap' }, [el('table', { class: 'fat-items fat-imp-t' }, [el('thead', null, [el('tr', null, ['', fLabel('cols', { k: 'code' }, lang()), fLabel('cols', { k: 'name' }, lang()), fLabel('cols', { k: 'qty' }, lang()), fLabel('cols', { k: 'unit' }, lang()), fLabel('cols', { k: 'price' }, lang()), '%', t('impMatch')].map(function (h) { return el('th', { text: h }); }))]), tb])]);
+      // v1.61: toplu aktif / pasif (pasif kalem faturaya ve ürün kayıtlarına girmez; silinmez)
+      var onCnt = el('span', { class: 'muted small' });
+      var allCb = el('input', { type: 'checkbox', title: t('impAllOn'), onchange: function (e) { setAll(e.target.checked); } });
+      function syncOn() {
+        var a = rows.filter(function (o) { return o.on; }).length;
+        rows.forEach(function (o) { if (o.tr) o.tr.classList.toggle('off', !o.on); });
+        onCnt.textContent = t('impActive', { a: a, b: rows.length });
+        allCb.checked = a === rows.length && a > 0; allCb.indeterminate = a > 0 && a < rows.length;
+      }
+      function setAll(v) { rows.forEach(function (o) { o.on = v; if (o.cb) o.cb.checked = v; }); syncOn(); }
+      var bulk = el('div', { class: 'fat-imp-bulk' }, [
+        el('button', { type: 'button', class: 'btn small', text: '⊘ ' + t('impAllOff'), onclick: function () { setAll(false); } }),
+        el('button', { type: 'button', class: 'btn small', text: '✓ ' + t('impAllOn'), onclick: function () { setAll(true); } }),
+        el('span', { class: 'sp' }), onCnt
+      ]);
+      var itTable = el('div', { class: 'fat-items-wrap' }, [el('table', { class: 'fat-items fat-imp-t' }, [el('thead', null, [el('tr', null, [allCb, fLabel('cols', { k: 'code' }, lang()), fLabel('cols', { k: 'name' }, lang()), fLabel('cols', { k: 'qty' }, lang()), fLabel('cols', { k: 'unit' }, lang()), fLabel('cols', { k: 'price' }, lang()), '%', t('impMatch')].map(function (h) { return typeof h === 'string' ? el('th', { text: h }) : el('th', null, [h]); }))]), tb])]);
+      syncOn();
       // toplam denetimi
       var calc = rows.reduce(function (a, o) { return a + num(o.it.qty) * num(o.it.price); }, 0);
       var expect = r.totals.subtotal != null ? r.totals.subtotal - (rows.some(function (o) { return num(o.it.disc_amount) > 0 || num(o.it.disc_rate) > 0; }) ? num(r.totals.discount) : 0) : null;
@@ -1455,7 +1592,7 @@
         mRows.length ? el('h3', { class: 'section-title', text: t('secInfo') }) : null,
         mRows.length ? el('div', { class: 'fat-imp-ms' }, mRows) : null,
         mRows.length ? el('div', { class: 'field-hint', text: t('impMetaHint') }) : null,
-        el('h3', { class: 'section-title', text: t('items') + ' (' + rows.length + ')' }), itTable,
+        el('h3', { class: 'section-title', text: t('items') + ' (' + rows.length + ')' }), bulk, itTable, el('div', { class: 'field-hint', text: t('impOffHint') }),
         expect != null ? el('div', { class: 'fat-imp-st ' + (chk ? 'ok' : 'warn'), text: (chk ? '✓ ' : '⚠ ') + t('impTotals', { a: fmt(calc, cur || 'TRY'), b: fmt(expect, cur || 'TRY') }) }) : null
       ];
       drawC();
@@ -1854,5 +1991,5 @@
   }
 
   if (document.head) style(); else document.addEventListener('DOMContentLoaded', style);
-  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.60.0' };
+  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.61.0' };
 })();
