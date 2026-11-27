@@ -286,3 +286,21 @@ test('Kullanım Limitleri kartı tek (1.59): arayüz eşitleme kartının yanın
   assert.ok(read('dist/index.html').includes('./assets/fatura-falcon.js'), 'fatura eklentisi yüklenir');
   assert.ok(read('dist/assets/fatura-falcon.js').includes('window.FalconFatura'));
 });
+
+test('Arapça / dar ekran (1.60): varsayılan adlar ekranda çevrilir, tarih yereli dile bağlı, üst çubuk taşmaz, duyuru teması', () => {
+  const html = read('dist/index.html');
+  assert.ok(html.includes('./assets/adlar-falcon.js') && html.indexOf('adlar-falcon.js') < html.indexOf('type="module"'), 'ad çevirisi eklentisi React paketinden önce yüklenir');
+  const adlar = read('dist/assets/adlar-falcon.js');
+  for (const ad of ['Dolar Kasası', 'TL Kasası', 'Suriye Lirası Kasası', 'Nakit Dolar', 'Nakit TL', 'Nakit Suriye Lirası', 'Ana Depo']) assert.ok(adlar.includes(`'${ad}': { en: '`), ad);
+  assert.ok(/INPUT: 1, TEXTAREA: 1/.test(adlar), 'giriş kutularındaki kayıt adına dokunulmaz');
+  const main = read('electron/main.js');
+  assert.match(main, /appendSwitch\('lang', LOCALE_MAP\[l\]\)/, 'Chromium yereli dil.json ile açılışta seçilir');
+  assert.match(main, /if \(key === 'language'\) rememberLocale/, 'dil değişince dil.json yazılır');
+  assert.ok(main.indexOf("appendSwitch('lang'") < main.indexOf('app.whenReady()'), 'yerel, uygulama hazır olmadan seçilir');
+  const css = read('dist/assets/fc-falcon.css');
+  assert.match(css, /@media \(max-width:1500px\)\{[^}]*top-act-label\{display:none\}/, 'dar ekranda düğme yazıları gizlenir');
+  assert.match(css, /\.topbar-actions\{flex-wrap:wrap/, 'üst çubuk taşmak yerine alt satıra iner');
+  const duyuru = read('dist/assets/duyuru-falcon.js');
+  assert.ok(duyuru.includes('.aduy-kut{background:var(--modal-bg') && !duyuru.includes('prefers-color-scheme'), 'duyuru penceresi programın temasını izler');
+  assert.ok(duyuru.includes('.aduy-zil{position:fixed;inset-inline-end:'), 'bildirim düğmesi kenar çubuğunun üstüne binmez');
+});

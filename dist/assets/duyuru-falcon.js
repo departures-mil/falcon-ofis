@@ -51,17 +51,17 @@
     var s = document.createElement('style'); s.id = 'aduy-stil';
     s.textContent =
       '.aduy-ort{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2147483600;display:flex;align-items:center;justify-content:center;padding:16px;font-family:system-ui,"Segoe UI",Tahoma,sans-serif}' +
-      '.aduy-kut{background:#fff;color:#1d2433;max-width:520px;width:100%;max-height:85vh;overflow:auto;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.35);padding:20px 22px}' +
-      '.aduy-kut h3{margin:0 0 4px;font-size:18px}.aduy-tarih{font-size:12px;color:#6b7280;margin-bottom:10px}' +
+      '.aduy-kut{background:var(--modal-bg,#fff);color:var(--text,#1d2433);border:1px solid var(--modal-border,transparent);max-width:520px;width:100%;max-height:85vh;overflow:auto;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.35);padding:20px 22px}' +
+      '.aduy-kut h3{margin:0 0 4px;font-size:18px}.aduy-tarih{font-size:12px;color:var(--muted,#6b7280);margin-bottom:10px}' +
       '.aduy-metin{white-space:pre-wrap;line-height:1.55;font-size:14.5px}' +
       '.aduy-et{display:inline-block;background:#dc2626;color:#fff;font-size:11px;border-radius:6px;padding:1px 7px;margin-inline-end:6px;vertical-align:middle}' +
       '.aduy-alt{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}' +
-      '.aduy-alt button{border:0;border-radius:8px;padding:8px 16px;font-size:14px;cursor:pointer;background:#e5e7eb;color:#111}' +
-      '.aduy-alt button.ana{background:#2563eb;color:#fff}' +
-      '.aduy-oge{border-bottom:1px solid #e5e7eb;padding:10px 0}.aduy-oge:last-child{border:0}' +
-      '.aduy-zil{position:fixed;inset-inline-start:14px;bottom:14px;z-index:2147483500;width:42px;height:42px;border-radius:50%;border:0;background:#2563eb;color:#fff;font-size:19px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3);display:none}' +
+      '.aduy-alt button{border:0;border-radius:8px;padding:8px 16px;font-size:14px;cursor:pointer;background:var(--panel-hover,#e5e7eb);color:var(--text,#111)}' +
+      '.aduy-alt button.ana{background:var(--grad-primary,#2563eb);color:var(--on-accent,#fff)}' +
+      '.aduy-oge{border-bottom:1px solid var(--border,#e5e7eb);padding:10px 0}.aduy-oge:last-child{border:0}' +
+      '.aduy-zil{position:fixed;inset-inline-end:22px;bottom:96px;z-index:2147483500;width:42px;height:42px;border-radius:50%;border:0;background:#2563eb;color:#fff;font-size:19px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3);display:none}' +
       '.aduy-zil b{position:absolute;top:-3px;inset-inline-end:-3px;background:#dc2626;color:#fff;border-radius:9px;font-size:11px;min-width:18px;height:18px;line-height:18px;padding:0 4px}' +
-      '@media (prefers-color-scheme:dark){.aduy-kut{background:#1f2937;color:#f3f4f6}.aduy-alt button{background:#374151;color:#f3f4f6}.aduy-oge{border-color:#374151}}';
+      '';
     document.head.appendChild(s);
   }
 
@@ -159,11 +159,11 @@
 
   var Y = {
     tr: { baslik: 'Bildirimler ve Duyurular', sayi: 'Admin duyuruları', yeni: 'yeni', goster: 'Duyuruları göster', yenile: 'Yenile',
-      zil: 'Ekranda yüzen bildirim düğmesini göster (sol alt)', not: 'Yeni bir duyuru geldiğinde bir kez ekranda açılır; sonra buradan okunur. Yüzen düğme kapalıyken ekranın hiçbir yerini kapatmaz.' },
+      zil: 'Ekranda yüzen bildirim düğmesini göster (sağ alt)', not: 'Yeni bir duyuru geldiğinde bir kez ekranda açılır; sonra buradan okunur. Yüzen düğme kapalıyken ekranın hiçbir yerini kapatmaz.' },
     en: { baslik: 'Notifications & Announcements', sayi: 'Admin announcements', yeni: 'new', goster: 'Show announcements', yenile: 'Refresh',
-      zil: 'Show the floating notification button (bottom left)', not: 'A new announcement opens once on screen; after that it can be read here. With the floating button off, nothing covers the screen.' },
+      zil: 'Show the floating notification button (bottom corner)', not: 'A new announcement opens once on screen; after that it can be read here. With the floating button off, nothing covers the screen.' },
     ar: { baslik: 'الإشعارات والإعلانات', sayi: 'إعلانات المسؤول', yeni: 'جديد', goster: 'عرض الإعلانات', yenile: 'تحديث',
-      zil: 'إظهار زر الإشعارات العائم (أسفل اليسار)', not: 'يُعرض الإعلان الجديد مرة واحدة على الشاشة، ثم يمكن قراءته من هنا. عند إيقاف الزر العائم لا يغطي أي جزء من الشاشة.' }
+      zil: 'إظهار زر الإشعارات العائم (الزاوية السفلية)', not: 'يُعرض الإعلان الجديد مرة واحدة على الشاشة، ثم يمكن قراءته من هنا. عند إيقاف الزر العائم لا يغطي أي جزء من الشاشة.' }
   };
   function d() { var l = String(document.documentElement.lang || 'tr').slice(0, 2).toLowerCase(); return Y[l] ? l : 'tr'; }
   function T(k) { return Y[d()][k]; }

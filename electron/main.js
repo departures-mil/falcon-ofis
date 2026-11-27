@@ -53,6 +53,27 @@ if (NSIS_INSTALL) {
     // AppData klasöründe devam edilir
   }
 }
+// Tarih kutuları (gg.aa.yyyy) ve tarayıcı yerel ayarı programın diliyle aynı olsun. Chromium yereli yalnız açılışta
+// seçilebildiğinden dil, veri klasöründeki dil.json'a yazılır ve sonraki açılışta uygulanır. Arapçada rakamlar Latin kalsın diye en-GB.
+const LOCALE_MAP = { tr: 'tr', en: 'en-GB', ar: 'en-GB' };
+const localeFile = () => path.join(app.getPath('userData'), 'dil.json');
+try {
+  const l = JSON.parse(fs.readFileSync(localeFile(), 'utf8')).lang;
+  if (LOCALE_MAP[l]) app.commandLine.appendSwitch('lang', LOCALE_MAP[l]);
+} catch {
+  // ilk açılış: Chromium varsayılanı
+}
+function rememberLocale(lang) {
+  if (!LOCALE_MAP[lang]) return;
+  try {
+    let cur = null;
+    try { cur = JSON.parse(fs.readFileSync(localeFile(), 'utf8')).lang; } catch { /* yok */ }
+    if (cur !== lang) fs.writeFileSync(localeFile(), JSON.stringify({ lang }));
+  } catch (err) {
+    console.error('dil.json yazılamadı', err.message);
+  }
+}
+
 // Kurulum programına geçmeden önce: yeni kurulum bu veri klasörünü kullansın (yalnız konum yazılır, veri yerinde kalır)
 function writeDataPointer() {
   if (path.resolve(app.getPath('userData')) === path.resolve(defaultUserData())) return;
@@ -775,9 +796,11 @@ function registerIpc() {
     if (!OPEN_SETTINGS.includes(key)) locked();
     return database.get('SELECT value FROM settings WHERE key = ?', [key])?.value ?? null;
   });
-  handle('settings:set', (_e, key, value) =>
-    database.run('INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value', [key, String(value)]),
-  );
+  handle('settings:set', (_e, key, value) => {
+    const r = database.run('INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value', [key, String(value)]);
+    if (key === 'language') rememberLocale(String(value));
+    return r;
+  });
 
   handle('rates:fetchOnline', wrap(async () => {
     // v1.11: Suriye piyasası sayfası; tarayıcı kimliğiyle istenir. Eski lira kullanılıyorsa değerler x100 yazılır.
@@ -986,6 +1009,7 @@ function autoBackup() {
 async function openDatabase() {
   Kullanim.depo(path.join(app.getPath('userData'), 'kullanim-limit.json'));
   database = await new Database(dbPath(), { backupDir: backupsDir() }).open();
+  try { rememberLocale(database.get("SELECT value FROM settings WHERE key = 'language'")?.value || 'tr'); } catch { /* dil okunamadı */ }
   services = createServices(database, { removeFile: (rel) => fs.rmSync(safeFilePath(rel), { force: true }) });
   sync?.dispose();
   sync = createSync({
