@@ -31,7 +31,7 @@ html[dir=rtl] .fa-fab { right: auto; left: 22px; }
 .meter-left.late{color:var(--danger,#f43f5e);font-weight:700}
 .meter-diff.up{color:var(--usd,#34d399)}
 
-/* 1.60.0: dar masaüstü ekranında (1366 px dizüstü, küçültülmüş pencere) üst çubuk taşmasın — Kapat düğmesi her zaman görünür.
+/* 1.60.1: dar masaüstü ekranında (1366 px dizüstü, küçültülmüş pencere) üst çubuk taşmasın — Kapat düğmesi her zaman görünür.
    1500 px altında düğme yazıları gizlenir (simge + ipucu kalır; güncelleme varken/sürerken "Güncelle" yazısı görünür),
    daha da darsa düğmeler alt satıra iner. Türkçe ve Arapçada (RTL) aynı. */
 @media (max-width:1500px){

@@ -287,7 +287,7 @@ test('Kullanım Limitleri kartı tek (1.59): arayüz eşitleme kartının yanın
   assert.ok(read('dist/assets/fatura-falcon.js').includes('window.FalconFatura'));
 });
 
-test('Arapça / dar ekran (1.60): varsayılan adlar ekranda çevrilir, tarih yereli dile bağlı, üst çubuk taşmaz, duyuru teması', () => {
+test('Arapça / dar ekran (1.60.1): varsayılan adlar ekranda çevrilir, tarih yereli dile bağlı, üst çubuk taşmaz, duyuru teması', () => {
   const html = read('dist/index.html');
   assert.ok(html.includes('./assets/adlar-falcon.js') && html.indexOf('adlar-falcon.js') < html.indexOf('type="module"'), 'ad çevirisi eklentisi React paketinden önce yüklenir');
   const adlar = read('dist/assets/adlar-falcon.js');
@@ -305,11 +305,11 @@ test('Arapça / dar ekran (1.60): varsayılan adlar ekranda çevrilir, tarih yer
   assert.ok(duyuru.includes('.aduy-zil{position:fixed;inset-inline-end:'), 'bildirim düğmesi kenar çubuğunun üstüne binmez');
 });
 
-test('Sor asistanı çevrimdışı (1.60): kasa bakiyesi ve azalan stok soruları tr/en/ar tanınır, dönem soruları pakete kalır', () => {
+test('Sor asistanı çevrimdışı (1.60.1): kasa bakiyesi ve azalan stok soruları tr/en/ar tanınır, dönem soruları pakete kalır', () => {
   const html = read('dist/index.html');
   assert.ok(html.indexOf('sor-yerel-falcon.js') > 0 && html.indexOf('sor-yerel-falcon.js') < html.indexOf('type="module"'));
   const bundle = fs.readdirSync(path.join(ROOT, 'dist/assets')).filter((f) => /^index-.*\.js$/.test(f)).map((f) => read('dist/assets/' + f)).join('');
-  assert.ok(bundle.includes('if(window.FalconAskLocal){try{var pre=await window.FalconAskLocal(text,ctx,range);if(pre)return pre}catch(e){}}'), 'FA.local kancası (patch-ui-160)');
+  assert.ok(bundle.includes('if(window.FalconAskLocal){try{var pre=await window.FalconAskLocal(text,ctx,range);if(pre)return pre}catch(e){}}'), 'FA.local kancası (patch-ui-1601)');
   const g = { document: { documentElement: { getAttribute: () => 'tr' } } };
   g.window = g;
   new Function('window', 'document', read('dist/assets/sor-yerel-falcon.js'))(g, g.document);

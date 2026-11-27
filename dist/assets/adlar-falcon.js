@@ -1,4 +1,4 @@
-/* Falcon Ofis — varsayılan kayıt adlarının ekranda çevirisi (v1.60.0).
+/* Falcon Ofis — varsayılan kayıt adlarının ekranda çevirisi (v1.60.1).
    Kasalar ve "Ana Depo" ilk kurulumda Türkçe adla oluşturulur ve telefonla aynı adla eşitlenir; bu yüzden kayıt DEĞİŞTİRİLMEZ.
    Yalnızca ekrandaki yazı, program dili İngilizce ya da Arapçayken çevrilir. Kullanıcı adı değiştirdiyse kendi adı görünür.
    Giriş kutularındaki (input/textarea) değerlere dokunulmaz: düzenlerken kaydın gerçek adı görünür. */

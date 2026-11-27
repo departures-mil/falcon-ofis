@@ -1,5 +1,5 @@
-/* Falcon Ofis — "Sor" asistanının çevrimdışı (yapay zekâsız) ek cevapları (v1.60.0).
-   Paket FA.local'in başında window.FalconAskLocal(text, ctx, range)'i çağırır (araclar/patch-ui-160.py); bu eklenti bir cevap
+/* Falcon Ofis — "Sor" asistanının çevrimdışı (yapay zekâsız) ek cevapları (v1.60.1).
+   Paket FA.local'in başında window.FalconAskLocal(text, ctx, range)'i çağırır (araclar/patch-ui-1601.py); bu eklenti bir cevap
    döndürürse o gösterilir, null dönerse paketin kendi hareket motoru çalışır. İnternet ya da anahtar gerekmez; hesabı SQL yapar.
    Ele aldığı sorular (tr / en / ar):
      1) Kasa bakiyesi: "kasada ne kadar para var", "bakiye", "how much money do we have", "كم المال في الصندوق"
