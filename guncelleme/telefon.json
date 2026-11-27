@@ -1,10 +1,10 @@
 {
- "version": "1.61.2",
- "notes": "PDF'den doldur: yapay zeka okuması çevrimdışı okumayla teyit edilir; yapay zekanın neden kullanılamadığı doğru yazılır (zaman aşımı ≠ internet yok). Ayrıca 1.61: fatura döviz çevirisi, ödeme damgası kaldırılabilir.",
- "size": 3666575,
- "sha256": "1efa27d77135e9e984faa02751f3bbaaf477d11a01d98a8e685deed7605bfdcf",
- "sig": "MEUCICkKsaRXJFJV6sZaSZ7QlvCHanZaELBrKvJKVHmgJZtnAiEAgEyrSQzCR9rgRxUczVnIJg7iE6ROKSKTPOhQAXnLVLI=",
- "file": "telefon-1.61.2.fopk",
+ "version": "1.61.5",
+ "notes": "PDF'den doldur: yapay zeka bekleme süresi 4 dk, müşteri adındaki SN./SAYIN atılır. Ayrıca 1.61.3–1.61.4: KDV'siz fatura, karekod/barkod aç-kapa, fiyatları tek tuşla başka para biriminden çevirme.",
+ "size": 3669530,
+ "sha256": "b16d8b91ad171ca7a72856ef4c788dcfda82955d0fe973e499855040daef4b2e",
+ "sig": "MEUCIQCm7plZZmoeWpLRB96YNdLICGRfZn06FT9pLiK2Fgt+egIgIK//HKG8OGAL3K/OjHG9y+ztzdcxmDjjAEjX//OHBl8=",
+ "file": "telefon-1.61.5.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-27T18:23:56.702Z"
+ "publishedAt": "2026-11-27T18:37:54.116Z"
 }
