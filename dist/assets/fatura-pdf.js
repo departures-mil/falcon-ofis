@@ -4,6 +4,9 @@
  *     Hesaptaki modeller listelenir, en güçlüsü (pro, en yeni sürüm) seçilir; kota / hata olursa sıradakine geçilir.
  *  2) İnternet / anahtar yoksa ya da yapay zeka okuyamazsa: çevrimdışı okuma — pdf.js (dist/assets/pdfjs) ile metin + konum,
  *     Türkiye e-Fatura / e-Arşiv düzenine göre ayrıştırma (satıcı, SAYIN bloğu, fatura bilgileri tablosu, kalemler, toplamlar).
+ *  3) v1.61.2: çevrimdışı okuma her zaman yapay zeka ile aynı anda yapılır ve yapay zeka sonucunu TEYİT eder (verify):
+ *     rakamlar aynıysa check.status = match; farklıysa ve PDF'in kendi yazısı tutarlıysa rakamlar ondan alınır (fixed), değilse diff.
+ *     Yapay zeka neden kullanılamadı: aiError = skip | key | net | timeout | quota | empty | fail | cancel.
  * parseLayout(pages) ayrıştırıcıyı dışarıya açar (Node testleri pdf.js çıktısıyla çağırır). */
 (function (root) {
   'use strict';
@@ -445,12 +448,14 @@
   // ---------- yapay zeka (Gemini) ----------
   var F = function () { return root.falcon || {}; };
   function setting(k) { try { return Promise.resolve(F().settings.get(k)).then(function (v) { return v == null ? '' : String(v); }, function () { return ''; }); } catch (e) { return Promise.resolve(''); } }
-  function http(url, body, key) {
-    var ai = F().ai;
-    if (ai && ai.request) return Promise.resolve(ai.request({ url: url, body: body, key: key })).then(function (r) { if (r && r.status === 0) { var e = new Error(r.error || 'network'); e.net = true; throw e; } return r; });
-    var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null, tm = setTimeout(function () { if (ctrl) ctrl.abort(); }, 120000);
+  // v1.61.2: zaman aşımı ayrı bildirilir (eskiden "internet yok" sanılıyordu); her istek kendi süresiyle
+  function http(url, body, key, timeout) {
+    var ai = F().ai, ms = timeout || 60000;
+    var netErr = function (msg) { var e = new Error(msg || 'network'); e.net = true; if (/timeout|abort/i.test(String(msg))) e.timeout = true; return e; };
+    if (ai && ai.request) return Promise.resolve(ai.request({ url: url, body: body, key: key, timeout: ms })).then(function (r) { if (r && r.status === 0) throw netErr(r.error); return r; });
+    var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null, tm = setTimeout(function () { if (ctrl) ctrl.abort(); }, ms);
     return fetch(url, { method: body ? 'POST' : 'GET', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key }, body: body ? JSON.stringify(body) : undefined, signal: ctrl ? ctrl.signal : undefined })
-      .then(function (res) { return res.json().catch(function () { return null; }).then(function (d) { return { status: res.status, data: d }; }); }, function (e) { var x = new Error(String(e && e.message || e)); x.net = true; throw x; })
+      .then(function (res) { return res.json().catch(function () { return null; }).then(function (d) { return { status: res.status, data: d }; }); }, function (e) { throw netErr(e && e.name === 'AbortError' ? 'timeout' : String(e && e.message || e)); })
       .then(function (r) { clearTimeout(tm); return r; }, function (e) { clearTimeout(tm); throw e; });
   }
   var API = 'https://generativelanguage.googleapis.com/v1beta/';
@@ -501,6 +506,7 @@
     var i = t.indexOf('{'), j = t.lastIndexOf('}');
     return JSON.parse(i >= 0 ? t.slice(i, j + 1) : t);
   }
+  var AI_TIMEOUT = 150000;
   function viaAi(buf, opts) {
     return Promise.all([setting('ai_gemini_key'), setting('ai_mode')]).then(function (r) {
       var key = r[0].trim();
@@ -511,13 +517,14 @@
         generationConfig: { temperature: 0, responseMimeType: 'application/json' }
       };
       return models(key).then(function (list) {
-        var i = 0, lastErr = null;
+        var i = 0, lastErr = null, quota = false, slow = 0;
         var next = function () {
-          if (i >= list.length) throw lastErr || new Error('ai-failed');
+          if (i >= list.length || slow >= 2) { var x = lastErr || new Error('ai-failed'); if (quota && !x.timeout) x.quota = true; throw x; }
           var m = list[i++];
           if (opts && opts.onModel) try { opts.onModel(m); } catch (e) {}
-          return http(API + 'models/' + encodeURIComponent(m) + ':generateContent', body, key).then(function (res) {
+          return http(API + 'models/' + encodeURIComponent(m) + ':generateContent', body, key, AI_TIMEOUT).then(function (res) {
             if (res.status === 401 || res.status === 403) { var e = new Error('ai-key'); e.key = true; throw e; }
+            if (res.status === 429) quota = true;
             if (res.status !== 200) { lastErr = new Error('ai-' + res.status); return next(); }
             var parts = res.data && res.data.candidates && res.data.candidates[0] && res.data.candidates[0].content && res.data.candidates[0].content.parts || [];
             var txt = parts.map(function (p) { return p.text || ''; }).join('');
@@ -525,6 +532,10 @@
             try { o = parseJson(txt); } catch (e) { lastErr = e; return next(); }
             o.source = 'ai'; o.model = m;
             return o;
+          }, function (e) {
+            // büyük model zamanında cevap vermediyse daha hızlı modele geçilir; gerçek bağlantı hatası hemen çevrimdışına düşer
+            if (e && e.timeout) { slow++; lastErr = e; return next(); }
+            throw e;
           });
         };
         return next();
@@ -559,33 +570,122 @@
     if (f && f.arrayBuffer) return f.arrayBuffer();
     return new Promise(function (ok, no) { var r = new FileReader(); r.onload = function () { ok(r.result); }; r.onerror = no; r.readAsArrayBuffer(f); });
   }
-  // opts: { ai: true|false, onStep(step, model) }  step: 'ai' | 'offline'
+  // ---------- teyit: yapay zeka okuması ↔ çevrimdışı okuma (v1.61.2) ----------
+  // Çevrimdışı okuma PDF'teki yazıyı olduğu gibi alır (rakamlarda tahmin yok); yapay zeka okumasını onunla karşılaştırırız.
+  function near(a, b) { return Math.abs(a - b) <= Math.max(0.05, Math.abs(b) * 0.0005); }
+  function itemsSum(x) { return x.items.reduce(function (a, i) { return a + (i.amount != null ? i.amount : (i.qty || 0) * (i.price || 0)); }, 0); }
+  // kendi içinde tutarlı mı: kalemler toplamı = ara toplam (ya da ara toplam − iskonto); ara toplam − iskonto + KDV = genel toplam
+  function selfCheck(x) {
+    if (!x || !x.items.length) return false;
+    var t = x.totals || {}, s = itemsSum(x), ok = null;
+    if (t.subtotal != null) ok = near(s, t.subtotal) || (t.discount != null && near(s, t.subtotal - t.discount));
+    if (ok !== false && t.subtotal != null && t.vat != null && t.total != null) ok = near(t.subtotal - (t.discount || 0) + t.vat, t.total) || near(t.subtotal + t.vat, t.total);
+    return ok;
+  }
+  var normS = function (v) { return String(v == null ? '' : v).replace(/\s+/g, '').toLocaleUpperCase('tr'); };
+  function compare(a, b) {
+    var d = [];
+    var numD = function (f, i, k, x, y) { if (x != null && y != null && !near(x, y)) d.push({ f: f, i: i, k: k, a: x, b: y }); };
+    var strD = function (f, k, x, y) { if (normS(x) && normS(y) && normS(x) !== normS(y)) d.push({ f: f, k: k, a: x, b: y }); };
+    if (a.items.length !== b.items.length) d.push({ f: 'count', k: 'count', a: a.items.length, b: b.items.length });
+    for (var i = 0; i < Math.min(a.items.length, b.items.length); i++) {
+      var p = a.items[i], q = b.items[i];
+      ['qty', 'amount', 'vat'].forEach(function (k) { numD('item', i, k, p[k], q[k]); });
+      // birim fiyat: satır iskontosu varsa ikisi farklı yorumlanabilir — tutar zaten karşılaştırılıyor
+      if (!(p.disc_amount || p.disc_rate || q.disc_amount || q.disc_rate)) numD('item', i, 'price', p.price, q.price);
+      if (normS(p.code) && normS(q.code) && normS(p.code) !== normS(q.code)) d.push({ f: 'item', i: i, k: 'code', a: p.code, b: q.code });
+    }
+    ['subtotal', 'discount', 'vat', 'total', 'payable'].forEach(function (k) { numD('total', null, k, a.totals[k], b.totals[k]); });
+    ['number', 'date', 'ettn'].forEach(function (k) { strD('meta', k, a.meta[k], b.meta[k]); });
+    strD('buyer', 'tax_no', a.buyer.tax_no, b.buyer.tax_no);
+    strD('seller', 'tax_no', a.seller.tax_no, b.seller.tax_no);
+    return d;
+  }
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  // ai: yapay zeka sonucu, off: çevrimdışı sonuç (ya da null). Dönüş: kullanılacak sonuç + check { status, diffs, okAi, okOff } + alt (diğer okuma)
+  function verify(ai, off) {
+    var usable = off && (off.items.length || off.totals.total != null || off.totals.payable != null);
+    if (!usable) { ai.check = { status: 'none', why: off && off.warnings.indexOf('scanned') >= 0 ? 'scanned' : 'unreadable', diffs: [] }; return ai; }
+    var diffs = compare(ai, off), okAi = selfCheck(ai), okOff = selfCheck(off);
+    if (!diffs.length) { ai.check = { status: 'match', diffs: [], okAi: okAi, okOff: okOff }; ai.alt = off; return ai; }
+    var res;
+    if (okOff === true && ai.items.length === off.items.length) {
+      // aynı satırlar: metinler yapay zekadan, rakamlar PDF'in kendi yazısından
+      res = clone(ai);
+      res.items.forEach(function (it, i) {
+        var o = off.items[i];
+        ['qty', 'price', 'amount', 'vat', 'vat_amount', 'disc_rate', 'disc_amount'].forEach(function (k) { if (o[k] != null) it[k] = o[k]; });
+        if (o.code) it.code = o.code;
+        if (!it.unit && o.unit) it.unit = o.unit;
+      });
+      ['subtotal', 'discount', 'vat', 'total', 'payable'].forEach(function (k) { if (off.totals[k] != null) res.totals[k] = off.totals[k]; });
+      ['number', 'date', 'ettn'].forEach(function (k) { if (off.meta[k]) res.meta[k] = off.meta[k]; });
+      ['buyer', 'seller'].forEach(function (s) { if (off[s].tax_no) res[s].tax_no = off[s].tax_no; });
+      res.check = { status: 'fixed', diffs: diffs, okAi: okAi, okOff: okOff };
+      res.alt = ai;
+      return res;
+    }
+    if (okOff === true && okAi !== true) {
+      // satır sayısı bile farklı ve yalnız çevrimdışı okuma tutarlı: çevrimdışı sonuç kullanılır, yapay zeka okuması yedekte
+      res = clone(off); res.source = 'offline'; res.model = ai.model; res.verifiedBy = 'ai';
+      res.check = { status: 'fixed', whole: true, diffs: diffs, okAi: okAi, okOff: okOff };
+      res.alt = ai;
+      return res;
+    }
+    ai.check = { status: 'diff', diffs: diffs, okAi: okAi, okOff: okOff };
+    ai.alt = off;
+    return ai;
+  }
+  function reason(e) {
+    if (!e) return '';
+    if (e.cancel) return 'cancel';
+    if (e.skip) return 'skip';
+    if (e.key) return 'key';
+    if (e.timeout) return 'timeout';
+    if (e.quota) return 'quota';
+    if (e.net) return 'net';
+    if (e.empty) return 'empty';
+    return 'fail';
+  }
+  // opts: { ai: true|false, onStep(step, model), ctl: {} → ctl.skipAi() yapay zekayı beklemeden çevrimdışı sonucu verir }
+  // Çevrimdışı okuma her zaman yapılır (yapay zeka ile aynı anda): yapay zeka okursa onu teyit eder, okuyamazsa sonuç odur.
   function read(file, opts) {
     opts = opts || {};
+    var step = function (s, m) { if (opts.onStep) try { opts.onStep(s, m); } catch (e) {} };
     return toBuf(file).then(function (buf) {
+      var pagesP = extract(buf).catch(function () { return null; });
+      var offP = pagesP.then(function (pages) {
+        if (!pages) return null;
+        var r = normalize(parseLayout(pages));
+        if (!r.items.length && !r.buyer.name) {
+          var txt = pages.reduce(function (n, p) { return n + p.items.length; }, 0);
+          r.warnings.push(txt ? 'unreadable' : 'scanned');
+        }
+        return r;
+      }).catch(function () { return null; });
       var offline = function (why) {
-        if (opts.onStep) try { opts.onStep('offline'); } catch (e) {}
-        return extract(buf).then(function (pages) {
-          var r = normalize(parseLayout(pages));
-          r.aiError = why ? String(why.key ? 'key' : why.net ? 'net' : why.skip ? 'skip' : why.message || why) : '';
-          if (!r.items.length && !r.buyer.name) {
-            var txt = pages.reduce(function (n, p) { return n + p.items.length; }, 0);
-            r.warnings.push(txt ? 'unreadable' : 'scanned');
-          }
+        step('offline');
+        return offP.then(function (r) {
+          if (!r) throw new Error('pdf-unreadable');
+          r.aiError = reason(why);
+          if (why && why.message && !/^(no-ai|offline|ai-key)$/.test(why.message)) r.aiDetail = String(why.message).slice(0, 120);
           return r;
         });
       };
       if (opts.ai === false) return offline(null);
-      if (opts.onStep) try { opts.onStep('ai'); } catch (e) {}
-      return viaAi(buf, { onModel: function (m) { if (opts.onStep) try { opts.onStep('ai', m); } catch (e) {} } }).then(function (o) {
+      step('ai');
+      var aiP = viaAi(buf, { onModel: function (m) { step('ai', m); } });
+      if (opts.ctl) aiP = Promise.race([aiP, new Promise(function (_ok, no) { opts.ctl.skipAi = function () { var e = new Error('cancel'); e.cancel = true; no(e); }; })]);
+      return aiP.then(function (o) {
         var r = normalize(o);
-        if (!r.items.length && !r.buyer.name) return offline(new Error('ai-empty'));
-        return r;
+        if (!r.items.length && !r.buyer.name) { var e = new Error('ai-empty'); e.empty = true; return offline(e); }
+        step('verify');
+        return offP.then(function (off) { return verify(r, off); });
       }, offline);
     });
   }
 
-  var api = { read: read, parseLayout: parseLayout, normalize: normalize, rankModels: rankModels, num: num, extract: extract, version: '1.60.2' };
+  var api = { read: read, parseLayout: parseLayout, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, extract: extract, version: '1.61.2' };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.FalconFaturaPdf = api;
 })(typeof window !== 'undefined' ? window : globalThis);

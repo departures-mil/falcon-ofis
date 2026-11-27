@@ -771,10 +771,13 @@ function registerIpc() {
   }));
 
   // v1.42: soru botu. Pencere (CSP) dış adreslere bağlanamadığı için yapay zekâ isteği buradan gider; yalnızca Gemini adresi.
-  handle('ai:request', async (_e, { url, body, key } = {}) => {
+  // v1.61.2: süre isteğe göre (10–300 sn); zaman aşımı "timeout" olarak bildirilir (bağlantı yok sanılmasın)
+  handle('ai:request', async (_e, { url, body, key, timeout } = {}) => {
     if (typeof url !== 'string' || !url.startsWith('https://generativelanguage.googleapis.com/')) throw new Error('ERR_AI_URL');
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 90000);
+    const ms = Math.min(300000, Math.max(10000, Number(timeout) || 90000));
+    let timedOut = false;
+    const timer = setTimeout(() => { timedOut = true; ctrl.abort(); }, ms);
     try {
       const res = await fetch(url, {
         method: body ? 'POST' : 'GET',
@@ -786,7 +789,7 @@ function registerIpc() {
       try { data = await res.json(); } catch { data = null; }
       return { status: res.status, data };
     } catch (err) {
-      return { status: 0, data: null, error: String(err && err.message || err) };
+      return { status: 0, data: null, error: timedOut ? 'timeout' : String(err && err.message || err) };
     } finally {
       clearTimeout(timer);
     }

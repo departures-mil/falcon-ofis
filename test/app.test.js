@@ -233,6 +233,40 @@ test('fatura (1.60): PDF çevrimdışı okuma — e-Fatura düzeni (satıcı, SA
   assert.ok(fs.existsSync(path.join(ROOT, 'dist/assets/pdfjs/pdf.min.mjs')) && fs.existsSync(path.join(ROOT, 'dist/assets/pdfjs/pdf.worker.min.mjs')), 'pdf.js çevrimdışı okuma için pakette');
 });
 
+test('fatura (1.61.2): yapay zeka okuması çevrimdışı okumayla teyit edilir', () => {
+  const P = require('../dist/assets/fatura-pdf.js');
+  const off = () => P.normalize(P.parseLayout(JSON.parse(read('test/fixtures/efatura-sayfa.json'))));
+  const ai = () => Object.assign(JSON.parse(JSON.stringify(off())), { source: 'ai', model: 'gemini-test' });
+  assert.strictEqual(P.selfCheck(off()), true, 'e-Fatura çevrimdışı okuması kendi içinde tutarlı');
+  // 1) aynı rakamlar → teyit edildi
+  const a = P.verify(ai(), off());
+  assert.strictEqual(a.check.status, 'match'); assert.strictEqual(a.source, 'ai');
+  // 2) yapay zeka bir fiyatı ve toplamı yanlış okudu → rakamlar PDF yazısından, adlar yapay zekadan
+  const x = ai(); x.items[1].price = 297.12; x.items[1].amount = 2971.2; x.totals.total = 8082.22; x.items[0].name = 'WD19X-P1 19 mm Anahtarlı Mandal Buton 2NO+2NC';
+  const b = P.verify(x, off());
+  assert.strictEqual(b.check.status, 'fixed'); assert.ok(b.check.diffs.length >= 3);
+  assert.ok(b.check.diffs.some((d) => d.f === 'item' && d.i === 1 && d.k === 'price' && d.a === 297.12 && d.b === 291.72));
+  assert.strictEqual(b.items[1].price, 291.72); assert.strictEqual(b.totals.total, 8028.22); assert.strictEqual(b.items[0].name, 'WD19X-P1 19 mm Anahtarlı Mandal Buton 2NO+2NC');
+  assert.strictEqual(b.source, 'ai'); assert.strictEqual(b.alt.items[1].price, 297.12, 'yapay zeka okuması yedekte durur');
+  // 3) yapay zeka bir satırı atladı ve tutarsız → çevrimdışı okuma kullanılır
+  const y = ai(); y.items.splice(2, 1);
+  const c = P.verify(y, off());
+  assert.strictEqual(c.check.status, 'fixed'); assert.strictEqual(c.check.whole, true); assert.strictEqual(c.items.length, 4); assert.strictEqual(c.source, 'offline');
+  // 4) taranmış PDF (çevrimdışı okunamıyor) → teyit yok, yapay zeka sonucu
+  const scan = P.normalize({ warnings: ['scanned'] });
+  const d = P.verify(ai(), scan);
+  assert.deepStrictEqual([d.check.status, d.check.why, d.items.length], ['none', 'scanned', 4]);
+  // 5) çevrimdışı okuma da tutarsızsa karar kullanıcıya bırakılır (farklar işaretlenir)
+  const o2 = off(); o2.totals.subtotal = 1; const z = ai(); z.items[3].qty = 21;
+  const e = P.verify(z, o2);
+  assert.strictEqual(e.check.status, 'diff'); assert.strictEqual(e.items[3].qty, 21); assert.strictEqual(e.alt, o2);
+  // ana süreç: yapay zeka isteğinde süre aşımı "internet yok" sayılmaz
+  const main = read('electron/main.js');
+  assert.ok(/handle\('ai:request', async \(_e, \{ url, body, key, timeout \}/.test(main) && main.includes("timedOut ? 'timeout'"));
+  const ui = read('dist/assets/fatura-falcon.js');
+  ['pdfWhy_timeout', 'vMatch', 'vFixed', 'vDiff', 'vNone', 'rereadAi', 'pdfSkipAi'].forEach((k) => assert.strictEqual(ui.split(k + ':').length - 1, 3, k + ' üç dilde'));
+});
+
 test('fatura (1.60): müşteri kaydı (VKN eşleşir), ürün kaydı (stok kodu / ad), fiyat geçmişi, satır KDV, başlık bilgileri', async () => {
   const db = await openDb();
   const s = require('../electron/services').createServices(db);

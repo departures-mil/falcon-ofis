@@ -129,6 +129,16 @@
       pdfApplied: 'PDF bilgileri dolduruldu — kontrol edip kaydedin', pdfNoReader: 'PDF okuyucu yüklenemedi.', pdfReading: 'PDF okunuyor…', pdfAi: 'Yapay zeka okuyor…', pdfOffline: 'Çevrimdışı okunuyor…',
       pdfScanned: 'Bu PDF taranmış resim; çevrimdışı okunamadı. İnternete bağlanıp yapay zeka anahtarıyla deneyin.', pdfNothing: 'PDF\'de fatura bilgisi bulunamadı.', pdfFail: 'PDF okunamadı.',
       pdfSrcAi: 'Yapay zeka ile okundu', pdfSrcOffline: 'Çevrimdışı okundu', pdfNoNet: 'internet yok', pdfNoKey: 'yapay zeka anahtarı yok (Ayarlar → Asistan)', pdfBadKey: 'yapay zeka anahtarı geçersiz',
+      pdfWhy_skip: 'yapay zeka anahtarı yok ya da kapalı (Ayarlar → Asistan)', pdfWhy_key: 'yapay zeka anahtarı geçersiz', pdfWhy_net: 'internete ulaşılamadı', pdfWhy_timeout: 'yapay zeka zamanında cevap vermedi',
+      pdfWhy_quota: 'yapay zeka kullanım kotası doldu', pdfWhy_empty: 'yapay zeka boş sonuç verdi', pdfWhy_fail: 'yapay zeka okuyamadı', pdfWhy_cancel: 'yapay zeka beklenmedi',
+      pdfVerify: 'Çevrimdışı okumayla karşılaştırılıyor…', pdfSkipAi: 'Beklemeden çevrimdışı oku', pdfSec: '{s} sn',
+      vMatch: 'Çevrimdışı okumayla teyit edildi — rakamlar birebir aynı', vFixed: 'Çevrimdışı okumayla {n} fark bulundu — PDF\'in kendi yazısındaki rakamlar kullanıldı (toplamlar tutuyor)',
+      vFixedWhole: 'Yapay zeka okuması tutarsızdı ({n} fark) — çevrimdışı okuma kullanıldı (toplamlar tutuyor)', vDiff: 'Çevrimdışı okumayla {n} fark var — işaretli satırları kontrol edin',
+      vNone: 'Çevrimdışı teyit yapılamadı (PDF\'te yazı katmanı yok — taranmış belge)', vShow: 'Farkları göster', vHide: 'Farkları gizle', vLine: '{f}: yapay zeka {a} · çevrimdışı {b}',
+      vCount: 'Kalem sayısı', vRow: '{i}. satır {k}', vk_qty: 'miktar', vk_price: 'birim fiyat', vk_amount: 'tutar', vk_vat: 'KDV %', vk_code: 'stok kodu',
+      vt_subtotal: 'Ara toplam', vt_discount: 'Toplam iskonto', vt_vat: 'Hesaplanan KDV', vt_total: 'Vergiler dahil toplam', vt_payable: 'Ödenecek tutar',
+      vm_number: 'Fatura no', vm_date: 'Fatura tarihi', vm_ettn: 'ETTN', vb_tax_no: 'Alıcı VKN', vs_tax_no: 'Satıcı VKN',
+      useAi: 'Yapay zeka okumasını kullan', useOff: 'Çevrimdışı okumayı kullan', rereadAi: 'Yapay zekayla tekrar oku',
       impTitle: 'PDF\'den okunan bilgiler', impApply: 'Faturaya aktar', impSideBuyer: 'Müşteri = SAYIN (alıcı)', impSideSeller: 'Müşteri = Satıcı',
       impCustFound: 'Kayıtlı müşteri: {n} — eksik bilgileri tamamlanır', impCustNew: 'Yeni müşteri olarak kaydedilecek', impNewProduct: 'Yeni ürün', impMatch: 'Ürün kaydı',
       impCurUnknown: 'Para birimi ({c}) desteklenmiyor — faturanın para birimini seçin', impMetaHint: 'İşaretli bilgiler faturaya alınır. Fatura No ve ETTN sizde yeniden üretilir.',
@@ -155,6 +165,16 @@
       pdfApplied: 'Filled from the PDF — check and save', pdfNoReader: 'The PDF reader could not be loaded.', pdfReading: 'Reading the PDF…', pdfAi: 'AI is reading…', pdfOffline: 'Reading offline…',
       pdfScanned: 'This PDF is a scanned image and cannot be read offline. Connect to the internet and try with an AI key.', pdfNothing: 'No invoice data found in the PDF.', pdfFail: 'The PDF could not be read.',
       pdfSrcAi: 'Read with AI', pdfSrcOffline: 'Read offline', pdfNoNet: 'no internet', pdfNoKey: 'no AI key (Settings → Assistant)', pdfBadKey: 'invalid AI key',
+      pdfWhy_skip: 'no AI key or AI turned off (Settings → Assistant)', pdfWhy_key: 'invalid AI key', pdfWhy_net: 'could not reach the internet', pdfWhy_timeout: 'the AI did not answer in time',
+      pdfWhy_quota: 'AI usage quota exhausted', pdfWhy_empty: 'the AI returned an empty result', pdfWhy_fail: 'the AI could not read it', pdfWhy_cancel: 'did not wait for the AI',
+      pdfVerify: 'Cross-checking with the offline reading…', pdfSkipAi: 'Read offline without waiting', pdfSec: '{s} s',
+      vMatch: 'Verified by the offline reading — figures match exactly', vFixed: '{n} difference(s) found by the offline reading — figures taken from the PDF\'s own text (totals reconcile)',
+      vFixedWhole: 'The AI reading was inconsistent ({n} differences) — the offline reading is used (totals reconcile)', vDiff: '{n} difference(s) from the offline reading — check the highlighted lines',
+      vNone: 'Offline cross-check not possible (the PDF has no text layer — scanned document)', vShow: 'Show differences', vHide: 'Hide differences', vLine: '{f}: AI {a} · offline {b}',
+      vCount: 'Number of lines', vRow: 'line {i} {k}', vk_qty: 'quantity', vk_price: 'unit price', vk_amount: 'amount', vk_vat: 'VAT %', vk_code: 'stock code',
+      vt_subtotal: 'Subtotal', vt_discount: 'Total discount', vt_vat: 'Calculated VAT', vt_total: 'Total incl. taxes', vt_payable: 'Amount payable',
+      vm_number: 'Invoice no.', vm_date: 'Invoice date', vm_ettn: 'ETTN', vb_tax_no: 'Buyer tax no.', vs_tax_no: 'Seller tax no.',
+      useAi: 'Use the AI reading', useOff: 'Use the offline reading', rereadAi: 'Read again with AI',
       impTitle: 'Data read from the PDF', impApply: 'Apply to invoice', impSideBuyer: 'Customer = bill-to (buyer)', impSideSeller: 'Customer = seller',
       impCustFound: 'Saved customer: {n} — missing details are completed', impCustNew: 'Will be saved as a new customer', impNewProduct: 'New product', impMatch: 'Product record',
       impCurUnknown: 'Currency ({c}) is not supported — choose the invoice currency', impMetaHint: 'Ticked details are taken over. The invoice number and ETTN are generated here.',
@@ -181,6 +201,16 @@
       pdfApplied: 'عُبّئت البيانات من PDF — راجعها ثم احفظ', pdfNoReader: 'تعذّر تحميل قارئ PDF.', pdfReading: 'جارٍ قراءة ملف PDF…', pdfAi: 'الذكاء الاصطناعي يقرأ…', pdfOffline: 'القراءة دون اتصال…',
       pdfScanned: 'هذا الملف صورة ممسوحة ضوئياً ولا يمكن قراءته دون اتصال. اتصل بالإنترنت وحاول بمفتاح الذكاء الاصطناعي.', pdfNothing: 'لم يُعثر على بيانات فاتورة في الملف.', pdfFail: 'تعذّرت قراءة ملف PDF.',
       pdfSrcAi: 'قُرئ بالذكاء الاصطناعي', pdfSrcOffline: 'قُرئ دون اتصال', pdfNoNet: 'لا يوجد إنترنت', pdfNoKey: 'لا يوجد مفتاح ذكاء اصطناعي (الإعدادات ← المساعد)', pdfBadKey: 'مفتاح الذكاء الاصطناعي غير صالح',
+      pdfWhy_skip: 'لا يوجد مفتاح ذكاء اصطناعي أو أنه معطّل (الإعدادات ← المساعد)', pdfWhy_key: 'مفتاح الذكاء الاصطناعي غير صالح', pdfWhy_net: 'تعذّر الوصول إلى الإنترنت', pdfWhy_timeout: 'لم يستجب الذكاء الاصطناعي في الوقت المحدد',
+      pdfWhy_quota: 'نفدت حصة استخدام الذكاء الاصطناعي', pdfWhy_empty: 'أعاد الذكاء الاصطناعي نتيجة فارغة', pdfWhy_fail: 'تعذّرت القراءة بالذكاء الاصطناعي', pdfWhy_cancel: 'لم يُنتظر الذكاء الاصطناعي',
+      pdfVerify: 'جارٍ المطابقة مع القراءة دون اتصال…', pdfSkipAi: 'القراءة دون اتصال دون انتظار', pdfSec: '{s} ث',
+      vMatch: 'تم التحقق بالقراءة دون اتصال — الأرقام متطابقة تماماً', vFixed: 'وُجد {n} اختلاف بالقراءة دون اتصال — اعتُمدت الأرقام من نص الملف نفسه (المجاميع متطابقة)',
+      vFixedWhole: 'قراءة الذكاء الاصطناعي غير متّسقة ({n} اختلاف) — اعتُمدت القراءة دون اتصال (المجاميع متطابقة)', vDiff: 'يوجد {n} اختلاف عن القراءة دون اتصال — راجع البنود المميَّزة',
+      vNone: 'تعذّر التحقق دون اتصال (لا توجد طبقة نصية في الملف — مستند ممسوح ضوئياً)', vShow: 'عرض الاختلافات', vHide: 'إخفاء الاختلافات', vLine: '{f}: الذكاء الاصطناعي {a} · دون اتصال {b}',
+      vCount: 'عدد البنود', vRow: 'البند {i} — {k}', vk_qty: 'الكمية', vk_price: 'سعر الوحدة', vk_amount: 'المبلغ', vk_vat: 'نسبة ض.ق.م %', vk_code: 'رمز المخزون',
+      vt_subtotal: 'المجموع الفرعي', vt_discount: 'إجمالي الخصم', vt_vat: 'ضريبة القيمة المضافة المحتسبة', vt_total: 'الإجمالي شاملاً الضرائب', vt_payable: 'المبلغ المستحق الدفع',
+      vm_number: 'رقم الفاتورة', vm_date: 'تاريخ الفاتورة', vm_ettn: 'ETTN', vb_tax_no: 'الرقم الضريبي للمشتري', vs_tax_no: 'الرقم الضريبي للبائع',
+      useAi: 'استخدام قراءة الذكاء الاصطناعي', useOff: 'استخدام القراءة دون اتصال', rereadAi: 'إعادة القراءة بالذكاء الاصطناعي',
       impTitle: 'البيانات المقروءة من PDF', impApply: 'نقل إلى الفاتورة', impSideBuyer: 'العميل = المشتري (السيد/ة)', impSideSeller: 'العميل = البائع',
       impCustFound: 'عميل مسجَّل: {n} — تُستكمل بياناته الناقصة', impCustNew: 'سيُسجَّل عميلاً جديداً', impNewProduct: 'منتج جديد', impMatch: 'سجل المنتج',
       impCurUnknown: 'العملة ({c}) غير مدعومة — اختر عملة الفاتورة', impMetaHint: 'تُنقل البيانات المحددة إلى الفاتورة. يُولَّد رقم الفاتورة ورقم ETTN هنا من جديد.',
@@ -789,6 +819,8 @@
       '.fat-items td.nmc{min-width:220px}.fat-items .p{width:104px}.fat-qu{display:flex;gap:4px}.fat-qu .q{width:70px}.fat-qu .u{width:64px}.fat-items th{white-space:nowrap}' +
       '.fat-busy{display:flex;align-items:center;gap:12px;font-weight:600;padding:8px 2px}.fat-busy .spin{width:20px;height:20px;border:3px solid #38bdf855;border-top-color:#38bdf8;border-radius:50%;animation:fatspin .8s linear infinite}@keyframes fatspin{to{transform:rotate(360deg)}}' +
       '.fat-imp-src{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}.fat-imp-st{border-radius:10px;padding:8px 12px;margin:6px 0 10px;font-weight:600}.fat-imp-st.ok{background:#22a06b1f;color:#22a06b}.fat-imp-st.new{background:#0ea5e91f;color:#38bdf8}.fat-imp-st.warn{background:#e2a4001f;color:#d69500}' +
+      '.fat-imp-v{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}.fat-imp-v .btn.link{padding:0 4px;min-height:0;background:none;border:0;color:inherit;text-decoration:underline;cursor:pointer;font-weight:600}' +
+      '.fat-imp-dl{flex-basis:100%;margin:4px 0 0;padding-inline-start:18px;font-weight:500;font-size:12.5px;line-height:1.55}.fat-imp-t tr.fat-imp-diff td{background:#e2a40018}.fat-imp-t tr.fat-imp-diff td:first-child{box-shadow:inset 3px 0 #d69500}' +
       '.fat-imp-ms{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px 14px}.fat-imp-m{display:flex;gap:6px;align-items:center;font-size:13px}.fat-imp-m b{overflow-wrap:anywhere}' +
       '.fat-fx{border:1px solid var(--border,#ffffff1f);border-radius:12px;padding:10px 12px}.fat-fx-h{display:flex;align-items:center;gap:8px;margin-bottom:6px}.fat-fx-h .sp{flex:1}' +
       '.fat-fx-r{display:flex;flex-wrap:wrap;gap:10px 18px}.fat-fx-i{display:flex;align-items:center;gap:6px;font-weight:600;white-space:nowrap}.fat-fx-i input{width:130px}.fat-fx-i input.bad{border-color:#e5484d}' +
@@ -1500,20 +1532,29 @@
       inp.addEventListener('cancel', end);
       inp.click();
     }
+    // v1.61.2: yapay zeka okurken çevrimdışı okuma da yapılır ve sonucu teyit eder; beklemek istemeyen "Beklemeden çevrimdışı oku"ya basar
     function readPdf(file, done) {
       if (!window.FalconFaturaPdf) { toast(t('pdfNoReader'), 'error'); return; }
       var msg = el('div', { class: 'fat-busy' }, [el('span', { class: 'spin' }), el('span', { text: t('pdfReading') })]);
       var sub = el('div', { class: 'muted small', style: 'margin-top:6px' });
-      var bm = modal('📄 ' + t('fromPdf'), [msg, sub], [], '');
-      window.FalconFaturaPdf.read(file, { onStep: function (step, model) {
-        msg.lastChild.textContent = step === 'ai' ? t('pdfAi') : t('pdfOffline');
+      var clock = el('span', { class: 'muted small', dir: 'ltr', style: 'margin-inline-start:auto' });
+      var ctl = {}, t0 = Date.now(), aiOn = false;
+      var skipB = el('button', { type: 'button', class: 'btn', style: 'display:none', text: '⌁ ' + t('pdfSkipAi'), onclick: function () { if (ctl.skipAi) ctl.skipAi(); skipB.disabled = true; } });
+      var bm = modal('📄 ' + t('fromPdf'), [msg, sub], [clock, skipB], '');
+      var tick = setInterval(function () { var s = Math.round((Date.now() - t0) / 1000); clock.textContent = s >= 3 ? t('pdfSec', { s: s }) : ''; if (aiOn && s >= 8) skipB.style.display = ''; }, 1000);
+      var stop = function () { clearInterval(tick); bm.close(); };
+      window.FalconFaturaPdf.read(file, { ctl: ctl, onStep: function (step, model) {
+        aiOn = step === 'ai';
+        msg.lastChild.textContent = step === 'ai' ? t('pdfAi') : step === 'verify' ? t('pdfVerify') : t('pdfOffline');
         sub.textContent = step === 'ai' && model ? '✦ ' + model : file.name || '';
+        if (!aiOn) skipB.style.display = 'none';
       } }).then(function (r) {
-        bm.close();
+        stop();
+        r._file = file;
         if (!r.items.length && !r.buyer.name && !r.seller.name) { toast(r.warnings.indexOf('scanned') >= 0 ? t('pdfScanned') : t('pdfNothing'), 'error'); return; }
         return Promise.all([q('SELECT * FROM customers').catch(function () { return []; }), q('SELECT id, name, code, unit, sale_price, cost_currency, vat_rate, depot FROM products').catch(function () { return []; })])
           .then(function (x) { importPreview(r, x[0], x[1], done); });
-      }, function (e) { bm.close(); toast(t('pdfFail') + ' ' + String(e && e.message || e), 'error'); });
+      }, function (e) { stop(); toast(t('pdfFail') + ' ' + String(e && e.message || e), 'error'); });
     }
     // Ad benzerliği (0–1): harf ikilileri (Dice)
     function simil(a, b) {
@@ -1576,6 +1617,9 @@
         return o;
       });
       var cur = CUR.indexOf(r.currency) >= 0 ? r.currency : '';
+      // v1.61.2: çevrimdışı teyit — farklı satırlar işaretlenir
+      var ck = r.check || null, diffRows = {};
+      if (ck && ck.status === 'diff') ck.diffs.forEach(function (d) { if (d.f === 'item') diffRows[d.i] = 1; });
       var tb = el('tbody', null, rows.map(function (o, i) {
         var it = o.it;
         var cb = el('input', { type: 'checkbox', onchange: function (e) { o.on = e.target.checked; syncOn(); } }); cb.checked = o.on; o.cb = cb;
@@ -1584,7 +1628,7 @@
         })));
         var ni = function (k, cls) { return el('input', { class: cls, type: 'number', step: 'any', dir: 'ltr', value: it[k] == null ? '' : String(it[k]), oninput: function (e) { it[k] = e.target.value === '' ? null : num(e.target.value); } }); };
         var ti = function (k, cls) { return el('input', { class: cls, value: it[k] || '', oninput: function (e) { it[k] = e.target.value; } }); };
-        return (o.tr = el('tr', null, [el('td', null, [cb]), el('td', null, [ti('code', 'cd')]), el('td', null, [ti('name', 'nm2')]), el('td', null, [ni('qty', 'q')]), el('td', null, [ti('unit', 'u')]),
+        return (o.tr = el('tr', { class: diffRows[i] ? 'fat-imp-diff' : null }, [el('td', null, [cb]), el('td', null, [ti('code', 'cd')]), el('td', null, [ti('name', 'nm2')]), el('td', null, [ni('qty', 'q')]), el('td', null, [ti('unit', 'u')]),
           el('td', null, [ni('price', 'p')]), el('td', null, [ni('vat', 'v')]), el('td', null, [sel])]));
       }));
       // v1.61: toplu aktif / pasif (pasif kalem faturaya ve ürün kayıtlarına girmez; silinmez)
@@ -1608,9 +1652,40 @@
       var calc = rows.reduce(function (a, o) { return a + num(o.it.qty) * num(o.it.price); }, 0);
       var expect = r.totals.subtotal != null ? r.totals.subtotal - (rows.some(function (o) { return num(o.it.disc_amount) > 0 || num(o.it.disc_rate) > 0; }) ? num(r.totals.discount) : 0) : null;
       var chk = expect != null ? Math.abs(calc - expect) < 0.05 + expect * 0.001 : null;
-      var src = r.source === 'ai' ? '✦ ' + t('pdfSrcAi') + (r.model ? ' · ' + r.model : '') : '⌁ ' + t('pdfSrcOffline') + (r.aiError === 'net' ? ' · ' + t('pdfNoNet') : r.aiError === 'skip' ? ' · ' + t('pdfNoKey') : r.aiError === 'key' ? ' · ' + t('pdfBadKey') : '');
+      var why = r.aiError ? t('pdfWhy_' + r.aiError) : '';
+      var src = r.source === 'ai' ? '✦ ' + t('pdfSrcAi') + (r.model ? ' · ' + r.model : '') : '⌁ ' + t('pdfSrcOffline') + (why ? ' · ' + why : '');
+      var dv = function (d, v) { return v == null || v === '' ? '—' : typeof v === 'number' ? (d.k === 'vat' && d.f === 'item' || d.k === 'qty' || d.k === 'count' ? String(v) : fmt(v, cur || 'TRY')) : String(v); };
+      var dLabel = function (d) {
+        if (d.f === 'count') return t('vCount');
+        if (d.f === 'item') return t('vRow', { i: d.i + 1, k: t('vk_' + d.k) });
+        if (d.f === 'total') return t('vt_' + d.k);
+        if (d.f === 'meta') return t('vm_' + d.k);
+        return t((d.f === 'buyer' ? 'vb_' : 'vs_') + d.k);
+      };
+      var vBox = null;
+      if (ck) {
+        var n = ck.diffs.length;
+        var vTxt = ck.status === 'match' ? '✓ ' + t('vMatch') : ck.status === 'fixed' ? '✓ ' + t(ck.whole ? 'vFixedWhole' : 'vFixed', { n: n }) : ck.status === 'diff' ? '⚠ ' + t('vDiff', { n: n }) : 'ⓘ ' + t('vNone');
+        var list = n ? el('ul', { class: 'fat-imp-dl', style: 'display:none' }, ck.diffs.slice(0, 40).map(function (d) { return el('li', { text: t('vLine', { f: dLabel(d), a: dv(d, d.a), b: dv(d, d.b) }) }); })) : null;
+        var tg = n ? el('button', { type: 'button', class: 'btn link small', text: t('vShow'), onclick: function () { var on = list.style.display === 'none'; list.style.display = on ? '' : 'none'; tg.textContent = t(on ? 'vHide' : 'vShow'); } }) : null;
+        vBox = el('div', { class: 'fat-imp-st fat-imp-v ' + (ck.status === 'match' || ck.status === 'fixed' ? 'ok' : ck.status === 'diff' ? 'warn' : 'new') }, [el('span', { text: vTxt }), tg, list]);
+        if (ck.status === 'diff' && n) list.style.display = '';
+        if (tg && ck.status === 'diff') tg.textContent = t('vHide');
+      }
+      // diğer okumaya geç / yapay zekayla tekrar oku
+      var altB = null;
+      if (r.alt && ck && ck.status !== 'match') {
+        var altAi = r.alt.source === 'ai' && !(r.alt.check && r.alt.check.status === 'fixed');
+        altB = el('button', { type: 'button', class: 'btn', text: altAi ? '✦ ' + t('useAi') : '⌁ ' + t('useOff'), onclick: function () {
+          var o = r.alt; o.alt = r; o._file = r._file; if (!o.check || o.check.status !== 'fixed') o.check = Object.assign({}, ck, { status: 'diff', whole: false });
+          m.close(); importPreview(o, customers, products, done);
+        } });
+      }
+      var reB = r.source !== 'ai' && !r.verifiedBy && r._file && r.aiError && r.aiError !== 'skip' && r.aiError !== 'key'
+        ? el('button', { type: 'button', class: 'btn', text: '✦ ' + t('rereadAi'), onclick: function () { m.close(); readPdf(r._file, done); } }) : null;
       var body = [
         el('div', { class: 'fat-imp-src' }, [el('span', { class: 'fat-pv-tag', text: src }), cur ? el('span', { class: 'muted small', text: t('currency') + ': ' + cur }) : el('span', { class: 'notice error small', text: t('impCurUnknown', { c: r.currency || '?' }) })]),
+        vBox,
         el('h3', { class: 'section-title', text: t('secCustomer') }), cBox,
         mRows.length ? el('h3', { class: 'section-title', text: t('secInfo') }) : null,
         mRows.length ? el('div', { class: 'fat-imp-ms' }, mRows) : null,
@@ -1620,7 +1695,7 @@
       ];
       drawC();
       var m = modal('📄 ' + t('impTitle'), body, [
-        el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }),
+        el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }), reB, altB,
         el('button', { type: 'button', class: 'btn primary', text: '✓ ' + t('impApply'), onclick: function () {
           var p = P[side], mc = matchCust(p);
           var cx = {};
