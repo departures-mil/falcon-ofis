@@ -543,6 +543,39 @@
       });
     });
   }
+  // v1.63: fatura çıktısında ürün adlarını seçilen dile çevirir (kullanıcının kendi Gemini anahtarı). Dönüş: aynı sırada dizi.
+  function translate(list, lg) {
+    var LN = { en: 'English', ar: 'Arabic (Modern Standard, as used on official commercial invoices)', tr: 'Turkish' }[lg];
+    if (!LN || !list || !list.length) return Promise.resolve(list || []);
+    return Promise.all([setting('ai_gemini_key'), setting('ai_mode')]).then(function (r) {
+      var key = r[0].trim();
+      if (!key || r[1] === 'local') { var e = new Error('no-ai'); e.skip = true; throw e; }
+      if (typeof navigator !== 'undefined' && navigator.onLine === false) { var e2 = new Error('offline'); e2.net = true; throw e2; }
+      var prompt = ['Translate each product / service name from a commercial invoice into ' + LN + '.',
+        'Rules: use the standard formal technical terminology of the electrical, electronics, automotive and aviation industries (not everyday language).',
+        'Keep model numbers, part numbers, codes, brand names, sizes, voltages, currents and units (e.g. "LP-12-C04PE-02-001", "GX-16", "19mm", "6-36V", "200A", "2NO+2NC", "PNP", "NC") exactly as written.',
+        'Do not add or drop information. Return ONLY a JSON array of strings, same length and order as the input.',
+        'Input:', JSON.stringify(list)].join('\n');
+      var body = { contents: [{ role: 'user', parts: [{ text: prompt }] }], generationConfig: { temperature: 0, responseMimeType: 'application/json' } };
+      return models(key).then(function (ms) {
+        var i = 0, last = null;
+        var next = function () {
+          if (i >= ms.length) throw last || new Error('ai-failed');
+          var m = ms[i++];
+          return http(API + 'models/' + encodeURIComponent(m) + ':generateContent', body, key, 90000).then(function (res) {
+            if (res.status === 401 || res.status === 403) { var e = new Error('ai-key'); e.key = true; throw e; }
+            if (res.status !== 200) { last = new Error('ai-' + res.status); return next(); }
+            var parts = res.data && res.data.candidates && res.data.candidates[0] && res.data.candidates[0].content && res.data.candidates[0].content.parts || [];
+            var txt = parts.map(function (p) { return p.text || ''; }).join('').trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '');
+            var a; try { a = JSON.parse(txt.slice(txt.indexOf('['), txt.lastIndexOf(']') + 1)); } catch (e) { last = e; return next(); }
+            if (!Array.isArray(a) || a.length !== list.length) { last = new Error('ai-shape'); return next(); }
+            return a.map(function (x) { return String(x == null ? '' : x); });
+          }, function (e) { if (e && e.timeout) { last = e; return next(); } throw e; });
+        };
+        return next();
+      });
+    });
+  }
   // Yapay zeka çıktısı da çevrimdışı çıktı da aynı biçime getirilir
   function normalize(o) {
     o = o || {};
@@ -688,7 +721,7 @@
     });
   }
 
-  var api = { read: read, parseLayout: parseLayout, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, extract: extract, version: '1.61.5' };
+  var api = { translate: translate, read: read, parseLayout: parseLayout, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, extract: extract, version: '1.61.5' };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.FalconFaturaPdf = api;
 })(typeof window !== 'undefined' ? window : globalThis);

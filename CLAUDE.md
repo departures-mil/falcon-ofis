@@ -52,6 +52,11 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
 - Android: APK yalnızca kullanıcı isteyince; telefon kabuğu kaynağı burada olmadığından `android` kanalı yok.
 - İmza anahtarları / şifreler depoya girmez.
 
+- 1.63 ÇIKTI AKIŞI: PDF'ler doğrudan kaydedilmez. Fatura: `openPreview` (dil → ürün adları olduğu gibi / çevrilmiş → önizle ve düzelt → PDF);
+  diğer dökümler `dist/assets/cikti-falcon.js` (`FalconCikti.open`, ürün/malzeme dökümü `araclar/patch-ui-163.py` ile). Ürün adı çevirisi:
+  `FalconFaturaPdf.translate` (Gemini) → olmazsa çevrimdışı `TERMS` sözlüğü; önbellek ayarı `invoice_name_tr`. Sayfa numarası: fatura HTML'indeki
+  `<meta name="falcon-pdf-footer">` → main.js `htmlToPdf` footerTemplate. Test: `araclar/cikti-e2e.js`.
+
 ## Test
 - `npm test`: `test/app.test.js` (sürüm, çekirdek kopyası, CSP, güncelleme kanalı, paketleme, Wi‑Fi arşiv kuralı sql.js ile, FOPK) +
   `test/electron-smoke.test.js` (gerçek Electron + xvfb, `FALCON_SMOKE=1`: açılış, üst çubuk, Ayarlar sırası; eski 1.57.0 kabuğunda

@@ -686,7 +686,16 @@ async function htmlToPdf(html) {
   const win = new BrowserWindow({ show: false, webPreferences: { javascript: false, sandbox: true } });
   try {
     await win.loadFile(tmp);
-    return await win.webContents.printToPDF({ printBackground: true, preferCSSPageSize: true, landscape: true, pageSize: 'A4' });
+    const opt = { printBackground: true, preferCSSPageSize: true, landscape: true, pageSize: 'A4' };
+    // v1.63: faturada her sayfanın altına "Firma · No | Sayfa x / y" (şablon HTML'de <meta name="falcon-pdf-footer">)
+    const fm = /<meta name="falcon-pdf-footer" content="([^"]*)">/.exec(inlined);
+    if (fm) {
+      const un = { '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&amp;': '&' };
+      opt.displayHeaderFooter = true;
+      opt.headerTemplate = '<span></span>';
+      opt.footerTemplate = fm[1].replace(/&(lt|gt|quot|#39|amp);/g, (m) => un[m]);
+    }
+    return await win.webContents.printToPDF(opt);
   } finally {
     win.destroy();
     fs.rmSync(tmp, { force: true });

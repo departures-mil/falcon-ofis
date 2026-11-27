@@ -299,6 +299,31 @@
     }
   };
   ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX4[l]).forEach(function (k) { TX[l][k] = TX4[l][k]; }); });
+  // v1.63: çıktı akışı (dil → önizle / düzelt → PDF) ve ürün adı çevirisi
+  var TX5 = {
+    tr: {
+      pvStepLang: 'Çıktı dili', pvStepNames: 'Ürün adları', pvStepEdit: 'Önizle ve düzelt', pvNamesKeep: 'Olduğu gibi bırak', pvNamesTr: 'Seçilen dile çevir',
+      pvNamesBusy: 'Ürün adları çevriliyor…', pvNamesAi: 'Yapay zekâ ile çevrildi', pvNamesOffline: 'İnternet / yapay zekâ yok: çevrimdışı teknik sözlükle çevrildi, gerekirse düzeltin',
+      pvNamesSame: 'Ürün adları zaten Türkçe', pvEditOn: 'Düzelt', pvEditOff: 'Düzeltmeyi bitir',
+      pvEditHint: 'Önizlemedeki herhangi bir yazıya tıklayıp düzeltebilirsiniz; düzeltmeler PDF\'e aynen girer. Dil ya da şablon değişirse düzeltmeler sıfırlanır.',
+      pvEditLost: 'Dil / şablon değişti, önizlemedeki düzeltmeler sıfırlandı', pvPdf: 'PDF olarak kaydet'
+    },
+    en: {
+      pvStepLang: 'Output language', pvStepNames: 'Product names', pvStepEdit: 'Preview and correct', pvNamesKeep: 'Keep as they are', pvNamesTr: 'Translate to the selected language',
+      pvNamesBusy: 'Translating product names…', pvNamesAi: 'Translated with AI', pvNamesOffline: 'No internet / AI: translated with the offline technical glossary, correct if needed',
+      pvNamesSame: 'Product names are already in Turkish', pvEditOn: 'Correct', pvEditOff: 'Finish correcting',
+      pvEditHint: 'Click any text in the preview to correct it; corrections go into the PDF exactly as shown. Changing the language or template resets them.',
+      pvEditLost: 'Language / template changed, corrections in the preview were reset', pvPdf: 'Save as PDF'
+    },
+    ar: {
+      pvStepLang: 'لغة المستند', pvStepNames: 'أسماء المنتجات', pvStepEdit: 'المعاينة والتصحيح', pvNamesKeep: 'إبقاؤها كما هي', pvNamesTr: 'ترجمتها إلى اللغة المختارة',
+      pvNamesBusy: 'جارٍ ترجمة أسماء المنتجات…', pvNamesAi: 'تُرجمت بالذكاء الاصطناعي', pvNamesOffline: 'لا يوجد إنترنت / ذكاء اصطناعي: تُرجمت بالمعجم التقني دون اتصال، صحّحها عند الحاجة',
+      pvNamesSame: 'أسماء المنتجات باللغة التركية أصلاً', pvEditOn: 'تصحيح', pvEditOff: 'إنهاء التصحيح',
+      pvEditHint: 'انقر على أي نص في المعاينة لتصحيحه؛ تدخل التصحيحات إلى ملف PDF كما هي. تغيير اللغة أو القالب يلغي التصحيحات.',
+      pvEditLost: 'تغيّرت اللغة / القالب، فأُلغيت التصحيحات في المعاينة', pvPdf: 'حفظ بصيغة PDF'
+    }
+  };
+  ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX5[l]).forEach(function (k) { TX[l][k] = TX5[l][k]; }); });
   // Faturanın kendi dilindeki resmi metinler (PDF)
   var DOC = {
     tr: { title: 'FATURA', no: 'Fatura No', date: 'Fatura Tarihi', due: 'Vade Tarihi', billTo: 'Sayın', desc: 'Açıklama', qty: 'Miktar', unit: 'Birim',
@@ -568,6 +593,72 @@
   // v1.61.2: fatura başına karekod (nq) / barkod (nb) kapatma
   function hasQr(v) { return hasFlagOn(v, 'nq'); }
   function hasBc(v) { return hasFlagOn(v, 'nb'); }
+  // v1.63: PDF düzeni — yazıyla tutar (tr / en / ar), sayfa numarası, özet kartı
+  var PX = {
+    tr: { words: 'Yalnız', page: 'Sayfa', items: 'Kalem', qty: 'Toplam miktar', payable: 'Ödenecek tutar', due: 'Vade', summary: 'Fatura özeti' },
+    en: { words: 'Amount in words', page: 'Page', items: 'Lines', qty: 'Total quantity', payable: 'Amount due', due: 'Due date', summary: 'Invoice summary' },
+    ar: { words: 'المبلغ كتابةً', page: 'صفحة', items: 'البنود', qty: 'إجمالي الكمية', payable: 'المبلغ المستحق', due: 'تاريخ الاستحقاق', summary: 'ملخص الفاتورة' }
+  };
+  var CURW = {
+    tr: { USD: ['ABD Doları', 'Sent'], TRY: ['Türk Lirası', 'Kuruş'], SYP: ['Suriye Lirası', 'Kuruş'] },
+    en: { USD: ['US Dollars', 'Cents'], TRY: ['Turkish Lira', 'Kurus'], SYP: ['Syrian Pounds', 'Piastres'] },
+    ar: { USD: ['دولار أمريكي', 'سنت'], TRY: ['ليرة تركية', 'قرش'], SYP: ['ليرة سورية', 'قرش'] }
+  };
+  function wordsTr(n) {
+    var B = ['', 'Bir', 'İki', 'Üç', 'Dört', 'Beş', 'Altı', 'Yedi', 'Sekiz', 'Dokuz'], O = ['', 'On', 'Yirmi', 'Otuz', 'Kırk', 'Elli', 'Altmış', 'Yetmiş', 'Seksen', 'Doksan'];
+    var u3 = function (x) { var h = Math.floor(x / 100), r = x % 100; return (h ? (h > 1 ? B[h] + ' ' : '') + 'Yüz ' : '') + (O[Math.floor(r / 10)] ? O[Math.floor(r / 10)] + ' ' : '') + (B[r % 10] ? B[r % 10] : ''); };
+    if (!n) return 'Sıfır';
+    var S = ['', 'Bin', 'Milyon', 'Milyar'], out = [], i = 0;
+    while (n > 0) { var g = n % 1000; if (g) out.unshift(i === 1 && g === 1 ? 'Bin' : (u3(g).trim() + (S[i] ? ' ' + S[i] : ''))); n = Math.floor(n / 1000); i++; }
+    return out.join(' ').replace(/\s+/g, ' ').trim();
+  }
+  function wordsEn(n) {
+    var A = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+    var T = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+    var u2 = function (x) { return x < 20 ? A[x] : T[Math.floor(x / 10)] + (x % 10 ? '-' + A[x % 10] : ''); };
+    var u3 = function (x) { var h = Math.floor(x / 100), r = x % 100; return (h ? A[h] + ' Hundred' + (r ? ' ' : '') : '') + (r ? u2(r) : ''); };
+    if (!n) return 'Zero';
+    var S = ['', 'Thousand', 'Million', 'Billion'], out = [], i = 0;
+    while (n > 0) { var g = n % 1000; if (g) out.unshift(u3(g) + (S[i] ? ' ' + S[i] : '')); n = Math.floor(n / 1000); i++; }
+    return out.join(' ');
+  }
+  function wordsAr(n) {
+    var U = ['', 'واحد', 'اثنان', 'ثلاثة', 'أربعة', 'خمسة', 'ستة', 'سبعة', 'ثمانية', 'تسعة', 'عشرة', 'أحد عشر', 'اثنا عشر', 'ثلاثة عشر', 'أربعة عشر', 'خمسة عشر', 'ستة عشر', 'سبعة عشر', 'ثمانية عشر', 'تسعة عشر'];
+    var T = ['', '', 'عشرون', 'ثلاثون', 'أربعون', 'خمسون', 'ستون', 'سبعون', 'ثمانون', 'تسعون'];
+    var H = ['', 'مائة', 'مائتان', 'ثلاثمائة', 'أربعمائة', 'خمسمائة', 'ستمائة', 'سبعمائة', 'ثمانمائة', 'تسعمائة'];
+    var u3 = function (x) {
+      var h = Math.floor(x / 100), r = x % 100, p = [];
+      if (h) p.push(H[h]);
+      if (r) p.push(r < 20 ? U[r] : (r % 10 ? U[r % 10] + ' و' + T[Math.floor(r / 10)] : T[Math.floor(r / 10)]));
+      return p.join(' و');
+    };
+    if (!n) return 'صفر';
+    var SC = [null, ['ألف', 'ألفان', 'آلاف'], ['مليون', 'مليونان', 'ملايين'], ['مليار', 'ملياران', 'مليارات']], out = [], i = 0;
+    while (n > 0) {
+      var g = n % 1000;
+      if (g) {
+        if (!SC[i]) out.unshift(u3(g));
+        else if (g === 1) out.unshift(SC[i][0]);
+        else if (g === 2) out.unshift(SC[i][1]);
+        else if (g <= 10) out.unshift(u3(g) + ' ' + SC[i][2]);
+        else out.unshift(u3(g) + ' ' + SC[i][0]);
+      }
+      n = Math.floor(n / 1000); i++;
+    }
+    return out.join(' و');
+  }
+  function amountWords(v, cur, lg) {
+    var d = DEC[cur] == null ? 2 : DEC[cur], neg = v < 0; v = Math.abs(v);
+    var whole = Math.floor(v + 1e-9), frac = d ? Math.round((v - whole) * Math.pow(10, d)) : 0;
+    if (frac >= Math.pow(10, d) && d) { whole++; frac = 0; }
+    var W = lg === 'ar' ? wordsAr : lg === 'en' ? wordsEn : wordsTr, C = (CURW[lg] || CURW.tr)[cur] || [cur, ''];
+    var s = W(whole) + ' ' + C[0] + (frac ? (lg === 'ar' ? ' و' : lg === 'en' ? ' and ' : ' ') + W(frac) + ' ' + C[1] : '');
+    if (lg === 'ar') return 'فقط ' + s + ' لا غير';
+    return (neg ? '− ' : '') + s;
+  }
+  var CODEW = { SATIS: ['Sales', 'مبيعات'], IADE: ['Return', 'مرتجع'], TEVKIFAT: ['Withholding', 'استقطاع ضريبي'], ISTISNA: ['VAT Exemption', 'إعفاء ضريبي'], OZELMATRAH: ['Special Tax Base', 'وعاء ضريبي خاص'],
+    IHRACKAYITLI: ['Export-Registered', 'مسجّلة للتصدير'], TEMELFATURA: ['Basic Invoice', 'فاتورة أساسية'], TICARIFATURA: ['Commercial Invoice', 'فاتورة تجارية'], EARSIVFATURA: ['e-Archive Invoice', 'فاتورة أرشيف إلكتروني'],
+    IHRACAT: ['Export', 'تصدير'], KAMU: ['Public Sector', 'القطاع العام'], YOLCUBERABERFATURA: ['Passenger Invoice', 'فاتورة مسافر'] };
   function invoiceHtml(inv, cfg, forPdf) {
     var lg = DOC[inv.lang] ? inv.lang : lang();
     var D = DOC[lg], LB = LBL[lg] || LBL.tr, rtl = lg === 'ar', cur = inv.currency_code, tpl = tplOf(inv.template), P = PALETTE[tpl], gib = tpl === 'efatura';
@@ -581,13 +672,19 @@
     var st = inv.status || 'pending';
     var M = function (n) { return '<span dir="ltr" class="m">' + esc(money(n, cur, lg)) + '</span>'; };
     var L = function (x) { return '<span dir="ltr">' + esc(x) + '</span>'; };
-    var pct = function (v) { return '%' + fmt(num(v), 'X', lg).replace(/[.,]00$/, ''); };
+    var pct = function (v) { var x = fmt(num(v), 'X', lg).replace(/[.,]00$/, ''); return lg === 'tr' ? '%' + x : x + '%'; };
     var pos = c.info_pos === 'top' || c.info_pos === 'bottom' ? c.info_pos : 'both';
     // satır KDV'si: kalemlerde vat varsa (ya da düzende KDV sütunu açıksa) her satırın KDV'si; yoksa fatura geneli oran
     var noVat = !hasVat(inv.template);
     var perLine = !noVat && items.some(function (it) { return it.vat != null && it.vat !== ''; });
     var tt = calcTotals(items, inv.discount, noVat ? 0 : inv.tax_rate, cur, perLine);
-    var cols = layOn(cfg, 'cols').filter(function (f) { return perLine || (f.k !== 'vat' && f.k !== 'vat_amount'); });
+    var X = PX[lg] || PX.tr, lay0 = cfg.layout || {};
+    var vset = {}; items.forEach(function (it) { vset[String(num(it.vat))] = 1; });
+    var oneVat = perLine && Object.keys(vset).length === 1 && lay0.vat_cols !== 'always';
+    var codeInline = lay0.code_inline === true;
+    var cols = layOn(cfg, 'cols').filter(function (f) { return (perLine && !oneVat) || (f.k !== 'vat' && f.k !== 'vat_amount'); })
+      .filter(function (f) { return !(codeInline && f.k === 'code'); });
+    var hasCodeCol = layHas(cfg, 'cols', 'code');
     var unitCol = cols.some(function (f) { return f.k === 'unit'; });
     var taxLine = [c.tax_office ? esc(D.taxOffice) + ': ' + esc(c.tax_office) : '', c.tax ? esc(D.taxNo) + ': ' + L(c.tax) : ''].filter(Boolean).join(' · ');
     var contact = pos === 'bottom' ? [] : [c.address ? esc(c.address) : '', c.phone ? '☎ ' + L(c.phone) : '', c.email ? '✉ ' + L(c.email) : '', c.web ? L(c.web) : '', taxLine].filter(Boolean);
@@ -614,6 +711,7 @@
     // fatura bilgileri (düzendeki sırayla)
     var metaVal = function (k) {
       if (k === 'date') return dmy(inv.date); if (k === 'number') return inv.number; if (k === 'due_date') return inv.due_date ? dmy(inv.due_date) : '';
+      if ((k === 'inv_type' || k === 'scenario') && lg !== 'tr' && CODEW[meta[k]]) return CODEW[meta[k]][lg === 'ar' ? 1 : 0];
       return meta[k] || '';
     };
     var LTR_META = { number: 1, ettn: 1, customization: 1, issue_time: 1, order_no: 1, waybill_no: 1, campaign: 1 };
@@ -642,7 +740,7 @@
       return out;
     };
     // kalemler
-    var CW = { no: '8mm', depot: '14mm', unit: '13mm', vat: '15mm' };
+    var CW = { no: '7mm', depot: '15mm', unit: '13mm', vat: '13mm', qty: '17mm', price: '21mm', amount: '28mm', vat_amount: '20mm' };
     var NUMC = { qty: 1, price: 1, amount: 1, vat: 1, vat_amount: 1 };
     var thead = '<tr>' + cols.map(function (f) {
       var cls = NUMC[f.k] ? 'n' : f.k === 'no' || f.k === 'unit' ? 'c' : '';
@@ -657,7 +755,7 @@
           case 'no': return '<td class="c">' + (i + 1) + '</td>';
           case 'depot': return '<td class="cd">' + esc(it.depot || '') + '</td>';
           case 'code': return '<td class="cd" dir="ltr">' + esc(it.code || '') + '</td>';
-          case 'name': return '<td class="nm">' + itemNameHtml(it.name) + '</td>';
+          case 'name': return '<td class="nm">' + itemNameHtml(it.name) + (codeInline && hasCodeCol && it.code ? '<div class="sc" dir="ltr">' + esc(it.code) + '</div>' : '') + '</td>';
           case 'qty': return '<td class="n">' + qty + '</td>';
           case 'unit': return '<td class="c">' + esc(it.unit || '') + '</td>';
           case 'price': return '<td class="n">' + M(it.price) + '</td>';
@@ -668,56 +766,66 @@
         }
       }).join('') + '</tr>';
     }).join('');
+    var units = {}; items.forEach(function (it) { units[String(it.unit || '')] = 1; });
+    var uList = Object.keys(units), qSum = items.reduce(function (a, it) { return a + num(it.qty); }, 0);
+    var qTxt = esc(fmt(qSum, 'X', lg).replace(/[.,]00$/, '')) + (uList.length === 1 && uList[0] ? ' ' + esc(uList[0]) : '');
+    var cntRow = '<tr class="q"><td>' + esc(X.items) + ' · ' + esc(X.qty) + '</td><td class="n"><span dir="ltr">' + items.length + ' · ' + qTxt + '</span></td></tr>';
     var rates = Object.keys(tt.byRate).sort(function (a, b) { return Number(b) - Number(a); });
     var G = LB.gib;
     var vatRows = noVat ? '' : perLine ? rates.map(function (r) { return '<tr><td>' + esc(gib || lg === 'tr' ? G.vat : D.tax) + ' (' + pct(r) + ')</td><td class="n">' + M(tt.byRate[r].tax) + '</td></tr>'; }).join('')
       : (inv.tax_rate ? '<tr><td>' + D.tax + ' (' + pct(inv.tax_rate) + ')</td><td class="n">' + M(inv.tax) + '</td></tr>' : '');
     var totals = gib
-      ? '<tr><td>' + esc(G.subtotal) + '</td><td class="n">' + M(inv.subtotal) + '</td></tr><tr><td>' + esc(G.discount) + '</td><td class="n">' + M(inv.discount || 0) + '</td></tr>' + vatRows +
+      ? cntRow + '<tr><td>' + esc(G.subtotal) + '</td><td class="n">' + M(inv.subtotal) + '</td></tr><tr><td>' + esc(G.discount) + '</td><td class="n">' + M(inv.discount || 0) + '</td></tr>' + vatRows +
         (noVat ? '' : '<tr><td>' + esc(G.total) + '</td><td class="n">' + M(inv.total) + '</td></tr>') + (inv.paid > 0 ? '<tr><td>' + D.paid + '</td><td class="n">' + M(inv.paid) + '</td></tr>' : '') +
         '<tr class="g"><td>' + esc(G.payable) + '</td><td class="n">' + M(inv.paid > 0 ? remaining : inv.total) + '</td></tr>'
-      : '<tr><td>' + D.subtotal + '</td><td class="n">' + M(inv.subtotal) + '</td></tr>' +
+      : cntRow + '<tr><td>' + D.subtotal + '</td><td class="n">' + M(inv.subtotal) + '</td></tr>' +
         (inv.discount ? '<tr><td>' + D.discount + '</td><td class="n">− ' + M(inv.discount) + '</td></tr>' : '') + vatRows +
         '<tr class="g"><td>' + D.grand + '</td><td class="n">' + M(inv.total) + '</td></tr>' +
         (inv.paid > 0 ? '<tr><td>' + D.paid + '</td><td class="n">' + M(inv.paid) + '</td></tr><tr class="r"><td>' + D.remaining + '</td><td class="n">' + M(remaining) + '</td></tr>' : '');
     var lay = cfg.layout || {};
+    var payable = inv.paid > 0 ? remaining : inv.total;
+    var words = lay.words !== false ? '<div class="wd"><span class="k">' + esc(X.words) + ':</span> ' + esc(amountWords(num(payable), cur, lg)) + '</div>' : '';
     var qr = lay.qr !== false && hasQr(inv.template) ? qrSvg(qrPayload(inv, cfg, tt), '#000') : '';
     var bc = lay.barcode !== false && hasBc(inv.template) ? barcodeSvg(meta.ettn || inv.number, '#000') : '';
     var font = rtl ? "'Noto Sans Arabic','Segoe UI',Tahoma,Arial,sans-serif" : "'Segoe UI','Inter',Arial,'Noto Sans Arabic',sans-serif";
-    var many = cols.length > 7;
+    var many = cols.length > 8;
     var css =
-      '@page{size:210mm 297mm;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0}table{color:inherit;font-size:inherit;font-family:inherit}' +
-      '.inv{width:210mm;min-height:297mm;padding:0 0 16mm;font-family:' + font + ';color:' + P.ink + ';font-size:10.5pt;background:#fff;position:relative;-webkit-print-color-adjust:exact;print-color-adjust:exact;display:flex;flex-direction:column}' +
-      '.hd{display:flex;justify-content:space-between;align-items:center;gap:10mm;padding:12mm 14mm 9mm;' + (tpl === 'falcon' ? 'background:' + P.ink + ';color:#fff;border-bottom:3px solid ' + P.accent + ';' : tpl === 'classic' ? 'border-bottom:2px solid ' + P.ink + ';margin:0 14mm;padding:12mm 0 7mm;' : 'border-bottom:1px solid ' + P.line + ';margin:0 14mm;padding:12mm 0 7mm;') + '}' +
+      '@page{size:210mm 297mm;margin:10mm 0 12mm}@page:first{margin-top:0}*{box-sizing:border-box}html,body{margin:0;padding:0}table{color:inherit;font-size:inherit;font-family:inherit}' +
+      '.inv{width:210mm;min-height:285mm;padding:0 0 4mm;font-family:' + font + ';color:' + P.ink + ';font-size:10.5pt;background:#fff;position:relative;-webkit-print-color-adjust:exact;print-color-adjust:exact;display:flex;flex-direction:column}' +
+      '.hd{display:flex;justify-content:space-between;align-items:center;gap:10mm;padding:9mm 14mm 7mm;' + (tpl === 'falcon' ? 'background:' + P.ink + ';color:#fff;border-bottom:3px solid ' + P.accent + ';' : tpl === 'classic' ? 'border-bottom:2px solid ' + P.ink + ';margin:0 14mm;padding:12mm 0 7mm;' : 'border-bottom:1px solid ' + P.line + ';margin:0 14mm;padding:12mm 0 7mm;') + '}' +
       '.brand{display:flex;align-items:center;gap:5mm}.brand img{height:' + (tpl === 'minimal' ? '20mm' : '25mm') + ';width:auto}' +
       '.co{font-size:9pt;line-height:1.55;opacity:.95}.co b{font-size:13pt;display:block;margin-bottom:1mm;letter-spacing:.02em}' +
       '.tt{text-align:' + (rtl ? 'left' : 'right') + '}.tt h1{margin:0;font-size:' + (rtl ? '26pt' : '24pt') + ';letter-spacing:' + (rtl ? '0' : '.14em') + ';font-weight:800;color:' + (tpl === 'falcon' ? '#fff' : P.accent) + '}' +
       '.tt .o{font-size:8.5pt;opacity:.75;margin-top:1mm}.meta{margin-top:3mm;font-size:9pt;line-height:1.55}.meta span{opacity:.75}.tt .l2{max-height:14mm;max-width:50mm;margin-bottom:2mm}' +
-      '.body{padding:8mm 14mm 0;flex:1}' +
-      '.parties{display:flex;justify-content:space-between;gap:8mm;margin-bottom:7mm}' +
+      '.body{padding:6mm 14mm 0;flex:1}' +
+      '.parties{display:flex;justify-content:space-between;gap:8mm;margin-bottom:5mm}' +
       '.box{flex:1;background:' + P.soft + ';border-' + (rtl ? 'right' : 'left') + ':3px solid ' + P.accent + ';padding:4mm 5mm;border-radius:2mm;font-size:9.5pt;line-height:1.6}' +
       '.box h3{margin:0 0 1.5mm;font-size:8.5pt;text-transform:uppercase;letter-spacing:.08em;opacity:.7}.box b{font-size:11.5pt}.box .k,.gb .k{opacity:.7}' +
       '.stbox{display:flex;flex-direction:column;align-items:' + (rtl ? 'flex-start' : 'flex-end') + ';justify-content:center;gap:2.5mm;min-width:45mm}' +
       '.codes{display:flex;gap:3mm;align-items:center}.codes .qr svg{width:24mm;height:24mm;display:block}.bc svg{width:52mm;height:10mm;display:block}.bc .t{font-size:6.5pt;text-align:center;letter-spacing:.04em;margin-top:.6mm}' +
       '.st{display:inline-block;border:2px solid currentColor;border-radius:2mm;padding:1.5mm 4mm;font-weight:800;letter-spacing:.08em;font-size:11pt;transform:rotate(' + (rtl ? '4' : '-4') + 'deg)}' +
       '.st.paid{color:#15803d}.st.partial{color:#b45309}.st.pending{color:#b91c1c}.st.cancelled{color:#6b7280}' +
-      'table.it{width:100%;border-collapse:collapse;font-size:' + (many ? '8.4pt' : '9.8pt') + '}' +
+      'table.it{width:100%;border-collapse:collapse;font-size:' + (many ? '8.4pt' : '8.9pt') + '}' +
       'table.it th{background:' + (tpl === 'minimal' ? 'transparent' : gib ? '#e9ecf1' : P.ink) + ';color:' + (tpl === 'minimal' || gib ? P.ink : '#fff') + ';font-weight:700;padding:' + (many ? '2mm 1.6mm' : '2.6mm 2.5mm') + ';text-align:' + (rtl ? 'right' : 'left') + ';font-size:' + (many ? '7.8pt' : '9pt') + ';vertical-align:bottom;' + (tpl === 'minimal' ? 'border-bottom:2px solid ' + P.ink + ';' : '') + '}' +
-      'table.it td{padding:' + (many ? '1.8mm 1.6mm' : '2.4mm 2.5mm') + ';border-bottom:1px solid ' + P.line + ';vertical-align:' + (gib ? 'middle' : 'top') + '}' +
+      'table.it tr{break-inside:avoid}table.it td{line-height:1.25;padding:' + (many ? '1.3mm 1.6mm' : '1.5mm 2mm') + ';border-bottom:1px solid ' + P.line + ';vertical-align:' + (gib ? 'middle' : 'top') + '}' +
       (tpl === 'classic' || gib ? 'table.it td,table.it th{border:1px solid ' + P.line + '}' : '') +
-      'table.it tr:nth-child(even) td{background:' + (tpl === 'minimal' ? '#fff' : P.soft) + '}table.it td.cd{white-space:nowrap;font-size:.92em}table.it td.nm{min-width:34mm}' +
+      'table.it tr:nth-child(even) td{background:' + (tpl === 'minimal' ? '#fff' : P.soft) + '}table.it td.cd{white-space:nowrap;font-size:.84em;opacity:.85}table.it td.nm{min-width:60mm}table.it td.nm .sc{font-size:.82em;opacity:.6;margin-top:.4mm;letter-spacing:.02em}' +
       '.n,table.it th.n{text-align:' + (rtl ? 'left' : 'right') + ';white-space:nowrap}.c,table.it th.c{text-align:center}.m{unicode-bidi:isolate}' +
-      '.sum{display:flex;justify-content:space-between;gap:8mm;margin-top:6mm;align-items:flex-start}' +
+      '.end{break-inside:avoid;page-break-inside:avoid}.sum{display:flex;justify-content:space-between;gap:8mm;margin-top:4mm;align-items:flex-start}' +
+      '.wd{margin-top:2mm;padding:2.2mm 3.5mm;background:' + P.soft + ';border-radius:1.5mm;font-size:9pt;font-weight:600}.wd .k{opacity:.65;font-weight:500}table.tot tr.q td{font-size:8.6pt;opacity:.7}' +
+      '.sumc{min-width:62mm;border:1px solid ' + P.line + ';border-radius:2mm;padding:4mm 5mm;display:flex;flex-direction:column;gap:1.6mm;font-size:9pt;justify-content:center}' +
+      '.sumc h3{margin:0;font-size:8.5pt;text-transform:uppercase;letter-spacing:.08em;opacity:.7}.sumc .big{font-size:17pt;font-weight:800;color:' + P.ink + ';line-height:1.2}.sumc .row{display:flex;justify-content:space-between;gap:4mm}.sumc .row span:first-child{opacity:.7}' +
+      '.sumc .cd2{display:flex;gap:3mm;align-items:center;justify-content:center;margin-top:1mm}.sumc .cd2 svg{width:22mm;height:22mm}' +
       '.notes{flex:1;font-size:9pt;line-height:1.6}.notes h4{margin:0 0 1mm;font-size:8.5pt;text-transform:uppercase;letter-spacing:.06em;opacity:.7}.notes p{margin:0 0 3mm;white-space:pre-wrap}' +
-      'table.tot{width:' + (gib ? '92mm' : '78mm') + ';border-collapse:collapse;font-size:10pt}table.tot td{padding:1.8mm 2.5mm}table.tot tr+tr td{border-top:1px solid ' + P.line + '}' +
+      'table.tot{width:' + (gib ? '92mm' : '78mm') + ';border-collapse:collapse;font-size:10pt}table.tot td{padding:1.4mm 2.5mm}table.tot tr+tr td{border-top:1px solid ' + P.line + '}' +
       (gib ? 'table.tot td{border:1px solid ' + P.line + '}table.tot td:first-child{font-weight:700;background:#f3f5f8}' : '') +
       'table.tot tr.g td{background:' + P.ink + ';color:#fff;font-weight:800;font-size:11.5pt}table.tot tr.r td{font-weight:800;color:#b91c1c}' +
-      '.sig{display:flex;justify-content:space-between;align-items:flex-end;gap:10mm;margin-top:10mm;page-break-inside:avoid}' +
-      '.sg{width:62mm;text-align:center;font-size:9pt}.sg .im{height:26mm;display:flex;align-items:flex-end;justify-content:center}.sg img{max-height:26mm;max-width:60mm}' +
+      '.sig{display:flex;justify-content:space-between;align-items:flex-end;gap:6mm;margin-top:4mm;page-break-inside:avoid}.notes{display:flex;flex-direction:column;align-self:stretch}.notes .sig{margin-top:auto}' +
+      '.sg{flex:1;max-width:48mm;text-align:center;font-size:9pt}.sg .im{height:17mm;display:flex;align-items:flex-end;justify-content:center}.sg img{max-height:17mm;max-width:46mm}' +
       '.sg .ln{border-top:1px solid ' + P.ink + ';margin-top:1.5mm;padding-top:1.5mm;font-weight:700}' +
-      '.ft{margin:6mm 14mm 0;padding-top:3mm;border-top:1px solid ' + P.line + ';font-size:8pt;line-height:1.5;page-break-inside:avoid}' +
+      '.ft{break-inside:avoid;margin:4mm 14mm 0;padding-top:3mm;border-top:1px solid ' + P.line + ';font-size:8pt;line-height:1.5;page-break-inside:avoid}' +
       (tpl === 'falcon' ? '.ft{border-top:2px solid ' + P.accent + '}' : '') +
-      '.ft .th{text-align:center;font-style:italic;opacity:.85;margin-bottom:2.5mm;font-size:8.5pt}' +
+      '.ft{display:flex;gap:6mm;align-items:flex-start}.ft .th{flex:0 0 46mm;font-style:italic;opacity:.85;font-size:8.3pt;padding-top:.3mm}.ft .cols{flex:1}' +
       '.ft .cols{display:flex;gap:6mm;justify-content:space-between}.ft .fc{flex:1;min-width:0}.ft .fc:first-child{flex:1.25}' +
       '.ft h5{margin:0 0 .8mm;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:' + P.accent + ';' + (tpl === 'falcon' ? 'filter:brightness(.8);' : '') + '}' +
       '.ft .k{opacity:.65}.ft .ad,.ad{white-space:pre-wrap}.inv [dir=ltr]{unicode-bidi:isolate;direction:ltr}' +
@@ -754,11 +862,11 @@
         (ettnRow.length ? '<div class="g-ettn"><b>' + esc(ettnRow[0].label) + ':</b> ' + L(ettnRow[0].v) + '</div>' : '') +
         '<div class="body">' +
         '<table class="it"><thead>' + thead + '</thead><tbody>' + rows + '</tbody></table>' +
-        '<div class="sum"><div class="notes">' + (inv.note ? '<h4>' + D.note + '</h4><p>' + esc(inv.note) + '</p>' : '') + (c.bank ? '<h4>' + D.bank + '</h4><p>' + esc(c.bank) + '</p>' : '') + '</div><table class="tot">' + totals + '</table></div>' +
-        '<div class="sig"><div class="sg"><div class="im">' + (cfg.stamp ? '<img src="' + cfg.stamp + '" alt="">' : '') + '</div><div class="ln">' + D.stamp + '</div></div>' +
-        '<div class="sg"><div class="im">' + (sign ? '<img src="' + sign + '" alt="">' : '') + '</div><div class="ln">' + D.sign + '</div></div></div></div>' +
+        '<div class="end"><div class="sum"><div class="notes">' + (inv.note ? '<h4>' + D.note + '</h4><p>' + esc(inv.note) + '</p>' : '') + (c.bank ? '<h4>' + D.bank + '</h4><p>' + esc(c.bank) + '</p>' : '') + '<div class="sig"><div class="sg"><div class="im">' + (cfg.stamp ? '<img src="' + cfg.stamp + '" alt="">' : '') + '</div><div class="ln">' + D.stamp + '</div></div>' +
+        '<div class="sg"><div class="im">' + (sign ? '<img src="' + sign + '" alt="">' : '') + '</div><div class="ln">' + D.sign + '</div></div></div>' +
+        '</div><table class="tot">' + totals + '</table></div>' + words + '</div></div>' +
         '<div class="ft"><div class="th">' + esc(c.footer || D.thanks) + '</div>' + (fcols && pos !== 'top' ? '<div class="cols">' + fcols + '</div>' : '') +
-        '<div class="bt"><span>' + esc(c.name || '') + '</span><span dir="ltr">' + esc(inv.number) + ' · ' + esc(dmy(inv.date)) + '</span></div></div></div>';
+        '</div></div>';
     } else {
       body =
         '<div class="inv" dir="' + (rtl ? 'rtl' : 'ltr') + '" lang="' + lg + '">' +
@@ -769,17 +877,92 @@
         metaRows.filter(function (r) { return r.k !== 'ettn'; }).map(function (r) { return '<span>' + esc(r.label) + ':</span> ' + (r.ltr ? '<b dir="ltr">' + esc(r.v) + '</b>' : esc(r.v)); }).join('<br>') +
         '<br><span>' + D.currency + ':</span> ' + esc(cur) + '</div></div></div>' +
         '<div class="body"><div class="parties"><div class="box"><h3>' + D.billTo + '</h3>' + custBlock + '</div>' +
-        '<div class="stbox">' + stamp + ((qr || bc) ? '<div class="codes">' + (qr ? '<div class="qr">' + qr + '</div>' : '') + '</div>' : '') + (bc ? '<div class="bc">' + bc + '<div class="t" dir="ltr">' + esc(meta.ettn || inv.number) + '</div></div>' : '') + '</div></div>' +
+        '<div class="sumc"><h3>' + esc(X.summary) + '</h3><div>' + esc(X.payable) + '</div><div class="big">' + M(payable) + '</div>' +
+        (inv.due_date ? '<div class="row"><span>' + esc(X.due) + '</span><b dir="ltr">' + esc(dmy(inv.due_date)) + '</b></div>' : '') +
+        '<div class="row"><span>' + esc(X.items) + '</span><b dir="ltr">' + items.length + ' · ' + qTxt + '</b></div>' +
+        (stamp ? '<div>' + stamp + '</div>' : '') + ((qr || bc) ? '<div class="cd2">' + (qr ? '<div class="qr">' + qr + '</div>' : '') + '</div>' : '') + (bc ? '<div class="bc">' + bc + '<div class="t" dir="ltr">' + esc(meta.ettn || inv.number) + '</div></div>' : '') + '</div></div>' +
         metaRows.filter(function (r) { return r.k === 'ettn'; }).map(function (r) { return '<div style="font-size:8.5pt;margin:-4mm 0 4mm"><span style="opacity:.7">' + esc(r.label) + ':</span> ' + L(r.v) + '</div>'; }).join('') +
         '<table class="it"><thead>' + thead + '</thead><tbody>' + rows + '</tbody></table>' +
-        '<div class="sum"><div class="notes">' + (inv.note ? '<h4>' + D.note + '</h4><p>' + esc(inv.note) + '</p>' : '') + (c.bank ? '<h4>' + D.bank + '</h4><p>' + esc(c.bank) + '</p>' : '') + '</div><table class="tot">' + totals + '</table></div>' +
-        '<div class="sig"><div class="sg"><div class="im">' + (cfg.stamp ? '<img src="' + cfg.stamp + '" alt="">' : '') + '</div><div class="ln">' + D.stamp + '</div></div>' +
-        '<div class="sg"><div class="im">' + (sign ? '<img src="' + sign + '" alt="">' : '') + '</div><div class="ln">' + D.sign + '</div></div></div></div>' +
+        '<div class="end"><div class="sum"><div class="notes">' + (inv.note ? '<h4>' + D.note + '</h4><p>' + esc(inv.note) + '</p>' : '') + (c.bank ? '<h4>' + D.bank + '</h4><p>' + esc(c.bank) + '</p>' : '') + '<div class="sig"><div class="sg"><div class="im">' + (cfg.stamp ? '<img src="' + cfg.stamp + '" alt="">' : '') + '</div><div class="ln">' + D.stamp + '</div></div>' +
+        '<div class="sg"><div class="im">' + (sign ? '<img src="' + sign + '" alt="">' : '') + '</div><div class="ln">' + D.sign + '</div></div></div>' +
+        '</div><table class="tot">' + totals + '</table></div>' + words + '</div></div>' +
         '<div class="ft"><div class="th">' + esc(c.footer || D.thanks) + '</div>' + (fcols && pos !== 'top' ? '<div class="cols">' + fcols + '</div>' : '') +
-        '<div class="bt"><span>' + esc(c.name || '') + '</span><span dir="ltr">' + esc(inv.number) + ' · ' + esc(dmy(inv.date)) + '</span></div></div></div>';
+        '</div></div>';
     }
     if (!forPdf) return { css: css, body: body };
-    return '<!doctype html><html lang="' + lg + '" dir="' + (rtl ? 'rtl' : 'ltr') + '"><head><meta charset="utf-8"><title>' + esc(inv.number) + '</title><style>' + css + '</style></head><body>' + body + '</body></html>';
+    var pf = '<div dir="' + (rtl ? 'rtl' : 'ltr') + '" style="width:100%;font-size:7.5pt;font-family:' + font.replace(/'/g, '') + ';color:#64748b;padding:0 14mm;display:flex;justify-content:space-between">' +
+      '<span>' + esc(c.name || '') + ' · <span dir="ltr">' + esc(inv.number) + '</span></span><span>' + esc(X.page) + ' <span class="pageNumber"></span> / <span class="totalPages"></span></span></div>';
+    return '<!doctype html><html lang="' + lg + '" dir="' + (rtl ? 'rtl' : 'ltr') + '"><head><meta charset="utf-8"><title>' + esc(inv.number) + '</title><meta name="falcon-pdf-footer" content="' + esc(pf) + '"><style>' + css + '</style></head><body>' + body + '</body></html>';
+  }
+  function pdfName(inv) { return (DOC[inv.lang] || DOC.tr).title.replace(/\s/g, '') + '-' + String(inv.number).replace(/[^\w.-]+/g, '_') + '.pdf'; }
+  function savePdfHtml(inv, html) { return Promise.resolve(F().report.savePdf(html, pdfName(inv))); }
+  function pvNamesPref(v) {
+    try { if (v) { localStorage.setItem('fat.pvNames', v); return v; } return localStorage.getItem('fat.pvNames') === 'tr' ? 'tr' : 'keep'; } catch (e) { return v || 'keep'; }
+  }
+  // ---------- v1.63: ürün adı çevirisi (önce yapay zekâ, yoksa çevrimdışı teknik sözlük) ----------
+  var UNITS = { adet: ['pcs', 'قطعة'], kg: ['kg', 'كغ'], gr: ['g', 'غ'], metre: ['m', 'متر'], m: ['m', 'متر'], saat: ['hour', 'ساعة'], gün: ['day', 'يوم'], ay: ['month', 'شهر'],
+    paket: ['pack', 'عبوة'], kutu: ['box', 'علبة'], takım: ['set', 'طقم'], set: ['set', 'طقم'], litre: ['L', 'لتر'], lt: ['L', 'لتر'], rulo: ['roll', 'لفة'], çift: ['pair', 'زوج'], ton: ['t', 'طن'], m2: ['m²', 'م²'], m3: ['m³', 'م³'] };
+  function unitTr(u, lg) { if (lg === 'tr') return u; var k = String(u || '').trim().toLocaleLowerCase('tr'), x = UNITS[k]; return x ? x[lg === 'ar' ? 1 : 0] : u; }
+  // Teknik terimler (elektrik / otomotiv / havacılık / genel). En uzun ifade önce eşleşir; model ve kodlar olduğu gibi kalır.
+  var TERMS = [
+    ['mike konnektör', 'Aviation Connector', 'موصل طيران'], ['havacılık konnektörü', 'Aviation Connector', 'موصل طيران'],
+    ['su geçirmez', 'Waterproof', 'مقاوم للماء'], ['toz geçirmez', 'Dustproof', 'مقاوم للغبار'],
+    ['konnektör takımı', 'Connector Set', 'طقم موصلات'], ['konnektör seti', 'Connector Set', 'طقم موصلات'], ['konnektörü', 'Connector', 'موصل'], ['konnektör', 'Connector', 'موصل'], ['konektör', 'Connector', 'موصل'],
+    ['panel tipi', 'Panel Mount', 'للتركيب على اللوحة'], ['ray tipi', 'DIN Rail Mount', 'للتركيب على سكة DIN'],
+    ['erkek', 'Male', 'ذكر'], ['dişi', 'Female', 'أنثى'],
+    ['mandal buton', 'Latching Push Button', 'زر ضغط مزلاجي'], ['acil stop butonu', 'Emergency Stop Button', 'زر إيقاف طوارئ'], ['buton', 'Push Button', 'زر ضغط'], ['anahtarlı', 'Key-Operated', 'بمفتاح'],
+    ['endüktif mesafe sensörü', 'Inductive Proximity Sensor', 'حساس تقارب حثي'], ['kapasitif mesafe sensörü', 'Capacitive Proximity Sensor', 'حساس تقارب سعوي'], ['mesafe sensörü', 'Proximity Sensor', 'حساس تقارب'],
+    ['sıcaklık sensörü', 'Temperature Sensor', 'حساس حرارة'], ['basınç sensörü', 'Pressure Sensor', 'حساس ضغط'], ['sensörü', 'Sensor', 'حساس'], ['sensör', 'Sensor', 'حساس'],
+    ['endüktif', 'Inductive', 'حثي'], ['kapasitif', 'Capacitive', 'سعوي'],
+    ['bıçak sigorta kutusu', 'Blade Fuse Box', 'علبة فيوزات شفرية'], ['röle ve sigorta kutusu', 'Relay and Fuse Box', 'علبة مرحلات وفيوزات'], ['sigorta kutusu', 'Fuse Box', 'علبة فيوزات'],
+    ['bıçak sigorta', 'Blade Fuse', 'فيوز شفري'], ['sigorta', 'Fuse', 'فيوز'], ['sigortası', 'Fuse', 'فيوز'],
+    ['marş rölesi', 'Starter Relay', 'مرحّل بادئ التشغيل'], ['rölesi', 'Relay', 'مرحّل'], ['röle', 'Relay', 'مرحّل'],
+    ['yüksek akım', 'High Current', 'تيار عالٍ'], ['otomotiv', 'Automotive', 'للسيارات'], ['oto', 'Automotive', 'للسيارات'],
+    ['kanal', 'Channel', 'قنوات'], ['yollu', 'Way', 'اتجاهات'], ['parça', 'Piece', 'قطعة'], ['dahil', 'Included', 'مشمولة'],
+    ['kutusu', 'Box', 'علبة'], ['kutu', 'Box', 'علبة'], ['takımı', 'Set', 'طقم'], ['seti', 'Set', 'طقم'], ['takım', 'Set', 'طقم'],
+    ['kablo demeti', 'Wiring Harness', 'حزمة أسلاك'], ['kablosu', 'Cable', 'كابل'], ['kablo', 'Cable', 'كابل'], ['soket', 'Socket', 'مقبس'], ['fiş', 'Plug', 'قابس'], ['priz', 'Power Outlet', 'مقبس كهربائي'],
+    ['güç kaynağı', 'Power Supply', 'مزود طاقة'], ['adaptör', 'Adapter', 'محوّل'], ['şalter', 'Circuit Breaker', 'قاطع دارة'], ['anahtar', 'Switch', 'مفتاح'],
+    ['motor', 'Motor', 'محرك'], ['pompa', 'Pump', 'مضخة'], ['vida', 'Screw', 'برغي'], ['somun', 'Nut', 'صامولة'], ['pul', 'Washer', 'حلقة'], ['conta', 'Gasket', 'حشية'], ['rulman', 'Bearing', 'محمل'],
+    ['lamba', 'Lamp', 'مصباح'], ['ampul', 'Bulb', 'لمبة'], ['akü', 'Battery', 'بطارية'], ['pil', 'Battery', 'بطارية'], ['şarj', 'Charging', 'شحن'],
+    ['danışmanlık hizmeti', 'Consulting Service', 'خدمة استشارية'], ['danışmanlık', 'Consulting', 'استشارات'], ['hizmeti', 'Service', 'خدمة'], ['hizmet', 'Service', 'خدمة'],
+    ['eğitim', 'Training', 'تدريب'], ['bakım', 'Maintenance', 'صيانة'], ['onarım', 'Repair', 'إصلاح'], ['montaj', 'Installation', 'تركيب'], ['nakliye', 'Shipping', 'شحن'],
+    ['yedek parça', 'Spare Part', 'قطعة غيار'], ['uçak', 'Aircraft', 'طائرة'], ['iniş takımı', 'Landing Gear', 'جهاز الهبوط'],
+    ['yüksek', 'High', 'عالي'], ['düşük', 'Low', 'منخفض'], ['akım', 'Current', 'تيار'], ['gerilim', 'Voltage', 'جهد'],
+    ['ve', 'and', 'و'], ['ile', 'with', 'مع'], ['için', 'for', 'لـ']
+  ].sort(function (a, b) { return b[0].length - a[0].length; });
+  function offlineName(s, lg) {
+    var src = String(s || ''), low = src.toLocaleLowerCase('tr');
+    if (low.length !== src.length) low = src.toLowerCase();
+    var isL = function (ch) { return !!ch && /[a-zçğıöşüâîû0-9]/i.test(ch); };
+    var out = '', i = 0, hit = 0;
+    while (i < src.length) {
+      var m = null;
+      if (!isL(low[i - 1])) for (var k = 0; k < TERMS.length; k++) { var w = TERMS[k][0]; if (low.substr(i, w.length) === w && !isL(low[i + w.length])) { m = TERMS[k]; break; } }
+      if (m) { out += m[lg === 'ar' ? 2 : 1]; i += m[0].length; hit++; } else { out += src[i]; i++; }
+    }
+    return { text: out.replace(/\s+/g, ' ').trim(), hit: hit };
+  }
+  function nameCache(v) {
+    if (v) return F().settings.set('invoice_name_tr', JSON.stringify(v)).catch(function () {});
+    return Promise.resolve(F().settings.get('invoice_name_tr')).then(function (x) { var o = jparse(x, {}); return o && typeof o === 'object' ? o : {}; }, function () { return {}; });
+  }
+  function translateNames(list, lg) {
+    var uniq = list.filter(function (x, i) { return list.indexOf(x) === i; });
+    if (lg === 'tr') { var id = {}; uniq.forEach(function (x) { id[x] = x; }); return Promise.resolve({ map: id, src: 'same' }); }
+    return nameCache().then(function (cache) {
+      var c = cache[lg] || {}, miss = uniq.filter(function (x) { return c[x] == null; });
+      var done = function (src) { var map = {}; uniq.forEach(function (x) { map[x] = c[x] != null ? c[x] : x; }); return { map: map, src: src }; };
+      if (!miss.length) return done('ai');
+      var ai = window.FalconFaturaPdf && window.FalconFaturaPdf.translate;
+      return (ai ? ai(miss, lg) : Promise.reject(new Error('no-ai'))).then(function (arr) {
+        miss.forEach(function (x, i) { var v = String(arr[i] == null ? '' : arr[i]).trim(); if (v) c[x] = v; });
+        cache[lg] = c; nameCache(cache); return done('ai');
+      }, function () {
+        // çevrimdışı: önbelleğe yazılmaz (internet gelince yapay zekâ ile yeniden çevrilir)
+        var map = {}; uniq.forEach(function (x) { map[x] = c[x] != null ? c[x] : offlineName(x, lg).text; });
+        return { map: map, src: 'offline' };
+      });
+    });
   }
   function savePdf(inv) {
     return (CFG ? Promise.resolve(CFG) : loadCfg()).then(function (cfg) {
@@ -838,6 +1021,9 @@
       '.fat-tot{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:14px}.fat-tot div{display:flex;gap:18px;justify-content:space-between;min-width:260px}.fat-tot .g{font-weight:800;font-size:16px;border-top:1px solid var(--border,#334);padding-top:6px}' +
       '.fat-cash{border:1px solid var(--border,#334);border-radius:12px;padding:12px 14px}.fat-cash .segmented{margin:6px 0 8px;flex-wrap:wrap}.fat-cash .segmented button{flex:1;min-width:140px}' +
       '.fat-pv{background:#7d8595;border-radius:10px;padding:14px;overflow:auto;max-height:70vh}.fat-pv-host{transform-origin:top left;margin:0 auto}' +
+      '.fat-pv-steps{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;padding:10px 12px;border:1px solid var(--border,#ffffff1f);border-radius:12px}.fat-pv-st{display:flex;align-items:center;gap:10px;flex-wrap:wrap}' +
+      '.fat-pv-st .n{width:22px;height:22px;border-radius:50%;background:#0ea5e9;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none}.fat-pv-st>b{min-width:120px}' +
+      '.fat-pv-st .fat-seg{flex:0 1 auto}.fat-pv-st .fat-seg button{padding:6px 14px;white-space:nowrap}.fat-pv-st .field-hint{flex:1;min-width:220px;margin:0}.fat-pv-nm{font-size:12.5px;opacity:.85}.fat-pv-nm.busy{color:#38bdf8}' +
       '.fat-pv-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.fat-pv-bar select{width:auto;min-width:150px}.fat-pv-bar .sp{flex:1}' +
       '.fat-pv-tag{display:inline-block;border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:700;background:#e2a40026;color:#d69500}' +
       '.fat-img{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.fat-img .pv{width:170px;height:80px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid var(--border,#334)}.fat-img .pv img{max-width:160px;max-height:72px}' +
@@ -979,7 +1165,7 @@
         var over = r.due_date && r.due_date < td && (r.status === 'pending' || r.status === 'partial');
         var acts = [
           el('button', { type: 'button', class: 'btn', title: t('preview'), text: '👁', onclick: function () { openPreview(r); } }),
-          el('button', { type: 'button', class: 'btn', text: '⬇ ' + t('pdf'), onclick: function () { savePdf(r).then(function (x) { if (x !== null) toast(t('pdfSaved')); }).catch(function (e) { toast(String(e && e.message || e), 'error'); }); } }),
+          el('button', { type: 'button', class: 'btn', text: '⬇ ' + t('pdf'), onclick: function () { openPreview(r); } }),
           r.status !== 'cancelled' ? el('button', { type: 'button', class: 'btn ' + (rem > 0 ? 'success' : ''), text: rem > 0 ? '₊ ' + t('pay') : t('payments'), onclick: function () { openPay(r); } }) : null,
           el('button', { type: 'button', class: 'btn', text: '✎', title: t('edit'), onclick: function () { openEditor(r); } }),
           el('button', { type: 'button', class: 'btn', title: r.status === 'cancelled' ? t('uncancel') : t('cancel'), text: r.status === 'cancelled' ? '↺' : '⊘', onclick: function () { toggleCancel(r); } }),
@@ -1012,17 +1198,32 @@
 
     // ----- önizleme -----
     // opts: { tag: rozet metni, onChange(template, lang): düzenleyiciye geri yazar, extra: ek alt düğmeler (function(m) → [düğme]), cfg: ayarlar yerine kullanılacak }
+    // v1.63: çıktı akışı — 1) dil  2) önizle ve düzelt (ürün adları olduğu gibi / çevrilmiş)  3) PDF
     function openPreview(inv, opts) {
       opts = opts || {};
       (opts.cfg ? Promise.resolve(opts.cfg) : CFG ? Promise.resolve(CFG) : loadCfg()).then(function (cfg) {
         var cur = Object.assign({}, inv);
+        if (!DOC[cur.lang]) cur.lang = lang();
         var host = el('div', { class: 'fat-pv-host', style: 'width:210mm' });
         var sr = host.attachShadow ? host.attachShadow({ mode: 'open' }) : host;
         var pv = el('div', { class: 'fat-pv' }, [host]);
-        var zoom = 'fit';
+        var zoom = 'fit', editing = false, edited = false;
+        var names = pvNamesPref(), tr = { lg: '', map: null, src: '', busy: false };
+        var view = function () {
+          if (names !== 'tr' || !tr.map || tr.lg !== cur.lang) return cur;
+          var its = jparse(cur.items, []); if (!Array.isArray(its)) its = [];
+          return Object.assign({}, cur, { items: JSON.stringify(its.map(function (it) {
+            var o = Object.assign({}, it);
+            if (tr.map[String(it.name || '')] != null) o.name = tr.map[String(it.name || '')];
+            if (it.unit) o.unit = unitTr(it.unit, cur.lang);
+            return o;
+          })) });
+        };
         var render = function () {
-          var h = invoiceHtml(cur, cfg, false);
-          sr.innerHTML = '<style>' + h.css.replace('@page{size:210mm 297mm;margin:0}', '') + '.inv{box-shadow:0 6px 30px rgba(0,0,0,.35)}</style>' + h.body;
+          var h = invoiceHtml(view(), cfg, false);
+          sr.innerHTML = '<style>' + h.css.replace(/@page[^{]*\{[^}]*\}/g, '') + '.inv{box-shadow:0 6px 30px rgba(0,0,0,.35)}.inv[contenteditable] *:hover{outline:1px dashed #38bdf8aa}.inv[contenteditable]:focus{outline:none}</style>' + h.body;
+          if (edited) toast(t('pvEditLost'));
+          edited = false; setEdit(editing);
           setTimeout(fit, 0);
         };
         var fit = function () {
@@ -1030,33 +1231,94 @@
           var k = zoom === 'fit' ? Math.min(1, (pv.clientWidth - 28) / full) : 1;
           host.style.transform = 'scale(' + k + ')'; host.style.height = (hh * k) + 'px'; host.style.marginBottom = '0';
         };
-        var tplSel = el('select', { onchange: function (e) { cur.template = [e.target.value].concat(tplFlagList(cur.template)).join('|'); render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } },
+        var changed = function () { if (opts.onChange) opts.onChange(cur.template, cur.lang); };
+        // 1) dil
+        var lgBox = el('div', { class: 'fat-seg fat-pv-lg' });
+        var drawLg = function () {
+          lgBox.innerHTML = '';
+          [['tr', 'Türkçe'], ['en', 'English'], ['ar', 'العربية']].forEach(function (x) {
+            lgBox.appendChild(el('button', { type: 'button', class: cur.lang === x[0] ? 'on' : '', dir: x[0] === 'ar' ? 'rtl' : 'ltr', text: x[1], onclick: function () {
+              if (cur.lang === x[0]) return; cur.lang = x[0]; drawLg(); changed(); ensureNames().then(render); render();
+            } }));
+          });
+        };
+        // ürün adları
+        var nmBox = el('div', { class: 'fat-seg' });
+        var nmInfo = el('span', { class: 'fat-pv-nm' });
+        var drawNm = function () {
+          nmBox.innerHTML = '';
+          [['keep', t('pvNamesKeep')], ['tr', t('pvNamesTr')]].forEach(function (x) {
+            nmBox.appendChild(el('button', { type: 'button', class: names === x[0] ? 'on' : '', text: x[1], onclick: function () {
+              if (names === x[0]) return; names = x[0]; pvNamesPref(names); drawNm(); ensureNames().then(render); render();
+            } }));
+          });
+          nmInfo.className = 'fat-pv-nm' + (tr.busy ? ' busy' : '');
+          nmInfo.textContent = names !== 'tr' ? '' : tr.busy ? '⏳ ' + t('pvNamesBusy') : tr.lg === cur.lang && tr.src ? (tr.src === 'ai' ? '✓ ' + t('pvNamesAi') : tr.src === 'same' ? t('pvNamesSame') : '⚠ ' + t('pvNamesOffline')) : '';
+        };
+        var ensureNames = function () {
+          if (names !== 'tr' || (tr.lg === cur.lang && tr.map)) { drawNm(); return Promise.resolve(); }
+          var its = jparse(cur.items, []); if (!Array.isArray(its)) its = [];
+          var list = its.map(function (it) { return String(it.name || ''); }).filter(Boolean);
+          var lg = cur.lang;
+          tr.busy = true; drawNm();
+          return translateNames(list, lg).then(function (r) {
+            if (cur.lang !== lg) return;
+            tr = { lg: lg, map: r.map, src: r.src, busy: false }; drawNm();
+          }, function () { tr.busy = false; drawNm(); });
+        };
+        // 2) düzelt
+        var edBtn = el('button', { type: 'button', class: 'btn small' });
+        var setEdit = function (on) {
+          editing = on;
+          var x = sr.querySelector && sr.querySelector('.inv');
+          if (x) { if (on) { x.setAttribute('contenteditable', 'true'); x.setAttribute('spellcheck', 'false'); } else x.removeAttribute('contenteditable'); }
+          edBtn.className = 'btn small' + (on ? ' primary' : '');
+          edBtn.textContent = on ? '✓ ' + t('pvEditOff') : '✎ ' + t('pvEditOn');
+        };
+        edBtn.onclick = function () { setEdit(!editing); if (editing) { var x = sr.querySelector('.inv'); if (x) try { x.focus(); } catch (e) {} } };
+        sr.addEventListener && sr.addEventListener('input', function () { edited = true; });
+        var tplSel = el('select', { onchange: function (e) { cur.template = [e.target.value].concat(tplFlagList(cur.template)).join('|'); render(); changed(); } },
           TEMPLATES.map(function (x) { return opt(x, t('tpl' + x.charAt(0).toUpperCase() + x.slice(1)), tplOf(cur.template) === x); }));
-        var sgCb = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withSign(cur.template, e.target.checked); render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } });
+        var sgCb = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withSign(cur.template, e.target.checked); render(); changed(); } });
         sgCb.checked = hasSign(cur.template);
-        var sdCb = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withStatus(cur.template, e.target.checked); render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } });
+        var sdCb = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withStatus(cur.template, e.target.checked); render(); changed(); } });
         sdCb.checked = hasStatus(cur.template);
-        var pvFlag = function (f) { var x = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withFlag(cur.template, f, e.target.checked); render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } }); x.checked = hasFlagOn(cur.template, f); return x; };
+        var pvFlag = function (f) { var x = el('input', { type: 'checkbox', onchange: function (e) { cur.template = withFlag(cur.template, f, e.target.checked); render(); changed(); } }); x.checked = hasFlagOn(cur.template, f); return x; };
         var pvLay = cfg.layout || {};
-        var lgSel = el('select', { onchange: function (e) { cur.lang = e.target.value; render(); if (opts.onChange) opts.onChange(cur.template, cur.lang); } },
-          [['tr', 'langTr'], ['en', 'langEn'], ['ar', 'langAr']].map(function (x) { return opt(x[0], t(x[1]), (cur.lang || lang()) === x[0]); }));
         var zb = el('button', { type: 'button', class: 'btn small', text: t('zoomFull'), onclick: function () { zoom = zoom === 'fit' ? 'full' : 'fit'; zb.textContent = zoom === 'fit' ? t('zoomFull') : t('zoomFit'); fit(); } });
+        var steps = el('div', { class: 'fat-pv-steps' }, [
+          el('div', { class: 'fat-pv-st' }, [el('span', { class: 'n', text: '1' }), el('b', { text: t('pvStepLang') }), lgBox]),
+          el('div', { class: 'fat-pv-st' }, [el('span', { class: 'n', text: '2' }), el('b', { text: t('pvStepNames') }), nmBox, nmInfo]),
+          el('div', { class: 'fat-pv-st' }, [el('span', { class: 'n', text: '3' }), el('b', { text: t('pvStepEdit') }), edBtn, el('span', { class: 'field-hint', text: t('pvEditHint') })])
+        ]);
         var bar = el('div', { class: 'fat-pv-bar' }, [
-          el('span', { class: 'field-label', text: t('template') }), tplSel, el('span', { class: 'field-label', text: t('lang') }), lgSel,
+          el('span', { class: 'field-label', text: t('template') }), tplSel,
           el('label', { class: 'check fat-pv-sg' }, [sgCb, el('span', { text: t('signOn') })]),
           el('label', { class: 'check fat-pv-sg' }, [sdCb, el('span', { text: t('statusOn') })]),
           pvLay.qr !== false ? el('label', { class: 'check fat-pv-sg' }, [pvFlag('nq'), el('span', { text: t('codeQr') })]) : null,
           pvLay.barcode !== false ? el('label', { class: 'check fat-pv-sg' }, [pvFlag('nb'), el('span', { text: t('codeBc') })]) : null,
           el('span', { class: 'sp' }), opts.tag ? el('span', { class: 'fat-pv-tag', text: opts.tag }) : null, zb
         ]);
+        // 3) PDF: düzeltilmiş önizleme aynen PDF'e girer
+        var pdfHtml = function () {
+          var full = invoiceHtml(view(), cfg, true);
+          var x = sr.querySelector && sr.querySelector('.inv');
+          if (!edited || !x) return full;
+          var c2 = x.cloneNode(true); c2.removeAttribute('contenteditable'); c2.removeAttribute('spellcheck');
+          return full.replace(/<body>[\s\S]*<\/body>/, function () { return '<body>' + c2.outerHTML + '</body>'; });
+        };
         var foot = [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } })];
         var m;
         if (opts.extra) foot = foot.concat(opts.extra(function () { return m; }, cur));
-        else foot.push(el('button', { type: 'button', class: 'btn primary', text: '⬇ ' + t('pdf'), onclick: function () { savePdf(cur).then(function (x) { if (x !== null) toast(t('pdfSaved')); }); } }));
-        m = modal(t('previewTitle') + (cur.number ? ' · ' + cur.number : ''), [bar, pv], foot, 'xwide');
+        else foot.push(el('button', { type: 'button', class: 'btn primary', text: '⬇ ' + t('pvPdf'), onclick: function (e) {
+          var b = e.target; b.disabled = true;
+          savePdfHtml(cur, pdfHtml()).then(function (x) { b.disabled = false; if (x !== null && x !== undefined) toast(t('pdfSaved')); }, function (er) { b.disabled = false; toast(String(er && er.message || er), 'error'); });
+        } }));
+        m = modal(t('previewTitle') + (cur.number ? ' · ' + cur.number : ''), [steps, bar, pv], foot, 'xwide');
         var onRs = function () { if (!pv.isConnected) { window.removeEventListener('resize', onRs); return; } fit(); };
         window.addEventListener('resize', onRs);
-        render();
+        drawLg(); drawNm(); render();
+        ensureNames().then(function () { if (names === 'tr') render(); });
       });
     }
     // Ayarlardaki şirket bilgileriyle örnek fatura
@@ -1686,7 +1948,7 @@
           };
           run('saveInvoice', payload, t('saved')).then(function (res) {
             m.close(); load();
-            if (withPdf && res && res.id) q('SELECT * FROM invoices WHERE id = ?', [res.id]).then(function (x) { if (x[0]) return savePdf(x[0]); });
+            if (withPdf && res && res.id) q('SELECT * FROM invoices WHERE id = ?', [res.id]).then(function (x) { if (x[0]) openPreview(x[0]); });
           }, function () { btn.disabled = false; });
         };
         // kaydetmeden önizleme: düzenleyicideki bilgilerden taslak fatura
@@ -2307,5 +2569,5 @@
   }
 
   if (document.head) style(); else document.addEventListener('DOMContentLoaded', style);
-  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, logo: falconLogo, version: '1.61.4' };
+  window.FalconFatura = { mount: mount, html: invoiceHtml, savePdf: savePdf, translateNames: translateNames, namesPref: pvNamesPref, logo: falconLogo, version: '1.63.0' };
 })();
