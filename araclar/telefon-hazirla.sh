@@ -12,5 +12,5 @@ node -e "require('./electron/update-pack').extractPack(require('fs').readFileSyn
 sed -i "s/\`$ESKI\`/\`$V\`/g" "$W"/assets/index-*.js
 sed -i "s/$ESKI/$V/g" "$W"/assets/agent-baslat.js
 # v1.60: müşteriler / ürün kartı / fiyat geçmişi / satır KDV (gömülü services + schema). Taban 1.60.0 olunca yama zaten içindedir (betik atlar).
-for f in "$W"/assets/index-*.js; do python3 araclar/patch-srv-160.py "$f"; python3 araclar/patch-srv-161.py "$f"; done
+for f in "$W"/assets/index-*.js; do python3 araclar/patch-srv-160.py "$f"; python3 araclar/patch-srv-161.py "$f"; python3 araclar/patch-srv-162.py "$f"; done
 echo "hazır: $W ($V)"

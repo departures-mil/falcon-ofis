@@ -2213,6 +2213,8 @@ function createServices(db, { removeFile = () => {} } = {}) {
       }
       // v1.61 fx: döviz çevrilmiş kalemin orijinal fiyatı ve para birimi
       if (it.fx && typeof it.fx === 'object' && Number.isFinite(Number(it.fx.p)) && Number(it.fx.p) >= 0 && /^[A-Z]{3,5}$/.test(String(it.fx.c || ''))) row.fx = { p: Number(it.fx.p), c: String(it.fx.c) };
+      // v1.62 mk: kâr eklenmiş kalemin kârsız fiyatı ve kâr oranı
+      if (it.mk && typeof it.mk === 'object' && Number.isFinite(Number(it.mk.b)) && Number(it.mk.b) >= 0 && Number.isFinite(Number(it.mk.r)) && Number(it.mk.r) > -100 && Number(it.mk.r) !== 0) row.mk = { b: Number(it.mk.b), r: Number(it.mk.r) };
       if (it.x && typeof it.x === 'object' && !Array.isArray(it.x)) {
         const x = {};
         for (const [k, v] of Object.entries(it.x)) { const s = optText(v === null || v === undefined ? '' : String(v)); if (s) x[String(k).slice(0, 40)] = s.slice(0, 500); }
@@ -2446,7 +2448,7 @@ function createServices(db, { removeFile = () => {} } = {}) {
       if (!pid) {
         const rest = String(it.name).split('\n').slice(1).join('\n').trim();
         const code = it.code && !db.get('SELECT id FROM products WHERE code = ?', [it.code]) ? it.code : null;
-        pid = saveProduct({ name: first || it.name, code, unit: it.unit || 'pcs', description: rest || null, sale_price: it.fx && it.fx.c !== cur && db.get('SELECT code FROM currencies WHERE code = ?', [it.fx.c]) ? it.fx.p : it.price, cost_currency: it.fx && it.fx.c !== cur && db.get('SELECT code FROM currencies WHERE code = ?', [it.fx.c]) ? it.fx.c : cur }).id;
+        pid = saveProduct({ name: first || it.name, code, unit: it.unit || 'pcs', description: rest || null, sale_price: it.fx && it.fx.c !== cur && db.get('SELECT code FROM currencies WHERE code = ?', [it.fx.c]) ? it.fx.p : it.mk ? it.mk.b : it.price, cost_currency: it.fx && it.fx.c !== cur && db.get('SELECT code FROM currencies WHERE code = ?', [it.fx.c]) ? it.fx.c : cur }).id;
         db.run('UPDATE products SET vat_rate = ?, depot = ? WHERE id = ?', [it.vat ?? null, it.depot || null, pid]);
       } else {
         // eksik bilgiler tamamlanır (var olan bilgi değiştirilmez)
@@ -2478,7 +2480,7 @@ function createServices(db, { removeFile = () => {} } = {}) {
       if (seen.has(it.product_id)) continue;
       seen.add(it.product_id);
       const newer = db.get('SELECT id FROM product_prices WHERE product_id = ? AND date > ? AND (invoice_id IS NULL OR invoice_id <> ?) LIMIT 1', [it.product_id, date, invId]);
-      if (!newer && !(it.fx && it.fx.c !== cur)) setProductPrice(it.product_id, it.price, cur);
+      if (!newer && !(it.fx && it.fx.c !== cur) && !it.mk) setProductPrice(it.product_id, it.price, cur);
     }
   }
   function metaJson(m) {

@@ -277,6 +277,28 @@
     }
   };
   ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX3[l]).forEach(function (k) { TX[l][k] = TX3[l][k]; }); });
+  // v1.62: kâr ekleme (toplu / tekli)
+  var TX4 = {
+    tr: {
+      mkTitle: 'Kâr ekle', mkRate: 'Kâr oranı (%)', mkAll: 'Tüm kalemlere uygula', mkClear: 'Kârı kaldır', mkClearAll: 'Tüm kârları kaldır',
+      mkHint: 'Kâr her zaman kalemin ilk (kârsız) fiyatı üzerinden hesaplanır; tekrar uygulanınca üst üste binmez. Tek bir kalem için fiyatın yanındaki ％ düğmesini kullanın. Fiyatı elle değiştirirseniz o kalemin kârı sıfırlanır. Ürün kayıtlarındaki fiyatlar değişmez.',
+      mkSum: '{n} kalemde kâr var · Eklenen kâr: {a}', mkNone: 'Henüz kâr eklenmedi', mkDone: '{n} kaleme %{r} kâr eklendi', mkRemoved: 'Kâr kaldırıldı, ilk fiyatlar geri geldi',
+      mkLine: 'Bu kaleme kâr ekle', mkApply: 'Uygula', mkBase: 'Kârsız fiyat', mkTot: 'Dahil kâr', mkBad: 'Geçerli bir kâr oranı yazın (ör. 15)', mkEmpty: 'Fiyatı olan kalem yok'
+    },
+    en: {
+      mkTitle: 'Add profit', mkRate: 'Profit rate (%)', mkAll: 'Apply to all lines', mkClear: 'Remove profit', mkClearAll: 'Remove all profit',
+      mkHint: 'Profit is always calculated on the line\'s original (no-profit) price, so applying it again does not stack. For a single line use the ％ button next to its price. If you edit a price by hand, that line\'s profit is reset. Saved product prices are not changed.',
+      mkSum: '{n} lines with profit · Profit added: {a}', mkNone: 'No profit added yet', mkDone: '{r}% profit added to {n} lines', mkRemoved: 'Profit removed, original prices restored',
+      mkLine: 'Add profit to this line', mkApply: 'Apply', mkBase: 'Price without profit', mkTot: 'Profit included', mkBad: 'Enter a valid profit rate (e.g. 15)', mkEmpty: 'No lines with a price'
+    },
+    ar: {
+      mkTitle: 'إضافة هامش ربح', mkRate: 'نسبة الربح (%)', mkAll: 'تطبيق على جميع البنود', mkClear: 'إزالة الربح', mkClearAll: 'إزالة كل الأرباح',
+      mkHint: 'يُحسب الربح دائماً على السعر الأصلي للبند (دون ربح)، فلا يتراكم عند إعادة تطبيقه. لبند واحد استخدم زر ％ بجانب سعره. إذا عدّلت السعر يدوياً يُلغى ربح ذلك البند. أسعار المنتجات المحفوظة لا تتغير.',
+      mkSum: '{n} بنود بها ربح · الربح المضاف: {a}', mkNone: 'لم يُضف أي ربح بعد', mkDone: 'أُضيف ربح بنسبة {r}% إلى {n} بنود', mkRemoved: 'أُزيل الربح وعادت الأسعار الأصلية',
+      mkLine: 'إضافة ربح لهذا البند', mkApply: 'تطبيق', mkBase: 'السعر دون ربح', mkTot: 'الربح المتضمَّن', mkBad: 'أدخل نسبة ربح صحيحة (مثلاً 15)', mkEmpty: 'لا توجد بنود لها سعر'
+    }
+  };
+  ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX4[l]).forEach(function (k) { TX[l][k] = TX4[l][k]; }); });
   // Faturanın kendi dilindeki resmi metinler (PDF)
   var DOC = {
     tr: { title: 'FATURA', no: 'Fatura No', date: 'Fatura Tarihi', due: 'Vade Tarihi', billTo: 'Sayın', desc: 'Açıklama', qty: 'Miktar', unit: 'Birim',
@@ -848,6 +870,12 @@
       '.fat-fx{border:1px solid var(--border,#ffffff1f);border-radius:12px;padding:10px 12px}.fat-fx-h{display:flex;align-items:center;gap:8px;margin-bottom:6px}.fat-fx-h .sp{flex:1}' +
       '.fat-fx-r{display:flex;flex-wrap:wrap;gap:10px 18px}.fat-fx-i{display:flex;align-items:center;gap:6px;font-weight:600;white-space:nowrap}.fat-fx-i input{width:130px}.fat-fx-i input.bad{border-color:#e5484d}' +
       '.fat-fx-cv{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}.fat-fx-cv select{width:auto;min-width:120px}' +
+      '.fat-mk{border:1px solid var(--border,#ffffff1f);border-radius:12px;padding:10px 12px;margin-top:8px}.fat-mk-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0}.fat-mk-r input{width:96px}' +
+      '.fat-mk-c{padding:3px 10px;border-radius:999px;border:1px solid var(--border,#ffffff2a);background:none;color:inherit;cursor:pointer;font-weight:600}.fat-mk-c.on{background:#22a06b2a;border-color:#22a06b;color:#22a06b}' +
+      '.fat-mk-s{font-weight:600;color:#22a06b}.fat-mk-s.z{color:inherit;opacity:.65;font-weight:500}' +
+      '.fat-pw{display:flex;gap:4px;align-items:center;position:relative}.fat-mk-b{min-width:30px;height:30px;padding:0 6px;border-radius:8px;border:1px solid var(--border,#ffffff2a);background:none;color:inherit;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap}' +
+      '.fat-mk-b.on{background:#22a06b2a;border-color:#22a06b;color:#22a06b}.fat-mk-p{position:fixed;z-index:100000;background:var(--surface,#0f1a2b);border:1px solid var(--border,#ffffff2a);border-radius:10px;padding:8px;box-shadow:0 8px 24px #0006;display:flex;flex-direction:column;gap:6px;min-width:210px}' +
+      '.fat-mk-p .fat-mk-r{margin:0}.fat-mk-p input{width:80px}.fat-mk-p .b{font-size:12px;opacity:.75}.fat-tot .mk span,.fat-tot .mk b{color:#22a06b;font-weight:600}' +
       '.fat-imp-bulk{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:4px 0 8px}.fat-imp-bulk .sp{flex:1}.fat-imp-t tr.off td{opacity:.45}.fat-imp-t tr.off td:first-child{opacity:1}' +
       '.fat-imp-t .nm2{min-width:240px}.fat-imp-t .cd{width:140px}.fat-imp-t .q{width:70px}.fat-imp-t .u{width:64px}.fat-imp-t .p{width:100px}.fat-imp-t .v{width:56px}.fat-imp-sel{max-width:260px}' +
       '.fat-click{cursor:pointer}.fat-hist{margin-top:14px}.fat-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}.fat-chks{display:flex;gap:18px;flex-wrap:wrap}' +
@@ -1250,6 +1278,15 @@
         var fxRate = function (c) { return c === 'USD' ? 1 : num(FX.man[c]) > 0 ? num(FX.man[c]) : num(FX.r[c]) > 0 ? num(FX.r[c]) : 0; };
         var fxConv = function (a, from, to) { if (from === to) return a; var rf = fxRate(from), rt = fxRate(to); return rf > 0 && rt > 0 ? a / rf * rt : null; };
         var fxPrice = function (n, c) { var p = Math.pow(10, DEC[c] === 0 ? 0 : 4); return Math.round(n * p) / p; };
+        // v1.62 kâr: kalemin kârsız fiyatı ve oranı it.mk = {b, r}; fiyat = b × (1 + r/100). Kâr hep b'den hesaplanır (üst üste binmez).
+        var mkBase = function (it) { return it.mk ? num(it.mk.b) : num(it.price); };
+        var setBase = function (it, b) { if (it.mk) { it.mk.b = b; it.price = fxPrice(b * (1 + num(it.mk.r) / 100), st.currency); } else it.price = b; };
+        var mkSet = function (it, r) {
+          r = num(r);
+          if (!r) { if (it.mk) { it.price = num(it.mk.b); delete it.mk; } return; }
+          var b = mkBase(it); it.mk = { b: b, r: r }; it.price = fxPrice(b * (1 + r / 100), st.currency);
+        };
+        var hasPrice = function (it) { return String(it.name || '').trim() && (it.mk ? num(it.mk.b) > 0 : num(it.price) > 0); };
         var fxUsed = function () {
           var u = {}; st.items.forEach(function (it) { if (it.fx && it.fx.c !== st.currency) u[it.fx.c] = 1; });
           if (st.discFx && st.discFx.c !== st.currency) u[st.discFx.c] = 1;
@@ -1283,9 +1320,9 @@
           var n = 0, miss = false, c = st.currency;
           st.items.forEach(function (it) {
             if (!it.fx) return;
-            if (it.fx.c === c) { it.price = it.fx.p; delete it.fx; n++; return; }
+            if (it.fx.c === c) { setBase(it, it.fx.p); delete it.fx; n++; return; }
             var v = fxConv(it.fx.p, it.fx.c, c); if (v == null) { miss = true; return; }
-            it.price = fxPrice(v, c); n++;
+            setBase(it, fxPrice(v, c)); n++;
           });
           if (st.discFx) {
             if (st.discFx.c === c) { st.discount = st.discFx.p; st.discFx = null; }
@@ -1299,7 +1336,7 @@
         }
         function switchCurrency(from, to) {
           if (from === to) return;
-          st.items.forEach(function (it) { if (!it.fx && it.price !== '' && it.price != null && num(it.price) !== 0) it.fx = { p: num(it.price), c: from }; });
+          st.items.forEach(function (it) { if (!it.fx && it.price !== '' && it.price != null && num(it.price) !== 0) it.fx = { p: mkBase(it), c: from }; });
           if (!st.discFx && num(st.discount) > 0) st.discFx = { p: num(st.discount), c: from };
           fxApply(false);
           // internetten güncel kur (oturumda bir kez); kur değiştiyse fiyatlar orijinalden yeniden çevrilir
@@ -1309,7 +1346,7 @@
         var fxFrom = st.currency === 'TRY' ? 'USD' : 'TRY';
         function convertFrom(src) {
           if (!src || src === st.currency) return;
-          st.items.forEach(function (it) { if (!it.fx && it.price !== '' && it.price != null && num(it.price) !== 0) it.fx = { p: num(it.price), c: src }; });
+          st.items.forEach(function (it) { if (!it.fx && it.price !== '' && it.price != null && num(it.price) !== 0) it.fx = { p: mkBase(it), c: src }; });
           if (!st.discFx && num(st.discount) > 0) st.discFx = { p: num(st.discount), c: src };
           fxApply(false);
           if (!FX.fetched) fetchFx().then(function (ch) { if (ch) fxApply(true); });
@@ -1360,6 +1397,8 @@
             totBox.appendChild(el('div', null, [el('span', { text: (perLine ? t('vatCalc') : t('tax')) + ' (%' + num(rt) + ')' }), el('b', { dir: 'ltr', text: money(tt.byRate[rt].tax, c) })]));
           });
           totBox.appendChild(el('div', { class: 'g' }, [el('span', { text: t('grand') }), el('b', { dir: 'ltr', text: money(tt.total, c) })]));
+          var mp = mkProfit(); if (mp.n) totBox.appendChild(el('div', { class: 'mk' }, [el('span', { text: t('mkTot') + ' (' + mp.n + ')' }), el('b', { dir: 'ltr', text: '+ ' + money(mp.a, c) })]));
+          drawMkSum();
           st._total = tt.total;
           if (payIn && !payTouched) payIn.value = tt.total ? String(tt.total) : '';
         }
@@ -1371,12 +1410,106 @@
           if ((force || !it.depot) && p.depot) { it.depot = p.depot; if (refs.depot) refs.depot.value = p.depot; }
           if (perLine && p.vat_rate != null && (force || it.vat == null || it.vat === '' || num(it.vat) === dVat)) { it.vat = p.vat_rate; if (refs.vat) refs.vat.value = p.vat_rate; }
           if ((force || it.price === '' || it.price == null || num(it.price) === 0) && p.sale_price != null) {
-            if (!p.cost_currency || p.cost_currency === st.currency) { it.price = p.sale_price; delete it.fx; if (refs.price) refs.price.value = p.sale_price; }
-            else { var pv = fxConv(num(p.sale_price), p.cost_currency, st.currency); if (pv != null) { it.fx = { p: num(p.sale_price), c: p.cost_currency }; it.price = fxPrice(pv, st.currency); st.fxTxt = fxText(); if (refs.price) refs.price.value = it.price; } }
+            if (!p.cost_currency || p.cost_currency === st.currency) { setBase(it, num(p.sale_price)); delete it.fx; if (refs.price) refs.price.value = it.price; }
+            else { var pv = fxConv(num(p.sale_price), p.cost_currency, st.currency); if (pv != null) { it.fx = { p: num(p.sale_price), c: p.cost_currency }; setBase(it, fxPrice(pv, st.currency)); st.fxTxt = fxText(); if (refs.price) refs.price.value = it.price; } }
+            if (refs.mk) refs.mk();
           }
           recalc();
         }
+        // v1.62: satır başına kâr (fiyatın yanındaki ％ düğmesi)
+        var mkPop = null;
+        var mkClose = function () { if (mkPop) { mkPop.remove(); mkPop = null; document.removeEventListener('mousedown', mkOut, true); document.removeEventListener('keydown', mkKey, true); window.removeEventListener('scroll', mkClose, true); } };
+        var mkKey = function (e) { if (e.key === 'Escape' && mkPop) { e.stopPropagation(); e.preventDefault(); mkClose(); } };
+        var mkOut = function (e) { if (mkPop && !mkPop.contains(e.target) && !(mkPop._b && mkPop._b.contains(e.target))) mkClose(); };
+        var pctTxt = function (r) { return String(Math.round(num(r) * 100) / 100).replace('.', lang() === 'tr' ? ',' : '.'); };
+        function mkCell(it, refs, pIn) {
+          var btn = el('button', { type: 'button', class: 'fat-mk-b', tabindex: '-1' });
+          var wrap = el('div', { class: 'fat-pw' }, [pIn, btn]);
+          refs.mk = function () {
+            btn.className = 'fat-mk-b' + (it.mk ? ' on' : '');
+            btn.textContent = it.mk ? '+%' + pctTxt(it.mk.r) : '％';
+            btn.title = it.mk ? t('mkBase') + ': ' + money(num(it.mk.b), st.currency) + ' · +%' + pctTxt(it.mk.r) : t('mkLine');
+          };
+          refs.mk();
+          var done = function (r) {
+            mkSet(it, r); pIn.value = it.price === '' || it.price == null ? '' : String(it.price); refs.mk(); mkClose(); recalc();
+          };
+          btn.onclick = function () {
+            if (mkPop && mkPop._b === btn) { mkClose(); return; }
+            mkClose();
+            var x = el('input', { type: 'number', step: 'any', dir: 'ltr', value: it.mk ? String(it.mk.r) : (st._mkR || ''), placeholder: '15',
+              onkeydown: function (e) { if (e.key === 'Enter') { e.preventDefault(); ok(); } else if (e.key === 'Escape') { e.stopPropagation(); mkClose(); } } });
+            var ok = function () { var r = num(x.value); if (!(r > -100) || !String(x.value).trim()) { toast(t('mkBad'), 'error'); x.focus(); return; } done(r); };
+            mkPop = el('div', { class: 'fat-mk-p' }, [
+              el('b', { text: t('mkLine') }),
+              el('div', { class: 'fat-mk-r' }, [el('span', { text: '%' }), x, el('button', { type: 'button', class: 'btn small primary', text: t('mkApply'), onclick: ok })]),
+              el('div', { class: 'fat-mk-r' }, [5, 10, 15, 20, 25].map(function (v) { return el('button', { type: 'button', class: 'fat-mk-c', text: '%' + v, onclick: function () { done(v); } }); })),
+              it.mk ? el('div', { class: 'b', text: t('mkBase') + ': ' + money(num(it.mk.b), st.currency) }) : null,
+              it.mk ? el('button', { type: 'button', class: 'btn small', text: '⊘ ' + t('mkClear'), onclick: function () { done(0); } }) : null
+            ]);
+            mkPop._b = btn;
+            document.body.appendChild(mkPop);
+            var rc = btn.getBoundingClientRect(), pw = mkPop.offsetWidth, ph = mkPop.offsetHeight, rtl = getComputedStyle(btn).direction === 'rtl';
+            var lx = rtl ? rc.left : rc.right - pw; lx = Math.max(8, Math.min(lx, window.innerWidth - pw - 8));
+            var ty = rc.bottom + 4; if (ty + ph > window.innerHeight - 8) ty = Math.max(8, rc.top - ph - 4);
+            mkPop.style.left = lx + 'px'; mkPop.style.top = ty + 'px';
+            if (document.documentElement.dir === 'rtl' || lang() === 'ar') mkPop.dir = 'rtl';
+            window.addEventListener('scroll', mkClose, true);
+            document.addEventListener('keydown', mkKey, true);
+            document.addEventListener('mousedown', mkOut, true);
+            setTimeout(function () { try { x.focus(); x.select(); } catch (e) {} }, 0);
+          };
+          return wrap;
+        }
+        // v1.62: toplu kâr paneli
+        var mkBox = el('div', { class: 'fat-mk' });
+        var mkSum = el('span', { class: 'fat-mk-s' });
+        var mkProfit = function () {
+          var n = 0, a = 0;
+          st.items.forEach(function (it) { if (it.mk && String(it.name || '').trim()) { n++; a += num(it.qty) * (num(it.price) - num(it.mk.b)); } });
+          return { n: n, a: rnd(a, st.currency) };
+        };
+        function drawMkSum() {
+          var p = mkProfit();
+          mkSum.className = 'fat-mk-s' + (p.n ? '' : ' z');
+          mkSum.textContent = p.n ? t('mkSum', { n: p.n, a: money(p.a, st.currency) }) : t('mkNone');
+        }
+        function drawMk() {
+          mkBox.innerHTML = '';
+          var rIn = el('input', { type: 'number', step: 'any', dir: 'ltr', placeholder: '15', value: st._mkR || '', oninput: function (e) { st._mkR = e.target.value; chips(); } });
+          var chipBox = el('span', { class: 'fat-mk-r', style: 'margin:0' });
+          var chips = function () {
+            chipBox.innerHTML = '';
+            [5, 10, 15, 20, 25, 30].forEach(function (v) {
+              chipBox.appendChild(el('button', { type: 'button', class: 'fat-mk-c' + (num(st._mkR) === v ? ' on' : ''), text: '%' + v, onclick: function () { st._mkR = String(v); rIn.value = st._mkR; chips(); } }));
+            });
+          };
+          chips();
+          var applyAll = function () {
+            var r = num(rIn.value);
+            if (!String(rIn.value).trim() || !(r > -100) || !r) { toast(t('mkBad'), 'error'); rIn.focus(); return; }
+            var n = 0;
+            st.items.forEach(function (it) { if (hasPrice(it)) { mkSet(it, r); n++; } });
+            if (!n) { toast(t('mkEmpty'), 'error'); return; }
+            mkClose(); drawItems(); toast(t('mkDone', { n: n, r: pctTxt(r) }));
+          };
+          var clearAll = function () {
+            var n = 0; st.items.forEach(function (it) { if (it.mk) { mkSet(it, 0); n++; } });
+            mkClose(); drawItems(); if (n) toast(t('mkRemoved'));
+          };
+          mkBox.appendChild(el('span', { class: 'field-label', text: '📈 ' + t('mkTitle') }));
+          mkBox.appendChild(el('div', { class: 'fat-mk-r' }, [el('span', { text: t('mkRate') }), rIn, chipBox]));
+          mkBox.appendChild(el('div', { class: 'fat-mk-r' }, [
+            el('button', { type: 'button', class: 'btn small primary', text: '＋ ' + t('mkAll'), onclick: applyAll }),
+            el('button', { type: 'button', class: 'btn small', text: '⊘ ' + t('mkClearAll'), onclick: clearAll }),
+            mkSum
+          ]));
+          mkBox.appendChild(el('div', { class: 'field-hint', text: t('mkHint') }));
+          drawMkSum();
+        }
+        drawMk();
         function drawItems() {
+          mkClose();
           tbody.innerHTML = '';
           st.items.forEach(function (it, i) {
             var refs = {};
@@ -1412,7 +1545,7 @@
               e.preventDefault(); if (sug.hidden) { nm.focus(); showSug(true); } else sug.hidden = true;
             } }) : null;
             requestAnimationFrame(fit);
-            var numIn = function (key, cls) { var x = el('input', { class: cls, type: 'number', step: 'any', min: '0', dir: 'ltr', value: it[key] == null ? '' : String(it[key]), oninput: function (e) { it[key] = e.target.value; if (key === 'price') delete it.fx; recalc(); } }); refs[key] = x; return x; };
+            var numIn = function (key, cls) { var x = el('input', { class: cls, type: 'number', step: 'any', min: '0', dir: 'ltr', value: it[key] == null ? '' : String(it[key]), oninput: function (e) { it[key] = e.target.value; if (key === 'price') { delete it.fx; if (it.mk) { delete it.mk; if (refs.mk) refs.mk(); } } recalc(); } }); refs[key] = x; return x; };
             var txtIn = function (key, cls, ltr) {
               var x = el('input', { class: cls, dir: ltr ? 'ltr' : null, value: it[key] || '', oninput: function (e) {
                 it[key] = e.target.value;
@@ -1429,7 +1562,7 @@
                 case 'name': return el('td', { class: 'nmc' }, [nm, sugBtn, sug]);
                 case 'qty': return el('td', null, unitCol ? [numIn('qty', 'q')] : [el('div', { class: 'fat-qu' }, [numIn('qty', 'q'), txtIn('unit', 'u')])]);
                 case 'unit': return el('td', null, [txtIn('unit', 'u')]);
-                case 'price': return el('td', null, [numIn('price', 'p')]);
+                case 'price': return el('td', null, [mkCell(it, refs, numIn('price', 'p'))]);
                 case 'amount': return el('td', { class: 'l', 'data-l': String(i), dir: 'ltr' });
                 case 'vat': return el('td', null, [numIn('vat', 'v')]);
                 case 'vat_amount': return el('td', { class: 'l', 'data-v': String(i), dir: 'ltr' });
@@ -1509,7 +1642,7 @@
           field(t('vatField'), vtBox, { span: 2, group: true, hint: t('vatFieldHint') }),
           (cfg.layout || {}).qr !== false || (cfg.layout || {}).barcode !== false ? field(t('codeField'), cdBox, { span: 2, group: true, hint: t('codeFieldHint') }) : null,
           el('div', { class: 'field span-2' }, [el('span', { class: 'field-label', text: t('items') }), el('div', { class: 'fat-items-wrap' }, [itemsTable]),
-            el('div', null, [el('button', { type: 'button', class: 'btn small', text: t('addItem'), onclick: function () { st.items.push(newItem()); drawItems(); var ins = tbody.querySelectorAll('tr:last-child textarea'); if (ins[0]) ins[0].focus(); } })])]),
+            el('div', null, [el('button', { type: 'button', class: 'btn small', text: t('addItem'), onclick: function () { st.items.push(newItem()); drawItems(); var ins = tbody.querySelectorAll('tr:last-child textarea'); if (ins[0]) ins[0].focus(); } })]), mkBox]),
           field(t('discount'), (discIn = inpS('discount', { type: 'number', step: 'any', min: '0', dir: 'ltr', after: function () { st.discFx = null; recalc(); } }))),
           (taxField = field(t('taxRate'), inpS('tax_rate', { type: 'number', step: 'any', min: '0', max: '100', dir: 'ltr', after: recalc }))),
           el('div', { class: 'span-2' }, [totBox]),
@@ -1522,6 +1655,7 @@
             if (it.code) o.code = it.code; if (it.depot) o.depot = it.depot;
             if (perLine) o.vat = num(it.vat);
             if (it.fx && it.fx.c !== st.currency) o.fx = { p: num(it.fx.p), c: it.fx.c };
+            if (it.mk && num(it.mk.r)) o.mk = { b: num(it.mk.b), r: num(it.mk.r) };
             if (it.x) { var x = {}; Object.keys(it.x).forEach(function (k) { if (String(it.x[k] || '').trim()) x[k] = it.x[k]; }); if (Object.keys(x).length) o.x = x; }
             return o;
           });
