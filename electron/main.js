@@ -855,6 +855,22 @@ function registerIpc() {
     fs.writeFileSync(safeFilePath(rel), buf);
     return { relPath: rel, originalName: 'foto.jpg', mime: 'image/jpeg' };
   }));
+  // v1.65: tahsilat dekontu (PDF ya da resim) olduğu gibi saklanır; tür dosyanın ilk baytlarından anlaşılır
+  handle('files:saveReceipt', wrap((_e, bytes, name) => {
+    const buf = Buffer.from(bytes);
+    if (buf.length < 8 || buf.length > 25 * 1024 * 1024) throw new Error('ERR_FILE_TYPE');
+    const sig = buf.subarray(0, 12);
+    const type = sig.subarray(0, 4).toString('latin1') === '%PDF' ? ['.pdf', 'application/pdf']
+      : sig[0] === 0xff && sig[1] === 0xd8 ? ['.jpg', 'image/jpeg']
+        : sig.subarray(1, 4).toString('latin1') === 'PNG' ? ['.png', 'image/png']
+          : sig.subarray(0, 4).toString('latin1') === 'RIFF' && sig.subarray(8, 12).toString('latin1') === 'WEBP' ? ['.webp', 'image/webp'] : null;
+    if (!type) throw new Error('ERR_FILE_TYPE');
+    fs.mkdirSync(path.join(filesDir(), 'receipts'), { recursive: true });
+    const rel = `receipts/${Date.now()}-${crypto.randomBytes(4).toString('hex')}${type[0]}`;
+    fs.writeFileSync(safeFilePath(rel), buf);
+    const base = path.basename(String(name || '')).replace(/[^\p{L}\p{N} ._()\-]/gu, '').slice(0, 120);
+    return { relPath: rel, originalName: base || `dekont${type[0]}`, mime: type[1] };
+  }));
   handle('files:saveAs', wrap((_e, rel, name) => {
     const target = dialog.showSaveDialogSync(mainWindow, { defaultPath: name || path.basename(rel) });
     if (target) fs.copyFileSync(safeFilePath(rel), target);
@@ -887,9 +903,10 @@ function registerIpc() {
   }));
   ipcMain.handle('app:readAsset', (_e, url) => {
     const name = path.basename(String(url || '').split(/[?#]/)[0]);
-    if (!/^[\w.-]+\.wasm$/.test(name)) return null;
-    const file = path.join(__dirname, '..', 'dist', 'assets', name);
-    return fs.existsSync(file) ? fs.readFileSync(file) : null;
+    // v1.65: dekont okuyucunun (Tesseract) dil dosyaları da assets/ocr'den okunur
+    if (!/^[\w.-]+\.(wasm|traineddata\.gz)$/.test(name)) return null;
+    const file = [path.join(__dirname, '..', 'dist', 'assets', name), path.join(__dirname, '..', 'dist', 'assets', 'ocr', name)].find((f) => fs.existsSync(f));
+    return file ? fs.readFileSync(file) : null;
   });
   handle('report:savePdf', wrap(async (_e, html, name) => {
     const target = dialog.showSaveDialogSync(mainWindow, {

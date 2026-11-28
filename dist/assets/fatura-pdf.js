@@ -543,6 +543,47 @@
       });
     });
   }
+  // v1.65: genel amaçlı JSON isteği (dekont okuma vb.): parts = Gemini içerik parçaları (inline_data / text). Dönüş: { data, model }
+  function gemini(parts, opts) {
+    opts = opts || {};
+    return Promise.all([setting('ai_gemini_key'), setting('ai_mode')]).then(function (r) {
+      var key = r[0].trim();
+      if (!key || r[1] === 'local') { var e = new Error('no-ai'); e.skip = true; throw e; }
+      if (typeof navigator !== 'undefined' && navigator.onLine === false) { var e2 = new Error('offline'); e2.net = true; throw e2; }
+      var body = { contents: [{ role: 'user', parts: parts }], generationConfig: { temperature: 0, responseMimeType: 'application/json' } };
+      return models(key).then(function (list) {
+        var i = 0, lastErr = null, quota = false, slow = 0;
+        var next = function () {
+          if (i >= list.length || slow >= 2) { var x = lastErr || new Error('ai-failed'); if (quota && !x.timeout) x.quota = true; throw x; }
+          var m = list[i++];
+          if (opts.onModel) try { opts.onModel(m); } catch (e) {}
+          return http(API + 'models/' + encodeURIComponent(m) + ':generateContent', body, key, opts.timeout || 120000).then(function (res) {
+            if (res.status === 401 || res.status === 403) { var e = new Error('ai-key'); e.key = true; throw e; }
+            if (res.status === 429) quota = true;
+            if (res.status !== 200) { lastErr = new Error('ai-' + res.status); return next(); }
+            var ps = res.data && res.data.candidates && res.data.candidates[0] && res.data.candidates[0].content && res.data.candidates[0].content.parts || [];
+            var o;
+            try { o = parseJson(ps.map(function (p) { return p.text || ''; }).join('')); } catch (e) { lastErr = e; return next(); }
+            return { data: o, model: m };
+          }, function (e) { if (e && e.timeout) { slow++; lastErr = e; return next(); } throw e; });
+        };
+        return next();
+      });
+    });
+  }
+  // v1.65: PDF sayfasını resme çevirir (taranmış dekontun çevrimdışı okunması / ek olarak saklanması). Dönüş: canvas
+  function renderPage(buf, pageNo, scale) {
+    return pdfjs().then(function (lib) {
+      return lib.getDocument({ data: new Uint8Array(buf.slice(0)), isEvalSupported: false, useSystemFonts: true }).promise;
+    }).then(function (doc) {
+      return doc.getPage(Math.min(pageNo || 1, doc.numPages)).then(function (pg) {
+        var vp = pg.getViewport({ scale: scale || 2 });
+        var cv = document.createElement('canvas'); cv.width = Math.ceil(vp.width); cv.height = Math.ceil(vp.height);
+        var cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height);
+        return pg.render({ canvasContext: cx, viewport: vp }).promise.then(function () { try { doc.destroy(); } catch (e) {} return cv; });
+      });
+    });
+  }
   // v1.63: fatura çıktısında ürün adlarını seçilen dile çevirir (kullanıcının kendi Gemini anahtarı). Dönüş: aynı sırada dizi.
   function translate(list, lg) {
     var LN = { en: 'English', ar: 'Arabic (Modern Standard, as used on official commercial invoices)', tr: 'Turkish' }[lg];
@@ -721,7 +762,7 @@
     });
   }
 
-  var api = { translate: translate, read: read, parseLayout: parseLayout, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, extract: extract, version: '1.61.5' };
+  var api = { gemini: gemini, renderPage: renderPage, b64: b64, translate: translate, read: read, parseLayout: parseLayout, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, extract: extract, version: '1.61.5' };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.FalconFaturaPdf = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -362,3 +362,29 @@ test('Sor asistanı çevrimdışı (1.60.1): kasa bakiyesi ve azalan stok sorula
   for (const s of ['Stokta azalan malzemeler hangileri?', 'Which items are running low?', 'ما المواد التي نفدت من المخزون؟', 'biten ürünler']) assert.ok(low(s), s);
   for (const s of ['Stokta kaç ürün var?', 'Bu ay hangi malzemeler bitti?']) assert.ok(!low(s), s);
 });
+
+test('Tahsilat dekontu (1.65): Sham Cash / banka dekontu çevrimdışı ayrıştırılır, yapay zeka okuması teyit edilir, OCR dosyaları pakette', () => {
+  const D = require('../dist/assets/dekont-falcon.js');
+  let r = D.parse('Sham Cash\nTransfer Successful\nAmount: 2,145.75 USD\nDate: 27/11/2026 14:32\nFrom: Ahmad Khalil\nTo: Falcon Company\nTransaction ID: SC-88412093\nFee: 0.00 USD');
+  assert.deepStrictEqual([r.provider, r.amount, r.currency, r.date, r.time, r.sender, r.ref, r.fee], ['shamcash', 2145.75, 'USD', '2026-11-27', '14:32', 'Ahmad Khalil', 'SC-88412093', 0]);
+  r = D.parse('شام كاش\nالمبلغ: ١٥٠٬٠٠٠ ل.س\nالمرسل: أحمد خليل\nرقم العملية: 774512903\nالتاريخ: 2026/11/27');
+  assert.deepStrictEqual([r.provider, r.amount, r.currency, r.sender, r.ref, r.date], ['shamcash', 150000, 'SYP', 'أحمد خليل', '774512903', '2026-11-27']);
+  r = D.parse('Tutar 3.250,50 TL\nGönderen: Mehmet Yılmaz\nİşlem No: TR2026112700451\nTarih 27.11.2026');
+  assert.deepStrictEqual([r.amount, r.currency, r.ref, r.date], [3250.5, 'TRY', 'TR2026112700451', '2026-11-27']);
+  assert.deepStrictEqual([D.num('150,000'), D.num('2.145,75'), D.num('1.5'), D.num('1.500.000')], [150000, 2145.75, 1.5, 1500000]);
+  // teyit: yapay zekanın tutarı / işlem no'su çevrimdışı metinde geçiyorsa match, değilse diff
+  const text = 'Amount: 1,000.00 USD\nTransaction ID: SC-88412093';
+  const off = D.parse(text);
+  assert.strictEqual(D.verify(D.norm({ amount: 1000, currency: 'USD', ref: 'SC-88412093' }), off, text).check.status, 'match');
+  const bad = D.verify(D.norm({ amount: 1500, currency: 'USD', ref: 'SC-88412099' }), off, text).check;
+  assert.strictEqual(bad.status, 'diff');
+  assert.deepStrictEqual(bad.diffs.map((d) => d.k).sort(), ['amount', 'ref']);
+  // paket: betik sırası, OCR dosyaları, ana süreç okuma izni, telefon kopyası
+  const html = read('dist/index.html');
+  assert.ok(html.indexOf('fatura-pdf.js') < html.indexOf('dekont-falcon.js') && html.indexOf('dekont-falcon.js') < html.indexOf('type="module"'));
+  for (const f of ['tesseract-core-lstm.wasm.js', 'ara.traineddata.gz', 'eng.traineddata.gz']) assert.ok(fs.statSync(path.join(ROOT, 'dist/assets/ocr', f)).size > 1e6, f);
+  const main = read('electron/main.js');
+  assert.ok(main.includes("(wasm|traineddata\\.gz)$/") && main.includes("handle('files:saveReceipt'"));
+  assert.ok(read('electron/preload.js').includes("saveReceipt: (bytes, name) => ipcRenderer.invoke('files:saveReceipt', bytes, name)"));
+  assert.ok(read('araclar/telefon-yayinla.js').includes("'dekont-falcon.js', 'ocr/tesseract-core-lstm.wasm.js'"));
+});

@@ -15,6 +15,7 @@ contextBridge.exposeInMainWorld('falcon', {
   files: {
     import: (kind, multiple = false) => ipcRenderer.invoke('files:import', kind, multiple),
     saveImage: (bytes) => ipcRenderer.invoke('files:saveImage', bytes),
+    saveReceipt: (bytes, name) => ipcRenderer.invoke('files:saveReceipt', bytes, name),
     open: (rel) => ipcRenderer.invoke('files:open', rel),
     saveAs: (rel, name) => ipcRenderer.invoke('files:saveAs', rel, name),
   },
