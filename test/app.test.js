@@ -362,3 +362,29 @@ test('Sor asistanı çevrimdışı (1.60.1): kasa bakiyesi ve azalan stok sorula
   for (const s of ['Stokta azalan malzemeler hangileri?', 'Which items are running low?', 'ما المواد التي نفدت من المخزون؟', 'biten ürünler']) assert.ok(low(s), s);
   for (const s of ['Stokta kaç ürün var?', 'Bu ay hangi malzemeler bitti?']) assert.ok(!low(s), s);
 });
+
+test('Sham Cash dekontu (1.65): giriş / çıkış, Arapça adlar aynen, aynı işlem no tekrar yazılmaz, not ayrı, formdan düzenleme korur', async () => {
+  const db = await openDb();
+  const s = require('../electron/services').createServices(db);
+  const usd = db.get("SELECT id FROM cash_accounts WHERE currency_code = 'USD' ORDER BY id LIMIT 1").id;
+  const doc = { kind: 'SEND', ref: '626382846', date: '26/11/2026', time: '19:03:45', from_name: 'متن ارجن جولر', from_account: '************0951',
+    to_name: 'خليل ابراهيم علاء الدين شنكحيا', to_account: '************5465', amount: '300', currency: 'USD', note: '-', file_name: 'sham_cash_receipt.pdf' };
+  const r = s.call('importShamCashReceipt', { account_id: usd, direction: 'out', amount: 300, date: '2026-11-26', doc, receipt: { relPath: 'receipts/x.pdf', originalName: 'sham_cash_receipt.pdf', mime: 'application/pdf' } });
+  let tx = db.get('SELECT * FROM cash_transactions WHERE id = ?', [r.id]);
+  assert.strictEqual(tx.direction, 'out'); assert.strictEqual(tx.amount, 300); assert.strictEqual(tx.pay_method, 'shamcash');
+  assert.strictEqual(tx.sc_name, 'خليل ابراهيم علاء الدين شنكحيا'); assert.strictEqual(tx.sc_account, '************5465'); assert.strictEqual(tx.sc_ref, '626382846');
+  assert.deepStrictEqual(JSON.parse(tx.sc_doc).from_name, 'متن ارجن جولر');
+  assert.strictEqual(db.get('SELECT original_name FROM receipts WHERE transaction_id = ?', [r.id]).original_name, 'sham_cash_receipt.pdf');
+  const again = s.call('importShamCashReceipt', { account_id: usd, direction: 'out', amount: 300, date: '2026-11-26', doc });
+  assert.deepStrictEqual(again, { id: r.id, duplicate: true });
+  assert.strictEqual(db.get('SELECT COUNT(*) AS n FROM cash_transactions WHERE sc_ref = ?', ['626382846']).n, 1);
+  s.call('setShamCashNote', { id: r.id, note: 'gerçek sahibi: Ahmet' });
+  // eski form (yön / sc_on gönderir) dekont bilgilerini silmez, yalnız notu yazar
+  s.call('saveCashTx', { id: r.id, account_id: usd, direction: 'out', amount: 300, date: '2026-11-26', sc_on: false, sc_note: 'Ahmet', pay_method: 'cash' });
+  tx = db.get('SELECT * FROM cash_transactions WHERE id = ?', [r.id]);
+  assert.strictEqual(tx.pay_method, 'shamcash'); assert.strictEqual(tx.sc_note, 'Ahmet'); assert.strictEqual(tx.sc_name, 'خليل ابراهيم علاء الدين شنكحيا');
+  const inn = s.call('importShamCashReceipt', { account_id: usd, direction: 'in', amount: 50, date: '2026-11-27', note: 'kira', doc: Object.assign({}, doc, { ref: '700', from_name: 'باسل', to_name: 'متن ارجن جولر' }) });
+  tx = db.get('SELECT * FROM cash_transactions WHERE id = ?', [inn.id]);
+  assert.strictEqual(tx.direction, 'in'); assert.strictEqual(tx.sc_name, 'باسل'); assert.strictEqual(tx.sc_note, 'kira'); assert.strictEqual(tx.pay_method, 'shamcash');
+  assert.throws(() => s.call('importShamCashReceipt', { account_id: usd, direction: 'in', amount: 1, date: '2026-11-27', doc: {} }), /ERR_REQUIRED/);
+});

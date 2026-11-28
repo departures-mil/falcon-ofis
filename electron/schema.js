@@ -972,3 +972,14 @@ migrations.push({
     CREATE INDEX idx_product_prices_inv ON product_prices(invoice_id);
   `,
 });
+
+migrations.push({
+  version: 30,
+  name: 'v1.65-shamcash-dekont',
+  sql: `
+    -- v1.65: Sham Cash dekontundan okunan alanlar (JSON; dekonttaki yazı aynen: işlem türü, no, tarih, saat, gönderen, alıcı, hesaplar, tutar, not, dosya adı).
+    -- Kullanıcının kendi notu sc_note'ta ayrı durur; dekont alanları sonradan değiştirilmez.
+    ALTER TABLE cash_transactions ADD COLUMN sc_doc TEXT;
+    CREATE INDEX idx_cash_sc_ref ON cash_transactions(sc_ref);
+  `,
+});

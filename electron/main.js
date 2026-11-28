@@ -114,6 +114,8 @@ const startHidden = process.argv.includes('--hidden');
 
 const dataDir = () => path.join(app.getPath('userData'), 'data');
 const filesDir = () => path.join(dataDir(), 'files');
+// v1.65: Sham Cash dekont kutusu (veri klasörünün içinde; kurulum klasörüne yazılmaz)
+const shamInboxDir = () => path.join(app.getPath('userData'), 'Sham Cash Dekontları');
 const dbPath = () => path.join(dataDir(), 'falcon-ofis.db');
 // Otomatik yedekler: veri klasöründe ve ayrıca Belgeler\Falcon Ofis Yedekler'de (program klasörü silinse bile kalır)
 const backupsDir = () => path.join(dataDir(), 'yedekler');
@@ -126,7 +128,7 @@ const localDate = () => {
 const stamp = () => new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
 
 // Uygulama içindeki dosyalar (ürün fotoğrafı, dekont) falcon://files/... adresinden gösterilir
-protocol.registerSchemesAsPrivileged([{ scheme: 'falcon', privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true } }]);
+protocol.registerSchemesAsPrivileged([{ scheme: 'falcon', privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true, corsEnabled: true } }]);
 
 function safeFilePath(rel) {
   const full = path.resolve(filesDir(), rel);
@@ -846,6 +848,67 @@ function registerIpc() {
 
   handle('files:import', wrap((_e, kind, multiple) => importFiles(kind, multiple)));
   handle('files:open', wrap((_e, rel) => shell.openPath(safeFilePath(rel))));
+  // v1.65: kayıtlı dosyanın baytları (Sham Cash dekontunu okumak için; dosyaya dokunulmaz)
+  handle('files:read', wrap((_e, rel) => fs.readFileSync(safeFilePath(rel))));
+  // v1.65: Sham Cash dekont kutusu — "Falcon Ofis Veri\Sham Cash Dekontları" klasörüne konan PDF / resimler programda okunur.
+  // Dosya receipts'e BAYT BAYT kopyalanır (orijinal bozulmaz); işlenince "İşlendi" alt klasörüne taşınır. Yanında aynı adlı .json
+  // varsa (doğrulanmış alanlar) o da okunur.
+  handle('shamcash:inbox', wrap(() => {
+    const dir = shamInboxDir();
+    fs.mkdirSync(dir, { recursive: true });
+    return fs.readdirSync(dir).filter((n) => MIME[path.extname(n).toLowerCase()] && MIME[path.extname(n).toLowerCase()] !== 'image/gif')
+      .map((n) => ({ name: n, size: fs.statSync(path.join(dir, n)).size, mtime: fs.statSync(path.join(dir, n)).mtimeMs }))
+      .sort((a, b) => a.mtime - b.mtime);
+  }));
+  handle('shamcash:take', wrap((_e, name) => {
+    const src = path.join(shamInboxDir(), path.basename(String(name || '')));
+    const ext = path.extname(src).toLowerCase();
+    if (!MIME[ext] || !fs.existsSync(src)) throw new Error('ERR_FILE_TYPE');
+    fs.mkdirSync(path.join(filesDir(), 'receipts'), { recursive: true });
+    const rel = `receipts/${Date.now()}-${crypto.randomBytes(4).toString('hex')}${ext}`;
+    fs.copyFileSync(src, safeFilePath(rel));
+    let side = null;
+    const sj = src.slice(0, -ext.length) + '.json';
+    if (fs.existsSync(sj)) { try { side = JSON.parse(fs.readFileSync(sj, 'utf8').replace(/^\uFEFF/, '')); } catch { side = null; } }
+    return { relPath: rel, originalName: path.basename(src), mime: MIME[ext], side };
+  }));
+  // Dosyayı kopyalamadan okur (dekont önce okunur; kayıt anında take ile receipts'e kopyalanır)
+  handle('shamcash:peek', wrap((_e, name) => {
+    const src = path.join(shamInboxDir(), path.basename(String(name || '')));
+    const ext = path.extname(src).toLowerCase();
+    if (!MIME[ext] || !fs.existsSync(src)) throw new Error('ERR_FILE_TYPE');
+    let side = null;
+    const sj = src.slice(0, -ext.length) + '.json';
+    if (fs.existsSync(sj)) { try { side = JSON.parse(fs.readFileSync(sj, 'utf8').replace(/^\uFEFF/, '')); } catch { side = null; } }
+    return { bytes: fs.readFileSync(src), originalName: path.basename(src), mime: MIME[ext], side };
+  }));
+  // Sürükle-bırak: dosya kutuya aynen yazılır (aynı adda dosya varsa önüne zaman eklenir)
+  handle('shamcash:put', wrap((_e, name, bytes) => {
+    const dir = shamInboxDir();
+    fs.mkdirSync(dir, { recursive: true });
+    let base = path.basename(String(name || 'dekont')).replace(/[<>:"/\\|?*\x00-\x1f]/g, '_');
+    if (!MIME[path.extname(base).toLowerCase()]) throw new Error('ERR_FILE_TYPE');
+    const buf = Buffer.from(bytes);
+    if (!buf.length || buf.length > 30 * 1024 * 1024) throw new Error('ERR_FILE_TYPE');
+    if (fs.existsSync(path.join(dir, base))) base = `${Date.now()}-${base}`;
+    fs.writeFileSync(path.join(dir, base), buf);
+    return base;
+  }));
+  handle('shamcash:done', wrap((_e, name) => {
+    const dir = shamInboxDir();
+    const base = path.basename(String(name || ''));
+    const done = path.join(dir, 'İşlendi');
+    fs.mkdirSync(done, { recursive: true });
+    for (const n of [base, base.replace(/\.[^.]+$/, '') + '.json']) {
+      const f = path.join(dir, n);
+      if (!fs.existsSync(f)) continue;
+      let t = path.join(done, n);
+      if (fs.existsSync(t)) t = path.join(done, `${Date.now()}-${n}`);
+      fs.renameSync(f, t);
+    }
+    return true;
+  }));
+  handle('shamcash:openInbox', wrap(() => { fs.mkdirSync(shamInboxDir(), { recursive: true }); return shell.openPath(shamInboxDir()); }));
   // v1.11: kameradan (web kamerası) çekilen fotoğraf JPEG olarak kaydedilir
   handle('files:saveImage', wrap((_e, bytes) => {
     const buf = Buffer.from(bytes);
@@ -1238,8 +1301,15 @@ if (!gotLock) {
     await openDatabase();
     autoBackup();
 
-    protocol.handle('falcon', (req) => {
+    protocol.handle('falcon', async (req) => {
       const url = new URL(req.url);
+      // v1.65: çevrimdışı dekont okuyucunun dil verileri (falcon://app/ocr/<ad>) — yalnız dist/assets/ocr içindeki bilinen dosyalar
+      if (url.host === 'app') {
+        const name = path.basename(decodeURIComponent(url.pathname));
+        const file = path.join(__dirname, '..', 'dist', 'assets', 'ocr', name);
+        if (!/^[\w.-]+\.(gz|js|wasm)$/.test(name) || !fs.existsSync(file)) return new Response('Not found', { status: 404 });
+        return new Response(fs.readFileSync(file), { headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': name.endsWith('.js') ? 'text/javascript' : 'application/octet-stream' } });
+      }
       try {
         const rel = decodeURIComponent(url.pathname.replace(/^\/+/, ''));
         return net.fetch(pathToFileURL(safeFilePath(rel)).toString());

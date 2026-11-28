@@ -241,10 +241,44 @@ function createServices(db, { removeFile = () => {} } = {}) {
 
   // add_to_cash = false: yalnızca bilgi amaçlı kayıt, kasa bakiyesini etkilemez
   // v1.49: Sham Cash bilgileri (yalnızca çıkışta). sc_save_payee: alıcı listesine de kaydedilir / güncellenir.
+
+  // v1.65 sc_doc: Sham Cash dekontundan kasa hareketi. doc alanları dekonttaki gibi saklanır (çeviri / düzeltme yok).
+  // Aynı işlem numarası ikinci kez kaydedilmez: { id, duplicate: true } döner (üst üste yazılmaz).
+  function importShamCashReceipt(p) {
+    const doc = p && p.doc && typeof p.doc === 'object' ? p.doc : {};
+    const ref = optText(doc.ref);
+    if (!ref) throw new AppError('ERR_REQUIRED');
+    const dup = db.get('SELECT id FROM cash_transactions WHERE sc_ref = ? AND sc_doc IS NOT NULL ORDER BY id LIMIT 1', [ref]);
+    if (dup) return { id: dup.id, duplicate: true };
+    const direction = p.direction === 'in' ? 'in' : p.direction === 'out' ? 'out' : null;
+    if (!direction) throw new AppError('ERR_REQUIRED');
+    const keep = {};
+    for (const k of ['kind', 'ref', 'date', 'time', 'from_name', 'from_account', 'to_name', 'to_account', 'amount', 'currency', 'note', 'file_name', 'read_by', 'generated']) {
+      if (doc[k] !== undefined && doc[k] !== null && String(doc[k]) !== '') keep[k] = String(doc[k]);
+    }
+    const r = saveCashTxCore({
+      account_id: p.account_id, direction, amount: p.amount, date: p.date, category: p.category || 'other',
+      person: p.person, people: p.people, description: p.description, add_to_cash: p.add_to_cash !== false,
+      newReceipts: p.receipt ? [p.receipt] : [],
+    });
+    const other = direction === 'out' ? { name: keep.to_name, account: keep.to_account } : { name: keep.from_name, account: keep.from_account };
+    db.run(`UPDATE cash_transactions SET sc_name=?, sc_account=?, sc_ref=?, sc_note=?, pay_method='shamcash', sc_doc=?, updated_at=${now} WHERE id=?`,
+      [optText(other.name), optText(other.account), ref, optText(p.note), JSON.stringify(keep), r.id]);
+    return { id: r.id, duplicate: false };
+  }
+
+  function setShamCashNote({ id, note }) {
+    if (!db.get('SELECT id FROM cash_transactions WHERE id = ?', [id])) throw new AppError('ERR_NOT_FOUND');
+    db.run(`UPDATE cash_transactions SET sc_note=?, updated_at=${now} WHERE id=?`, [optText(note), id]);
+    return { id };
+  }
+
   function saveShamCash(txId, p) {
     if (p.sc_on === undefined && p.sc_account === undefined && p.sc_name === undefined && p.pay_method === undefined) return; // eski arayüz: dokunma
-    const tx = db.get('SELECT direction, sc_qr_path, sc_payee_id FROM cash_transactions WHERE id = ?', [txId]);
+    const tx = db.get('SELECT direction, sc_qr_path, sc_payee_id, sc_doc FROM cash_transactions WHERE id = ?', [txId]);
     if (!tx) return;
+    // v1.65 sc_doc: dekonttan gelen kayıtta Sham Cash bilgileri (orijinal) korunur; formdan yalnız not değişir
+    if (tx.sc_doc) { if (p.sc_note !== undefined) db.run('UPDATE cash_transactions SET sc_note=? WHERE id=?', [optText(p.sc_note), txId]); return; }
     const PM = ['cash', 'shamcash', 'bank', 'other'];
     const method = tx.direction === 'out' && PM.includes(p.pay_method) ? p.pay_method : null;
     const on = (method ? method === 'shamcash' : p.sc_on !== false) && tx.direction === 'out';
@@ -2760,7 +2794,7 @@ function createServices(db, { removeFile = () => {} } = {}) {
 
   const writes = {
     savePerson, deletePerson, togglePersonContact,
-    saveCashTx, deleteCashTx, transfer, saveAccount, setAccountHidden, addReceipts, deleteReceipt,
+    saveCashTx, importShamCashReceipt, setShamCashNote, deleteCashTx, transfer, saveAccount, setAccountHidden, addReceipts, deleteReceipt,
     saveRates,
     saveDebt, addDebtPayment, deleteDebtPayment, deleteDebt,
     saveGift, deleteGift,

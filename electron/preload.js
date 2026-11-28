@@ -16,6 +16,7 @@ contextBridge.exposeInMainWorld('falcon', {
     import: (kind, multiple = false) => ipcRenderer.invoke('files:import', kind, multiple),
     saveImage: (bytes) => ipcRenderer.invoke('files:saveImage', bytes),
     open: (rel) => ipcRenderer.invoke('files:open', rel),
+    read: (rel) => ipcRenderer.invoke('files:read', rel),
     saveAs: (rel, name) => ipcRenderer.invoke('files:saveAs', rel, name),
   },
   report: {
@@ -75,6 +76,15 @@ contextBridge.exposeInMainWorld('falcon', {
   },
   // v1.42: soru botu (Gemini isteği ana süreçten)
   ai: { request: (req) => ipcRenderer.invoke('ai:request', req) },
+  // v1.65: Sham Cash dekont kutusu
+  shamcash: {
+    inbox: () => ipcRenderer.invoke('shamcash:inbox'),
+    take: (name) => ipcRenderer.invoke('shamcash:take', name),
+    peek: (name) => ipcRenderer.invoke('shamcash:peek', name),
+    put: (name, bytes) => ipcRenderer.invoke('shamcash:put', name, bytes),
+    done: (name) => ipcRenderer.invoke('shamcash:done', name),
+    openInbox: () => ipcRenderer.invoke('shamcash:openInbox'),
+  },
   sendContact: (m) => ipcRenderer.invoke('contact:send', m),
   // v1.50: Wi‑Fi (internetsiz) eşitleme
   lan: {

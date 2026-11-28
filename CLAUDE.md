@@ -62,6 +62,17 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   geçiş → yeni metin; şablon değişince korunur, ekranda yoksa saklanır), `cur` + `rates` (çıktı para birimi ve kullanılan kur; kayıt değişmez), `fxc`,
   `lang`/`tpl`. Enter düzeltmede kapalı. Test: `araclar/fatura-164-e2e.js`.
 
+- 1.65 SHAM CASH DEKONTU: `dist/assets/shamcash-falcon.js` (`FalconShamDekont.open/read`, masaüstü + telefon). Okuma: Gemini (dosyanın kendisi) + çevrimdışı
+  tesseract (`dist/assets/ocr`: tesseract.js 7 + core simd-lstm + eng/ara best_int; dil verisi `falcon://app/ocr/<ad>` — main.js protocol, ACAO *; yalnız masaüstü,
+  telefona konmaz). Rakamlar nokta vuruşlu: bölge bulanıklaştırılıp eşiklenir; hesaplarda yalnız son 4 hane okunur ("************" + 4 hane); bilinen adlar
+  (benim adlarım + geçmiş sc_name/sc_doc + alıcılar) boşluksuz eşleşirse bilinen yazılış kullanılır. Kayıt `importShamCashReceipt` (`cash_transactions.sc_doc`
+  JSON = dekonttaki metin AYNEN; Arapça adlara dokunulmaz; aynı `sc_ref` ikinci kez yazılmaz → `{duplicate:true}`), not `setShamCashNote` (sc_note), dekonttan
+  gelen harekette `saveShamCash` yalnız notu değiştirir. Yön: ayar `shamcash_me` {names, accounts(son 4)}. Kasa/kategori hatırlanır: `shamcash_acc_<CUR>`,
+  `shamcash_cat_<in|out>`. Masaüstü dekont kutusu `<userData>\Sham Cash Dekontları` (peek → kayıtta take = receipts'e bayt bayt kopya → `İşlendi`); yanında aynı
+  adlı .json (doğrulanmış alanlar + direction/me_name/me_account/category/note) ya da yapay zekâ + çevrimdışı birebir aynıysa kendiliğinden kaydedilir.
+  Arayüz `araclar/patch-ui-165.py` (Kasa düğmesi, `sc` süzgeci girişleri de kapsar, aramada sc_doc, ayrıntıda dekont + Notum), servis `patch-srv-165.py`
+  (migration 30). Test: `araclar/shamcash-e2e.js <dekont.pdf>`.
+
 ## Test
 - `npm test`: `test/app.test.js` (sürüm, çekirdek kopyası, CSP, güncelleme kanalı, paketleme, Wi‑Fi arşiv kuralı sql.js ile, FOPK) +
   `test/electron-smoke.test.js` (gerçek Electron + xvfb, `FALCON_SMOKE=1`: açılış, üst çubuk, Ayarlar sırası; eski 1.57.0 kabuğunda

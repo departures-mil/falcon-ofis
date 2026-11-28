@@ -15,7 +15,7 @@ const pem = fs.readFileSync(process.env.OZEL_ANAHTAR || '', 'utf8');
 // v1.59: Fatura sekmesi eklentisi de (dist/assets/fatura-falcon.js) telefona girer
 // v1.59.1: duyuru-falcon.js (yüzen 🔔 gizli, Ayarlar'da "Bildirimler ve Duyurular" kartı) da masaüstü kopyasından gelir
 // v1.60: PDF'den doldur (fatura-pdf.js + pdf.js çevrimdışı okuyucu) ve karekod (qrcode-gen.js)
-for (const f of ['kullanim.js', 'kullanim-falcon.js', 'fatura-falcon.js', 'duyuru-falcon.js', 'fatura-pdf.js', 'qrcode-gen.js', 'pdfjs/pdf.min.mjs', 'pdfjs/pdf.worker.min.mjs', 'pdfjs/LICENSE.txt']) {
+for (const f of ['kullanim.js', 'kullanim-falcon.js', 'fatura-falcon.js', 'duyuru-falcon.js', 'fatura-pdf.js', 'qrcode-gen.js', 'pdfjs/pdf.min.mjs', 'pdfjs/pdf.worker.min.mjs', 'pdfjs/LICENSE.txt', 'shamcash-falcon.js']) {
   fs.mkdirSync(path.dirname(path.join(www, 'assets', f)), { recursive: true });
   fs.copyFileSync(path.join(__dirname, '..', 'dist', 'assets', f), path.join(www, 'assets', f));
 }
@@ -28,6 +28,11 @@ for (const f of ['kullanim.js', 'kullanim-falcon.js', 'fatura-falcon.js', 'duyur
   }
   if (!h.includes('fatura-falcon.js')) {
     h = h.replace(/(<script src="\.\/assets\/kullanim-falcon\.js"><\/script>)/, '$1\n    <script src="./assets/fatura-falcon.js"></script>');
+    fs.writeFileSync(ih, h);
+  }
+  // v1.65: Sham Cash dekontu (telefonda çevrimiçi yapay zekâ ile okur; çevrimdışı okuyucu dosyaları telefona konmaz)
+  if (!h.includes('shamcash-falcon.js')) {
+    h = h.replace(/(<script type="module")/, '<script src="./assets/shamcash-falcon.js"></script>\n    $1');
     fs.writeFileSync(ih, h);
   }
   if (!h.includes('fatura-pdf.js')) {
