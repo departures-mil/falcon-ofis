@@ -20,4 +20,7 @@ for f in "$W"/assets/index-*.js; do python3 araclar/patch-srv-166.py "$f"; done
 for f in "$W"/assets/main-*.js; do python3 araclar/patch-ui-165.py "$f"; done
 # v1.65.1: Kasa tablosunda TUTAR başlığına tıklayınca tutara göre sıralama
 for f in "$W"/assets/main-*.js; do python3 araclar/patch-ui-1651.py "$f"; done
+# v1.67: Sham Cash her yerde (servis: girişlerde de, elle kayda dekont, aktarımda Sham Cash kasası; arayüz: dekont ekle, kasa otomatiği)
+for f in "$W"/assets/index-*.js; do python3 araclar/patch-srv-167.py "$f"; done
+for f in "$W"/assets/main-*.js; do python3 araclar/patch-ui-167.py "$f"; done
 echo "hazır: $W ($V)"

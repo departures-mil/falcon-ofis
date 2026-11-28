@@ -12,7 +12,7 @@
 (function () {
   'use strict';
   if (window.FalconShamDekont) return;
-  var VERSION = '1.65.0';
+  var VERSION = '1.67.0';
 
   // ---------- dil ----------
   var TX = {
@@ -36,7 +36,12 @@
       me: 'Benim Sham Cash adlarım ve hesaplarım', meHint: 'Her satıra bir ad ya da hesabın son 4 hanesi. Yön bunlardan bulunur.', meSave: 'Kaydet',
       openOriginal: 'Orijinal dekontu aç', docTitle: 'dekontu', editNote: 'Notu düzenle', autoDone: 'Sham Cash: {n} dekont kendiliğinden kaydedildi',
       waiting: 'Sham Cash: {n} dekont onayınızı bekliyor', open: 'Aç', fileErr: 'Dosya okunamadı', pdfOnly: 'Yalnız PDF, JPEG ya da PNG',
-      checkField: 'iki okuma farklı'
+      checkField: 'iki okuma farklı',
+      fAttach: '📎 Sham Cash dekontu ekle (PDF / resim)', fAttachTip: 'Dekont okunur, alanlar kendiliğinden dolar; orijinal dosya kayda olduğu gibi eklenir',
+      fAttached: 'Ekli dekont', fRemove: 'Kaldır', fRead: '✓ Dekont okundu, alanlar dolduruldu — kontrol edip kaydedin',
+      fReadDiff: '⚠ Dekont okundu ama iki okuma farklı ({f}) — tutar ve işlem noyu dekontla karşılaştırın',
+      fNone: '⚠ Dekont okunamadı — dosya eklendi, alanları elle doldurun', fDup: 'Bu dekont zaten kayıtlı (aynı işlem no). Eklenmedi.',
+      fAcc: 'Kasa Sham Cash kasası olarak ayarlandı: {a}', fCur: 'Dikkat: dekontun para birimi {c}; {c} Sham Cash kasası yok', fLocked: 'Dekont bilgileri (değiştirilemez)'
     },
     en: {
       btn: 'Sham Cash receipt', btnTip: 'Reads a Sham Cash receipt (PDF or image) and records it as cash in / cash out',
@@ -58,7 +63,12 @@
       me: 'My Sham Cash names and accounts', meHint: 'One name or the last 4 digits of an account per line. The direction is found from these.', meSave: 'Save',
       openOriginal: 'Open original receipt', docTitle: 'receipt', editNote: 'Edit note', autoDone: 'Sham Cash: {n} receipt(s) saved automatically',
       waiting: 'Sham Cash: {n} receipt(s) waiting for your approval', open: 'Open', fileErr: 'The file could not be read', pdfOnly: 'PDF, JPEG or PNG only',
-      checkField: 'the two readings differ'
+      checkField: 'the two readings differ',
+      fAttach: '📎 Attach Sham Cash receipt (PDF / image)', fAttachTip: 'The receipt is read and the fields are filled in; the original file is attached unchanged',
+      fAttached: 'Attached receipt', fRemove: 'Remove', fRead: '✓ Receipt read and fields filled in — check and save',
+      fReadDiff: '⚠ Receipt read but the two readings differ ({f}) — compare the amount and transaction no with the receipt',
+      fNone: '⚠ The receipt could not be read — the file is attached, fill in the fields by hand', fDup: 'This receipt is already recorded (same transaction no). Not attached.',
+      fAcc: 'Cash box set to the Sham Cash box: {a}', fCur: 'Note: the receipt currency is {c}; there is no {c} Sham Cash box', fLocked: 'Receipt details (cannot be changed)'
     },
     ar: {
       btn: 'إيصال شام كاش', btnTip: 'يقرأ إيصال شام كاش (PDF أو صورة) ويسجّله كإدخال أو إخراج في الصندوق',
@@ -80,7 +90,12 @@
       me: 'أسمائي وحساباتي في شام كاش', meHint: 'اسم واحد أو آخر 4 أرقام من الحساب في كل سطر. يُحدَّد الاتجاه منها.', meSave: 'حفظ',
       openOriginal: 'فتح الإيصال الأصلي', docTitle: 'إيصال', editNote: 'تعديل الملاحظة', autoDone: 'شام كاش: حُفظ {n} إيصال تلقائياً',
       waiting: 'شام كاش: {n} إيصال بانتظار موافقتك', open: 'فتح', fileErr: 'تعذّرت قراءة الملف', pdfOnly: 'PDF أو JPEG أو PNG فقط',
-      checkField: 'القراءتان مختلفتان'
+      checkField: 'القراءتان مختلفتان',
+      fAttach: '📎 إرفاق إيصال شام كاش (PDF / صورة)', fAttachTip: 'يُقرأ الإيصال وتُملأ الحقول تلقائياً؛ ويُرفق الملف الأصلي دون تغيير',
+      fAttached: 'الإيصال المرفق', fRemove: 'إزالة', fRead: '✓ قُرئ الإيصال ومُلئت الحقول — تحقّق ثم احفظ',
+      fReadDiff: '⚠ قُرئ الإيصال لكن القراءتين مختلفتان ({f}) — قارن المبلغ ورقم العملية بالإيصال',
+      fNone: '⚠ تعذّرت قراءة الإيصال — أُرفق الملف، املأ الحقول يدوياً', fDup: 'هذا الإيصال مسجَّل مسبقاً (رقم العملية نفسه). لم يُرفق.',
+      fAcc: 'ضُبط الصندوق على صندوق شام كاش: {a}', fCur: 'تنبيه: عملة الإيصال {c}؛ ولا يوجد صندوق شام كاش بعملة {c}', fLocked: 'بيانات الإيصال (لا تُعدَّل)'
     }
   };
   var CATS = {
@@ -506,6 +521,43 @@
     });
   }
 
+
+  // v1.67: elle girilen bir para kaydına (Kasa giriş / çıkış, İnfak, düzenli ödeme …) Sham Cash dekontu ekleme.
+  // Dosya seçilir (receipts'e bayt bayt kopyalanmış olarak gelir), okunur; forma doldurulacak alanlar döner. Kaydı form yapar
+  // (saveShamCash: sc_doc + sc_doc_file). { file, doc, source, diffs, verified, direction, other: {name, account}, account_id, accountName, dup }
+  function pick(opts) {
+    opts = opts || {};
+    return pickFiles().then(function (files) {
+      var f = files && files[0];
+      if (!f) return null;
+      return bytesOf(f).then(function (u8) { return read(u8, f.mime, f.originalName); }, function () { return { doc: normDoc({}), source: 'none', diffs: [] }; }).then(function (res) {
+        var d = res.doc || normDoc({});
+        return Promise.all([getMe(), dupOf(d.ref), accounts()]).then(function (r) {
+          var me = r[0], dup = r[1], list = r[2];
+          var dir = directionOf(me, d) || '';
+          var want = opts.direction === 'in' || opts.direction === 'out' ? opts.direction : '';
+          if (!dir && want && res.source !== 'none') { // yön bulunamadı: formdaki yön esas, adımı öğren (sonraki dekontlar kendiliğinden)
+            dir = want;
+            addMe(dir === 'out' ? d.from_name : d.to_name, dir === 'out' ? d.from_account : d.to_account).catch(function () {});
+          }
+          var useDir = dir || want || 'out';
+          var cur = d.currency || '';
+          return (cur ? pickAccount(list, cur) : Promise.resolve(null)).then(function (accId) {
+            var acc = list.filter(function (a) { return a.id === accId; })[0];
+            var doc = Object.assign({}, d, { file_name: f.originalName || '', file_path: f.relPath, read_by: res.source + (res.model ? ':' + res.model : '') });
+            delete doc._conf; delete doc._model;
+            return {
+              file: { relPath: f.relPath, originalName: f.originalName, mime: f.mime }, doc: doc, source: res.source, diffs: res.diffs || [], verified: !!res.verified,
+              direction: useDir, dirKnown: !!dir, other: useDir === 'out' ? { name: d.to_name || '', account: d.to_account || '' } : { name: d.from_name || '', account: d.from_account || '' },
+              amount: amountNum(d.amount), date: toIso(d.date) || '', currency: cur, account_id: acc ? acc.id : null, accountName: acc ? acc.name : '',
+              accountIsSham: !!(acc && /sham|شام/i.test(acc.name || '')), dup: dup
+            };
+          });
+        });
+      });
+    });
+  }
+
   // ---------- dosya alma ----------
   function bytesOf(file) {
     var fr = F().files || {};
@@ -773,12 +825,16 @@
 
   // Kayıttaki orijinal dekontu açar (dosyaya dokunmadan)
   function openOriginal(txId) {
-    return dbAll('SELECT file_path FROM receipts WHERE transaction_id = ? ORDER BY id LIMIT 1', [txId]).then(function (r) {
+    // v1.67: elle girilen kayda eklenen dekontun yolu sc_doc.file_path'te (kayıtta başka belgeler de olabilir)
+    return dbAll("SELECT json_extract(sc_doc,'$.file_path') AS fp FROM cash_transactions WHERE id = ?", [txId]).catch(function () { return []; }).then(function (a) {
+      if (a[0] && a[0].fp) return [{ file_path: a[0].fp }];
+      return dbAll('SELECT file_path FROM receipts WHERE transaction_id = ? ORDER BY id LIMIT 1', [txId]);
+    }).then(function (r) {
       if (r[0] && F().files && F().files.open) F().files.open(r[0].file_path);
     });
   }
 
   try { css(); } catch (e) {}
-  window.FalconShamDekont = { open: open, read: read, t: t, openOriginal: openOriginal, checkInbox: checkInbox, parseOcr: parseOcr, dateFix: dateFix, parseText: parseText, version: VERSION,
+  window.FalconShamDekont = { open: open, read: read, pick: pick, accounts: accounts, t: t, openOriginal: openOriginal, checkInbox: checkInbox, parseOcr: parseOcr, dateFix: dateFix, parseText: parseText, version: VERSION,
     _test: { normDoc: normDoc, directionOf: directionOf, amountNum: amountNum, snapName: snapName, toIso: toIso, curOf: curOf } };
 })();

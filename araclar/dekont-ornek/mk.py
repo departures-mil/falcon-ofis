@@ -18,3 +18,12 @@ c=canvas.Canvas('banka.pdf'); y=780
 for t in ["Bank Transfer Receipt","Amount: 3,000.00 USD","Date: 25.11.2026","Sender: Mehmet Yilmaz","Reference No: TR2026112500451"]:
     c.drawString(72,y,t); y-=24
 c.save()
+# v1.67: Sham Cash dekontu (metin katmanlı PDF, gerçek dekont etiketleri) — elle kayda dekont ekleme testi
+def scpdf(name, ref, dt, sn, sa, rn, ra, amt):
+    c=canvas.Canvas(name); y=780
+    for t in ["Sham Cash","TRANSACTION SEND","TRANSACTION NUMBER "+ref,"TRANSACTION DATE "+dt,"SENDER NAME "+sn,"SENDER ACCOUNT "+sa,
+              "RECIPIENT NAME "+rn,"RECIPIENT ACCOUNT "+ra,"AMOUNT "+amt,"NOTE -"]:
+        c.drawString(72,y,t); y-=24
+    c.save()
+scpdf('sham-giris.pdf','900111222','27/11/2026 - 14:32:10','Ahmad Khalil','************1234','Metin Ercan Guler','************0951','250 USD')
+scpdf('sham-cikis.pdf','900111333','28/11/2026 - 09:05:00','Metin Ercan Guler','************0951','Omar Saleh','************7788','75 USD')

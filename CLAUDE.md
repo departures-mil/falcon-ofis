@@ -77,6 +77,15 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   `falconSrt`). `FalconSortAmt` işaretli tutarı güncel kurla (`V().rates`, birim/USD) USD'ye çevirerek sıralar; eşitlikte tarih sırası korunur. Yama
   `araclar/patch-ui-1651.py` (masaüstü index + telefon main bundle; telefon-hazirla.sh'ta). Stil satır içi (telefona CSS gerekmez).
 
+- 1.67 SHAM CASH HER YERDE: `FalconScSection` (Kasa formu iki yönde + bağlı kayıtlar, İnfak, düzenli ödeme — `FalconScFor`) içinde `FalconScDocAttach`:
+  «📎 Sham Cash dekontu ekle» → `FalconShamDekont.pick({direction})` (files.import receipt = bayt bayt kopya → read → getMe/directionOf; yön yoksa formdaki yön
+  + `addMe`; `pickAccount`; `dupOf`) → forma amount/date/direction(yalnız Kasa formu)/account_id/sc_name/sc_account/sc_ref + `sc_doc` (JSON) + `sc_doc_file`.
+  Sunucu `saveShamCash` artık girişte de (payee yalnız çıkış) → `attachShamDoc` (sc_doc aynen + file_path, receipts satırı, aynı sc_ref → ERR_SC_DUPLICATE,
+  db.tx geri alır). `isShamAccount` (ayar `shamcash_acc_<CUR>` ya da adında sham/شام) → `transfer` tarafları pay_method=shamcash. Kasa otomatiği arayüzde:
+  `FalconScPmUp` (yöntem → kasa), `FalconScAccChange` (kasa → yöntem). sc_doc'lu kayıtta form `FalconScDocLocked`. `openOriginal` önce sc_doc.file_path.
+  Yamalar `araclar/patch-srv-167.py` (electron/services.js + telefon index) ve `patch-ui-167.py` (iki bundle), telefon-hazirla.sh'ta. Test: `araclar/sham-her-yer-167-e2e.js`
+  (örnekler `dekont-ornek/sham-giris.pdf`, `sham-cikis.pdf` — metin katmanlı; testte internetten gelen admin duyurusu gizlenir).
+
 ## Test
 - `npm test`: `test/app.test.js` (sürüm, çekirdek kopyası, CSP, güncelleme kanalı, paketleme, Wi‑Fi arşiv kuralı sql.js ile, FOPK) +
   `test/electron-smoke.test.js` (gerçek Electron + xvfb, `FALCON_SMOKE=1`: açılış, üst çubuk, Ayarlar sırası; eski 1.57.0 kabuğunda
