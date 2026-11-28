@@ -355,6 +355,61 @@
     }
   };
   ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX6[l]).forEach(function (k) { TX[l][k] = TX6[l][k]; }); });
+  // v1.65: tahsilat — dekonttan (Sham Cash, PDF / görsel) otomatik ya da elle giriş
+  var TX7 = {
+    tr: {
+      payModeSham: 'Sham Cash (dekont)', payModeManual: 'Elle giriş',
+      rcDrop: 'Dekontu buraya sürükleyin, yapıştırın (Ctrl+V) ya da seçin — PDF veya görsel', rcPick: '📄 Dekont seç', rcCamera: '📷 Fotoğraf çek',
+      rcAttach: '📎 Dekont ekle (isteğe bağlı)', rcAttached: 'Ek: {n}', rcRemove: 'Eki kaldır', rcChange: 'Başka dekont',
+      rcReading: 'Dekont okunuyor…', rcPrepare: 'Dosya hazırlanıyor…', rcAi: 'Yapay zeka okuyor…', rcOffline: 'Çevrimdışı okunuyor (OCR)…', rcVerify: 'Çevrimdışı okumayla teyit ediliyor…',
+      rcSkipAi: 'Beklemeden çevrimdışı oku', rcSrcAi: '✦ Yapay zeka ile okundu ({m})', rcSrcOff: 'Çevrimdışı okundu', rcSrcOcr: 'Çevrimdışı okundu (OCR)',
+      rcAiNo: 'Yapay zeka kullanılamadı: {w}', rcW_skip: 'anahtar yok ya da yapay zeka kapalı', rcW_key: 'anahtar geçersiz', rcW_net: 'internet yok', rcW_timeout: 'zaman aşımı',
+      rcW_quota: 'kullanım kotası doldu', rcW_cancel: 'beklenmedi', rcW_fail: 'okuma hatası',
+      rcMatch: '✓ Çevrimdışı okuma tutarı ve işlem numarasını teyit etti', rcDiff: '⚠ İki okuma farklı: {x} — işaretli alanları kontrol edin',
+      rcNoCheck: 'Teyit edilemedi (çevrimdışı okuma sonuç vermedi) — alanları kontrol edin', rcNothing: 'Dekonttan tutar okunamadı — eksik alanları elle doldurun.',
+      rcFail: 'Dekont okunamadı:', rcCurDiff: 'Dekontun para birimi {a}, faturanınki {b}: tutar doldurulmadı — karşılığını elle yazın.',
+      rcOver: 'Dekont tutarı ({a}) kalan tutardan {x} fazla; yalnız kalan tutar ({b}) işlenir.', rcLess: 'Dekont tutarı kalan tutardan az: kısmi tahsilat olarak işlenir.',
+      rcDup: 'Bu işlem numarası ({r}) daha önce kaydedilmiş: {d} — dekont ikinci kez işlenmez.', rcStatusBad: 'Dekontta işlem durumu: «{s}» — ödemenin tamamlandığını kontrol edin.',
+      rcSender: 'Gönderen', rcRef: 'İşlem no', rcAccount: 'Hesap', rcFee: 'Ücret', rcView: 'Dekontu aç', rcSaveFail: 'Tahsilat işlendi ama dekont eklenemedi:',
+      rcSet: 'Bilgiler dekonttan dolduruldu — kontrol edip «Kasaya işle»ye basın.', rcNoReader: 'Dekont okuyucu yüklenemedi.', rcTooBig: 'Dosya çok büyük (en çok 25 MB).',
+      rcType: 'Yalnız PDF ya da görsel (JPG, PNG, WEBP) dekont eklenebilir.'
+    },
+    en: {
+      payModeSham: 'Sham Cash (receipt)', payModeManual: 'Manual entry',
+      rcDrop: 'Drag the receipt here, paste it (Ctrl+V) or choose it — PDF or image', rcPick: '📄 Choose receipt', rcCamera: '📷 Take photo',
+      rcAttach: '📎 Attach receipt (optional)', rcAttached: 'Attached: {n}', rcRemove: 'Remove attachment', rcChange: 'Another receipt',
+      rcReading: 'Reading the receipt…', rcPrepare: 'Preparing the file…', rcAi: 'AI is reading…', rcOffline: 'Reading offline (OCR)…', rcVerify: 'Verifying with the offline reading…',
+      rcSkipAi: 'Read offline without waiting', rcSrcAi: '✦ Read by AI ({m})', rcSrcOff: 'Read offline', rcSrcOcr: 'Read offline (OCR)',
+      rcAiNo: 'AI could not be used: {w}', rcW_skip: 'no key or AI turned off', rcW_key: 'invalid key', rcW_net: 'no internet', rcW_timeout: 'timed out',
+      rcW_quota: 'usage quota reached', rcW_cancel: 'not awaited', rcW_fail: 'reading error',
+      rcMatch: '✓ The offline reading confirmed the amount and the transaction number', rcDiff: '⚠ The two readings differ: {x} — check the marked fields',
+      rcNoCheck: 'Could not be verified (the offline reading returned nothing) — check the fields', rcNothing: 'No amount could be read from the receipt — fill in the missing fields manually.',
+      rcFail: 'The receipt could not be read:', rcCurDiff: 'The receipt currency is {a}, the invoice currency is {b}: the amount was not filled in — enter the equivalent manually.',
+      rcOver: 'The receipt amount ({a}) exceeds the balance by {x}; only the balance ({b}) is posted.', rcLess: 'The receipt amount is less than the balance: it is posted as a partial payment.',
+      rcDup: 'This transaction number ({r}) is already recorded: {d} — a receipt is not posted twice.', rcStatusBad: 'Transaction status on the receipt: «{s}» — make sure the payment was completed.',
+      rcSender: 'Sender', rcRef: 'Transaction no', rcAccount: 'Account', rcFee: 'Fee', rcView: 'Open receipt', rcSaveFail: 'The payment was posted but the receipt could not be attached:',
+      rcSet: 'Filled in from the receipt — check and press «Post to cash».', rcNoReader: 'The receipt reader could not be loaded.', rcTooBig: 'The file is too large (25 MB at most).',
+      rcType: 'Only a PDF or image (JPG, PNG, WEBP) receipt can be added.'
+    },
+    ar: {
+      payModeSham: 'شام كاش (إشعار)', payModeManual: 'إدخال يدوي',
+      rcDrop: 'اسحب الإشعار إلى هنا أو الصقه (Ctrl+V) أو اختره — PDF أو صورة', rcPick: '📄 اختيار الإشعار', rcCamera: '📷 التقاط صورة',
+      rcAttach: '📎 إرفاق الإشعار (اختياري)', rcAttached: 'المرفق: {n}', rcRemove: 'إزالة المرفق', rcChange: 'إشعار آخر',
+      rcReading: 'جارٍ قراءة الإشعار…', rcPrepare: 'جارٍ تجهيز الملف…', rcAi: 'الذكاء الاصطناعي يقرأ…', rcOffline: 'القراءة دون اتصال (OCR)…', rcVerify: 'جارٍ التحقق بالقراءة دون اتصال…',
+      rcSkipAi: 'القراءة دون اتصال دون انتظار', rcSrcAi: '✦ قُرئ بالذكاء الاصطناعي ({m})', rcSrcOff: 'قُرئ دون اتصال', rcSrcOcr: 'قُرئ دون اتصال (OCR)',
+      rcAiNo: 'تعذّر استخدام الذكاء الاصطناعي: {w}', rcW_skip: 'لا يوجد مفتاح أو الذكاء الاصطناعي معطّل', rcW_key: 'المفتاح غير صالح', rcW_net: 'لا يوجد اتصال بالإنترنت', rcW_timeout: 'انتهت المهلة',
+      rcW_quota: 'نفدت حصة الاستخدام', rcW_cancel: 'لم يُنتظر', rcW_fail: 'خطأ في القراءة',
+      rcMatch: '✓ أكّدت القراءة دون اتصال المبلغ ورقم العملية', rcDiff: '⚠ القراءتان مختلفتان: {x} — راجع الحقول المعلَّمة',
+      rcNoCheck: 'تعذّر التحقق (لم تُعطِ القراءة دون اتصال نتيجة) — راجع الحقول', rcNothing: 'تعذّرت قراءة المبلغ من الإشعار — املأ الحقول الناقصة يدوياً.',
+      rcFail: 'تعذّرت قراءة الإشعار:', rcCurDiff: 'عملة الإشعار {a} وعملة الفاتورة {b}: لم يُعبَّأ المبلغ — اكتب المقابل يدوياً.',
+      rcOver: 'مبلغ الإشعار ({a}) يزيد على المبلغ المتبقي بمقدار {x}؛ يُسجَّل المتبقي فقط ({b}).', rcLess: 'مبلغ الإشعار أقل من المتبقي: يُسجَّل تحصيلاً جزئياً.',
+      rcDup: 'رقم العملية هذا ({r}) مسجَّل من قبل: {d} — لا يُسجَّل الإشعار مرتين.', rcStatusBad: 'حالة العملية في الإشعار: «{s}» — تأكّد من إتمام الدفع.',
+      rcSender: 'المرسل', rcRef: 'رقم العملية', rcAccount: 'الحساب', rcFee: 'العمولة', rcView: 'فتح الإشعار', rcSaveFail: 'سُجِّل التحصيل لكن تعذّر إرفاق الإشعار:',
+      rcSet: 'عُبّئت البيانات من الإشعار — راجعها ثم اضغط «تسجيل في الصندوق».', rcNoReader: 'تعذّر تحميل قارئ الإشعارات.', rcTooBig: 'الملف كبير جداً (25 ميغابايت كحد أقصى).',
+      rcType: 'يمكن إرفاق إشعار بصيغة PDF أو صورة (JPG، PNG، WEBP) فقط.'
+    }
+  };
+  ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX7[l]).forEach(function (k) { TX[l][k] = TX7[l][k]; }); });
   // Faturanın kendi dilindeki resmi metinler (PDF)
   var DOC = {
     tr: { title: 'FATURA', no: 'Fatura No', date: 'Fatura Tarihi', due: 'Vade Tarihi', billTo: 'Sayın', desc: 'Açıklama', qty: 'Miktar', unit: 'Birim',
@@ -374,13 +429,13 @@
   var ERR = {
     tr: { ERR_INVOICE_ITEMS: 'En az bir kalem girin.', ERR_CUSTOMER_REQUIRED: 'Müşteri adını yazın.', ERR_INVOICE_OVERPAY: 'Tahsilat kalan tutardan büyük olamaz.',
       ERR_INVOICE_NUMBER_TAKEN: 'Bu fatura numarası zaten kullanılıyor.', ERR_INVOICE_HAS_PAYMENTS: 'Tahsilatı olan faturada bu yapılamaz — önce tahsilatları silin.',
-      ERR_INVOICE_BELOW_PAID: 'Yeni toplam, tahsil edilen tutardan küçük olamaz.', ERR_INVOICE_CANCELLED: 'İptal edilmiş faturaya tahsilat girilemez.' },
+      ERR_INVOICE_BELOW_PAID: 'Yeni toplam, tahsil edilen tutardan küçük olamaz.', ERR_INVOICE_CANCELLED: 'İptal edilmiş faturaya tahsilat girilemez.', ERR_SC_DUPLICATE: 'Bu işlem numarasıyla bir dekont zaten kayıtlı — ikinci kez işlenmedi.' },
     en: { ERR_INVOICE_ITEMS: 'Enter at least one line.', ERR_CUSTOMER_REQUIRED: 'Enter the customer name.', ERR_INVOICE_OVERPAY: 'The payment cannot exceed the balance.',
       ERR_INVOICE_NUMBER_TAKEN: 'This invoice number is already in use.', ERR_INVOICE_HAS_PAYMENTS: 'Not possible on an invoice with payments — delete the payments first.',
-      ERR_INVOICE_BELOW_PAID: 'The new total cannot be lower than the amount collected.', ERR_INVOICE_CANCELLED: 'A cancelled invoice cannot take payments.' },
+      ERR_INVOICE_BELOW_PAID: 'The new total cannot be lower than the amount collected.', ERR_INVOICE_CANCELLED: 'A cancelled invoice cannot take payments.', ERR_SC_DUPLICATE: 'A receipt with this transaction number is already recorded — it was not posted twice.' },
     ar: { ERR_INVOICE_ITEMS: 'أدخل بنداً واحداً على الأقل.', ERR_CUSTOMER_REQUIRED: 'اكتب اسم العميل.', ERR_INVOICE_OVERPAY: 'لا يمكن أن يتجاوز التحصيل المبلغ المتبقي.',
       ERR_INVOICE_NUMBER_TAKEN: 'رقم الفاتورة هذا مستخدم من قبل.', ERR_INVOICE_HAS_PAYMENTS: 'غير ممكن في فاتورة لها تحصيلات — احذف التحصيلات أولاً.',
-      ERR_INVOICE_BELOW_PAID: 'لا يمكن أن يكون الإجمالي الجديد أقل من المبلغ المحصّل.', ERR_INVOICE_CANCELLED: 'لا يمكن تسجيل تحصيل لفاتورة ملغاة.' }
+      ERR_INVOICE_BELOW_PAID: 'لا يمكن أن يكون الإجمالي الجديد أقل من المبلغ المحصّل.', ERR_INVOICE_CANCELLED: 'لا يمكن تسجيل تحصيل لفاتورة ملغاة.', ERR_SC_DUPLICATE: 'يوجد إشعار مسجَّل برقم العملية هذا — لم يُسجَّل مرة ثانية.' }
   };
 
   // ---------- v1.60: modüler fatura düzeni ----------
@@ -1099,6 +1154,10 @@
       '.fat-inrow{display:flex;gap:6px;align-items:center}.fat-inrow input{flex:1;min-width:0}.fat-inrow select{width:auto}' +
       '.fat-items-wrap{overflow-x:auto;max-width:100%}.fat-items .dp{width:76px}.fat-items .cd{width:130px}.fat-items .v{width:64px}.fat-items .cx{width:110px}.fat-items td.no{padding-top:12px;opacity:.7;text-align:center;width:28px}' +
       '.fat-items td.nmc{min-width:220px}.fat-items .p{width:104px}.fat-qu{display:flex;gap:4px}.fat-qu .q{width:70px}.fat-qu .u{width:64px}.fat-items th{white-space:nowrap}' +
+      '.fat-rc-seg{margin:10px 0}.fat-rc-zone{display:flex;gap:14px;align-items:center;border:2px dashed var(--border,#3a4458);border-radius:12px;padding:14px;margin-bottom:8px;transition:border-color .15s,background .15s}.fat-rc-zone.over{border-color:#38bdf8;background:#0ea5e914}.fat-rc-zone.has{border-style:solid}' +
+      '.fat-rc-ic{font-size:30px;opacity:.7}.fat-rc-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}.fat-rc-btns,.fat-rc-att{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.fat-rc-att{margin-top:8px}.fat-rc-name{font-weight:600;overflow-wrap:anywhere}' +
+      '.fat-rc-thumb{display:block;max-width:120px;max-height:150px;border-radius:8px;border:1px solid var(--border,#3a4458);object-fit:contain;background:#fff;margin:0 auto}.fat-rc-flags .fat-imp-st{margin:4px 0;font-size:13px}' +
+      '.field.fat-rc-warn input,.field.fat-rc-warn select{border-color:#d69500;box-shadow:0 0 0 2px #e2a40033}.fat-pay-act{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}' +
       '.fat-busy{display:flex;align-items:center;gap:12px;font-weight:600;padding:8px 2px}.fat-busy .spin{width:20px;height:20px;border:3px solid #38bdf855;border-top-color:#38bdf8;border-radius:50%;animation:fatspin .8s linear infinite}@keyframes fatspin{to{transform:rotate(360deg)}}' +
       '.fat-imp-src{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}.fat-imp-st{border-radius:10px;padding:8px 12px;margin:6px 0 10px;font-weight:600}.fat-imp-st.ok{background:#22a06b1f;color:#22a06b}.fat-imp-st.new{background:#0ea5e91f;color:#38bdf8}.fat-imp-st.warn{background:#e2a4001f;color:#d69500}' +
       '.fat-imp-v{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}.fat-imp-v .btn.link{padding:0 4px;min-height:0;background:none;border:0;color:inherit;text-decoration:underline;cursor:pointer;font-weight:600}' +
@@ -1601,40 +1660,264 @@
     }
 
     // ----- tahsilat -----
+    // v1.65: iki giriş yolu — «Sham Cash (dekont)»: PDF / görsel dekont okunur (önce yapay zeka, çevrimdışı OCR teyidi), alanlar dolar;
+    // «Elle giriş»: alanlar elle, dekont isteğe bağlı eklenir. İki yolda da kayıt kasaya, faturanın ödeme durumuna işlenir ve dekont
+    // kasa hareketine ek olarak (receipts) saklanır. Aynı işlem numarası ikinci kez işlenmek istenirse uyarılır.
     function accountsFor(cur) { return q('SELECT id, name FROM cash_accounts WHERE currency_code = ? AND COALESCE(hidden,0) = 0 ORDER BY id', [cur]); }
+    var SHAM_RE = /sham|شام/i;
+    function payMode(v) { try { if (v) localStorage.setItem('fat_pay_mode', v); return localStorage.getItem('fat_pay_mode') || 'sham'; } catch (e) { return v || 'sham'; } }
+    // Dekont dosyası saklanır: PDF / resim olduğu gibi (masaüstü), olmazsa JPEG kopyası (telefon)
+    function storeReceipt(rc) {
+      var Fl = F().files || {};
+      var asBytes = function (u8) { return u8 instanceof Uint8Array ? u8 : new Uint8Array(u8); };
+      // köprü yanıtı { ok, data } ya da doğrudan veri olabilir
+      var un = function (r) { if (r && typeof r.ok === 'boolean') { if (!r.ok) throw new Error(r.error || 'ERR'); return r.data; } return r; };
+      var orig = rc.pdf ? asBytes(rc.pdf) : rc.raw ? asBytes(rc.raw) : null;
+      var jpg = function () {
+        if (!Fl.saveImage || !rc.jpeg) return Promise.reject(new Error('no-store'));
+        return Promise.resolve(Fl.saveImage(rc.jpeg)).then(un).then(function (r) { r = Object.assign({}, r); r.originalName = String(rc.name || 'dekont').replace(/\.[^.]+$/, '') + '.jpg'; return r; });
+      };
+      if (Fl.saveReceipt && orig) return Promise.resolve(Fl.saveReceipt(orig, rc.name || '')).then(un).catch(jpg);
+      return jpg();
+    }
     function openPay(inv) {
-      Promise.all([accountsFor(inv.currency_code), q('SELECT p.*, a.name AS account_name FROM invoice_payments p LEFT JOIN cash_accounts a ON a.id = p.account_id WHERE p.invoice_id = ? ORDER BY p.date, p.id', [inv.id]),
+      Promise.all([accountsFor(inv.currency_code),
+        q('SELECT p.*, a.name AS account_name, (SELECT r.file_path FROM receipts r WHERE r.transaction_id = p.cash_transaction_id ORDER BY r.id LIMIT 1) AS receipt FROM invoice_payments p LEFT JOIN cash_accounts a ON a.id = p.account_id WHERE p.invoice_id = ? ORDER BY p.date, p.id', [inv.id])
+          .catch(function () { return q('SELECT p.*, a.name AS account_name FROM invoice_payments p LEFT JOIN cash_accounts a ON a.id = p.account_id WHERE p.invoice_id = ? ORDER BY p.date, p.id', [inv.id]); }),
         q('SELECT * FROM invoices WHERE id = ?', [inv.id])]).then(function (r) {
-        var accs = r[0], pays = r[1], cur = r[2][0] || inv;
-        var rem = rnd(cur.total - cur.paid, cur.currency_code);
+        var accs = r[0], pays = r[1], cur = r[2][0] || inv, C = cur.currency_code;
+        var rem = rnd(cur.total - cur.paid, C);
+        var openFile = function (rel) { try { F().files.open(rel); } catch (e) { toast(String(e && e.message || e), 'error'); } };
         var list = el('div', { class: 'fat-pays' }, pays.length ? pays.map(function (p) {
           return el('div', { class: 'row' }, [
-            el('div', null, [el('b', { dir: 'ltr', text: money(p.amount, cur.currency_code) }), el('div', { class: 'muted small', text: dmy(p.date) + (p.account_name ? ' · ' + p.account_name : '') + (p.note ? ' · ' + p.note : '') })]),
-            el('button', { type: 'button', class: 'btn danger-soft', text: '🗑 ' + t('payDel'), onclick: function () {
-              confirmBox(t('confirmPayDel')).then(function (ok) { if (ok) run('deleteInvoicePayment', { id: p.id }, t('deleted')).then(function () { m.close(); load(); openPay(inv); }, function () {}); });
-            } })
+            el('div', null, [el('b', { dir: 'ltr', text: money(p.amount, C) }), el('div', { class: 'muted small', text: dmy(p.date) + (p.account_name ? ' · ' + p.account_name : '') + (p.note ? ' · ' + p.note : '') })]),
+            el('div', { class: 'fat-pay-act' }, [
+              p.receipt ? el('button', { type: 'button', class: 'btn', title: t('rcView'), text: '📎 ' + t('rcView'), onclick: function () { openFile(p.receipt); } }) : null,
+              el('button', { type: 'button', class: 'btn danger-soft', text: '🗑 ' + t('payDel'), onclick: function () {
+                confirmBox(t('confirmPayDel')).then(function (ok) { if (ok) run('deleteInvoicePayment', { id: p.id }, t('deleted')).then(function () { m.close(); load(); openPay(inv); }, function () {}); });
+              } })
+            ])
           ]);
         }) : [el('div', { class: 'muted', text: t('payNone') })]);
         var kids = [list];
         var foot = [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } })];
+        var m;
         if (rem <= 0) kids.push(el('div', { class: 'notice', text: '✓ ' + t('payDone') }));
         else if (!accs.length) kids.push(el('div', { class: 'notice error', text: t('noAccount') }));
         else {
+          var mode = payMode() === 'manual' ? 'manual' : 'sham';
+          var rc = null; // okunan / eklenen dekont
           var amt = el('input', { type: 'number', step: 'any', min: '0', value: String(rem), dir: 'ltr' });
           var dt = el('input', { type: 'date', value: today() });
-          var ac = el('select', null, accs.map(function (a) { return opt(a.id, a.name, false); }));
+          var shamAcc = accs.filter(function (a) { return SHAM_RE.test(a.name); })[0];
+          var ac = el('select', null, accs.map(function (a) { return opt(a.id, a.name, mode === 'sham' && shamAcc && a.id === shamAcc.id); }));
+          var snd = el('input', { value: '' });
+          var ref = el('input', { value: '', dir: 'ltr' });
           var nt = el('input', { value: '' });
-          kids.push(el('div', { class: 'form' }, [
-            field(t('payAmount') + ' (' + t('remaining') + ': ' + money(rem, cur.currency_code) + ')', amt, { hint: t('payAmountHint') }), field(t('payDate'), dt),
-            field(t('account'), ac), field(t('payNote'), nt)
-          ]));
-          foot.push(el('button', { type: 'button', class: 'btn primary', text: t('pay'), onclick: function (e) {
-            e.target.disabled = true;
-            run('addInvoicePayment', { invoice_id: inv.id, amount: num(amt.value), date: dt.value, account_id: Number(ac.value), note: nt.value }, t('saved'))
-              .then(function () { m.close(); load(); }, function () { e.target.disabled = false; });
-          } }));
+          var flags = el('div', { class: 'fat-rc-flags' });
+          var flag = function (cls, txt) { flags.appendChild(el('div', { class: 'fat-imp-st ' + cls, text: txt })); };
+          var mark = function (inp, on) { var f = inp.closest('.field'); if (f) f.classList.toggle('fat-rc-warn', !!on); };
+          var seg = el('div', { class: 'fat-seg fat-rc-seg' });
+          var zone = el('div', { class: 'fat-rc-zone' });
+          var attachRow = el('div', { class: 'fat-rc-att' });
+          var drawSeg = function () {
+            seg.innerHTML = '';
+            [['sham', '💳 ' + t('payModeSham')], ['manual', '✍ ' + t('payModeManual')]].forEach(function (x) {
+              seg.appendChild(el('button', { type: 'button', class: mode === x[0] ? 'on' : '', text: x[1], onclick: function () {
+                if (mode === x[0]) return; mode = x[0]; payMode(mode); drawSeg(); drawZone();
+                if (mode === 'sham' && shamAcc && !rc) ac.value = String(shamAcc.id);
+              } }));
+            });
+          };
+          var pickFile = function (camera, cb) {
+            var inp = el('input', { type: 'file', accept: camera ? 'image/*' : 'application/pdf,.pdf,image/*', capture: camera ? 'environment' : null, style: 'display:none' });
+            document.body.appendChild(inp);
+            var fin = false, end = function () { if (fin) return; fin = true; if (inp.parentNode) inp.parentNode.removeChild(inp); };
+            inp.addEventListener('change', function () { var f = inp.files && inp.files[0]; end(); if (f) cb(f); });
+            inp.addEventListener('cancel', end);
+            inp.click();
+          };
+          var okFile = function (f) {
+            if (!f) return false;
+            if (f.size > 25 * 1024 * 1024) { toast(t('rcTooBig'), 'error'); return false; }
+            if (!/pdf|image\//i.test(f.type || '') && !/\.(pdf|jpe?g|png|webp|gif|bmp)$/i.test(f.name || '')) { toast(t('rcType'), 'error'); return false; }
+            return true;
+          };
+          var thumb = function () {
+            if (!rc || !rc.jpeg) return null;
+            var url = URL.createObjectURL(new Blob([rc.jpeg], { type: 'image/jpeg' }));
+            return el('img', { class: 'fat-rc-thumb', src: url, alt: '', onload: function () { setTimeout(function () { URL.revokeObjectURL(url); }, 60000); } });
+          };
+          // Elle girişte dekont yalnız eklenir (okunmaz); yine de resim / JPEG hazırlanır
+          var attachOnly = function (f) {
+            if (!okFile(f)) return;
+            var D = window.FalconDekont;
+            var done = function (x) { rc = x; drawZone(); };
+            if (!D) return f.arrayBuffer().then(function (b) { done({ raw: b, name: f.name, kind: /pdf/i.test(f.type) ? 'pdf' : 'image', pdf: /pdf/i.test(f.type) ? b : null }); });
+            D.prepare(f).then(function (P) { done({ jpeg: P.jpeg, pdf: P.kind === 'pdf' ? P.buf : null, raw: P.kind === 'image' ? P.buf : null, name: f.name, kind: P.kind, manual: true }); },
+              function (e) { toast(t('rcFail') + ' ' + String(e && e.message || e), 'error'); });
+          };
+          var applyRead = function (x, f) {
+            rc = x; rc.name = f.name || x.name;
+            flags.innerHTML = '';
+            [amt, dt, ref, snd].forEach(function (i) { mark(i, false); });
+            if (x.source === 'ai') flag('ok', t('rcSrcAi', { m: x.model || 'Gemini' }));
+            else flag('new', (x.via === 'ocr' ? t('rcSrcOcr') : t('rcSrcOff')) + (x.aiError ? ' · ' + t('rcAiNo', { w: t('rcW_' + x.aiError) }) : ''));
+            var ck = x.check || {};
+            if (x.source === 'ai') {
+              if (ck.status === 'match') flag('ok', t('rcMatch'));
+              else if (ck.status === 'diff') {
+                var L = { amount: t('payAmount'), ref: t('rcRef'), date: t('payDate'), from_name: t('rcSender') };
+                var lbl = function (k) { return L[k] || (window.FalconShamDekont && window.FalconShamDekont.t ? window.FalconShamDekont.t(k) : k); };
+                flag('warn', t('rcDiff', { x: ck.diffs.map(function (d) { return lbl(d.k) + ': ' + (d.a == null ? '—' : d.a) + ('b' in d ? ' ↔ ' + (d.b == null ? '—' : d.b) : ''); }).join(' · ') }));
+                ck.diffs.forEach(function (d) { var i = { amount: amt, ref: ref, date: dt, from_name: snd }[d.k]; if (i) mark(i, true); });
+              } else flag('warn', t('rcNoCheck'));
+            }
+            if (x.amount != null) {
+              if (x.currency && x.currency !== C) { flag('warn', t('rcCurDiff', { a: x.currency, b: C })); mark(amt, true); }
+              else {
+                var a = rnd(x.amount, C);
+                if (a > rem + 0.004) { flag('warn', t('rcOver', { a: money(a, C), x: money(rnd(a - rem, C), C), b: money(rem, C) })); amt.value = String(rem); mark(amt, true); }
+                else { amt.value = String(a); if (a < rem - 0.004) flag('new', t('rcLess')); }
+              }
+            } else { flag('warn', t('rcNothing')); mark(amt, true); }
+            if (x.date) dt.value = x.date;
+            if (x.ref) ref.value = x.ref;
+            if (x.sender) snd.value = x.sender;
+            if (x.status && /fail|reject|cancel|pending|فشل|مرفوض|ملغ|معلق|قيد|başarısız|iptal|bekl/i.test(x.status)) flag('warn', t('rcStatusBad', { s: x.status }));
+            var extra = [x.time ? x.time : '', x.sender_account ? t('rcAccount') + ': ' + x.sender_account : '', x.fee ? t('rcFee') + ': ' + x.fee : '', x.note || ''].filter(Boolean).join(' · ');
+            if (extra && !nt.value) nt.value = extra;
+            if (x.provider === 'shamcash' && shamAcc) ac.value = String(shamAcc.id);
+            drawZone();
+            toast(t('rcSet'));
+          };
+          // FalconShamDekont.read sonucu → tahsilat alanları. doc dekonttaki gibi saklanır (Arapça adlar aynen).
+          var fromSham = function (res, P) {
+            var S = window.FalconShamDekont, d = res && res.doc || {}, T = S._test || {};
+            var amount = T.amountNum ? T.amountNum(d.amount) : window.FalconDekont.num(d.amount);
+            if (amount == null || !d.ref) return null; // eksik okuma: genel okuyucu (çevrimdışı) dener
+            var src = res.source, diffs = res.diffs || [];
+            return { provider: 'shamcash', amount: amount, currency: d.currency || '', date: (T.toIso ? T.toIso(d.date) : window.FalconDekont.isoDate(d.date)) || '',
+              time: String(d.time || '').slice(0, 5), sender: d.from_name || '', sender_account: d.from_account || '', receiver: d.to_name || '', receiver_account: d.to_account || '',
+              ref: d.ref || '', note: d.note && d.note !== '-' ? d.note : '', status: '', source: src === 'offline' ? 'offline' : 'ai', model: src === 'side' ? '✓' : 'Gemini',
+              via: src === 'offline' ? 'ocr' : '', aiError: res.aiError || '', scDoc: d,
+              check: src === 'both' ? { status: diffs.length ? 'diff' : 'match', diffs: diffs.map(function (k) { return { k: k, a: d[k] }; }) } : { status: src === 'side' ? 'match' : 'none', diffs: [] },
+              kind: P.kind, jpeg: P.jpeg, pdf: P.kind === 'pdf' ? P.buf : null, raw: P.kind === 'image' ? P.buf : null, name: P.name };
+          };
+          var readReceipt = function (f) {
+            if (!okFile(f)) return;
+            if (!window.FalconDekont) { toast(t('rcNoReader'), 'error'); return; }
+            flags.innerHTML = '';
+            var msg = el('div', { class: 'fat-busy' }, [el('span', { class: 'spin' }), el('span', { text: t('rcPrepare') })]);
+            var sub = el('div', { class: 'muted small', style: 'margin-top:6px', text: f.name || '' });
+            var clock = el('span', { class: 'muted small', dir: 'ltr', style: 'margin-inline-start:auto' });
+            var ctl = {}, t0 = Date.now(), aiOn = false;
+            var skipB = el('button', { type: 'button', class: 'btn', style: 'display:none', text: '⌁ ' + t('rcSkipAi'), onclick: function () { if (ctl.skipAi) ctl.skipAi(); skipB.disabled = true; } });
+            var bm = modal('💳 ' + t('rcReading'), [msg, sub], [clock, skipB], '');
+            var tick = setInterval(function () { var s = Math.round((Date.now() - t0) / 1000); clock.textContent = s >= 3 ? t('pdfSec', { s: s }) : ''; if (aiOn && s >= 6) skipB.style.display = ''; }, 1000);
+            var stop = function () { clearInterval(tick); bm.close(); };
+            var generic = function (aiToo) {
+              return window.FalconDekont.read(f, { ai: aiToo, ctl: ctl, onStep: function (st, model) {
+                aiOn = st === 'ai';
+                msg.lastChild.textContent = st === 'ai' ? t('rcAi') : st === 'verify' ? t('rcVerify') : st === 'offline' ? t('rcOffline') : t('rcPrepare');
+                if (st === 'ai' && model) sub.textContent = '✦ ' + model;
+                if (!aiOn) skipB.style.display = 'none';
+              } });
+            };
+            // Sham Cash düzenini bilen okuyucu (Kasa → Sham Cash dekontu ile aynı; v1.65) önce; okuyamazsa genel dekont okuyucusu (çevrimdışı)
+            var S = window.FalconShamDekont;
+            var p = S && S.read && mode === 'sham'
+              ? window.FalconDekont.prepare(f).then(function (P) {
+                msg.lastChild.textContent = t('rcAi');
+                var u8 = new Uint8Array(P.buf.slice(0));
+                return S.read(u8, f.type || '', f.name || '').then(function (res) {
+                  var x = fromSham(res, P);
+                  if (x) return x;
+                  return generic(false).then(function (g) { if (res && res.aiError) g.aiError = res.aiError; return g; });
+                }, function () { return generic(true); });
+              })
+              : generic(true);
+            p.then(function (x) { stop(); applyRead(x, f); }, function (e) { stop(); toast(t('rcFail') + ' ' + String(e && e.message || e), 'error'); });
+          };
+          var take = function (f) { if (mode === 'sham') readReceipt(f); else attachOnly(f); };
+          var drawZone = function () {
+            zone.innerHTML = ''; attachRow.innerHTML = '';
+            var cam = el('button', { type: 'button', class: 'btn', text: t('rcCamera'), onclick: function () { pickFile(true, take); } });
+            if (mode === 'sham') {
+              zone.className = 'fat-rc-zone' + (rc ? ' has' : '');
+              zone.appendChild(rc ? thumb() : el('div', { class: 'fat-rc-ic', text: '💳' }));
+              zone.appendChild(el('div', { class: 'fat-rc-txt' }, [
+                el('div', { class: rc ? 'fat-rc-name' : 'muted', text: rc ? t('rcAttached', { n: rc.name || '' }) : t('rcDrop') }),
+                el('div', { class: 'fat-rc-btns' }, [el('button', { type: 'button', class: 'btn primary', text: rc ? '↻ ' + t('rcChange') : t('rcPick'), onclick: function () { pickFile(false, take); } }), cam,
+                  rc ? el('button', { type: 'button', class: 'btn danger-soft', text: '✕ ' + t('rcRemove'), onclick: function () { rc = null; flags.innerHTML = ''; drawZone(); } }) : null])
+              ]));
+              zone.style.display = '';
+            } else {
+              zone.style.display = 'none';
+              if (rc) attachRow.appendChild(el('span', { class: 'fat-rc-name', text: '📎 ' + t('rcAttached', { n: rc.name || '' }) }));
+              attachRow.appendChild(el('button', { type: 'button', class: 'btn', text: rc ? '↻ ' + t('rcChange') : t('rcAttach'), onclick: function () { pickFile(false, take); } }));
+              attachRow.appendChild(cam);
+              if (rc) attachRow.appendChild(el('button', { type: 'button', class: 'btn danger-soft', text: '✕ ' + t('rcRemove'), onclick: function () { rc = null; drawZone(); } }));
+            }
+          };
+          // sürükle-bırak ve yapıştırma (pencere açıkken)
+          zone.addEventListener('dragover', function (e) { e.preventDefault(); zone.classList.add('over'); });
+          zone.addEventListener('dragleave', function () { zone.classList.remove('over'); });
+          zone.addEventListener('drop', function (e) { e.preventDefault(); zone.classList.remove('over'); var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (f) take(f); });
+          var onPaste = function (e) {
+            if (!m || !document.body.contains(m.box)) { document.removeEventListener('paste', onPaste); return; }
+            var items = e.clipboardData && e.clipboardData.items || [];
+            for (var i = 0; i < items.length; i++) {
+              if (items[i].kind === 'file') { var f = items[i].getAsFile(); if (f && (/image\/|pdf/.test(f.type))) { e.preventDefault(); if (!f.name || f.name === 'image.png') f = new File([f], 'dekont-' + today() + (/pdf/.test(f.type) ? '.pdf' : '.png'), { type: f.type }); take(f); return; } }
+            }
+          };
+          document.addEventListener('paste', onPaste);
+          drawSeg(); drawZone();
+          kids.push(seg, zone, flags, el('div', { class: 'form' }, [
+            field(t('payAmount') + ' (' + t('remaining') + ': ' + money(rem, C) + ')', amt, { hint: t('payAmountHint') }), field(t('payDate'), dt),
+            field(t('account'), ac), field(t('rcSender'), snd), field(t('rcRef'), ref), field(t('payNote'), nt)
+          ]), attachRow);
+          var save = function (btn) {
+            var refV = String(ref.value || '').trim(), sndV = String(snd.value || '').trim(), accName = (accs.filter(function (a) { return String(a.id) === String(ac.value); })[0] || {}).name || '';
+            var parts = [];
+            if ((mode === 'sham' && rc) || (rc && rc.provider === 'shamcash') || SHAM_RE.test(accName) && (refV || sndV)) parts.push('Sham Cash');
+            if (sndV) parts.push(t('rcSender') + ': ' + sndV);
+            if (refV) parts.push(t('rcRef') + ': ' + refV);
+            if (String(nt.value || '').trim()) parts.push(String(nt.value).trim());
+            var note = parts.join(' · ');
+            var dupP = refV.length >= 4 ? q("SELECT t.date, t.amount, t.description, a.currency_code AS c FROM cash_transactions t LEFT JOIN cash_accounts a ON a.id = t.account_id WHERE t.description LIKE ? OR COALESCE(t.sc_ref, '') = ? ORDER BY t.id DESC LIMIT 1", ['%' + refV + '%', refV])
+              .catch(function () { return q('SELECT date, amount, description FROM cash_transactions WHERE description LIKE ? ORDER BY id DESC LIMIT 1', ['%' + refV + '%']); }).catch(function () { return []; })
+              : Promise.resolve([]);
+            btn.disabled = true;
+            dupP.then(function (d) {
+              if (d.length) {
+                var x = d[0];
+                toast(t('rcDup', { r: refV, d: dmy(x.date) + ' · ' + fmt(x.amount, x.c || C) + (x.c ? ' ' + x.c : '') + (x.description ? ' · ' + x.description : '') }), 'error');
+                mark(ref, true); btn.disabled = false; return;
+              }
+              // Sham Cash dekontu: kasa hareketine dekonttaki bilgiler (sc_ref / sc_doc) de yazılır — Kasa'daki Sham Cash kayıtlarıyla aynı düzen
+              var sc = null;
+              if (rc && refV && (mode === 'sham' || rc.provider === 'shamcash')) {
+                var doc = rc.scDoc ? Object.assign({}, rc.scDoc) : { ref: rc.ref, date: rc.date, time: rc.time, from_name: rc.sender, from_account: rc.sender_account,
+                  to_name: rc.receiver, to_account: rc.receiver_account, amount: rc.amount == null ? '' : String(rc.amount), currency: rc.currency, note: rc.note };
+                doc.ref = refV; doc.file_name = rc.name || ''; doc.read_by = rc.source === 'ai' ? 'ai' : 'offline';
+                sc = { ref: refV, name: sndV || doc.from_name || '', account: rc.sender_account || doc.from_account || '', doc: doc };
+              }
+              return run('addInvoicePayment', { invoice_id: inv.id, amount: num(amt.value), date: dt.value, account_id: Number(ac.value), note: note, sc: sc }, t('saved')).then(function (res) {
+                var fin = function () { m.close(); load(); };
+                if (!rc) return fin();
+                var payId = res && res.id;
+                return q('SELECT cash_transaction_id AS tx FROM invoice_payments WHERE id = ?', [payId]).then(function (rr) {
+                  var tx = rr[0] && rr[0].tx;
+                  if (!tx) throw new Error('tx');
+                  return storeReceipt(rc).then(function (file) { return run('addReceipts', { transaction_id: tx, files: [file] }); });
+                }).then(fin, function (e) { toast(t('rcSaveFail') + ' ' + String(e && e.message || e), 'error'); fin(); });
+              }, function () { btn.disabled = false; });
+            });
+          };
+          foot.push(el('button', { type: 'button', class: 'btn primary', text: t('pay'), onclick: function (e) { save(e.currentTarget); } }));
         }
-        var m = modal(t('payTitle') + ' · ' + cur.number, kids, foot, '');
+        m = modal(t('payTitle') + ' · ' + cur.number, kids, foot, '');
       });
     }
 

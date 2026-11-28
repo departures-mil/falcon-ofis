@@ -2283,7 +2283,10 @@ function createServices(db, { removeFile = () => {} } = {}) {
     const status = inv.status === 'cancelled' ? 'cancelled' : inv.total > 0 && paid >= inv.total - INV_PAY_EPS ? 'paid' : paid > INV_PAY_EPS ? 'partial' : 'pending';
     db.run(`UPDATE invoices SET paid=?, status=?, updated_at=${now} WHERE id=?`, [paid, status, id]);
   }
-  function invoicePay(invoiceId, { amount, date, account_id, note }) {
+  function invoicePay(invoiceId, { amount, date, account_id, note, sc }) {
+    // v1.66: Sham Cash dekontu (sc) — aynı işlem no ikinci kez yazılmaz
+    const scRef = sc && typeof sc === 'object' ? optText(sc.ref) : null;
+    if (scRef && db.get('SELECT id FROM cash_transactions WHERE sc_ref = ? LIMIT 1', [scRef])) throw new AppError('ERR_SC_DUPLICATE');
     const inv = db.get('SELECT * FROM invoices WHERE id = ?', [invoiceId]);
     if (!inv) throw new AppError('ERR_NOT_FOUND');
     if (inv.status === 'cancelled') throw new AppError('ERR_INVOICE_CANCELLED');
@@ -2300,6 +2303,16 @@ function createServices(db, { removeFile = () => {} } = {}) {
       description: `${inv.number} · ${inv.customer_name}` + (optText(note) ? ` · ${optText(note)}` : ''), relatedType: 'invoice', relatedId: payId,
     });
     db.run('UPDATE invoice_payments SET cash_transaction_id = ?, account_id = (SELECT account_id FROM cash_transactions WHERE id = ?) WHERE id = ?', [txId, txId, payId]);
+    if (scRef) {
+      const keep = {};
+      const doc = sc.doc && typeof sc.doc === 'object' ? sc.doc : {};
+      for (const k of ['kind', 'ref', 'date', 'time', 'from_name', 'from_account', 'to_name', 'to_account', 'amount', 'currency', 'note', 'file_name', 'read_by']) {
+        if (doc[k] !== undefined && doc[k] !== null && String(doc[k]) !== '') keep[k] = String(doc[k]).slice(0, 500);
+      }
+      if (!keep.ref) keep.ref = scRef;
+      db.run(`UPDATE cash_transactions SET sc_ref=?, sc_name=?, sc_account=?, pay_method='shamcash', sc_doc=? WHERE id=?`,
+        [scRef, optText(sc.name), optText(sc.account), JSON.stringify(keep), txId]);
+    }
     return payId;
   }
   function saveInvoice({ id, number, date, due_date, customer, customer_phone, customer_email, customer_address, customer_tax, currency, items,
@@ -2354,8 +2367,8 @@ function createServices(db, { removeFile = () => {} } = {}) {
     refreshInvoice(invId);
     return { id: invId, number: db.get('SELECT number FROM invoices WHERE id = ?', [invId]).number };
   }
-  function addInvoicePayment({ invoice_id, amount, date, account_id, note }) {
-    const id = invoicePay(invoice_id, { amount, date, account_id, note });
+  function addInvoicePayment({ invoice_id, amount, date, account_id, note, sc }) {
+    const id = invoicePay(invoice_id, { amount, date, account_id, note, sc });
     refreshInvoice(invoice_id);
     return { id };
   }

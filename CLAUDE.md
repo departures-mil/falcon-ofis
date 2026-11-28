@@ -83,3 +83,8 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   overlay ile açılan yeni sürüm → "Yeni kurulum gerekli").
 - Ekran görüntüleri: `PLAYWRIGHT_CORE=/opt/npm-tools/node_modules/playwright-core xvfb-run -a -s "-screen 0 1600x1000x24" node araclar/ekran.js <klasör>`.
 - Test ortam değişkenleri: `FALCON_TEST_NO_PIN`, `FALCON_TEST_OLD_DATA_CHOICE`, `FALCON_TEST_NO_UPDATE`, `FALCON_TEST_DOCS_DIR`, `FALCON_TEST_UPDATE_DIR`.
+- 1.66 FATURA TAHSİLATI (`openPay`, fatura-falcon.js): «Sham Cash (dekont)» / «Elle giriş» (`localStorage.fat_pay_mode`). Sham Cash'te önce `FalconShamDekont.read`
+  (1.65 okuyucusu), tutar + işlem no yoksa genel okuyucu `dist/assets/dekont-falcon.js` (`FalconDekont.read`: Gemini `FalconFaturaPdf.gemini` + PDF metni / Tesseract
+  OCR ana iş parçacığında, `ocr/tesseract-core-simd-lstm.wasm.js` + ara/eng; telefonda da). `addInvoicePayment` `sc: { ref, name, account, doc }` → hareketin
+  sc_ref / sc_doc / pay_method (telefon: `araclar/patch-srv-166.py`); aynı sc_ref ikinci kez → `ERR_SC_DUPLICATE` (arayüz de açıklama / sc_ref ile engeller).
+  Dekont `files.saveReceipt` (orijinal PDF / resim; telefonda JPEG) → `addReceipts`. Test: `araclar/tahsilat-166-e2e.js` (örnekler `araclar/dekont-ornek/`).
