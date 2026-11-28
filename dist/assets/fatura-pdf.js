@@ -1264,6 +1264,27 @@
     });
   }
   // Yapay zeka çıktısı da çevrimdışı çıktı da aynı biçime getirilir
+  // v1.75.1: koda yapışmış ürün adı ayrılır («OKT4012ABORING BAR SLEEVE D40 d12» + ad «BORING BAR SLEEVE D40 d12» → «OKT4012A»)
+  function codeClean(code, names) {
+    var c = String(code || '').trim(); if (!c) return c;
+    var K = function (x) { return String(x || '').toLocaleUpperCase('tr').replace(/[^0-9A-Za-zÇĞİÖŞÜÂÎÛ؀-ۿ]/g, ''); };
+    var kc = K(c);
+    for (var j = 0; j < (names || []).length; j++) {
+      var kn = K(names[j]); if (kn.length < 6) continue;
+      var key = kn.slice(0, Math.min(kn.length, 10)), p = kc.indexOf(key, 1);
+      while (p > 0) {
+        var tail = kc.slice(p);
+        if (tail.length >= 6 && (kn.indexOf(tail) === 0 || tail.indexOf(kn) === 0)) {
+          var cnt = 0, cut = -1;
+          for (var i = 0; i < c.length; i++) { if (K(c[i])) { if (cnt === p) { cut = i; break; } cnt++; } }
+          if (cut > 0) { var head = c.slice(0, cut).replace(/[\s\-–—_/|:;,.]+$/, '').trim(); if (head) return head; }
+          break;
+        }
+        p = kc.indexOf(key, p + 1);
+      }
+    }
+    return c;
+  }
   function normalize(o) {
     o = o || {};
     var P = function (p) {
@@ -1281,6 +1302,7 @@
       var n = function (v) { return v == null || v === '' ? null : num(v); };
       var o = { name: clean(it.name), code: clean(it.code || ''), depot: clean(it.depot || ''), qty: n(it.qty), unit: clean(it.unit || ''), price: n(it.price),
         amount: n(it.amount), vat: n(it.vat), vat_amount: n(it.vat_amount), disc_rate: n(it.disc_rate), disc_amount: n(it.disc_amount) };
+      if (o.code) o.code = codeClean(o.code, [o.name]);
       // v1.71: ek alanlar yalnız varsa (liste fiyatı, Model / P/N / S/N)
       if (n(it.list_price) > 0) o.list_price = n(it.list_price);
       if (clean(it.status || '')) o.status = clean(it.status);
@@ -1550,7 +1572,7 @@
     });
   }
 
-  var api = { _g: { linesOf: linesOf, gHeaderAt: gHeaderAt, gGroups: gGroups, gKey: gKey, headPart: headPart }, gemini: gemini, renderPage: renderPage, b64: b64, translate: translate, read: read, readMany: readMany, kindOf: kindOf, parseLayout: parseLayout, parseGeneric: parseGeneric, parseBest: parseBest, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, rateNum: rateNum, fixVat: fixVat, isoDate: isoDate, extract: extract, version: '1.76.0' };
+  var api = { _g: { linesOf: linesOf, gHeaderAt: gHeaderAt, gGroups: gGroups, gKey: gKey, headPart: headPart }, gemini: gemini, renderPage: renderPage, b64: b64, translate: translate, read: read, readMany: readMany, kindOf: kindOf, parseLayout: parseLayout, parseGeneric: parseGeneric, parseBest: parseBest, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, rateNum: rateNum, fixVat: fixVat, codeClean: codeClean, isoDate: isoDate, extract: extract, version: '1.76.1' };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.FalconFaturaPdf = api;
 })(typeof window !== 'undefined' ? window : globalThis);

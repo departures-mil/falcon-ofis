@@ -185,3 +185,12 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   `translate(text, lg, {keepCodes})`; arayüz sözlüğü ham kodla çağırır, kod standardı `view()`'da `stdName` ile (ayar `localStorage['fat.keepCodes']`, önizlemede «Orijinal kodları koru»).
   Kullanıcı düzeltmesi: önizlemede çevrilmiş ad «Düzelt» ile değişince `learn()` → ayar `invoice_name_user` {dil: {kaynak: yeni}} (eşitlenir), `translateNames` önce bunu kullanır
   (`user` bayrağı: stdCodes uygulanmaz). Gemini istemi (`translateAi`) aynı terim / kısaltma kurallarını içerir. Test: `test/app.test.js` (1.76).
+- 1.76.1 FATURA TABLOSU SAYFADAN TAŞMAZ (`fatura-falcon.js` `invoiceHtml` + önizleme `fitTable`): `table.it` `table-layout:fixed`; sütun genişlikleri içerikten (`tw`: karakter × 0,6 × pt) ve başlığın en uzun
+  kelimesinden hesaplanır, toplam ≤ 182 mm − ad payı (`NAME_MIN` 42/50 mm); sığmazsa önce metin sütunları daralır, sonra hepsi orantılı + yazı `FK` (≥ 0,72). th yazı boyu em (tabloyla ölçeklenir),
+  th kelime bölmez, td.cd / td.nm satır kırar, `.n` nowrap. Önizlemede `render` ve `input` (120 ms) sonrası `fitTable`: taşan hücre / tablo varsa satır içi font-size %4 adımla en çok %30 küçülür,
+  yine olmazsa `.wrapall` (her hücre kırar) — stil önizleme gövdesiyle PDF'e girer. Bütün satırlarda boş depo / stok kodu / ek sütun gizli (`layout.empty_cols === 'show'` ile gösterilir).
+  `codeClean(code, names)` (fatura-falcon.js + fatura-pdf.js, `normalize` ve `api.codeClean`): koda yapışık ürün adı ayrılır; çıktıda `_n0` (çeviri öncesi ad) ile de denetlenir.
+  Test: `araclar/fatura-1751-e2e.js` (3 dil × 4 şablon, düzeltme sonrası, büyük SYP tutarları + KDV sütunları).
+  1.76.1 önizleme düzeltmeleri: `collect` yeni metin düğümünü yalnız KENDİ hücresindeki kayda ekler (`ownerRec`, `cellOf`: td/th/.box/.wd/.sg; önce silinmiş düğümün kaydı) — eskiden
+  bir önceki kayda eklendiği için ad «#» / kod hücresine yapışıyordu. Boş td/th'lere boş metin düğümü konur (anahtar `EMPTY` = '\u0002' + sıra). `repairEd` (applyEdits'te, dil başına):
+  {o, n: o + kalan} + sonraki boşaltılmış kayıt → kalan o kayda taşınır; boş eş yoksa kalan sayfadaki bir metnin / ürün adının AYNISIYSA düzeltme atılır; onarım kaydedilir.
