@@ -17,7 +17,9 @@ const pem = fs.readFileSync(process.env.OZEL_ANAHTAR || '', 'utf8');
 // v1.60: PDF'den doldur (fatura-pdf.js + pdf.js çevrimdışı okuyucu) ve karekod (qrcode-gen.js)
 for (const f of ['kullanim.js', 'kullanim-falcon.js', 'fatura-falcon.js', 'duyuru-falcon.js', 'fatura-pdf.js', 'qrcode-gen.js', 'pdfjs/pdf.min.mjs', 'pdfjs/pdf.worker.min.mjs', 'pdfjs/LICENSE.txt', 'shamcash-falcon.js',
   // v1.66: fatura tahsilatı dekont okuyucu (Sham Cash / genel; çevrimdışı OCR ana iş parçacığında: Tesseract çekirdeği + Arapça / İngilizce)
-  'dekont-falcon.js', 'ocr/tesseract-core-simd-lstm.wasm.js', 'ocr/ara.traineddata.gz', 'ocr/eng.traineddata.gz', 'ocr/LICENSE-tesseract-core.txt']) {
+  'dekont-falcon.js', 'ocr/tesseract-core-simd-lstm.wasm.js', 'ocr/ara.traineddata.gz', 'ocr/eng.traineddata.gz', 'ocr/LICENSE-tesseract-core.txt',
+  // v1.68: Telegram «Kayıtlı Mesajlar» → Sham Cash dekontu otomatik kayıt (GramJS tarayıcı paketi yalnız açılınca yüklenir)
+  'telegram-falcon.js', 'telegram-vendor.js', 'LICENSE-gramjs.txt']) {
   fs.mkdirSync(path.dirname(path.join(www, 'assets', f)), { recursive: true });
   fs.copyFileSync(path.join(__dirname, '..', 'dist', 'assets', f), path.join(www, 'assets', f));
 }
@@ -39,6 +41,14 @@ for (const f of ['kullanim.js', 'kullanim-falcon.js', 'fatura-falcon.js', 'duyur
   }
   if (!h.includes('fatura-pdf.js')) {
     h = h.replace(/(<script src="\.\/assets\/fatura-falcon\.js"><\/script>)/, '<script src="./assets/qrcode-gen.js"></script>\n    $1\n    <script src="./assets/fatura-pdf.js"></script>');
+    fs.writeFileSync(ih, h);
+  }
+  if (!h.includes('telegram-falcon.js')) {
+    h = h.replace(/(<script src="\.\/assets\/shamcash-falcon\.js"><\/script>)/, '$1\n    <script src="./assets/telegram-falcon.js"></script>');
+    fs.writeFileSync(ih, h);
+  }
+  if (!h.includes('wss://*.web.telegram.org')) {
+    h = h.replace(/(connect-src 'self')/, "$1 wss://*.web.telegram.org");
     fs.writeFileSync(ih, h);
   }
   if (!h.includes('dekont-falcon.js')) {

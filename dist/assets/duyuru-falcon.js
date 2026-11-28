@@ -199,7 +199,7 @@
   function hedefBul() {
     var k = document.querySelector('.kul-kart');
     if (k) return k;
-    try { if (window.Kullanim && Kullanim.metindenBul) return Kullanim.metindenBul(['Telefon ve Bilgisayar Eşitleme', 'Phone and Computer Sync', 'Phone & computer sync'], '.card, section'); } catch (e) {}
+    try { if (window.Kullanim && Kullanim.metindenBul) return Kullanim.metindenBul(['Telefon ve Bilgisayar Eşitleme', 'Phone and Computer Sync', 'Phone & computer sync', 'مزامنة الهاتف والحاسوب'], '.card, section'); } catch (e) {}
     return null;
   }
   function yerlestir() {

@@ -112,3 +112,14 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   `localStorage.sc_ai_models` (24 sa). `read`: online / offline ayrı izlenir, `onStep('tick', metin)` saniyeli durum; online gelince offline en çok `OFF_GRACE` 4 sn beklenir,
   bitmeyen taraf `res.late` (pick → `late`, file=relPath) → `FalconScApply` `D.late(v,x)` yalnız `sc_doc_info` (+ sc_doc.read_by) günceller, alanlara dokunmaz, farkta toast.
   `skipWait`/`canSkip` («⏭ Beklemeden doldur»), `warm` (form açılınca masaüstü OCR işçileri). Mesajlar `mAiWait`/`mOffWait`. Test: `araclar/dekont-1672-e2e.js`.
+
+- 1.68 TELEGRAM → SHAM CASH DEKONTU: `dist/assets/telegram-falcon.js` (masaüstü + telefon; Ayarlar kartı `.tgf-kart`, Bildirimler kartından sonra) Telegram «Kayıtlı Mesajlar»ı
+  izler (açılışta, ekran açıkken dakikada bir, öne gelince, internet gelince + GramJS NewMessage). GramJS tarayıcı paketi `dist/assets/telegram-vendor.js` (telegram@2.26.22,
+  esbuild; yalnız oturum varken yüklenir; `LICENSE-gramjs.txt`), WebSocket `wss://*.web.telegram.org` (iki CSP'de). Oturum `localStorage.tg_session` (yalnız bu cihaz, eşitlenmez);
+  uygulama anahtarı `localStorage.tg_api` > `guncelleme/telegram.json` {api_id, api_hash} (raw GitHub, `tg_api_remote`) > koddaki sabit. Tetik `tg_trigger` («sisteme ekle»;
+  altyazıda ya da dekonttan hemen önce 30 dk / hemen sonra 5 dk; arkasındaki yazı Notum). İşlenen mesajlar `tg_done`; başka cihazın «🦅 Falcon Ofis» yanıtı olan tetik atlanır;
+  bir haftadan eski tetik işlenmez. Kayıt `FalconShamDekont.autoImport` (shamcash-falcon.js): files.saveReceipt (telefon: `araclar/patch-srv-168.py`) → read, `tg_wait` sn
+  (vars. 15) sonra `waiting.skip` (offline hazırsa) → yön benim adlarım > dekont türü > Çıkış(+review) → `saveItem`/importShamCashReceipt, açıklama «📨 Telegram»; tutar yoksa
+  ERR_SC_AMOUNT (kayıt yok, dosya saklı). Günlük eşitlenen ayar `telegram_log` [{m,d,tx,dir,amt,cur,ref,src,rv,ok,u,…}]: `rv` kodları gözden geçir listesi; kaydın
+  updated_at'i `u`'dan farklıysa (düzenlendi) ya da «✓ Gözden geçirdim» → kalkar; geç gelen okuma farklıysa `latediff`. Telegram'a yanıt + `falcon.notify`.
+  Arapça Ayarlar'da Kullanım / Bildirimler kartları bulunamıyordu (başlık metni) → `مزامنة الهاتف والحاسوب` eklendi. Test: `araclar/telegram-168-e2e.js` (Telegram istemcisi taklit).

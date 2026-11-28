@@ -12,6 +12,6 @@
   oku(); setInterval(oku, 20000);
   try { if (window.falcon && window.falcon.sync && window.falcon.sync.onStatus) window.falcon.sync.onStatus(function (st) { proje = (st && st.connected && st.projectId) || ''; }); } catch (e) {}
   Kullanim.yerlestir(function () {
-    return Kullanim.metindenBul(['Telefon ve Bilgisayar Eşitleme', 'Phone and Computer Sync', 'Phone & computer sync'], '.card, section');
+    return Kullanim.metindenBul(['Telefon ve Bilgisayar Eşitleme', 'Phone and Computer Sync', 'Phone & computer sync', 'مزامنة الهاتف والحاسوب'], '.card, section');
   });
 })();

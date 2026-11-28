@@ -12,7 +12,7 @@
 (function () {
   'use strict';
   if (window.FalconShamDekont) return;
-  var VERSION = '1.67.2';
+  var VERSION = '1.68.0';
 
   // ---------- dil ----------
   var TX = {
@@ -1189,6 +1189,59 @@
     window.addEventListener('focus', function () { setTimeout(checkInbox, 500); });
   }
 
+  // v1.68: dışarıdan gelen dekontu (Telegram «Kayıtlı Mesajlar» …) onay beklemeden kaydeder. Orijinal dosya bayt bayt saklanır; okuma 1.67
+  // okuyucusuyla (online → offline teyit). Online okuma `maxWait` sn'den uzun sürerse offline okumayla kaydedilir (offline de hazır değilse
+  // ilk biten okumayla). Kayıt sonradan elle düzeltilebilir; şüpheli durumlar `review` listesinde döner.
+  // opts: { name, mime, maxWait (sn, vars. 15), description, source } → { id, duplicate, direction, amount, currency, ref, source, review: [kod], doc, accountName, late }
+  function autoImport(u8, opts) {
+    opts = opts || {};
+    var name = opts.name || ('dekont-' + Date.now() + '.pdf'), mime = mimeOf(name, opts.mime);
+    if (!mime) return Promise.reject(new Error('type'));
+    var fr = F().files || {};
+    if (!fr.saveReceipt) return Promise.reject(new Error('save'));
+    var review = [];
+    return Promise.resolve(fr.saveReceipt(u8, name)).then(unwrap).then(function (file) {
+      var maxWait = Math.max(3, Number(opts.maxWait) || 15) * 1000, t0 = Date.now(), my = null;
+      var poke = setInterval(function () { if (Date.now() - t0 >= maxWait && waiting && waiting === my && waiting.can()) waiting.skip(); }, 500);
+      var p = read(u8, mime, name, null, function () { if (!my && waiting) my = waiting; });
+      if (!my && waiting) my = waiting;
+      return p.then(function (res) { clearInterval(poke); return res; }, function (e) { clearInterval(poke); throw e; }).then(function (res) {
+        var d = res.doc || normDoc({});
+        if (res.source === 'none') review.push('unread');
+        if (res.diffs && res.diffs.length) review.push('diff');
+        return Promise.all([getMe(), accounts(), dupOf(d.ref)]).then(function (r) {
+          var me = r[0], list = r[1], dup = r[2];
+          if (dup) return { id: dup, duplicate: true, ref: d.ref, file: file };
+          var dir = directionOf(me, d), kd = kindDir(d.kind);
+          if (!dir) { dir = kd; if (!dir) { dir = 'out'; review.push('dir'); } }
+          var amount = amountNum(d.amount);
+          if (!amount) { var ea = new Error('ERR_SC_AMOUNT'); ea.code = 'ERR_SC_AMOUNT'; ea.file = file; ea.doc = d; throw ea; }
+          if (!d.ref) { d.ref = 'TG-' + (opts.refHint || Date.now()); review.push('ref'); }
+          if (!validDate(d.date)) review.push('date');
+          var cur = d.currency || '';
+          if (!cur) review.push('currency');
+          return (cur ? pickAccount(list, cur) : Promise.resolve(null)).then(function (acc) {
+            if (!acc) { var vis = list.filter(function (a) { return !a.hidden; }); acc = vis[0] ? vis[0].id : null; review.push('account'); }
+            if (!acc) throw new Error('ERR_NO_ACCOUNT');
+            var a = list.filter(function (x) { return x.id === acc; })[0];
+            return setting('shamcash_cat_' + dir).then(function (cat) {
+              var doc = Object.assign({}, d); delete doc._conf; delete doc._model;
+              return saveItem({ doc: doc, direction: dir, account_id: acc, category: cat || 'other', description: opts.description || '', note: '', add_to_cash: true,
+                file: { relPath: file.relPath, originalName: file.originalName || name, mime: file.mime || mime }, source: res.source, model: res.model }).then(function (sv) {
+                if (sv && sv.duplicate) return { id: sv.id, duplicate: true, ref: d.ref, file: file };
+                var rf = window.__falconScRefresh || window.__falconLanRefresh;
+                if (rf) try { rf(); } catch (e) {}
+                return { id: sv && sv.id, duplicate: false, direction: dir, amount: amount, currency: cur, ref: d.ref, source: res.source, model: res.model || '',
+                  review: review, doc: doc, accountName: a ? a.name : '', file: file, other: dir === 'out' ? d.to_name : d.from_name,
+                  late: res.late ? res.late.then(function (x) { return x || null; }, function () { return null; }) : null };
+              });
+            });
+          });
+        });
+      });
+    });
+  }
+
   // Kayıttaki orijinal dekontu açar (dosyaya dokunmadan)
   function openOriginal(txId) {
     // v1.67: elle girilen kayda eklenen dekontun yolu sc_doc.file_path'te (kayıtta başka belgeler de olabilir)
@@ -1201,6 +1254,6 @@
   }
 
   try { css(); } catch (e) {}
-  window.FalconShamDekont = { open: open, read: read, pick: pick, formPatch: formPatch, choose: choose, rows: rows, conflictText: conflictText, redirect: redirect, markForm: markForm, message: message, detect: detect, fromDrop: fromDrop, mark: mark, late: late, warm: warm, skipWait: skipWait, canSkip: canSkip, statusText: statusText, kindDir: kindDir, payeeOf: payeeOf, toIso: toIso, amountNum: amountNum, accounts: accounts, t: t, openOriginal: openOriginal, checkInbox: checkInbox, parseOcr: parseOcr, dateFix: dateFix, parseText: parseText, version: VERSION,
+  window.FalconShamDekont = { open: open, read: read, pick: pick, formPatch: formPatch, choose: choose, rows: rows, conflictText: conflictText, redirect: redirect, markForm: markForm, message: message, detect: detect, fromDrop: fromDrop, mark: mark, late: late, warm: warm, skipWait: skipWait, canSkip: canSkip, statusText: statusText, kindDir: kindDir, payeeOf: payeeOf, toIso: toIso, amountNum: amountNum, accounts: accounts, t: t, openOriginal: openOriginal, checkInbox: checkInbox, autoImport: autoImport, getMe: getMe, addMe: addMe, parseOcr: parseOcr, dateFix: dateFix, parseText: parseText, version: VERSION,
     _test: { normDoc: normDoc, directionOf: directionOf, amountNum: amountNum, snapName: snapName, toIso: toIso, curOf: curOf } };
 })();
