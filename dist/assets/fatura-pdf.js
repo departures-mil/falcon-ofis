@@ -585,7 +585,24 @@
     });
   }
   // v1.63: fatura çıktısında ürün adlarını seçilen dile çevirir (kullanıcının kendi Gemini anahtarı). Dönüş: aynı sırada dizi.
+  // v1.69: Gemini yoksa / çevrimdışıysa masaüstündeki yerel zekâ (TranslateGemma / NLLB) — olmazsa çağıran TERMS sözlüğüne düşer
   function translate(list, lg) {
+    return translateAi(list, lg).catch(function (err) {
+      var Y = root.FCYZ;
+      if (!Y || !Y.available() || !list || !list.length) throw err;
+      return Y.ready('mt').then(function (ok) {
+        if (!ok) throw err;
+        var out = [], i = 0;
+        var step = function () {
+          if (i >= list.length) return out;
+          var s = String(list[i++] || '');
+          return (s.trim() ? Y.translate(s, 'auto', lg).then(function (r) { return r && r.text ? String(r.text).trim() : s; }, function () { return s; }) : Promise.resolve(s)).then(function (t) { out.push(t); return step(); });
+        };
+        return step();
+      });
+    });
+  }
+  function translateAi(list, lg) {
     var LN = { en: 'English', ar: 'Arabic (Modern Standard, as used on official commercial invoices)', tr: 'Turkish' }[lg];
     if (!LN || !list || !list.length) return Promise.resolve(list || []);
     return Promise.all([setting('ai_gemini_key'), setting('ai_mode')]).then(function (r) {

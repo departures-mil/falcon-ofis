@@ -230,6 +230,16 @@
     return c;
   }
   function ocr(cv) {
+    // v1.69: masaüstünde yerel zekâ paketi kuruluysa PaddleOCR PP-OCRv5 + Tesseract (Arapça rakamlar ve adlar çok daha doğru)
+    if (root.FCYZ && root.FCYZ.available()) {
+      return root.FCYZ.ready('ocr').then(function (ok) {
+        if (!ok) return tessOcr(cv);
+        return root.FCYZ.ocr(toCanvas(cv, 4000, 4000), { langs: ['ar', 'en'] }).then(function (r) { return r && r.text ? r.text : tessOcr(cv); }, function () { return tessOcr(cv); });
+      });
+    }
+    return tessOcr(cv);
+  }
+  function tessOcr(cv) {
     return engine().then(function (E) {
       return canvasBytes(ocrCanvas(cv), 'image/png').then(function (png) {
         E.m.FS.writeFile('/input', png);

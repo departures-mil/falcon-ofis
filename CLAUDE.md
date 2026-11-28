@@ -123,3 +123,9 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   ERR_SC_AMOUNT (kayıt yok, dosya saklı). Günlük eşitlenen ayar `telegram_log` [{m,d,tx,dir,amt,cur,ref,src,rv,ok,u,…}]: `rv` kodları gözden geçir listesi; kaydın
   updated_at'i `u`'dan farklıysa (düzenlendi) ya da «✓ Gözden geçirdim» → kalkar; geç gelen okuma farklıysa `latediff`. Telegram'a yanıt + `falcon.notify`.
   Arapça Ayarlar'da Kullanım / Bildirimler kartları bulunamıyordu (başlık metni) → `مزامنة الهاتف والحاسوب` eklendi. Test: `araclar/telegram-168-e2e.js` (Telegram istemcisi taklit).
+
+- 1.69 ÇEVRİMDIŞI YAPAY ZEKÂ (ortak-cekirdek `web/yerel-zeka`, kopya `cekirdek/electron/yerel-zeka/` + `dist/cekirdek/fc-yerel-zeka-ui.js`): ana süreç
+  `fc-yerel-zeka-main.install` (main.js), preload `window.fcYerelZeka`, Ayarlar kartı `yerelZekaCard` (Arşiv'den sonra, Hakkında'dan önce; smoke testi sırayı denetler).
+  Paketler `<userData>/yerel-zeka` (GitHub `ortak-cekirdek` sürümü `yerel-zeka-v1`): runtime (onnxruntime-node DirectML, transformers.js, tesseract.js,
+  node-llama-cpp Vulkan) · ocr (PaddleOCR PP-OCRv5 + Tesseract) · llm (TranslateGemma 12B/4B) · mt (NLLB-200). `FalconDekont.ocr` paket kuruluysa
+  `FCYZ.ocr` (yoksa Tesseract); `FalconFaturaPdf.translate` Gemini olmazsa `FCYZ.translate`, o da olmazsa TERMS. Sham Cash'in bölgesel okuyucusu değişmedi.

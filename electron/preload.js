@@ -115,3 +115,5 @@ contextBridge.exposeInMainWorld('falcon', {
 
 // v1.58: ortak çekirdek köprüsü (window.fcHost: pencere düğmeleri, güncelleme, indirme, Asistan Agent paylaşımı, ana süreç hataları)
 require('../cekirdek/electron/fc-preload.js');
+// v1.69: çevrimdışı yapay zekâ köprüsü (window.fcYerelZeka) — PaddleOCR PP-OCRv5 + Tesseract OCR, TranslateGemma / NLLB çeviri
+require('../cekirdek/electron/yerel-zeka/fc-yerel-zeka-preload').expose(contextBridge, ipcRenderer);

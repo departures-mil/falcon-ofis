@@ -15,6 +15,11 @@
   var APP = 'falcon-ofis', LANGS = ['tr', 'en', 'ar'];
 
   var NEWS = {
+    '1.69.0': {
+      tr: "- Çevrimdışı yapay zekâ: Ayarlar → «Çevrimdışı yapay zekâ» kartından bir kez indirilen paketlerle internet yokken de dekont / fiş okuma çok daha doğru (PaddleOCR PP-OCRv5 + Tesseract; Arapça rakamlar ve adlar, eğik fotoğraflar) ve fatura ürün adları çevrimdışı çevrilir (TranslateGemma — bilgisayarın belleğine göre 12B ya da 4B — teknik / havacılık terminolojisi; hızlı yedek NLLB-200).\n- İndirmede yüzde, MB, kalan MB, hız ve süre görünür; yarıda kalırsa kaldığı yerden sürer; paketler güncellemelerde yeniden inmez. Ekran kartı varsa daha hızlı.\n- Kayıtlarınız, belgeleriniz, PIN kodunuz ve eşitleme bağlantınız aynen korunur.",
+      en: "- Offline AI: with packs downloaded once from Settings → «Offline AI», reading receipts / slips is much more accurate even without internet (PaddleOCR PP-OCRv5 + Tesseract; Arabic digits and names, skewed photos) and invoice item names are translated offline (TranslateGemma — 12B or 4B depending on the computer's memory — technical / aviation terminology; NLLB-200 as a fast fallback).\n- The download shows percent, MB, MB left, speed and time, resumes where it stopped, and packs are not downloaded again on updates. Faster with a graphics card.\n- Your records, documents, PIN and sync connection are kept as they are.",
+      ar: "- ذكاء اصطناعي دون اتصال: مع حزم تُنزَّل مرة واحدة من الإعدادات ← «الذكاء الاصطناعي دون اتصال» تصبح قراءة الإيصالات والقسائم أدق بكثير حتى دون إنترنت (PaddleOCR PP-OCRv5 + Tesseract؛ الأرقام والأسماء العربية والصور المائلة) وتُترجَم أسماء أصناف الفواتير دون اتصال (TranslateGemma — 12B أو 4B حسب ذاكرة الحاسوب — بمصطلحات تقنية وطيران؛ وNLLB-200 بديلاً سريعاً).\n- يعرض التنزيل النسبة المئوية والميغابايت والمتبقي والسرعة والوقت، ويُستأنف من حيث توقف، ولا يُعاد تنزيل الحزم عند التحديث. أسرع مع بطاقة الرسوميات.\n- تبقى سجلاتك ومستنداتك ورمز PIN واتصال المزامنة كما هي."
+    },
     '1.68.0': {
       tr: "- Telegram'dan Sham Cash dekontu: Telegram'da «Kayıtlı Mesajlar»a dekontu (PDF / resim) gönderip yanına «sisteme ekle» yazın; Falcon Ofis dekontu kendisi alır, okur ve onay beklemeden Para Girişi / Çıkışı olarak kaydeder. Yön Sham Cash adınızdan bulunur (gönderen sizseniz Çıkış, alıcı sizseniz Giriş).\n- Online okuma uzun sürerse (varsayılan 15 sn) beklemeden offline okumayla kaydedilir; online sonuç sonradan farklı gelirse kayıt «gözden geçir» olarak işaretlenir.\n- Orijinal dekont dosyası olduğu gibi kayda eklenir, Arapça adlar aynen kalır, aynı dekont (işlem no) iki kez eklenmez. «sisteme ekle: kira» gibi ek yazı kaydın notu olur.\n- Kayıt bitince Telegram'da o mesaja «🦅 Falcon Ofis: ✅ Para Girişi eklendi · 250 USD …» yanıtı gelir; telefonda bildirim çıkar. Kayıtlar sonradan Kasa'dan düzeltilebilir.\n- Ayarlar → «Telegram → Sham Cash dekontu» kartı: Telegram'a bir kez bağlanma (numara + Telegram'dan gelen kod), aç / kapat, tetik sözcüğü, bekleme süresi, Sham Cash adlarınız, gelen kayıtların listesi ve «gözden geçir» işaretleri (kayıt düzenlenince ya da «✓ Gözden geçirdim» ile kalkar).\n- Arapça arayüzde Ayarlar'daki Kullanım Limitleri ve Bildirimler kartları görünmüyordu; düzeltildi.",
       en: "- Sham Cash receipt from Telegram: send the receipt (PDF / image) to «Saved Messages» in Telegram and write «sisteme ekle» with it; Falcon Ofis fetches it, reads it and records it as Money In / Out without waiting for approval. Direction comes from your Sham Cash name (you are the sender → Out, the recipient → In).\n- If online reading takes long (15 s by default) the record is saved with the offline reading; if the online result later differs the record is marked «review».\n- The original receipt file is attached unchanged, Arabic names are kept exactly, the same receipt (transaction no) is never added twice. Extra text such as «sisteme ekle: rent» becomes the record's note.\n- When done, a reply «🦅 Falcon Ofis: ✅ Money In added · 250 USD …» appears under that message in Telegram and the phone shows a notification. Records can be corrected later in Cash.\n- Settings → «Telegram → Sham Cash receipt» card: connect to Telegram once (number + code from Telegram), on / off, trigger phrase, waiting time, your Sham Cash names, list of incoming records with «review» marks (cleared when the record is edited or with «✓ Reviewed»).\n- In the Arabic interface the Usage Limits and Notifications cards were missing from Settings; fixed.",
@@ -313,7 +318,7 @@
     var grid = document.querySelector('.settings-grid');
     if (!grid) return;
     if (!cards) {
-      cards = [FC.agent ? FC.agent.card() : null, FC.crash.card(), archiveCard(), FC.settings.about({ onboarding: onboardingOpts() })].filter(Boolean);
+      cards = [FC.agent ? FC.agent.card() : null, FC.crash.card(), archiveCard(), yerelZekaCard(), FC.settings.about({ onboarding: onboardingOpts() })].filter(Boolean);
       cards.forEach(function (c) { c.classList.add('fc-core-card'); scope(c); });
     }
     var contact = document.getElementById('fo-contact');
@@ -334,6 +339,13 @@
         look.insertBefore(schemeRow, rows.length ? rows[0] : null);
       }
     }
+  }
+  // v1.69: çevrimdışı yapay zekâ — dekont / fiş okuma (OCR) ve fatura ürün adı çevirisi paketleri
+  function yerelZekaCard() {
+    if (!window.FCYZ || !window.FCYZ.available()) return null;
+    var lg = document.documentElement.lang || 'tr', c = ui.card({ key: 'yerel-zeka', title: window.FCYZ.title({ lang: lg }), icon: 'cloud' });
+    c.appendChild(window.FCYZ.card({ lang: lg }));
+    return c;
   }
   function archiveCard() {
     if (!F.arsiv) return null;

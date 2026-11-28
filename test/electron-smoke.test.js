@@ -51,7 +51,7 @@ test('Electron: açılış, ortak çekirdek, üst çubuk, Ayarlar sırası', { s
   assert.strictEqual(o.klasik, false);
   const s = o.settings;
   assert.strictEqual(s[s.length - 1], 'fo-contact', 'Admin ile iletişim EN SONDA');
-  assert.deepStrictEqual(s.slice(-5, -1), ['agent', 'crash', 'arsiv', 'about']);
+  assert.deepStrictEqual(s.slice(-6, -1), ['agent', 'crash', 'arsiv', 'yerel-zeka', 'about']); // v1.69: Çevrimdışı yapay zekâ kartı
   assert.ok(s.includes('look'));
   assert.ok(!o.bridgeModal.some((t) => /Yeni kurulum/.test(t)), 'kurulu sürümde köprü penceresi yok');
   assert.ok(o.bridgeModal.includes('Hoş geldiniz'), 'yeni kullanıcıda ilk açılış rehberi (PIN açıldıktan sonra)');

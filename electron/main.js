@@ -205,6 +205,10 @@ function createWindow() {
   }
 }
 
+// ---------- v1.69: çevrimdışı yapay zekâ (ortak çekirdek web/yerel-zeka) ----------
+// Paketler <userData>/yerel-zeka'ya bir kez iner (Ayarlar → Çevrimdışı yapay zekâ); güncelleme takasından etkilenmez.
+try { require('../cekirdek/electron/yerel-zeka/fc-yerel-zeka-main').install({ app, ipcMain }); } catch (e) { console.error('yerel-zeka', e); }
+
 // ---------- v1.58: ortak çekirdek ----------
 // fcMain.install: Küçült / Orta / Tam ekran / Kapat (fc:win:*), GitHub indirmesi (fc:net:download), ana süreç hataları → arayüz
 // (çökme raporu), Asistan Agent paylaşımı. Falcon'un açılışı (tepside gizli başlama, Ayarlar'daki pencere kipi) kendi kodunda
