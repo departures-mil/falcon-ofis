@@ -1356,6 +1356,8 @@ if (!gotLock) {
     cleanupOldOverlays();
     registerIpc();
     lanServer.setup({ prefsFile: path.join(app.getPath('userData'), 'wifi-esitleme.json'), hooks: lanHooks });
+    // v1.80: telefon güncellemesi Wi‑Fi'den (bilgisayar yeni telefon paketini arka planda indirip saklar)
+    try { require('./telefon-onbellek').setup(path.join(app.getPath('userData'), 'telefon-guncelleme')); } catch (e) { /* */ }
     createWindow();
     createTray();
     applyAutostart();

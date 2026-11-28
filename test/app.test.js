@@ -571,3 +571,65 @@ test('1.79: sunucu / ağ / siber güvenlik terimleri, işlemci seviyesi kod olar
   assert.strictEqual(ar('Intel Xeon Silver 4214R İşlemci 12 Çekirdek'), 'Intel Xeon Silver 4214R معالج 12 نواة');
   assert.ok(!/[çğıöşüÇĞİÖŞÜ]/.test(en('Kesintisiz Güç Kaynağı 3kVA Online Çift Dönüşüm')), 'UPS satırında Türkçe kalmaz');
 });
+
+test('1.80: hızlı telefon güncellemesi — yama, ham paket, istemciyle bayt bayt aynı, Wi‑Fi önbelleği', () => {
+  const vm = require('vm');
+  const zlib = require('zlib');
+  const crypto = require('crypto');
+  const pack = require(path.join(ROOT, 'electron/update-pack'));
+  const Y = require(path.join(ROOT, 'araclar/telefon-yama'));
+  const sha = (b) => crypto.createHash('sha256').update(b).digest('hex');
+  // istemci (telefon) kodu: aynı ham paket + saklı gzip
+  const win = {};
+  vm.runInNewContext(read('dist/assets/hizli-guncelleme.js'), { window: win, TextEncoder, TextDecoder, Uint8Array, Uint32Array, JSON, Math, Promise, console });
+  const H = win.FalconHizli;
+  const files = [{ path: 'index.html', data: Buffer.from('<p>ç</p>') }, { path: 'assets/a.js', data: crypto.randomBytes(200000) }, { path: 'assets/b.bin', data: Buffer.alloc(0) }];
+  const nodeGz = Y.storedGzip(Y.buildRaw('9.9.9', files));
+  const jsGz = Buffer.from(H.storedGzip(H.buildRaw('9.9.9', files.map((f) => [f.path]), files.map((f) => new Uint8Array(f.data)))));
+  assert.ok(nodeGz.equals(jsGz), 'telefondaki ham paket sunucudakiyle aynı');
+  assert.strictEqual(H.crc32(new Uint8Array(files[1].data)), zlib.crc32(files[1].data) >>> 0);
+  const back = pack.readPack(nodeGz);
+  assert.deepStrictEqual(back.files.map((f) => f.path), files.map((f) => f.path));
+  // yama üretimi: değişen dosya yamada, değişmeyen yok; yeniden kurulan paket tam paketle aynı dosyalar
+  const tmp = fs.mkdtempSync(path.join(require('os').tmpdir(), 'yama-'));
+  const mk = (v, fl) => { const d = path.join(tmp, v); fl.forEach((f) => { fs.mkdirSync(path.dirname(path.join(d, f.path)), { recursive: true }); fs.writeFileSync(path.join(d, f.path), f.data); }); return pack.createPack(v, pack.listFiles(d).map((r) => ({ path: r, file: path.join(d, r) }))); };
+  const big = crypto.randomBytes(300000);
+  const oldGz = mk('1.0.0', [{ path: 'index.html', data: Buffer.from('eski') }, { path: 'assets/big.bin', data: big }]);
+  const newGz = mk('1.0.1', [{ path: 'index.html', data: Buffer.from('yeni') }, { path: 'assets/big.bin', data: big }, { path: 'assets/yeni.js', data: Buffer.from('x') }]);
+  const r = Y.build('1.0.1', newGz, [{ version: '1.0.0', gz: oldGz }], null);
+  assert.deepStrictEqual(Object.keys(r.patches), ['1.0.0']);
+  const pk = pack.readPack(r.patchFiles[r.patches['1.0.0'].file]);
+  assert.deepStrictEqual(pk.files.map((f) => f.path).sort(), ['assets/yeni.js', 'index.html']);
+  assert.ok(r.patches['1.0.0'].size < newGz.length * 0.7);
+  assert.strictEqual(r.files.length, 3);
+  // %70 kuralı: her şey değiştiyse yama yayınlanmaz
+  const allNew = mk('1.0.2', [{ path: 'index.html', data: Buffer.from('z') }, { path: 'assets/big.bin', data: crypto.randomBytes(300000) }]);
+  const r2 = Y.build('1.0.2', allNew, [{ version: '1.0.0', gz: oldGz }], null);
+  assert.deepStrictEqual(r2.patches, {}); assert.strictEqual(r2.skipped.length, 1);
+
+  // yayınlanmış telefon paketi: ham paket imzası + her yama telefondaki gibi uygulanınca aynı paket
+  const m = JSON.parse(read('guncelleme/telefon.json'));
+  if (m.raw) {
+    const full = fs.readFileSync(path.join(ROOT, 'guncelleme', m.file));
+    assert.strictEqual(sha(full), m.sha256);
+    assert.ok(pack.verify('telefon', m.version, m.raw.sha256, m.raw.sig), 'ham paket imzası');
+    const cur = pack.readPack(full);
+    assert.deepStrictEqual(cur.files.map((f) => [f.path, f.data.length, sha(f.data)]), m.files);
+    for (const [from, p] of Object.entries(m.patches || {})) {
+      const pg = fs.readFileSync(path.join(ROOT, 'guncelleme', p.file));
+      assert.strictEqual(sha(pg), p.sha256, from);
+      assert.ok(pg.length <= full.length * 0.7, from + ' yama %70 altında');
+      const pm = new Map(pack.readPack(pg).files.map((f) => [f.path, f.data]));
+      const rebuilt = cur.files.map((f) => ({ path: f.path, data: pm.get(f.path) || f.data }));
+      assert.strictEqual(sha(Y.storedGzip(Y.buildRaw(m.version, rebuilt))), m.raw.sha256, from + ' yeniden kurulan paket');
+    }
+    if (m.cdn) assert.match(m.cdn, /^https:\/\/cdn\.jsdelivr\.net\/gh\/departures-mil\/falcon-ofis@[0-9a-f]{40}\/guncelleme\/$/);
+  }
+
+  // masaüstü: Wi‑Fi önbelleği parçaları ve indirme penceresi
+  const C = require(path.join(ROOT, 'electron/telefon-onbellek'));
+  assert.ok(C.NAME_RE.test('telefon-1.80.0.fopk') && C.NAME_RE.test('telefon-yama-1.78.0-1.80.0.fopk') && !C.NAME_RE.test('../x.fopk'));
+  assert.match(read('electron/lan-server.js'), /\/lan\/telefon\/parca/);
+  assert.match(read('dist/assets/' + fs.readdirSync(path.join(ROOT, 'dist/assets')).find((f) => /^index-.*\.js$/.test(f))), /function FalconDlMode/);
+  assert.match(read('araclar/telefon-hazirla.sh'), /patch-srv-180\.py/);
+});

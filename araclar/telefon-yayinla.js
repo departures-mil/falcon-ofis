@@ -7,6 +7,17 @@ const fs = require('fs');
 const path = require('path');
 const pack = require('../electron/update-pack');
 
+// v1.80: yalnız jsDelivr adresini yazmak için (paket commit'i main'e girdikten sonra):  node araclar/telefon-yayinla.js --cdn <commit>
+if (process.argv[2] === '--cdn') {
+  const sha = String(process.argv[3] || '');
+  if (!/^[0-9a-f]{40}$/.test(sha)) throw new Error('tam commit kimliği gerekli');
+  const mp = path.join(__dirname, '..', 'guncelleme', 'telefon.json');
+  const mj = JSON.parse(fs.readFileSync(mp, 'utf8'));
+  mj.cdn = `https://cdn.jsdelivr.net/gh/departures-mil/falcon-ofis@${sha}/guncelleme/`;
+  fs.writeFileSync(mp, JSON.stringify(mj, null, 1));
+  console.log('cdn', mj.cdn);
+  process.exit(0);
+}
 const [version, www, notes = '', apkPath, minShell] = process.argv.slice(2);
 if (!version || !www) throw new Error('kullanım: sürüm www-klasörü "notlar" [apk] [minShell]');
 const G = path.join(__dirname, '..', 'guncelleme');
@@ -24,6 +35,8 @@ for (const f of ['kullanim.js', 'kullanim-falcon.js', 'sozluk-falcon.js', 'fatur
   'telegram-falcon.js', 'telegram-vendor.js', 'LICENSE-gramjs.txt',
   // v1.70: çevrimdışı yapay zekâ (telefon çalışma zamanı + kart): PP-OCRv5 + Tesseract OCR, NLLB-200 çeviri; paketler GitHub'dan bir kez iner
   'yz-falcon.js', ...fs.readdirSync(path.join(__dirname, '..', 'dist', 'assets', 'yz'), { recursive: true }).filter((f) => !fs.statSync(path.join(__dirname, '..', 'dist', 'assets', 'yz', f)).isDirectory()).map((f) => 'yz/' + f.split(path.sep).join('/')),
+  // v1.80: hızlı güncelleme (yama + paralel + çok kaynak + Wi‑Fi)
+  'hizli-guncelleme.js',
   '../cekirdek/fc-yerel-zeka-ui.js'].map((f) => f.replace(/^\.\.\/cekirdek\//, '../cekirdek/'))) {
   fs.mkdirSync(path.dirname(path.join(www, 'assets', f)), { recursive: true });
   fs.copyFileSync(path.join(__dirname, '..', 'dist', 'assets', f), path.join(www, 'assets', f));
@@ -65,6 +78,10 @@ for (const f of ['kullanim.js', 'kullanim-falcon.js', 'sozluk-falcon.js', 'fatur
     h = h.replace(/(connect-src 'self')/, "$1 https://raw.githubusercontent.com https://cdn.jsdelivr.net");
     fs.writeFileSync(ih, h);
   }
+  if (!h.includes('hizli-guncelleme.js')) { // v1.80: index-*.js __fgD bunu çağırır (modülden önce yüklenmeli)
+    h = h.replace(/(<script type="module")/, '<script src="./assets/hizli-guncelleme.js"></script>\n    $1');
+    fs.writeFileSync(ih, h);
+  }
   if (!h.includes('dekont-falcon.js')) {
     h = h.replace(/(<script src="\.\/assets\/fatura-pdf\.js"><\/script>)/, '$1\n    <script src="./assets/dekont-falcon.js"></script>');
     fs.writeFileSync(ih, h);
@@ -75,10 +92,25 @@ const gz = pack.createPack(version, files);
 const sha256 = pack.sha256(gz);
 const sig = pack.sign(pem, 'telefon', version, sha256);
 if (!pack.verify('telefon', version, sha256, sig)) throw new Error('anahtar uyuşmuyor');
+// v1.80: yamalar (yalnızca değişen kısımlar) — son 5 sürümün paketleri YAMA_TABAN klasöründen (telefon-<sürüm>.fopk;
+// yoksa guncelleme/ içindeki önceki paket). Yama tam paketin %70'inden büyükse yayınlanmaz; her yama burada uygulanıp denetlenir.
+const olds = [];
+const tabanlar = [process.env.YAMA_TABAN, G].filter(Boolean);
+for (const d of tabanlar) {
+  if (!fs.existsSync(d)) continue;
+  for (const f of fs.readdirSync(d)) {
+    const mm = /^telefon-(\d+\.\d+\.\d+)\.fopk$/.exec(f);
+    if (mm && mm[1] !== version && !olds.some((o) => o.version === mm[1])) olds.push({ version: mm[1], gz: fs.readFileSync(path.join(d, f)) });
+  }
+}
+const yama = require('./telefon-yama').build(version, gz, olds, pem);
 for (const f of fs.readdirSync(G)) if (/^telefon-.*\.fopk$|^Falcon-Ofis-.*\.apk$/.test(f)) fs.rmSync(path.join(G, f));
 const file = `telefon-${version}.fopk`;
 fs.writeFileSync(path.join(G, file), gz);
-const m = { version, notes, size: gz.length, sha256, sig, file, minShell: Number(minShell) || 0, publishedAt: new Date().toISOString() };
+for (const [n, b] of Object.entries(yama.patchFiles)) fs.writeFileSync(path.join(G, n), b);
+const m = { version, notes, size: gz.length, sha256, sig, file, minShell: Number(minShell) || 0, publishedAt: new Date().toISOString(),
+  raw: yama.raw, patches: yama.patches, files: yama.files };
+console.log('yamalar:', Object.entries(yama.patches).map(([v, p]) => `${v} → ${(p.size / 1048576).toFixed(2)} MB (${p.changed} dosya)`).join(', ') || 'yok', yama.skipped.length ? 'atlanan: ' + JSON.stringify(yama.skipped) : '');
 if (apkPath) {
   const apk = fs.readFileSync(apkPath);
   const apkVersion = process.env.APK_VERSION || version; // APK'nın kendi sürümü (ör. 1.53.0) verilebilir

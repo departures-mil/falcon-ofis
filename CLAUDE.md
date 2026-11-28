@@ -221,3 +221,18 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   siber güvenlik, CCTV / geçiş / alarm, BT enerjisi, bilgisayar + çevre birimleri, hizmet / garanti / lisans). Eskiyi ezen tek kelimelik anahtar YOK (arka panel = Backplane, güç kablosu,
   devir, projektör, regülatör… eski anlamında bırakıldı); 1.78'deki 3.723 terimin çevirisi değişmedi (eski / yeni derleme karşılaştırması). Motor: `tier` — Arapçada
   gold/silver/platinum/bronze + model no («Gold 6152», «Silver 4214R») ENLEX ile çevrilmez. Test: `test/app.test.js` (1.79).
+- 1.80.0 HIZLI TELEFON GÜNCELLEMESİ: `dist/assets/hizli-guncelleme.js` (`window.FalconHizli.download`; telefon index.html'de modülden önce) — telefon index-*.js `__fgD`
+  bunu çağırır (`araclar/patch-srv-180.py`: `__fgU` telefon.json'u `m` olarak taşır, kurulu sürüm + APK bayrağı geçer, «güncelleme var» boyutu yamanınki). Sıra: (1) YAMA:
+  `telefon.json.patches[<kurulu>]` = yalnız değişen dosyaların FOPK'sı (gzip -9); değişmeyenler kurulu www'den (fetch, olmazsa XHR) okunur, her dosya `files [[yol, boyut, sha256]]`
+  ile denetlenir, paket telefonda SAKLI gzip olarak (65535'lik sıkıştırmasız deflate blokları; `araclar/telefon-yama.js storedGzip` ile bayt bayt aynı) yeniden kurulur →
+  `raw.sha256` + `raw.sig` (imza metni yine "telefon\nsürüm\nsha256") kabuğa gider; hazırlık bitmeden kabuğa bayt gönderilmez, olmazsa tam paket. (2) KAYNAK: önce Wi‑Fi'deki
+  eşleşmiş bilgisayar (`localStorage['falcon-lan-meta'].pairs`, `FalconLan.lanHttp`; masaüstü `electron/telefon-onbellek.js` yeni telefon paketini + yamaları 90 sn / 30 dk'da bir
+  indirir, imza + sha denetler, `<userData>/telefon-guncelleme`; lan-server `GET /lan/telefon`, `/lan/telefon/parca?ad=&bas=&uzun=` base64, ≤4 MB), sonra internet: jsDelivr
+  (`telefon.json.cdn` = commit'e sabit `cdn.jsdelivr.net/gh/departures-mil/falcon-ofis@<sha>/guncelleme/`) + raw GitHub, 512 KB Range parçaları 6 bağlantı, kaynak seçimi ölçülen hıza
+  göre, kuyruk boşalınca yavaş parça öbür kaynaktan da (ilk gelen), Range yoksa tek akış. (3) İLERLEME: `{done,total,speed (son 4 sn),mode: patch|full, src: lan|net, conns}`;
+  `araclar/patch-ui-180.py` (telefon main + masaüstü index): `FalconDlStat` hız son 4 sn / `p.speed`, `FalconDlMode` satırı (tr/en/ar).
+  YAYIN: `YAMA_TABAN=<eski telefon-*.fopk klasörü> OZEL_ANAHTAR=… node araclar/telefon-yayinla.js <sürüm> <www> "notlar"` (taban yoksa guncelleme/'deki önceki paket; eski paketler git
+  geçmişinden `git show <commit>:guncelleme/telefon-<v>.fopk`) → son 5 sürüme yama (tam paketin %70'inden büyükse yok; her yama uygulanıp denetlenir) → commit A (paketler) main'e girince
+  `node araclar/telefon-yayinla.js --cdn <A'nın tam sha'sı>` → commit B. Test: `test/app.test.js` (1.80: istemci / sunucu ham paket aynı, yamalar, imza), uçtan uca
+  `node araclar/hizli-180-e2e.js <eski www> <guncelleme klasörü> <eski sürüm>` (yama, tam, bozuk yerel dosya, bozuk kaynak, Range yok, Wi‑Fi, yavaş hatta paralel ≈5 kat).
+  NOT: 1.80'in kendisi telefona eski (1.78) kodla tam paket olarak iner; hızlı yol 1.80'den sonraki güncellemelerde çalışır.

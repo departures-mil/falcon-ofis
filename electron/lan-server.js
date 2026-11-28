@@ -4,6 +4,7 @@
 //
 // Protokol (HTTP, yalnızca yerel ağ; her istek X-Lan-Key ister):
 //   GET  /lan/ping  → {ok, app, name}
+//   GET  /lan/telefon → {ok, version, files}   GET /lan/telefon/parca?ad=&bas=&uzun= → {ok, data(base64)}  (v1.80)
 //   POST /lan/sync  {v, app, account, dev, op?, state | id/data}
 //        op yok     : karşının kayıtları birleştirilir, bu bilgisayarın (birleştirme öncesi) kayıtları döner
 //        op getBlob : dosya (base64) döner;  op putBlob: eksikse dosya yazılır (var olanın üstüne yazılmaz)
@@ -24,6 +25,7 @@ let port = 0;
 let bad = 0;
 let lockedUntil = 0;
 let chain = Promise.resolve();
+const phoneCache = () => require('./telefon-onbellek');
 
 function basePort(appId) {
   let h = 0;
@@ -128,6 +130,12 @@ async function handle(req, res) {
     }
     bad = 0;
     if (url.pathname === '/lan/ping') return send(res, 200, { ok: true, app: APP_ID, name: os.hostname(), v: 1 });
+    // v1.80: telefon güncellemesi bu bilgisayardan (telefon-onbellek.js indirip doğruladıysa)
+    if (url.pathname === '/lan/telefon') return send(res, 200, phoneCache().info());
+    if (url.pathname === '/lan/telefon/parca') {
+      const data = phoneCache().part(url.searchParams.get('ad'), url.searchParams.get('bas'), url.searchParams.get('uzun'));
+      return send(res, data ? 200 : 404, data ? { ok: true, data } : { ok: false });
+    }
     if (url.pathname === '/lan/sync' && req.method === 'POST') {
       let p;
       try { p = JSON.parse((await readBody(req)).toString('utf8')); } catch (e) { return send(res, 400, { ok: false, error: 'json' }); }
