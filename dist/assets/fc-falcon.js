@@ -15,6 +15,11 @@
   var APP = 'falcon-ofis', LANGS = ['tr', 'en', 'ar'];
 
   var NEWS = {
+    '1.70.0': {
+      tr: "- Sham Cash dekontu çevrimdışı okuması yükseltildi: Ayarlar → «Çevrimdışı yapay zekâ»daki OCR paketi kuruluysa dekont PaddleOCR PP-OCRv5 ile de okunur ve Tesseract'ın bölge okumasıyla alan alan birleşir — nokta vuruşlu rakamlar (işlem no, tutar, tarih) ve Arapça adlar çok daha doğru; internet yokken de online okumayla teyit edilen alan sayısı arttı.\n- Kayıtlarınız, belgeleriniz, PIN kodunuz ve eşitleme bağlantınız aynen korunur.",
+      en: "- Offline reading of Sham Cash receipts upgraded: when the OCR pack in Settings → «Offline AI» is installed, the receipt is also read with PaddleOCR PP-OCRv5 and merged field by field with Tesseract's region reading — dot-matrix digits (transaction no, amount, date) and Arabic names are much more accurate; more fields now match the online reading, also without internet.\n- Your records, documents, PIN and sync connection are kept as they are.",
+      ar: "- تحسين القراءة دون اتصال لإيصالات شام كاش: عند تثبيت حزمة OCR من الإعدادات ← «الذكاء الاصطناعي دون اتصال» يُقرأ الإيصال أيضاً بـ PaddleOCR PP-OCRv5 ويُدمج حقلاً بحقل مع قراءة Tesseract للمناطق — الأرقام النقطية (رقم العملية والمبلغ والتاريخ) والأسماء العربية أدق بكثير، وازداد عدد الحقول المطابقة للقراءة عبر الإنترنت حتى دون إنترنت.\n- تبقى سجلاتك ومستنداتك ورمز PIN واتصال المزامنة كما هي."
+    },
     '1.69.1': {
       tr: "- Telegram tetiği artık yalnız «ekle»: dekontu Kayıtlı Mesajlar'a gönderip yanına «ekle» yazın. Mesaj «ekle» ile başlamalı; «şunu da ekle» gibi sıradan notlar dekont eklemez. Arkasına yazdığınız yazı kaydın notu olur («ekle kira» → not «kira»). Eski «sisteme ekle» de çalışmaya devam eder.\n- Tetik sözcüğü bundan sonra güncelleme beklemeden de değiştirilebilir.",
       en: "- The Telegram trigger is now just «ekle»: send the receipt to Saved Messages and write «ekle» with it. The message must start with «ekle»; ordinary notes such as «şunu da ekle» do not add a receipt. Text after it becomes the record's note («ekle rent» → note «rent»). The old «sisteme ekle» still works.\n- From now on the trigger phrase can also be changed without waiting for an update.",

@@ -541,7 +541,9 @@
       if (!cv) return null;
       if (cv.text && /SENDER|RECIPIENT|TRANSACTION|المرسل/.test(cv.text)) return parseText(cv.text);
       var viaText = function () { return textOcr(cv.canvas); };
-      return ocrAvailable() ? viaOcr(cv.canvas).then(function (d) { return d && (d.ref || d.amount) ? d : viaText(); }, viaText) : viaText();
+      var tess = function () { return ocrAvailable() ? viaOcr(cv.canvas).then(function (d) { return d && (d.ref || d.amount) ? d : viaText(); }, viaText) : viaText(); };
+      // v1.70: yerel zekâ (PaddleOCR PP-OCRv5) kuruluysa tüm sayfa onunla da okunur; Tesseract'ın bölge okumasıyla alan alan birleşir
+      return Promise.all([viaYz(cv.canvas), Promise.resolve(tess()).catch(function () { return null; })]).then(function (r) { return mergeOff(r[0], r[1]); });
     }).then(function (d) { return d || null; }, function () { return null; }).then(function (d) { st.off.done = Date.now(); st.off.ok = !!d; st.off.no = !d; tick(); return d; });
     var combine = function (aiR, off) {
       return Promise.resolve(getMe()).then(function (me) {
@@ -604,6 +606,38 @@
     }).then(function (res) { return cvP.then(function (cv) { res.preview = cv ? cv.canvas : null; return res; }); });
   }
   var OFF_GRACE = 4000, waiting = null;
+  // v1.70: çevrimdışı yapay zekâ (masaüstü, Ayarlar → Çevrimdışı yapay zekâ): PaddleOCR PP-OCRv5 nokta vuruşlu rakamları ve Arapça adları
+  // Tesseract'tan çok daha doğru okur (test: sham-goruntu.pdf'te işlem no, tarih, iki ad, tutar birebir). Hızlı algılama modeli kullanılır.
+  function viaYz(canvas) {
+    var Y = window.FCYZ;
+    if (!Y || !Y.available || !Y.available()) return Promise.resolve(null);
+    return Y.ready('ocr').then(function (ok) {
+      if (!ok) return null;
+      return Y.ocr(canvas, { langs: ['ar', 'en'], quality: 'hizli' }).then(function (r) {
+        var txt = (r && r.text) || '';
+        if (!/TRANSACTION|SENDER|RECIPIENT|AMOUNT/i.test(txt)) return null;
+        var d = parseText(txt);
+        // hesaplar maskeli ("************" + son 4 hane); yıldızlarla karışan hane varsa güvenilmez → boş (Tesseract'ın son-4 okuması kullanılır)
+        ['from_account', 'to_account'].forEach(function (k) { var v = String(d[k] || '').replace(/[^*\d]/g, ''), m = /^\*{8,}(\d{4})$/.exec(v); d[k] = m ? '************' + m[1] : ''; });
+        var g = /GENERATED[^\d]*(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})/i.exec(txt);
+        if (g) d.generated = ('0' + g[1]).slice(-2) + '/' + ('0' + g[2]).slice(-2) + '/' + g[3];
+        if (!d.note || /^[-–—~_.]+$/.test(d.note)) d.note = '-';
+        d._yz = true;
+        return d.ref || d.amount ? d : null;
+      }, function () { return null; });
+    }, function () { return null; });
+  }
+  // İki çevrimdışı okuma: yapay zekâ okuması esas; boş kalan alanlar ve geçerli son-4 hesaplar Tesseract'tan
+  function mergeOff(y, t) {
+    if (!y) return t || null;
+    if (!t) return y;
+    var out = Object.assign({}, y);
+    FIELDS.forEach(function (k) { if (!out[k] && t[k]) out[k] = t[k]; });
+    ['from_account', 'to_account'].forEach(function (k) { if (/^\*{12}\d{4}$/.test(t[k] || '') && !t._partial) out[k] = t[k]; });
+    if (t._conf) out._conf = t._conf;
+    delete out._partial;
+    return out;
+  }
   function statusText(st) {
     var now = Date.now(), sec = function (a) { return Math.max(0, Math.round(((a.done || now) - a.t0) / 1000)); };
     var on = st.on.done ? (st.on.ok ? t('stOnOk', { s: sec(st.on) }) : t('stOnNo')) : t('stOn', { s: sec(st.on) });

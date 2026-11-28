@@ -129,3 +129,7 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   Paketler `<userData>/yerel-zeka` (GitHub `ortak-cekirdek` sürümü `yerel-zeka-v1`): runtime (onnxruntime-node DirectML, transformers.js, tesseract.js,
   node-llama-cpp Vulkan) · ocr (PaddleOCR PP-OCRv5 + Tesseract) · llm (TranslateGemma 12B/4B) · mt (NLLB-200). `FalconDekont.ocr` paket kuruluysa
   `FCYZ.ocr` (yoksa Tesseract); `FalconFaturaPdf.translate` Gemini olmazsa `FCYZ.translate`, o da olmazsa TERMS. Sham Cash'in bölgesel okuyucusu değişmedi.
+
+- 1.70.0 SHAM CASH + YEREL ZEKÂ: `read` offline yolunda `viaYz` (FCYZ.ocr, `quality:'hizli'` = PP-OCRv5 mobil algılama, ~2–10 sn) ve Tesseract bölge okuması (`viaOcr`/`textOcr`)
+  paralel; `mergeOff`: yapay zekâ okuması esas, boş alanlar + geçerli `************dddd` hesapları Tesseract'tan. Paket yoksa eski yol aynen.
+  Test: `YZ_PAKET=<kurulu yerel-zeka klasörü> … node araclar/dekont-1671-e2e.js` (paket kopyalanır; sham-goruntu.pdf'te farklı alan 2 → 1, teyitli 6 → 7).

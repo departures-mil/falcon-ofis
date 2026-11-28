@@ -25,6 +25,7 @@ const AI_DOC = { kind: 'SEND', ref: '612340987', date: '28/11/2026', time: '10:1
 (async () => {
   const errors = [];
   const ud = fs.mkdtempSync(path.join(os.tmpdir(), 'fo-dekont1671-'));
+  if (process.env.YZ_PAKET) fs.cpSync(process.env.YZ_PAKET, path.join(ud, 'yerel-zeka'), { recursive: true }); // 1.70: çevrimdışı yapay zekâ kurulu deneme
   const app = await pw._electron.launch({
     executablePath: electron, args: [ROOT, '--no-sandbox', '--disable-gpu', '--user-data-dir=' + ud],
     env: { ...process.env, FALCON_TEST_NO_PIN: '1', FALCON_TEST_OLD_DATA_CHOICE: '1', FALCON_TEST_NO_UPDATE: '1', FALCON_TEST_DOCS_DIR: path.join(ud, 'belgeler') },
