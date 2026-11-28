@@ -12,7 +12,7 @@
 (function () {
   'use strict';
   if (window.FalconShamDekont) return;
-  var VERSION = '1.67.1';
+  var VERSION = '1.67.2';
 
   // ---------- dil ----------
   var TX = {
@@ -43,6 +43,9 @@
       fNone: '⚠ Dekont okunamadı — dosya eklendi, alanları elle doldurun', fDup: 'Bu dekont zaten kayıtlı (aynı işlem no). Eklenmedi.',
       fAcc: 'Kasa Sham Cash kasası olarak ayarlandı: {a}', fCur: 'Dikkat: dekontun para birimi {c}; {c} Sham Cash kasası yok', fLocked: 'Dekont bilgileri (değiştirilemez)',
       fReading: 'Dekont okunuyor…', fStepOn: '🌐 Online okunuyor (yapay zekâ)…', fStepOff: '📴 Offline okunuyor / teyit ediliyor…',
+      stOn: '🌐 Online: {s} sn…', stOnOk: '🌐 Online ✓ {s} sn', stOnNo: '🌐 Online yok', stOff: '📴 Offline teyit: {s} sn…', stOffOk: '📴 Offline ✓ {s} sn', stOffNo: '📴 Offline yok',
+      fSkip: '⏭ Beklemeden doldur', fSkipTip: 'Hazır olan okumayla alanları hemen doldurur; diğer okuma arkada sürer ve bitince sonuç tabloya eklenir',
+      mAiWait: '🌐 Online okundu · 📴 offline teyit arkada sürüyor…', mOffWait: '📴 Offline okundu · 🌐 online okuma arkada sürüyor…', fLateDiff: '⚠ Arkadan gelen okuma bazı alanlarda farklı — dekont tablosundan doğrusunu seçin', fLateOk: '✓ Arkadan gelen okuma alanları teyit etti',
       mBoth: '🌐 Online okundu · ✓ offline okumayla teyit edildi', mDiff: '🌐 Online okundu · ⚠ offline okuma {n} alanda farklı — aşağıdan doğrusunu seçin',
       mAiOnly: '🌐 Online okundu · offline teyit yapılamadı — alanları dekontla karşılaştırın', mOffNet: '📴 İnternet yok: offline okundu — alanları kontrol edin',
       mOffKey: '📴 Yapay zekâ anahtarı yok: offline okundu — alanları kontrol edin', mOff: '📴 Offline okundu (online okuma yapılamadı) — alanları kontrol edin',
@@ -80,6 +83,9 @@
       fNone: '⚠ The receipt could not be read — the file is attached, fill in the fields by hand', fDup: 'This receipt is already recorded (same transaction no). Not attached.',
       fAcc: 'Cash box set to the Sham Cash box: {a}', fCur: 'Note: the receipt currency is {c}; there is no {c} Sham Cash box', fLocked: 'Receipt details (cannot be changed)',
       fReading: 'Reading receipt…', fStepOn: '🌐 Reading online (AI)…', fStepOff: '📴 Reading / confirming offline…',
+      stOn: '🌐 Online: {s} s…', stOnOk: '🌐 Online ✓ {s} s', stOnNo: '🌐 Online n/a', stOff: '📴 Offline check: {s} s…', stOffOk: '📴 Offline ✓ {s} s', stOffNo: '📴 Offline n/a',
+      fSkip: '⏭ Fill in without waiting', fSkipTip: 'Fills the fields now with the reading that is ready; the other reading continues in the background and is added to the table when done',
+      mAiWait: '🌐 Read online · 📴 offline confirmation still running…', mOffWait: '📴 Read offline · 🌐 online reading still running…', fLateDiff: '⚠ The later reading differs in some fields — choose the correct value in the receipt table', fLateOk: '✓ The later reading confirmed the fields',
       mBoth: '🌐 Read online · ✓ confirmed by the offline reading', mDiff: '🌐 Read online · ⚠ the offline reading differs in {n} field(s) — choose the correct value below',
       mAiOnly: '🌐 Read online · offline confirmation not possible — compare the fields with the receipt', mOffNet: '📴 No internet: read offline — check the fields',
       mOffKey: '📴 No AI key: read offline — check the fields', mOff: '📴 Read offline (online reading failed) — check the fields',
@@ -117,6 +123,9 @@
       fNone: '⚠ تعذّرت قراءة الإيصال — أُرفق الملف، املأ الحقول يدوياً', fDup: 'هذا الإيصال مسجَّل مسبقاً (رقم العملية نفسه). لم يُرفق.',
       fAcc: 'ضُبط الصندوق على صندوق شام كاش: {a}', fCur: 'تنبيه: عملة الإيصال {c}؛ ولا يوجد صندوق شام كاش بعملة {c}', fLocked: 'بيانات الإيصال (لا تُعدَّل)',
       fReading: 'جارٍ قراءة الإيصال…', fStepOn: '🌐 قراءة عبر الإنترنت (ذكاء اصطناعي)…', fStepOff: '📴 قراءة / تحقّق دون اتصال…',
+      stOn: '🌐 عبر الإنترنت: {s} ث…', stOnOk: '🌐 عبر الإنترنت ✓ {s} ث', stOnNo: '🌐 عبر الإنترنت غير متاح', stOff: '📴 تحقّق دون اتصال: {s} ث…', stOffOk: '📴 دون اتصال ✓ {s} ث', stOffNo: '📴 دون اتصال غير متاح',
+      fSkip: '⏭ املأ دون انتظار', fSkipTip: 'يملأ الحقول الآن بالقراءة الجاهزة؛ وتستمر القراءة الأخرى في الخلفية وتُضاف نتيجتها إلى الجدول عند انتهائها',
+      mAiWait: '🌐 قُرئ عبر الإنترنت · 📴 التحقّق دون اتصال جارٍ في الخلفية…', mOffWait: '📴 قُرئ دون اتصال · 🌐 القراءة عبر الإنترنت جارية في الخلفية…', fLateDiff: '⚠ القراءة اللاحقة تختلف في بعض الحقول — اختر القيمة الصحيحة من جدول الإيصال', fLateOk: '✓ أكّدت القراءة اللاحقة الحقول',
       mBoth: '🌐 قُرئ عبر الإنترنت · ✓ وتأكّد بالقراءة دون اتصال', mDiff: '🌐 قُرئ عبر الإنترنت · ⚠ القراءة دون اتصال تختلف في {n} حقل — اختر القيمة الصحيحة أدناه',
       mAiOnly: '🌐 قُرئ عبر الإنترنت · تعذّر التحقّق دون اتصال — قارن الحقول بالإيصال', mOffNet: '📴 لا يوجد إنترنت: قُرئ دون اتصال — تحقّق من الحقول',
       mOffKey: '📴 لا يوجد مفتاح ذكاء اصطناعي: قُرئ دون اتصال — تحقّق من الحقول', mOff: '📴 قُرئ دون اتصال (تعذّرت القراءة عبر الإنترنت) — تحقّق من الحقول',
@@ -244,15 +253,19 @@
     return fetch(url, { method: body ? 'POST' : 'GET', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key }, body: body ? JSON.stringify(body) : undefined, signal: ctrl ? ctrl.signal : undefined })
       .then(function (res) { clearTimeout(tm); return res.json().catch(function () { return null; }).then(function (d) { return { status: res.status, data: d }; }); }, function (e) { clearTimeout(tm); var x = new Error(String(e && e.message || e)); x.net = true; throw x; });
   }
+  var AI_REQ = 25000, AI_TOTAL = 45000;
   var modelsCache = null;
   function models(key) {
     if (modelsCache) return Promise.resolve(modelsCache);
-    return http(API + 'models?pageSize=200', null, key, 20000).then(function (r) {
+    // v1.67.2: liste 24 saat saklanır (her açılışta model listesi beklenmesin)
+    try { var mc = JSON.parse(localStorage.getItem('sc_ai_models') || 'null'); if (mc && mc.l && mc.l.length && Date.now() - mc.t < 864e5) { modelsCache = mc.l; return Promise.resolve(modelsCache); } } catch (e) {}
+    return http(API + 'models?pageSize=200', null, key, 10000).then(function (r) {
       if (r.status === 401 || r.status === 403) { var e = new Error('ai-key'); e.key = true; throw e; }
       var ls = r.data && r.data.models ? r.data.models.filter(function (m) { return (m.supportedGenerationMethods || []).indexOf('generateContent') >= 0; }).map(function (m) { return String(m.name).replace(/^models\//, ''); }) : [];
       var sc = function (n) { var m = /^gemini-(\d+(?:\.\d+)?)-(pro|flash)(-lite)?(?:-(.*))?$/.exec(n); if (!m || /image|tts|audio|live|embed|thinking-exp|computer|robotics|nano/.test(n)) return null; return (m[2] === 'flash' && !m[3] ? 3 : m[2] === 'pro' ? 2 : 1) * 1000 + Number(m[1]) * 100 - (m[4] ? (/preview/.test(m[4]) ? 1 : 2) : 0); };
       var best = ls.map(function (n) { return { n: n, s: sc(n) }; }).filter(function (x) { return x.s != null; }).sort(function (a, b) { return b.s - a.s; }).map(function (x) { return x.n; });
       modelsCache = best.length ? best.slice(0, 4) : FALLBACK;
+      if (best.length) try { localStorage.setItem('sc_ai_models', JSON.stringify({ t: Date.now(), l: modelsCache })); } catch (e) {}
       return modelsCache;
     }, function (e) { if (e.net) throw e; return FALLBACK; });
   }
@@ -270,22 +283,38 @@
       var key = r[0].trim();
       if (!key || r[1] === 'local') { var e = new Error('no-ai'); e.skip = true; throw e; }
       if (navigator.onLine === false) { var e2 = new Error('offline'); e2.net = true; throw e2; }
-      var body = { contents: [{ role: 'user', parts: [{ inline_data: { mime_type: mime, data: b64(u8) } }, { text: PROMPT }] }], generationConfig: { temperature: 0, responseMimeType: 'application/json' } };
+      var data = b64(u8), t0 = Date.now();
+      // v1.67.2: hız — istek başına 25 sn, toplam 45 sn; meşgul / kota (429, 5xx) cevabında hemen sonraki model;
+      // dekontu kopyalamak için «düşünme» kapalı (flash: minimal / bütçe 0, pro: low / 128). Model düşünme ayarını kabul etmezse
+      // (400) aynı model bir sonraki biçimle denenir; çalışan biçim modele göre hatırlanır.
+      var body = function (m, v) {
+        var g = { temperature: 0, responseMimeType: 'application/json' }, pro = /-pro/.test(m);
+        if (v === 0) g.thinkingConfig = { thinkingLevel: pro ? 'low' : 'minimal' };
+        else if (v === 1) g.thinkingConfig = { thinkingBudget: pro ? 128 : 0 };
+        return { contents: [{ role: 'user', parts: [{ inline_data: { mime_type: mime, data: data } }, { text: PROMPT }] }], generationConfig: g };
+      };
+      var memo = {}; try { memo = JSON.parse(localStorage.getItem('sc_ai_think') || '{}') || {}; } catch (e) { memo = {}; }
       return models(key).then(function (list) {
         var i = 0, last = null;
         var next = function () {
           if (i >= list.length) throw last || new Error('ai-failed');
+          var left = AI_TOTAL - (Date.now() - t0);
+          if (left < 8000) { var et = new Error('timeout'); et.timeout = true; throw last || et; }
           var m = list[i++];
-          return http(API + 'models/' + encodeURIComponent(m) + ':generateContent', body, key, 90000).then(function (res) {
-            if (res.status === 401 || res.status === 403) { var e = new Error('ai-key'); e.key = true; throw e; }
-            if (res.status !== 200) { last = new Error('ai-' + res.status); return next(); }
-            var parts = res.data && res.data.candidates && res.data.candidates[0] && res.data.candidates[0].content && res.data.candidates[0].content.parts || [];
-            var txt = parts.map(function (p) { return p.text || ''; }).join('').trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '');
-            var o; try { o = JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1)); } catch (e) { last = e; return next(); }
-            o = normDoc(o); o._model = m;
-            if (!o.ref && !o.amount) { last = new Error('ai-empty'); return next(); }
-            return o;
-          }, function (e) { if (e && /timeout/i.test(e.message)) { last = e; return next(); } throw e; });
+          var tryV = function (v) {
+            return http(API + 'models/' + encodeURIComponent(m) + ':generateContent', body(m, v), key, Math.min(AI_REQ, left)).then(function (res) {
+              if (res.status === 401 || res.status === 403) { var e = new Error('ai-key'); e.key = true; throw e; }
+              if (res.status === 400 && v < 2 && /thinking/i.test(JSON.stringify(res.data || ''))) { memo[m] = v + 1; try { localStorage.setItem('sc_ai_think', JSON.stringify(memo)); } catch (e) {} left = AI_TOTAL - (Date.now() - t0); return tryV(v + 1); }
+              if (res.status !== 200) { last = new Error('ai-' + res.status); return next(); }
+              var parts = res.data && res.data.candidates && res.data.candidates[0] && res.data.candidates[0].content && res.data.candidates[0].content.parts || [];
+              var txt = parts.filter(function (p) { return !p.thought; }).map(function (p) { return p.text || ''; }).join('').trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '');
+              var o; try { o = JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1)); } catch (e) { last = e; return next(); }
+              o = normDoc(o); o._model = m;
+              if (!o.ref && !o.amount) { last = new Error('ai-empty'); return next(); }
+              return o;
+            }, function (e) { if (e && /timeout/i.test(e.message)) { last = e; return next(); } throw e; });
+          };
+          return tryV(memo[m] || 0);
         };
         return next();
       });
@@ -490,7 +519,7 @@
   // Ana okuma: { doc, source: side|both|ai|offline|none, diffs: [alan], aiError }
   function read(u8, mime, name, side, onStep) {
     mime = mimeOf(name, mime);
-    var step = function (k) { try { if (onStep) onStep(k); } catch (e) {} };
+    var st = null, step = function (k, x) { try { if (onStep) onStep(k, x || (st ? statusText(st) : '')); } catch (e) {} };
     if (side && side.ref) {
       var d0 = normDoc(side);
       ['from_name', 'to_name', 'from_account', 'to_account', 'note', 'kind'].forEach(function (k) { if (side[k] != null) d0[k] = String(side[k]); }); // doğrulanmış metin aynen
@@ -498,17 +527,25 @@
     }
     var cvP = toCanvas(u8, mime).catch(function () { return null; });
     // Önce online (yapay zekâ); internet / anahtar yoksa yalnız offline. Online okunsa bile offline okuma da yapılır ve alan alan karşılaştırılır.
+    // v1.67.2: iki okuma ayrı izlenir (ekranda saniyeli durum). Online sonuç geldikten sonra offline en çok 4 sn beklenir; bitmediyse alanlar
+    // online sonuçla hemen doldurulur, offline teyit arkada sürer ve bitince `late` ile tabloya eklenir. «Beklemeden doldur» (skipWait) hazır
+    // olan okumayla (online ya da offline) hemen bitirir.
+    var now = Date.now(); st = { on: { t0: now }, off: { t0: now } };
+    var tick = function () { step('tick'); };
     step('online');
-    var aiP = viaAi(u8, mime).then(function (d) { return { d: d }; }, function (e) { return { e: e }; });
+    var ticker = setInterval(tick, 250);
+    var aiP = viaAi(u8, mime).then(function (d) { st.on.done = Date.now(); st.on.ok = true; tick(); return { d: d }; },
+      function (e) { st.on.done = Date.now(); st.on.no = true; tick(); return { e: e }; });
     var offP = cvP.then(function (cv) {
       step('offline');
       if (!cv) return null;
       if (cv.text && /SENDER|RECIPIENT|TRANSACTION|المرسل/.test(cv.text)) return parseText(cv.text);
       var viaText = function () { return textOcr(cv.canvas); };
       return ocrAvailable() ? viaOcr(cv.canvas).then(function (d) { return d && (d.ref || d.amount) ? d : viaText(); }, viaText) : viaText();
-    });
-    return Promise.all([aiP, offP, getMe()]).then(function (r) {
-      var ai = r[0].d || null, off = r[1], me = r[2], fn = fromFileName(name);
+    }).then(function (d) { return d || null; }, function () { return null; }).then(function (d) { st.off.done = Date.now(); st.off.ok = !!d; st.off.no = !d; tick(); return d; });
+    var combine = function (aiR, off) {
+      return Promise.resolve(getMe()).then(function (me) {
+      var ai = aiR.d || null, fn = fromFileName(name);
       return knownNames(me).then(function (known) {
         var doc, source, diffs = [];
         if (ai && off) {
@@ -535,9 +572,56 @@
         var aiDoc = ai ? Object.assign({}, ai) : null, offDoc = off ? Object.assign({}, off) : null;
         if (aiDoc) { delete aiDoc._conf; delete aiDoc._model; } if (offDoc) { delete offDoc._conf; delete offDoc._partial; }
         return { doc: doc, source: source, diffs: diffs, checks: checks, aiDoc: aiDoc, offDoc: offDoc, model: ai && ai._model || '',
-          aiError: r[0].e ? (r[0].e.skip ? 'skip' : r[0].e.key ? 'key' : r[0].e.net ? 'net' : 'fail') : '', verified: source === 'both' && !diffs.length, canvas: null };
+          aiError: aiR.e ? (aiR.e.pending ? 'wait' : aiR.e.skip ? 'skip' : aiR.e.key ? 'key' : aiR.e.net ? 'net' : 'fail') : '', verified: source === 'both' && !diffs.length, canvas: null };
+      });
+      });
+    };
+    var lateOf = function (res) {
+      return { checks: res.checks, diffs: res.diffs, aiDoc: res.aiDoc, offDoc: res.offDoc, model: res.model, aiError: res.aiError, verified: res.verified, source: res.source };
+    };
+    var raced = new Promise(function (resolve) {
+      var aiR = null, off, aiIn = false, offIn = false, fin = false, grace = null;
+      var finish = function () { if (fin) return; fin = true; clearTimeout(grace); resolve({ aiR: aiIn ? aiR : null, off: offIn ? off : undefined }); };
+      var check = function () {
+        if (aiIn && offIn) return finish();
+        if (aiIn && aiR.d && !grace) grace = setTimeout(finish, OFF_GRACE);
+      };
+      aiP.then(function (r) { aiR = r; aiIn = true; check(); });
+      offP.then(function (o) { off = o; offIn = true; check(); });
+      waiting = {
+        can: function () { return !fin && ((aiIn && !!aiR.d && !offIn) || (offIn && !!off && !aiIn)); },
+        skip: function () { if (this.can()) finish(); }
+      };
+    });
+    return raced.then(function (x) {
+      clearInterval(ticker); waiting = null;
+      var aiR = x.aiR || { e: { pending: true } }, offPending = x.off === undefined;
+      return combine(aiR, offPending ? null : x.off).then(function (res) {
+        if (offPending) { res.pendingOff = true; res.late = offP.then(function (o) { return o ? combine(aiR, o).then(lateOf) : { offFailed: true }; }); }
+        else if (!x.aiR) { res.pendingAi = true; res.late = aiP.then(function (r) { return r.d ? combine(r, x.off).then(lateOf) : null; }); }
+        return res;
       });
     }).then(function (res) { return cvP.then(function (cv) { res.preview = cv ? cv.canvas : null; return res; }); });
+  }
+  var OFF_GRACE = 4000, waiting = null;
+  function statusText(st) {
+    var now = Date.now(), sec = function (a) { return Math.max(0, Math.round(((a.done || now) - a.t0) / 1000)); };
+    var on = st.on.done ? (st.on.ok ? t('stOnOk', { s: sec(st.on) }) : t('stOnNo')) : t('stOn', { s: sec(st.on) });
+    var off = st.off.done ? (st.off.ok ? t('stOffOk', { s: sec(st.off) }) : t('stOffNo')) : t('stOff', { s: sec(st.off) });
+    return on + ' · ' + off;
+  }
+  function canSkip() { return !!(waiting && waiting.can()); }
+  function skipWait() { if (waiting) waiting.skip(); }
+  // Masaüstünde OCR motorları form açılınca önceden hazırlanır (ilk dekontta ~8 MB yükleme beklenmesin)
+  function warm() { if (ocrAvailable()) ocrWorkers().catch(function () {}); }
+  // Arkadan gelen okuma (online ya da offline) bitince forma yazılacak bilgi (yalnız okuma özeti; alanlara dokunulmaz)
+  function late(v, x) {
+    var info = v && v.sc_doc_info;
+    if (!info || !x || !v.sc_doc_file || v.sc_doc_file.relPath !== x.file) return null;
+    if (x.offFailed) return { sc_doc_info: Object.assign({}, info, { pendingOff: false, pendingAi: false }) };
+    var p = { sc_doc_info: Object.assign({}, info, { source: x.source, checks: x.checks, aiDoc: x.aiDoc, offDoc: x.offDoc, aiError: x.aiError, pendingOff: false, pendingAi: false }) };
+    try { var d = JSON.parse(v.sc_doc || '{}'); d.read_by = x.source + (x.model ? ':' + x.model : ''); p.sc_doc = JSON.stringify(d); } catch (e) {}
+    return p;
   }
   // Telefonda (ya da masaüstü OCR'ı başarısızsa) genel okuyucunun Tesseract'ı: sayfa metni → "ETİKET değer" satırları
   function textOcr(canvas) {
@@ -646,7 +730,8 @@
               amount: amountNum(d.amount), date: toIso(d.date) || '', currency: cur, account_id: acc ? acc.id : null, accountName: acc ? acc.name : '',
               accountIsSham: !!(acc && /sham|شام/i.test(acc.name || '')), dup: dup,
               checks: res.checks || {}, aiDoc: res.aiDoc || null, offDoc: res.offDoc || null, aiError: res.aiError || '', model: res.model || '',
-              dirFrom: dirFrom, kindDir: kd, conflict: conflict, time: d.time || '', note: d.note && d.note !== '-' ? d.note : '', payee: payee
+              dirFrom: dirFrom, kindDir: kd, conflict: conflict, time: d.time || '', note: d.note && d.note !== '-' ? d.note : '', payee: payee,
+              pendingOff: !!res.pendingOff, pendingAi: !!res.pendingAi, late: res.late ? res.late.then(function (x) { return x ? Object.assign(x, { file: f.relPath }) : null; }, function () { return null; }) : null
             };
           });
         });
@@ -691,7 +776,7 @@
     }
     if (dir === 'out' && r.payee) { p.sc_payee_id = r.payee.id; p.sc_save_payee = false; if (r.payee.phone && !String(v.sc_phone || '').trim()) p.sc_phone = r.payee.phone; if (r.payee.qr_text) p.sc_qr_text = r.payee.qr_text; }
     p.sc_doc_info = { source: r.source, checks: r.checks || {}, aiDoc: r.aiDoc, offDoc: r.offDoc, aiError: r.aiError || '', dirFrom: r.dirFrom || '', conflict: !!r.conflict,
-      kind: doc.kind || '', time: doc.time || '', note: note, direction: dir, accountName: r.accountName || '', currency: doc.currency || r.currency || '', payee: r.payee ? r.payee.name : '', chosen: (r.chosen || {}) };
+      kind: doc.kind || '', time: doc.time || '', note: note, direction: dir, pendingOff: !!r.pendingOff, pendingAi: !!r.pendingAi, accountName: r.accountName || '', currency: doc.currency || r.currency || '', payee: r.payee ? r.payee.name : '', chosen: (r.chosen || {}) };
     return p;
   }
   // Farklı okunan alanda kullanıcının seçimi: 'ai' ya da 'off' değeri dekonta ve forma yazılır
@@ -713,6 +798,8 @@
   function message(info) {
     if (!info) return { text: '', ok: false };
     var n = Object.keys(info.checks || {}).filter(function (k) { return info.checks[k] === 'diff' && !(info.chosen || {})[k]; }).length;
+    if (info.source === 'ai' && info.pendingOff) return { text: t('mAiWait'), ok: true };
+    if (info.source === 'offline' && info.pendingAi) return { text: t('mOffWait'), ok: false };
     if (info.source === 'both') return n ? { text: t('mDiff', { n: n }), ok: false } : { text: t('mBoth'), ok: true };
     if (info.source === 'ai') return { text: t('mAiOnly'), ok: false };
     if (info.source === 'offline') return { text: info.aiError === 'net' ? t('mOffNet') : info.aiError === 'skip' || info.aiError === 'key' ? t('mOffKey') : t('mOff'), ok: false };
@@ -1114,6 +1201,6 @@
   }
 
   try { css(); } catch (e) {}
-  window.FalconShamDekont = { open: open, read: read, pick: pick, formPatch: formPatch, choose: choose, rows: rows, conflictText: conflictText, redirect: redirect, markForm: markForm, message: message, detect: detect, fromDrop: fromDrop, mark: mark, kindDir: kindDir, payeeOf: payeeOf, toIso: toIso, amountNum: amountNum, accounts: accounts, t: t, openOriginal: openOriginal, checkInbox: checkInbox, parseOcr: parseOcr, dateFix: dateFix, parseText: parseText, version: VERSION,
+  window.FalconShamDekont = { open: open, read: read, pick: pick, formPatch: formPatch, choose: choose, rows: rows, conflictText: conflictText, redirect: redirect, markForm: markForm, message: message, detect: detect, fromDrop: fromDrop, mark: mark, late: late, warm: warm, skipWait: skipWait, canSkip: canSkip, statusText: statusText, kindDir: kindDir, payeeOf: payeeOf, toIso: toIso, amountNum: amountNum, accounts: accounts, t: t, openOriginal: openOriginal, checkInbox: checkInbox, parseOcr: parseOcr, dateFix: dateFix, parseText: parseText, version: VERSION,
     _test: { normDoc: normDoc, directionOf: directionOf, amountNum: amountNum, snapName: snapName, toIso: toIso, curOf: curOf } };
 })();

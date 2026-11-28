@@ -74,6 +74,9 @@ const AI_DOC = { kind: 'SEND', ref: '612340987', date: '28/11/2026', time: '10:1
   await pickFile(path.join(SAMPLE, 'sham-goruntu.pdf'));
   await dlg.locator('.sc-attach-btn').click();
   await dlg.locator('.sc-read').waitFor({ timeout: 90000 });
+  // 1.67.2: offline teyit online sonuçtan sonra arkadan gelebilir — bitmesi beklenir
+  await page.waitForFunction(() => { const m = document.querySelector('.modal .sc-read .sc-msg'); return m && !/arkada sürüyor/.test(m.textContent); }, null, { timeout: 90000 });
+  await sleep(400);
   const msg1 = await dlg.locator('.sc-read .sc-msg').first().textContent();
   assert.ok(/Online okundu/.test(msg1), 'okuma yöntemi yazıyor: ' + msg1);
   const rowTxt = await dlg.locator('.sc-read table').textContent();

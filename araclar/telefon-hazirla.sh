@@ -25,4 +25,5 @@ for f in "$W"/assets/index-*.js; do python3 araclar/patch-srv-167.py "$f"; done
 for f in "$W"/assets/main-*.js; do python3 araclar/patch-ui-167.py "$f"; done
 # v1.67.1: Para girişi / çıkışı — dekonttan doldurma + onay (online → offline teyit, alan seçimi, sürükle-bırak, Fişten oku)
 for f in "$W"/assets/main-*.js; do python3 araclar/patch-ui-1671.py "$f"; done
+for f in "$W"/assets/main-*.js; do python3 araclar/patch-ui-1672.py "$f"; done
 echo "hazır: $W ($V)"

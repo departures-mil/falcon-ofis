@@ -106,3 +106,9 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   RECEIVE→in; formla çelişirse yön değişir + uyarı, ad öğrenilmez) → formdaki yön. `read(…, onStep)`: online + offline paralel, `checks` alan alan (ok/diff/ai/off), `aiDoc`/`offDoc`;
   masaüstü OCR'ı yoksa (telefon) `FalconDekont.ocr` metni → `parseText` (`_partial`: ad/hesap teyitte kullanılmaz). Offline: ISO tarih (2026-11-28 - 12:34:34), tireli GENERATED,
   Arapça adlarda harf kutusu boşluğuyla kelime ayırma (`spacedName`). Test: `araclar/dekont-1671-e2e.js` (Gemini ana süreçte taklit; örnek `dekont-ornek/sham-goruntu.pdf` görüntü tabanlı).
+
+- 1.67.2 DEKONT OKUMA HIZI (`shamcash-falcon.js` + `araclar/patch-ui-1672.py`, iki bundle; telefon-hazirla.sh'ta): Gemini isteği 25 sn (`AI_REQ`), toplam 45 sn (`AI_TOTAL`); 429/5xx → hemen
+  sonraki model; düşünme kapalı (`thinkingConfig` thinkingLevel minimal/low → 400'de thinkingBudget 0/128 → ayarsız; çalışan biçim `localStorage.sc_ai_think`), model listesi
+  `localStorage.sc_ai_models` (24 sa). `read`: online / offline ayrı izlenir, `onStep('tick', metin)` saniyeli durum; online gelince offline en çok `OFF_GRACE` 4 sn beklenir,
+  bitmeyen taraf `res.late` (pick → `late`, file=relPath) → `FalconScApply` `D.late(v,x)` yalnız `sc_doc_info` (+ sc_doc.read_by) günceller, alanlara dokunmaz, farkta toast.
+  `skipWait`/`canSkip` («⏭ Beklemeden doldur»), `warm` (form açılınca masaüstü OCR işçileri). Mesajlar `mAiWait`/`mOffWait`. Test: `araclar/dekont-1672-e2e.js`.
