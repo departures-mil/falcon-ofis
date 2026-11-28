@@ -19,7 +19,10 @@ for (const f of ['kullanim.js', 'kullanim-falcon.js', 'fatura-falcon.js', 'duyur
   // v1.66: fatura tahsilatı dekont okuyucu (Sham Cash / genel; çevrimdışı OCR ana iş parçacığında: Tesseract çekirdeği + Arapça / İngilizce)
   'dekont-falcon.js', 'ocr/tesseract-core-simd-lstm.wasm.js', 'ocr/ara.traineddata.gz', 'ocr/eng.traineddata.gz', 'ocr/LICENSE-tesseract-core.txt',
   // v1.68: Telegram «Kayıtlı Mesajlar» → Sham Cash dekontu otomatik kayıt (GramJS tarayıcı paketi yalnız açılınca yüklenir)
-  'telegram-falcon.js', 'telegram-vendor.js', 'LICENSE-gramjs.txt']) {
+  'telegram-falcon.js', 'telegram-vendor.js', 'LICENSE-gramjs.txt',
+  // v1.70: çevrimdışı yapay zekâ (telefon çalışma zamanı + kart): PP-OCRv5 + Tesseract OCR, NLLB-200 çeviri; paketler GitHub'dan bir kez iner
+  'yz-falcon.js', ...fs.readdirSync(path.join(__dirname, '..', 'dist', 'assets', 'yz'), { recursive: true }).filter((f) => !fs.statSync(path.join(__dirname, '..', 'dist', 'assets', 'yz', f)).isDirectory()).map((f) => 'yz/' + f.split(path.sep).join('/')),
+  '../cekirdek/fc-yerel-zeka-ui.js'].map((f) => f.replace(/^\.\.\/cekirdek\//, '../cekirdek/'))) {
   fs.mkdirSync(path.dirname(path.join(www, 'assets', f)), { recursive: true });
   fs.copyFileSync(path.join(__dirname, '..', 'dist', 'assets', f), path.join(www, 'assets', f));
 }
@@ -49,6 +52,14 @@ for (const f of ['kullanim.js', 'kullanim-falcon.js', 'fatura-falcon.js', 'duyur
   }
   if (!h.includes('wss://*.web.telegram.org')) {
     h = h.replace(/(connect-src 'self')/, "$1 wss://*.web.telegram.org");
+    fs.writeFileSync(ih, h);
+  }
+  if (!h.includes('yz-falcon.js')) { // v1.70: çevrimdışı yapay zekâ (önce çalışma zamanı, sonra arayüz, sonra kart; dekont okuyucusundan önce)
+    h = h.replace(/(<script type="module")/, '<script src="./assets/yz/fc-yerel-zeka-web.js"></script>\n    <script src="./cekirdek/fc-yerel-zeka-ui.js"></script>\n    <script src="./assets/yz-falcon.js"></script>\n    $1');
+    fs.writeFileSync(ih, h);
+  }
+  if (!h.includes('cdn.jsdelivr.net')) { // telefon paketleri raw.githubusercontent.com + jsDelivr'dan iner
+    h = h.replace(/(connect-src 'self')/, "$1 https://raw.githubusercontent.com https://cdn.jsdelivr.net");
     fs.writeFileSync(ih, h);
   }
   if (!h.includes('dekont-falcon.js')) {

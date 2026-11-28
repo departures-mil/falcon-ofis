@@ -1,10 +1,10 @@
 {
- "version": "1.69.1",
- "notes": "Telegram tetiği artık yalnız «ekle» (mesaj başında; arkası not); çevrimdışı okuma / çeviri iyileştirmeleri",
- "size": 10047651,
- "sha256": "f2cd7613325f612a98af20462bc89f7ee88d3b37bf315e0eda70bc31224562fa",
- "sig": "MEQCIGA1h2f+UwsEuJbSXcC4H4IMih83vjVjFi7nGwKrKmvxAiA/xe96TNsJENmOaCW6vfESB5uLP3vECxlTRmbd+xyAvQ==",
- "file": "telefon-1.69.1.fopk",
+ "version": "1.70.0",
+ "notes": "Çevrimdışı yapay zekâ telefonda: Ayarlar → «Çevrimdışı yapay zekâ» kartından bir kez indirilen paketlerle dekont / fiş okuma (PaddleOCR PP-OCRv5 + Tesseract; Arapça rakamlar ve adlar) ve çevrimdışı çeviri (NLLB-200). Sham Cash dekontu çevrimdışı okuması da bu paketle daha doğru.",
+ "size": 11573644,
+ "sha256": "80b2f37f0ac7195adcfac8d1c54b6414c89949dab0e3652e7269e616eb6a9496",
+ "sig": "MEQCICn/s/xLD9XwNdQleSUP+2jWju/+sEVkZJK13Rj5b/AoAiAZJQkKhS3VvFSfI6o8caTRTjg2qYzOf4khBd1NoIqJxA==",
+ "file": "telefon-1.70.0.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-28T11:25:18.573Z"
+ "publishedAt": "2026-11-28T12:04:40.268Z"
 }

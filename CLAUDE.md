@@ -133,3 +133,6 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
 - 1.70.0 SHAM CASH + YEREL ZEKÂ: `read` offline yolunda `viaYz` (FCYZ.ocr, `quality:'hizli'` = PP-OCRv5 mobil algılama, ~2–10 sn) ve Tesseract bölge okuması (`viaOcr`/`textOcr`)
   paralel; `mergeOff`: yapay zekâ okuması esas, boş alanlar + geçerli `************dddd` hesapları Tesseract'tan. Paket yoksa eski yol aynen.
   Test: `YZ_PAKET=<kurulu yerel-zeka klasörü> … node araclar/dekont-1671-e2e.js` (paket kopyalanır; sham-goruntu.pdf'te farklı alan 2 → 1, teyitli 6 → 7).
+- 1.70.0 TELEFON YEREL ZEKÂ: telefon www'sine `assets/yz/` (ortak-cekirdek `web/yerel-zeka/telefon` + fc-ocr/fc-mt), `cekirdek/fc-yerel-zeka-ui.js` ve `assets/yz-falcon.js`
+  (Ayarlar'da Telegram kartından sonra «Çevrimdışı yapay zekâ» kartı; yalnız `fcYerelZeka.telefon`) — `telefon-yayinla.js` kopyalar, etiketleri ve CSP (`cdn.jsdelivr.net`) ekler.
+  Paketler `ortak-cekirdek` `yerel-zeka-telefon` dalından (PP-OCRv5 mobil + Tesseract ~36 MB, NLLB-200 8 bit ~896 MB), IndexedDB. `FalconDekont.ocr` ve Sham Cash `viaYz` telefonda da çalışır.
