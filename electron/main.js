@@ -986,14 +986,15 @@ function registerIpc() {
     const file = [path.join(__dirname, '..', 'dist', 'assets', name), path.join(__dirname, '..', 'dist', 'assets', 'ocr', name)].find((f) => fs.existsSync(f));
     return file ? fs.readFileSync(file) : null;
   });
-  handle('report:savePdf', wrap(async (_e, html, name) => {
+  // v1.76.3: opts.open === false → kaydedilen PDF kendiliğinden açılmaz (fatura)
+  handle('report:savePdf', wrap(async (_e, html, name, opts) => {
     const target = dialog.showSaveDialogSync(mainWindow, {
       defaultPath: path.join(app.getPath('documents'), name || 'dokum.pdf'),
       filters: [{ name: 'PDF', extensions: ['pdf'] }],
     });
     if (!target) return null;
     fs.writeFileSync(target, await htmlToPdf(html));
-    shell.openPath(target);
+    if (!(opts && opts.open === false)) shell.openPath(target);
     return target;
   }));
 

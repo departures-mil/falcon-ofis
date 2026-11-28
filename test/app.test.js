@@ -498,3 +498,12 @@ test('1.76: takım tezgâhı terimleri, kısaltmalar ve MK → MT', () => {
   const ui = read('dist/assets/fatura-falcon.js');
   assert.ok(ui.includes("'invoice_name_user'") && ui.includes('var learn = function') && ui.includes("pvKeepCodes: 'الإبقاء"), 'öğrenen sözlük + kod koruma seçeneği (tr/en/ar)');
 });
+
+test('1.76.3: fatura PDF kaydedilince dosya kendiliğinden açılmaz', () => {
+  const ui = read('dist/assets/fatura-falcon.js');
+  const calls = ui.match(/F\(\)\.report\.savePdf\([^;]*\)/g) || [];
+  assert.ok(calls.length >= 2 && calls.every((c) => c.includes('{ open: false }')), 'faturanın bütün savePdf çağrıları open:false');
+  const main = read('electron/main.js');
+  assert.ok(main.includes("handle('report:savePdf', wrap(async (_e, html, name, opts)") && main.includes('if (!(opts && opts.open === false)) shell.openPath(target);'), 'ana süreç open:false\'ta açmaz');
+  assert.ok(read('electron/preload.js').includes("savePdf: (html, name, opts) => ipcRenderer.invoke('report:savePdf', html, name, opts)"), 'preload seçeneği geçirir');
+});

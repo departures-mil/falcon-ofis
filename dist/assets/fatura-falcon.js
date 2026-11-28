@@ -46,7 +46,7 @@
       signSample: 'Şu an ÖRNEK imza kullanılıyor. Orijinal imzanızı yükleyin (şeffaf PNG en iyisi; beyaz zemin otomatik şeffaflaşır).',
       signReal: 'Kendi imzanız kullanılıyor.', stampNone: 'Kaşe yok (isteğe bağlı).', imgFail: 'Resim okunamadı.',
       tplFalcon: 'Falcon System (kurumsal)', tplClassic: 'Klasik', tplMinimal: 'Sade',
-      saved: 'Kaydedildi', deleted: 'Silindi', pdfSaved: 'PDF hazırlandı', product: 'Ürün listesinden seç',
+      saved: 'Kaydedildi', deleted: 'Silindi', pdfSaved: 'PDF kaydedildi', product: 'Ürün listesinden seç',
       errItems: 'En az bir kalem girin (ürün / hizmet adı).', errCustomer: 'Müşteri adını yazın.',
       langTr: 'Türkçe', langEn: 'İngilizce', langAr: 'Arapça', previewTitle: 'Fatura önizleme', overdue: 'vadesi geçti', previewDraft: 'Kaydedilmemiş taslak', previewSample: 'Örnek fatura', previewSampleCust: 'Örnek Müşteri Ltd.', previewSampleItem1: 'Danışmanlık hizmeti', previewSampleItem2: 'Eğitim (saat)', zoomFit: 'Sığdır', zoomFull: '%100'
     },
@@ -80,7 +80,7 @@
       signSample: 'A SAMPLE signature is in use. Upload your original signature (transparent PNG is best; a white background is made transparent).',
       signReal: 'Your own signature is in use.', stampNone: 'No stamp (optional).', imgFail: 'The image could not be read.',
       tplFalcon: 'Falcon System (corporate)', tplClassic: 'Classic', tplMinimal: 'Minimal',
-      saved: 'Saved', deleted: 'Deleted', pdfSaved: 'PDF ready', product: 'Pick from products',
+      saved: 'Saved', deleted: 'Deleted', pdfSaved: 'PDF saved', product: 'Pick from products',
       errItems: 'Enter at least one line (product / service name).', errCustomer: 'Enter the customer name.',
       langTr: 'Turkish', langEn: 'English', langAr: 'Arabic', previewTitle: 'Invoice preview', overdue: 'overdue', previewDraft: 'Unsaved draft', previewSample: 'Sample invoice', previewSampleCust: 'Sample Customer Ltd.', previewSampleItem1: 'Consulting service', previewSampleItem2: 'Training (hours)', zoomFit: 'Fit', zoomFull: '100%'
     },
@@ -114,7 +114,7 @@
       signSample: 'يُستخدم الآن توقيع «نموذج». ارفع توقيعك الأصلي (PNG شفاف هو الأفضل؛ الخلفية البيضاء تُجعل شفافة تلقائياً).',
       signReal: 'يُستخدم توقيعك الخاص.', stampNone: 'لا يوجد ختم (اختياري).', imgFail: 'تعذّرت قراءة الصورة.',
       tplFalcon: 'Falcon System (مؤسسي)', tplClassic: 'كلاسيكي', tplMinimal: 'بسيط',
-      saved: 'تم الحفظ', deleted: 'تم الحذف', pdfSaved: 'ملف PDF جاهز', product: 'اختر من المنتجات',
+      saved: 'تم الحفظ', deleted: 'تم الحذف', pdfSaved: 'تم حفظ ملف PDF', product: 'اختر من المنتجات',
       errItems: 'أدخل بنداً واحداً على الأقل (اسم المنتج / الخدمة).', errCustomer: 'اكتب اسم العميل.',
       langTr: 'التركية', langEn: 'الإنجليزية', langAr: 'العربية', previewTitle: 'معاينة الفاتورة', overdue: 'متأخرة', previewDraft: 'مسودة غير محفوظة', previewSample: 'فاتورة نموذجية', previewSampleCust: 'شركة العميل النموذجي', previewSampleItem1: 'خدمة استشارية', previewSampleItem2: 'تدريب (ساعة)', zoomFit: 'ملاءمة', zoomFull: '100%'
     }
@@ -1131,7 +1131,7 @@
     return '<!doctype html><html lang="' + lg + '" dir="' + (rtl ? 'rtl' : 'ltr') + '"><head><meta charset="utf-8"><title>' + esc(inv.number) + '</title><meta name="falcon-pdf-footer" content="' + esc(pf) + '"><style>' + css + '</style></head><body>' + body + '</body></html>';
   }
   function pdfName(inv) { return (DOC[inv.lang] || DOC.tr).title.replace(/\s/g, '') + '-' + String(inv.number).replace(/[^\w.-]+/g, '_') + '.pdf'; }
-  function savePdfHtml(inv, html) { return Promise.resolve(F().report.savePdf(html, pdfName(inv))); }
+  function savePdfHtml(inv, html) { return Promise.resolve(F().report.savePdf(html, pdfName(inv), { open: false })); }
   function pvNamesPref(v) {
     try { if (v) { localStorage.setItem('fat.pvNames', v); return v; } return localStorage.getItem('fat.pvNames') === 'tr' ? 'tr' : 'keep'; } catch (e) { return v || 'keep'; }
   }
@@ -1268,7 +1268,7 @@
   function savePdf(inv) {
     return (CFG ? Promise.resolve(CFG) : loadCfg()).then(function (cfg) {
       var name = (DOC[inv.lang] || DOC.tr).title.replace(/\s/g, '') + '-' + String(inv.number).replace(/[^\w.-]+/g, '_') + '.pdf';
-      return F().report.savePdf(invoiceHtml(inv, cfg, true), name);
+      return F().report.savePdf(invoiceHtml(inv, cfg, true), name, { open: false });
     });
   }
 
@@ -1952,7 +1952,7 @@
         else foot.push(el('button', { type: 'button', class: 'btn primary', text: '⬇ ' + t('pvPdf'), onclick: function (e) {
           var b = e.target; b.disabled = true;
           flush(); langCheck();
-          savePdfHtml(cur, pdfHtml()).then(function (x) { b.disabled = false; if (x !== null && x !== undefined) toast(t('pdfSaved')); }, function (er) { b.disabled = false; toast(String(er && er.message || er), 'error'); });
+          savePdfHtml(cur, pdfHtml()).then(function (x) { b.disabled = false; if (x !== null && x !== undefined && x !== false) toast(t('pdfSaved') + (typeof x === 'string' ? ': ' + x.split(/[\\/]/).pop() : '')); }, function (er) { b.disabled = false; toast(String(er && er.message || er), 'error'); });
         } }));
         m = modal(t('previewTitle') + (cur.number ? ' · ' + cur.number : ''), [steps, bar, curBar, pv], foot, 'xwide');
         var onRs = function () { if (!pv.isConnected) { window.removeEventListener('resize', onRs); flush(); return; } fit(); };

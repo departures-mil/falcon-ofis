@@ -15,6 +15,11 @@
   var APP = 'falcon-ofis', LANGS = ['tr', 'en', 'ar'];
 
   var NEWS = {
+    '1.76.3': {
+      tr: "- Fatura «Kaydet ve PDF» / önizlemedeki PDF ile kaydedilince PDF dosyası artık kendiliğinden açılmıyor; yalnız seçtiğiniz klasöre kaydediliyor ve «PDF kaydedildi: dosya adı» bildirimi çıkıyor.",
+      en: "- When an invoice is saved as PDF («Save and PDF» / PDF in the preview), the PDF file no longer opens by itself; it is only saved to the folder you choose and a «PDF saved: file name» notice appears.",
+      ar: "- عند حفظ الفاتورة بصيغة PDF («حفظ و PDF» / PDF في المعاينة) لم يعد ملف PDF يُفتح تلقائيًا؛ يُحفظ فقط في المجلد الذي تختاره ويظهر إشعار «تم حفظ ملف PDF: اسم الملف»."
+    },
     '1.76.2': {
       tr: "- Fatura önizlemesine «📐 Şekli düzelt» düğmesi: bozulmuş düzeltmeleri bütün dillerde tek tıkla onarır (başka hücreye kaymış yazı kendi hücresine döner, sıra numarasına yapışmış yazı geri alınır) ve tabloyu sayfaya sığdırır. Önceden kaydedilmiş bozuk faturalar önizleme açılınca zaten kendiliğinden onarılıyor; düğme bunu her an elle de yapar.\n- Ürün / malzeme dökümleri ve öteki çıktılarda da «📐 Şekli düzelt»: sayfadan taşan tablolar ve uzun yazılar sayfaya sığdırılır; açılışta ve düzeltme yaparken kendiliğinden de çalışır, PDF önizlemedeki gibi çıkar.",
       en: "- «📐 Fix layout» button in the invoice preview: repairs damaged corrections in every language with one click (text that slid into another cell goes back to its own cell, text stuck to the row number is undone) and fits the table to the page. Previously saved damaged invoices are already repaired automatically when the preview opens; the button does it on demand at any time.\n- «📐 Fix layout» in product / material lists and other outputs too: tables and long texts that run off the page are fitted to it; it also runs by itself on opening and while correcting, and the PDF comes out as in the preview.",

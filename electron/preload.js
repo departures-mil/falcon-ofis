@@ -22,7 +22,7 @@ contextBridge.exposeInMainWorld('falcon', {
     saveAs: (rel, name) => ipcRenderer.invoke('files:saveAs', rel, name),
   },
   report: {
-    savePdf: (html, name) => ipcRenderer.invoke('report:savePdf', html, name),
+    savePdf: (html, name, opts) => ipcRenderer.invoke('report:savePdf', html, name, opts),
     saveXlsx: (bytes, name) => ipcRenderer.invoke('report:saveXlsx', bytes, name),
     savePdfBytes: (bytes, name) => ipcRenderer.invoke('report:savePdfBytes', bytes, name),
   },

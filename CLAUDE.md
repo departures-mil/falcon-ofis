@@ -198,3 +198,6 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   yapışmış yazı eşi olmasa da geri alınır) + savePv + render (fitTable). Dökümler (`cikti-falcon.js`): `fitDoc(d)` (iframe belgesinde taşan tablo → font %4 adımla ≤%30 küçülür, olmazsa
   fixed + her hücre kırar) açılışta, düzeltmede (150 ms) ve «📐 Şekli düzelt» düğmesiyle; `fitted` olunca PDF iframe HTML'inden alınır. `FalconCikti.fitDoc`. Test: fatura-1751-e2e 5. adım, cikti-e2e.
 
+- 1.76.3 FATURA PDF'İ AÇILMAZ: `report:savePdf(html, name, opts)` — `opts.open === false` ise kaydedilen PDF `shell.openPath` ile açılmaz (preload üçüncü argümanı geçirir).
+  Faturanın bütün PDF kayıtları (`savePdfHtml`, `savePdf`) `{ open: false }`; bildirim «PDF kaydedildi: <dosya adı>». Öteki dökümler (cikti-falcon.js, etiket, Excel) eskisi gibi açılır.
+  Test: `test/app.test.js` (1.76.3).
