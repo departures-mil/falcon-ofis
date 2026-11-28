@@ -1146,12 +1146,13 @@
         'Do not add or drop information. Return ONLY a JSON array of strings, same length and order as the input.',
         'Input:', JSON.stringify(list)].join('\n');
       var body = { contents: [{ role: 'user', parts: [{ text: prompt }] }], generationConfig: { temperature: 0, responseMimeType: 'application/json' } };
+      // en güçlü model önce (kullanıcı kuralı); gecikirse arayüz çevrimdışı çeviriyle devam eder, bu çeviri gelince önizleme güncellenir
       return models(key).then(function (ms) {
         var i = 0, last = null;
         var next = function () {
           if (i >= ms.length) throw last || new Error('ai-failed');
           var m = ms[i++];
-          return http(API + 'models/' + encodeURIComponent(m) + ':generateContent', body, key, 90000).then(function (res) {
+          return http(API + 'models/' + encodeURIComponent(m) + ':generateContent', body, key, 120000).then(function (res) {
             if (res.status === 401 || res.status === 403) { var e = new Error('ai-key'); e.key = true; throw e; }
             if (res.status !== 200) { last = new Error('ai-' + res.status); return next(); }
             var parts = res.data && res.data.candidates && res.data.candidates[0] && res.data.candidates[0].content && res.data.candidates[0].content.parts || [];

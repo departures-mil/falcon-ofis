@@ -429,7 +429,7 @@
       pfTitle: '🔒 Özel dosyalar', pfHint: 'Yalnız sen görürsün: fatura çıktısında, PDF\'te ve müşteriye gönderilenlerde yer almaz. Cihazların arasında eşitlenir.',
       pfAdd: '＋ Dosya ekle', pfDrop: 'Dosyaları buraya sürükleyin ya da yapıştırın (Ctrl+V) — PDF, resim, Word, Excel, metin, arşiv…', pfEmpty: 'Bu faturaya eklenmiş özel dosya yok.',
       pfOpen: 'Aç', pfSave: 'Farklı kaydet', pfDel: 'Sil', pfNote: 'Not', pfDelQ: '«{n}» dosyası silinsin mi? (Silinenler kutusundan 30 gün geri alınabilir)', pfAdded: '{n} dosya eklendi',
-      yesDo: 'Evet', payModeNoCash: 'Tahsil edildi (kasaya eklenmez)', payNoCashHint: 'Fatura tahsil edildi olarak işaretlenir; kasaya para girişi yazılmaz, kasa bakiyesi değişmez.', payNoCashBtn: '✓ Tahsil edildi olarak işaretle', payNoCashTag: 'kasaya eklenmedi', impSrcCur: 'Belgedeki fiyatların para birimi', impTotals: 'Kalemlerin toplamı {a} · belgedeki ara toplam {b}', pdfApplied: 'Belgeden okunan bilgiler dolduruldu — kontrol edip kaydedin', pfPending: 'Fatura kaydedilince eklenecek', pfTooBig: '«{n}» çok büyük (en çok 50 MB).', pfFail: 'Dosya eklenemedi:', pfBtn: 'Özel dosyalar (yalnız sen görürsün)'
+      yesDo: 'Evet', pvNamesWait: 'Çevrimdışı çevrildi — yapay zekâ çevirisi gelince kendiliğinden güncellenecek', pvNamesLate: 'Yapay zekâ çevirisi geldi, önizleme güncellendi', kvTitle: 'KDV ekle', kvRate: 'KDV oranı (%)', kvAll: 'Tüm kalemlere uygula', kvClear: 'KDV\'yi kaldır', kvBad: 'Geçerli bir KDV oranı yazın (ör. 20)', kvSum: 'KDV %{r} · Eklenen KDV: {a}', kvSumMix: 'KDV\'li · Eklenen KDV: {a}', kdvYok: 'Bu faturada KDV yok', kvDone: 'KDV %{r} uygulandı', kvRemoved: 'KDV kaldırıldı — fatura KDV\'siz', kvHint: 'KDV, ara toplama (indirimden sonra) eklenir ve genel toplamda ayrı satır olarak görünür. Kalem bazında KDV sütunu açıksa oran her kaleme yazılır; tek kalemi KDV sütunundan ayrıca değiştirebilirsiniz. Kaldırınca fatura KDV\'siz olur. Ürün kayıtlarındaki fiyatlar değişmez.', payModeNoCash: 'Tahsil edildi (kasaya eklenmez)', payNoCashHint: 'Fatura tahsil edildi olarak işaretlenir; kasaya para girişi yazılmaz, kasa bakiyesi değişmez.', payNoCashBtn: '✓ Tahsil edildi olarak işaretle', payNoCashTag: 'kasaya eklenmedi', impSrcCur: 'Belgedeki fiyatların para birimi', impTotals: 'Kalemlerin toplamı {a} · belgedeki ara toplam {b}', pdfApplied: 'Belgeden okunan bilgiler dolduruldu — kontrol edip kaydedin', pfPending: 'Fatura kaydedilince eklenecek', pfTooBig: '«{n}» çok büyük (en çok 50 MB).', pfFail: 'Dosya eklenemedi:', pfBtn: 'Özel dosyalar (yalnız sen görürsün)'
     },
     en: {
       fromPdf: 'Fill from document', fromPdfHint: 'Reads an invoice / quotation (PDF or photo: JPEG, PNG) and fills the customer, document details, products and prices — AI first, offline (OCR) without internet',
@@ -448,7 +448,7 @@
       pfTitle: '🔒 Private files', pfHint: 'Only you see these: they are not on the invoice printout, the PDF or anything sent to the customer. Synced between your devices.',
       pfAdd: '＋ Add file', pfDrop: 'Drag files here or paste them (Ctrl+V) — PDF, image, Word, Excel, text, archive…', pfEmpty: 'No private files on this invoice.',
       pfOpen: 'Open', pfSave: 'Save as', pfDel: 'Delete', pfNote: 'Note', pfDelQ: 'Delete «{n}»? (It can be restored from Deleted items for 30 days)', pfAdded: '{n} file(s) added',
-      yesDo: 'Yes', payModeNoCash: 'Collected (not added to cash)', payNoCashHint: 'The invoice is marked as collected; no cash entry is written and the cash balance does not change.', payNoCashBtn: '✓ Mark as collected', payNoCashTag: 'not added to cash', impSrcCur: 'Currency of the prices on the document', impTotals: 'Lines total {a} · subtotal on the document {b}', pdfApplied: 'Filled from the document — check and save', pfPending: 'Will be attached when the invoice is saved', pfTooBig: '«{n}» is too large (max 50 MB).', pfFail: 'The file could not be added:', pfBtn: 'Private files (only you see them)'
+      yesDo: 'Yes', pvNamesWait: 'Translated offline — will update automatically when the AI translation arrives', pvNamesLate: 'AI translation arrived, preview updated', kvTitle: 'Add VAT', kvRate: 'VAT rate (%)', kvAll: 'Apply to all lines', kvClear: 'Remove VAT', kvBad: 'Enter a valid VAT rate (e.g. 20)', kvSum: 'VAT {r}% · VAT added: {a}', kvSumMix: 'With VAT · VAT added: {a}', kdvYok: 'No VAT on this invoice', kvDone: 'VAT {r}% applied', kvRemoved: 'VAT removed — invoice without VAT', kvHint: 'VAT is added to the subtotal (after discount) and shown as a separate line in the totals. If the per-line VAT column is on, the rate is written to every line; a single line can be changed in its VAT column. Removing it makes the invoice VAT-free. Product record prices do not change.', payModeNoCash: 'Collected (not added to cash)', payNoCashHint: 'The invoice is marked as collected; no cash entry is written and the cash balance does not change.', payNoCashBtn: '✓ Mark as collected', payNoCashTag: 'not added to cash', impSrcCur: 'Currency of the prices on the document', impTotals: 'Lines total {a} · subtotal on the document {b}', pdfApplied: 'Filled from the document — check and save', pfPending: 'Will be attached when the invoice is saved', pfTooBig: '«{n}» is too large (max 50 MB).', pfFail: 'The file could not be added:', pfBtn: 'Private files (only you see them)'
     },
     ar: {
       fromPdf: 'التعبئة من مستند', fromPdfHint: 'يقرأ فاتورة / عرض سعر (PDF أو صورة: JPEG، PNG) ويعبّئ بيانات العميل والمستند والمنتجات والأسعار — بالذكاء الاصطناعي أولاً، ودون اتصال (OCR) عند انقطاع الإنترنت',
@@ -467,7 +467,7 @@
       pfTitle: '🔒 ملفات خاصة', pfHint: 'تراها أنت فقط: لا تظهر في مطبوع الفاتورة ولا في ملف PDF ولا فيما يُرسل إلى العميل. تتزامن بين أجهزتك.',
       pfAdd: '＋ إضافة ملف', pfDrop: 'اسحب الملفات إلى هنا أو الصقها (Ctrl+V) — PDF، صورة، Word، Excel، نص، أرشيف…', pfEmpty: 'لا توجد ملفات خاصة لهذه الفاتورة.',
       pfOpen: 'فتح', pfSave: 'حفظ باسم', pfDel: 'حذف', pfNote: 'ملاحظة', pfDelQ: 'حذف «{n}»؟ (يمكن استعادته من المحذوفات خلال 30 يوماً)', pfAdded: 'أُضيف {n} ملف',
-      yesDo: 'نعم', payModeNoCash: 'تم التحصيل (دون إضافة إلى الصندوق)', payNoCashHint: 'تُعلَّم الفاتورة كمحصَّلة؛ لا يُسجَّل إيراد في الصندوق ولا يتغير رصيده.', payNoCashBtn: '✓ تعليمها كمحصَّلة', payNoCashTag: 'لم يُضف إلى الصندوق', impSrcCur: 'عملة الأسعار في المستند', impTotals: 'مجموع البنود {a} · المجموع الفرعي في المستند {b}', pdfApplied: 'عُبّئت البيانات من المستند — راجعها ثم احفظ', pfPending: 'سيُرفق عند حفظ الفاتورة', pfTooBig: '«{n}» كبير جداً (الحد 50 ميغابايت).', pfFail: 'تعذّرت إضافة الملف:', pfBtn: 'ملفات خاصة (تراها أنت فقط)'
+      yesDo: 'نعم', pvNamesWait: 'تُرجمت دون اتصال — ستُحدَّث تلقائياً عند وصول ترجمة الذكاء الاصطناعي', pvNamesLate: 'وصلت ترجمة الذكاء الاصطناعي وحُدِّثت المعاينة', kvTitle: 'إضافة ضريبة القيمة المضافة', kvRate: 'نسبة الضريبة (%)', kvAll: 'تطبيق على جميع البنود', kvClear: 'إزالة الضريبة', kvBad: 'أدخل نسبة ضريبة صحيحة (مثلاً 20)', kvSum: 'الضريبة {r}% · الضريبة المضافة: {a}', kvSumMix: 'مع الضريبة · الضريبة المضافة: {a}', kdvYok: 'لا ضريبة على هذه الفاتورة', kvDone: 'طُبّقت الضريبة {r}%', kvRemoved: 'أُزيلت الضريبة — الفاتورة بدون ضريبة', kvHint: 'تُضاف الضريبة إلى المجموع الفرعي (بعد الخصم) وتظهر سطراً مستقلاً في الإجمالي. إذا كان عمود الضريبة لكل بند مفعّلاً تُكتب النسبة في كل بند، ويمكن تغيير بند واحد من عموده. عند الإزالة تصبح الفاتورة بدون ضريبة. لا تتغير أسعار سجلات المنتجات.', payModeNoCash: 'تم التحصيل (دون إضافة إلى الصندوق)', payNoCashHint: 'تُعلَّم الفاتورة كمحصَّلة؛ لا يُسجَّل إيراد في الصندوق ولا يتغير رصيده.', payNoCashBtn: '✓ تعليمها كمحصَّلة', payNoCashTag: 'لم يُضف إلى الصندوق', impSrcCur: 'عملة الأسعار في المستند', impTotals: 'مجموع البنود {a} · المجموع الفرعي في المستند {b}', pdfApplied: 'عُبّئت البيانات من المستند — راجعها ثم احفظ', pfPending: 'سيُرفق عند حفظ الفاتورة', pfTooBig: '«{n}» كبير جداً (الحد 50 ميغابايت).', pfFail: 'تعذّرت إضافة الملف:', pfBtn: 'ملفات خاصة (تراها أنت فقط)'
     }
   };
   ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX171[l]).forEach(function (k) { TX[l][k] = TX171[l][k]; }); });
@@ -505,7 +505,8 @@
   // Standart alan: adı değiştirilebilir, kapatılabilir / çıkarılabilir (lock = zorunlu, yalnız adı değişir). Özel alan: eklenir, silinir.
   var LAY_STD = {
     cols: [['no', 1], ['depot', 1], ['code', 1], ['name', 1, 1], ['qty', 1, 1], ['unit', 0], ['price', 1, 1], ['amount', 1], ['vat', 1], ['vat_amount', 1]],
-    meta: [['date', 1, 1], ['number', 1, 1], ['due_date', 1], ['customization', 1], ['scenario', 1], ['inv_type', 1], ['issue_time', 1], ['ettn', 1], ['order_no', 0], ['waybill_no', 0], ['campaign', 1], ['cargo', 1]],
+    // v1.73: ETTN yok (kullanıcı isteği: faturada ve düzenleyicide hiç çıkmasın)
+    meta: [['date', 1, 1], ['number', 1, 1], ['due_date', 1], ['customization', 1], ['scenario', 1], ['inv_type', 1], ['issue_time', 1], ['order_no', 0], ['waybill_no', 0], ['campaign', 1], ['cargo', 1]],
     cust: [['tax_office', 1], ['tax_no', 1], ['address', 1], ['district', 1], ['city', 1], ['postal_code', 0], ['country', 0], ['phone', 1], ['email', 1], ['web', 0]],
     prod: [['code', 1], ['unit', 1], ['price', 1], ['vat', 1], ['depot', 1], ['description', 1]]
   };
@@ -546,7 +547,7 @@
     std.forEach(function (s) { if (!out.some(function (x) { return x.k === s.k; })) out.push(s); }); // sonradan eklenen standart alanlar
     return out;
   }
-  function layOn(cfg, kind) { return layOf(cfg, kind).filter(function (f) { return f.on && !f.del; }); }
+  function layOn(cfg, kind) { return layOf(cfg, kind).filter(function (f) { return f.on && !f.del && !(kind === 'meta' && f.k === 'ettn'); }); }
   function layHas(cfg, kind, k) { return layOn(cfg, kind).some(function (f) { return f.k === k; }); }
   // Alanın adı: kullanıcı adı yazdıysa o, yoksa verilen dildeki standart ad
   function fLabel(kind, f, lg) { var L = LBL[lg] || LBL.tr; return String(f.label || '').trim() || (L[kind] && L[kind][f.k]) || (LBL.tr[kind] && LBL.tr[kind][f.k]) || f.k; }
@@ -598,7 +599,7 @@
   // GİB karekodundaki gibi JSON: satıcı / alıcı VKN, senaryo, tip, tarih, no, ETTN, para birimi, toplamlar
   function qrPayload(inv, cfg, tt) {
     var m = jparse(inv.meta, {}) || {};
-    var o = { vkntckn: (cfg.company || {}).tax || '', avkntckn: inv.customer_tax || '', senaryo: m.scenario || '', tip: m.inv_type || '', tarih: inv.date, no: inv.number, ettn: m.ettn || '',
+    var o = { vkntckn: (cfg.company || {}).tax || '', avkntckn: inv.customer_tax || '', senaryo: m.scenario || '', tip: m.inv_type || '', tarih: inv.date, no: inv.number, ettn: '',
       parabirimi: inv.currency_code === 'TRY' ? 'TRY' : inv.currency_code, malhizmettoplam: String(tt.subtotal) };
     Object.keys(tt.byRate).forEach(function (r) { o['kdvmatrah(' + r + ')'] = String(rnd(tt.byRate[r].base, inv.currency_code)); o['hesaplanankdv(' + r + ')'] = String(rnd(tt.byRate[r].tax, inv.currency_code)); });
     o.vergidahil = String(tt.total); o.odenecek = String(rnd(tt.total - (inv.paid || 0), inv.currency_code));
@@ -954,7 +955,7 @@
     var payable = inv.paid > 0 ? remaining : inv.total;
     var words = lay.words !== false ? '<div class="wd"><span class="k">' + esc(X.words) + ':</span> ' + esc(amountWords(num(payable), cur, lg)) + '</div>' : '';
     var qr = lay.qr !== false && hasQr(inv.template) ? qrSvg(qrPayload(inv, cfg, tt), '#000') : '';
-    var bc = lay.barcode !== false && hasBc(inv.template) ? barcodeSvg(meta.ettn || inv.number, '#000') : '';
+    var bc = lay.barcode !== false && hasBc(inv.template) ? barcodeSvg(inv.number, '#000') : '';
     var font = rtl ? "'Noto Sans Arabic','Segoe UI',Tahoma,Arial,sans-serif" : "'Segoe UI','Inter',Arial,'Noto Sans Arabic',sans-serif";
     var many = cols.length > 8;
     var css =
@@ -1046,7 +1047,7 @@
         '<br><span>' + D.currency + ':</span> ' + esc(cur) + '</div></div></div>' +
         '<div class="body"><div class="parties"><div class="box"><h3>' + D.billTo + '</h3>' + custBlock + '</div>' +
         // v1.64: «Fatura özeti» kartı kaldırıldı (ödenecek tutar toplamlarda); durum damgası + karekod + barkod sağda kalır
-        ((stamp || qr || bc) ? '<div class="stbox">' + stamp + ((qr || bc) ? '<div class="codes">' + (qr ? '<div class="qr">' + qr + '</div>' : '') + (bc ? '<div class="bc">' + bc + '<div class="t" dir="ltr">' + esc(meta.ettn || inv.number) + '</div></div>' : '') + '</div>' : '') + '</div>' : '') + '</div>' +
+        ((stamp || qr || bc) ? '<div class="stbox">' + stamp + ((qr || bc) ? '<div class="codes">' + (qr ? '<div class="qr">' + qr + '</div>' : '') + (bc ? '<div class="bc">' + bc + '<div class="t" dir="ltr">' + esc(inv.number) + '</div></div>' : '') + '</div>' : '') + '</div>' : '') + '</div>' +
         metaRows.filter(function (r) { return r.k === 'ettn'; }).map(function (r) { return '<div style="font-size:8.5pt;margin:-4mm 0 4mm"><span style="opacity:.7">' + esc(r.label) + ':</span> ' + L(r.v) + '</div>'; }).join('') +
         '<table class="it"><thead>' + thead + '</thead><tbody>' + rows + '</tbody></table>' +
         '<div class="end"><div class="sum"><div class="notes">' + (inv.note ? '<h4>' + D.note + '</h4><p>' + esc(inv.note) + '</p>' : '') + (c.bank ? '<h4>' + D.bank + '</h4><p>' + esc(c.bank) + '</p>' : '') + '<div class="sig"><div class="sg"><div class="im">' + (cfg.stamp ? '<img src="' + cfg.stamp + '" alt="">' : '') + '</div><div class="ln">' + D.stamp + '</div></div>' +
@@ -1070,6 +1071,8 @@
     paket: ['pack', 'عبوة'], kutu: ['box', 'علبة'], takım: ['set', 'طقم'], set: ['set', 'طقم'], litre: ['L', 'لتر'], lt: ['L', 'لتر'], rulo: ['roll', 'لفة'], çift: ['pair', 'زوج'], ton: ['t', 'طن'], m2: ['m²', 'م²'], m3: ['m³', 'م³'] };
   function unitTr(u, lg) { if (lg === 'tr') return u; var k = String(u || '').trim().toLocaleLowerCase('tr'), x = UNITS[k]; return x ? x[lg === 'ar' ? 1 : 0] : u; }
   // Teknik terimler (elektrik / otomotiv / havacılık / genel). En uzun ifade önce eşleşir; model ve kodlar olduğu gibi kalır.
+  // v1.73: geniş ürün sözlüğü (elektronik, ağ / fiber, sunucu, siber güvenlik, elektrik, mekanik, otomotiv, havacılık, renk / malzeme / ölçü)
+  var TERMS2 = [["fiber optik patch cord", "Fiber Optic Patch Cord", "سلك توصيل ألياف ضوئية"], ["fiber optik patch panel", "Fiber Optic Patch Panel", "لوحة توصيل ألياف ضوئية"], ["fiber optik pigtail", "Fiber Optic Pigtail", "ضفيرة ألياف ضوئية"], ["fiber optik ek koruyucu", "Fiber Optic Splice Protector", "واقي لحام ألياف ضوئية"], ["ek koruyucu", "Splice Protector", "واقي لحام"], ["fiber optik", "Fiber Optic", "ألياف ضوئية"], ["patch panel", "Patch Panel", "لوحة توصيل"], ["patch cord", "Patch Cord", "سلك توصيل"], ["data patch panel", "Data Patch Panel", "لوحة توصيل بيانات"], ["keystone jack", "Keystone Jack", "مقبس Keystone"], ["rack tipi", "Rack Type", "من نوع الرف"], ["rack montajlı", "Rack Mounted", "مثبت على الرف"], ["rack kabin", "Rack Cabinet", "خزانة رف"], ["kabinet", "Cabinet", "خزانة"], ["kabin", "Cabinet", "خزانة"], ["yatay organizer", "Horizontal Cable Organizer", "منظم كابلات أفقي"], ["kablo düzenleyici", "Cable Manager", "منظم كابلات"], ["kablo organizeri", "Cable Organizer", "منظم كابلات"], ["kablo kanalı", "Cable Duct", "مجرى كابلات"], ["kablo bağı", "Cable Tie", "رباط كابلات"], ["kancalı", "Hooked", "بخطافات"], ["montajlı", "Mounted", "مثبت"], ["modüler", "Modular", "معياري"], ["modülü", "Module", "وحدة"], ["modül", "Module", "وحدة"], ["boş", "Blank", "فارغ"], ["dolu", "Loaded", "محمّل"], ["beyaz", "White", "أبيض"], ["siyah", "Black", "أسود"], ["kırmızı", "Red", "أحمر"], ["mavi", "Blue", "أزرق"], ["yeşil", "Green", "أخضر"], ["sarı", "Yellow", "أصفر"], ["turuncu", "Orange", "برتقالي"], ["mor", "Purple", "بنفسجي"], ["gri", "Grey", "رمادي"], ["kahverengi", "Brown", "بني"], ["pembe", "Pink", "وردي"], ["şeffaf", "Transparent", "شفاف"], ["gümüş", "Silver", "فضي"], ["altın", "Gold", "ذهبي"], ["lacivert", "Navy Blue", "كحلي"], ["bej", "Beige", "بيج"], ["renkli", "Coloured", "ملون"], ["switch", "Switch", "مبدّل"], ["yönlendirici", "Router", "موجّه"], ["erişim noktası", "Access Point", "نقطة وصول"], ["ağ kartı", "Network Card", "بطاقة شبكة"], ["ağ anahtarı", "Network Switch", "مبدّل شبكة"], ["ağ", "Network", "شبكة"], ["kart", "Card", "بطاقة"], ["sunucu", "Server", "خادم"], ["depolama", "Storage", "تخزين"], ["disk", "Disk", "قرص"], ["sabit disk", "Hard Disk", "قرص صلب"], ["bellek", "Memory", "ذاكرة"], ["işlemci", "Processor", "معالج"], ["anakart", "Motherboard", "لوحة أم"], ["ekran kartı", "Graphics Card", "بطاقة رسوميات"], ["ekran", "Display", "شاشة"], ["monitör", "Monitor", "شاشة"], ["klavye", "Keyboard", "لوحة مفاتيح"], ["fare", "Mouse", "فأرة"], ["yazıcı", "Printer", "طابعة"], ["tarayıcı", "Scanner", "ماسح ضوئي"], ["kamera", "Camera", "كاميرا"], ["güvenlik kamerası", "Security Camera", "كاميرا مراقبة"], ["kayıt cihazı", "Recorder", "جهاز تسجيل"], ["cihazı", "Device", "جهاز"], ["cihaz", "Device", "جهاز"], ["denetleyici", "Controller", "وحدة تحكم"], ["kontrol ünitesi", "Control Unit", "وحدة تحكم"], ["ünitesi", "Unit", "وحدة"], ["ünite", "Unit", "وحدة"], ["raid kartı", "RAID Card", "بطاقة RAID"], ["kartı", "Card", "بطاقة"], ["kaset", "Cassette", "كاسيت"], ["çekmece", "Drawer", "درج"], ["raf", "Shelf", "رف"], ["ray", "Rail", "سكة"], ["kızak", "Rail Kit", "طقم سكك"], ["braket", "Bracket", "حامل"], ["tutucu", "Holder", "حامل"], ["çap tutucu", "Diameter Holder", "حامل قطر"], ["punta", "Center", "ذنبة"], ["döner punta", "Live Center", "ذنبة دوّارة"], ["gövde", "Body", "جسم"], ["uç", "Insert", "لقمة"], ["uçlar", "Inserts", "لقم"], ["takım tutucu", "Tool Holder", "حامل عدة"], ["kater", "Cutter", "قاطعة"], ["delik", "Bore", "ثقب"], ["delik kater soketi", "Boring Cutter Socket", "مقبس قاطعة ثقب"], ["soketi", "Socket", "مقبس"], ["matkap", "Drill", "مثقاب"], ["matkap ucu", "Drill Bit", "لقمة مثقاب"], ["freze", "Milling Cutter", "قاطعة تفريز"], ["torna", "Lathe", "مخرطة"], ["pens", "Collet", "ماسكة"], ["mandren", "Chuck", "ظرف"], ["kılavuz", "Tap", "ذكر قلاووظ"], ["pafta", "Die", "لقمة قلاووظ"], ["testere", "Saw", "منشار"], ["bıçak", "Blade", "شفرة"], ["taşlama", "Grinding", "تجليخ"], ["zımpara", "Sandpaper", "ورق صنفرة"], ["anahtar takımı", "Wrench Set", "طقم مفاتيح ربط"], ["tornavida", "Screwdriver", "مفك"], ["pense", "Pliers", "كماشة"], ["çekiç", "Hammer", "مطرقة"], ["metre", "Metre", "متر"], ["cıvata", "Bolt", "مسمار ملولب"], ["civata", "Bolt", "مسمار ملولب"], ["dübel", "Wall Plug", "وتد جداري"], ["perçin", "Rivet", "برشام"], ["yay", "Spring", "نابض"], ["mil", "Shaft", "عمود"], ["dişli", "Gear", "ترس"], ["kayış", "Belt", "سير"], ["zincir", "Chain", "سلسلة"], ["kasnak", "Pulley", "بكرة"], ["burç", "Bushing", "جلبة"], ["keçe", "Seal", "مانع تسرب"], ["o-ring", "O-Ring", "حلقة O"], ["hortum", "Hose", "خرطوم"], ["boru", "Pipe", "أنبوب"], ["vana", "Valve", "صمام"], ["valf", "Valve", "صمام"], ["filtre", "Filter", "مرشح"], ["yağ", "Oil", "زيت"], ["gres", "Grease", "شحم"], ["yakıt", "Fuel", "وقود"], ["hava", "Air", "هواء"], ["su", "Water", "ماء"], ["basınç", "Pressure", "ضغط"], ["sıcaklık", "Temperature", "حرارة"], ["ölçer", "Meter", "مقياس"], ["ölçüm", "Measurement", "قياس"], ["gösterge", "Gauge", "مؤشر"], ["termometre", "Thermometer", "ميزان حرارة"], ["manometre", "Pressure Gauge", "مقياس ضغط"], ["kelepçe", "Clamp", "مشبك"], ["klemens", "Terminal Block", "كتلة أطراف توصيل"], ["pabuç", "Cable Lug", "طرف كابل"], ["makaron", "Heat Shrink Tube", "أنبوب انكماش حراري"], ["bant", "Tape", "شريط"], ["izole bant", "Insulating Tape", "شريط عازل"], ["izolasyon", "Insulation", "عزل"], ["topraklama", "Grounding", "تأريض"], ["pano", "Panel", "لوحة"], ["elektrik panosu", "Electrical Panel", "لوحة كهربائية"], ["kontaktör", "Contactor", "كونتاكتور"], ["inverter", "Inverter", "عاكس"], ["invertör", "Inverter", "عاكس"], ["regülatör", "Regulator", "منظم"], ["trafo", "Transformer", "محول"], ["transformatör", "Transformer", "محول"], ["redüktör", "Gearbox", "علبة تروس"], ["jeneratör", "Generator", "مولد"], ["kondansatör", "Capacitor", "مكثف"], ["direnç", "Resistor", "مقاومة"], ["diyot", "Diode", "ديود"], ["transistör", "Transistor", "ترانزستور"], ["devre", "Circuit", "دارة"], ["devre kartı", "Circuit Board", "لوحة دارة"], ["lehim", "Solder", "لحام قصدير"], ["havya", "Soldering Iron", "كاوية لحام"], ["tel", "Wire", "سلك"], ["iletken", "Conductor", "موصل"], ["bakır", "Copper", "نحاس"], ["alüminyum", "Aluminium", "ألمنيوم"], ["çelik", "Steel", "فولاذ"], ["paslanmaz", "Stainless", "مقاوم للصدأ"], ["paslanmaz çelik", "Stainless Steel", "فولاذ مقاوم للصدأ"], ["demir", "Iron", "حديد"], ["pirinç", "Brass", "نحاس أصفر"], ["plastik", "Plastic", "بلاستيك"], ["kauçuk", "Rubber", "مطاط"], ["cam", "Glass", "زجاج"], ["ahşap", "Wood", "خشب"], ["deri", "Leather", "جلد"], ["kumaş", "Fabric", "قماش"], ["karbon", "Carbon", "كربون"], ["seramik", "Ceramic", "سيراميك"], ["metal", "Metal", "معدني"], ["sert", "Hard", "صلب"], ["yumuşak", "Soft", "لين"], ["esnek", "Flexible", "مرن"], ["uzun", "Long", "طويل"], ["kısa", "Short", "قصير"], ["büyük", "Large", "كبير"], ["küçük", "Small", "صغير"], ["orta", "Medium", "متوسط"], ["geniş", "Wide", "عريض"], ["dar", "Narrow", "ضيق"], ["kalın", "Thick", "سميك"], ["ince", "Thin", "رفيع"], ["ağır", "Heavy", "ثقيل"], ["hafif", "Light", "خفيف"], ["yeni", "New", "جديد"], ["kullanılmış", "Used", "مستعمل"], ["orijinal", "Original", "أصلي"], ["yenilenmiş", "Refurbished", "مجدد"], ["çift", "Double", "مزدوج"], ["tek", "Single", "مفرد"], ["üçlü", "Triple", "ثلاثي"], ["dörtlü", "Quad", "رباعي"], ["iç", "Internal", "داخلي"], ["dış", "External", "خارجي"], ["ön", "Front", "أمامي"], ["arka", "Rear", "خلفي"], ["sağ", "Right", "أيمن"], ["sol", "Left", "أيسر"], ["üst", "Upper", "علوي"], ["alt", "Lower", "سفلي"], ["yatay", "Horizontal", "أفقي"], ["dikey", "Vertical", "عمودي"], ["düz", "Straight", "مستقيم"], ["açılı", "Angled", "مائل"], ["köşe", "Corner", "زاوية"], ["yuvarlak", "Round", "دائري"], ["kare", "Square", "مربع"], ["dikdörtgen", "Rectangular", "مستطيل"], ["kapak", "Cover", "غطاء"], ["kapaklı", "With Cover", "بغطاء"], ["kapağı", "Cover", "غطاء"], ["koruyucu", "Protector", "واقي"], ["kılıf", "Case", "غلاف"], ["çanta", "Bag", "حقيبة"], ["askı", "Hanger", "علاقة"], ["sabitleyici", "Fixer", "مثبت"], ["bağlantı", "Connection", "توصيل"], ["bağlantı parçası", "Fitting", "قطعة توصيل"], ["dönüştürücü", "Converter", "محوّل"], ["çevirici", "Converter", "محوّل"], ["uzatma", "Extension", "تمديد"], ["uzatma kablosu", "Extension Cable", "كابل تمديد"], ["çoklayıcı", "Splitter", "موزع"], ["dağıtıcı", "Distributor", "موزع"], ["birleştirici", "Coupler", "وصلة"], ["ara kablo", "Jumper Cable", "كابل وصل"], ["ara", "Intermediate", "وسيط"], ["giriş", "Input", "دخل"], ["çıkış", "Output", "خرج"], ["port", "Port", "منفذ"], ["portlu", "Port", "منافذ"], ["kanallı", "Channel", "قنوات"], ["yuvalı", "Slot", "فتحات"], ["yuva", "Slot", "فتحة"], ["sürücü", "Driver", "مشغل"], ["denetim", "Control", "تحكم"], ["kontrol", "Control", "تحكم"], ["uzaktan kumanda", "Remote Control", "جهاز تحكم عن بعد"], ["kumanda", "Remote Control", "جهاز تحكم"], ["sensörlü", "With Sensor", "بحساس"], ["otomatik", "Automatic", "تلقائي"], ["manuel", "Manual", "يدوي"], ["elektrikli", "Electric", "كهربائي"], ["pnömatik", "Pneumatic", "هوائي"], ["hidrolik", "Hydraulic", "هيدروليكي"], ["mekanik", "Mechanical", "ميكانيكي"], ["dijital", "Digital", "رقمي"], ["analog", "Analogue", "تناظري"], ["kablosuz", "Wireless", "لاسلكي"], ["kablolu", "Wired", "سلكي"], ["taşınabilir", "Portable", "محمول"], ["sabit", "Fixed", "ثابت"], ["endüstriyel", "Industrial", "صناعي"], ["profesyonel", "Professional", "احترافي"], ["standart", "Standard", "قياسي"], ["ekonomik", "Economy", "اقتصادي"], ["yüksek hızlı", "High Speed", "عالي السرعة"], ["hızlı", "Fast", "سريع"], ["yavaş", "Slow", "بطيء"], ["güç", "Power", "طاقة"], ["güçlü", "Powerful", "قوي"], ["enerji", "Energy", "طاقة"], ["güneş paneli", "Solar Panel", "لوح شمسي"], ["güneş", "Solar", "شمسي"], ["batarya", "Battery", "بطارية"], ["şarj cihazı", "Charger", "شاحن"], ["şarj aleti", "Charger", "شاحن"], ["kesintisiz güç kaynağı", "Uninterruptible Power Supply", "مزود طاقة غير منقطع"], ["ups", "UPS", "UPS"], ["aydınlatma", "Lighting", "إنارة"], ["projektör", "Floodlight", "كشاف"], ["led", "LED", "LED"], ["şerit", "Strip", "شريط"], ["armatür", "Light Fixture", "وحدة إنارة"], ["fan", "Fan", "مروحة"], ["fanı", "Fan", "مروحة"], ["soğutucu", "Cooler", "مبرد"], ["soğutma", "Cooling", "تبريد"], ["ısıtıcı", "Heater", "سخان"], ["ısıtma", "Heating", "تدفئة"], ["klima", "Air Conditioner", "مكيف"], ["kompresör", "Compressor", "ضاغط"], ["tekerlek", "Wheel", "عجلة"], ["lastik", "Tyre", "إطار"], ["fren", "Brake", "مكبح"], ["balata", "Brake Pad", "وسادة مكبح"], ["amortisör", "Shock Absorber", "ممتص صدمات"], ["debriyaj", "Clutch", "قابض"], ["şanzıman", "Transmission", "ناقل حركة"], ["radyatör", "Radiator", "مشع"], ["egzoz", "Exhaust", "عادم"], ["far", "Headlamp", "مصباح أمامي"], ["stop lambası", "Tail Lamp", "مصباح خلفي"], ["silecek", "Wiper", "ماسحة"], ["ayna", "Mirror", "مرآة"], ["koltuk", "Seat", "مقعد"], ["kemer", "Belt", "حزام"], ["emniyet kemeri", "Seat Belt", "حزام أمان"], ["kanat", "Wing", "جناح"], ["gövde paneli", "Fuselage Panel", "لوحة جسم الطائرة"], ["pervane", "Propeller", "مروحة دافعة"], ["türbin", "Turbine", "توربين"], ["kokpit", "Cockpit", "قمرة القيادة"], ["aviyonik", "Avionics", "إلكترونيات الطيران"], ["anten", "Antenna", "هوائي"], ["telsiz", "Radio", "جهاز لاسلكي"], ["alıcı", "Receiver", "مستقبل"], ["verici", "Transmitter", "مرسل"], ["modem", "Modem", "مودم"], ["telefon", "Telephone", "هاتف"], ["santral", "Exchange", "مقسم"], ["hoparlör", "Loudspeaker", "مكبر صوت"], ["mikrofon", "Microphone", "ميكروفون"], ["kulaklık", "Headphones", "سماعات"], ["kablo kesici", "Cable Cutter", "قاطعة كابلات"], ["sıyırıcı", "Stripper", "مقشرة"], ["pres", "Crimping Tool", "أداة كبس"], ["sıkma pensesi", "Crimping Pliers", "كماشة كبس"], ["test cihazı", "Tester", "جهاز اختبار"], ["ölçü aleti", "Measuring Instrument", "أداة قياس"], ["multimetre", "Multimeter", "مقياس متعدد"], ["lisans", "Licence", "ترخيص"], ["yazılım", "Software", "برمجيات"], ["garanti", "Warranty", "ضمان"], ["kurulum", "Installation", "تركيب"], ["yazılım lisansı", "Software Licence", "ترخيص برمجيات"], ["abonelik", "Subscription", "اشتراك"], ["yıllık", "Annual", "سنوي"], ["aylık", "Monthly", "شهري"], ["destek", "Support", "دعم"], ["teknik destek", "Technical Support", "دعم فني"], ["kargo", "Shipping", "شحن"], ["taşıma", "Transport", "نقل"], ["ambalaj", "Packaging", "تغليف"], ["kutulu", "Boxed", "في علبة"], ["paket", "Pack", "عبوة"], ["adet", "pcs", "قطعة"], ["metrelik", "Metre", "متر"], ["mt", "m", "م"], ["boy", "Length", "طول"], ["uzunluk", "Length", "طول"], ["genişlik", "Width", "عرض"], ["yükseklik", "Height", "ارتفاع"], ["çap", "Diameter", "قطر"], ["kalınlık", "Thickness", "سماكة"], ["ağırlık", "Weight", "وزن"], ["hacim", "Volume", "حجم"], ["kapasite", "Capacity", "سعة"], ["hız", "Speed", "سرعة"], ["frekans", "Frequency", "تردد"], ["tip", "Type", "نوع"], ["tipi", "Type", "نوع"], ["model", "Model", "طراز"], ["marka", "Brand", "علامة تجارية"], ["seri", "Series", "سلسلة"], ["sınıf", "Class", "فئة"], ["kalite", "Quality", "جودة"], ["uyumlu", "Compatible", "متوافق"], ["destekli", "Supported", "مدعوم"], ["hariç", "Excluded", "غير مشمول"], ["sfp modül", "SFP Module", "وحدة SFP"], ["sfp+ modül", "SFP+ Module", "وحدة SFP+"], ["sfp28 modül", "SFP28 Module", "وحدة SFP28"], ["qsfp modül", "QSFP Module", "وحدة QSFP"], ["optik modül", "Optical Module", "وحدة ضوئية"], ["optik alıcı verici", "Optical Transceiver", "مرسل مستقبل ضوئي"], ["alıcı verici", "Transceiver", "مرسل مستقبل"], ["optik", "Optical", "ضوئي"], ["hba kart", "HBA Card", "بطاقة HBA"], ["hba kartı", "HBA Card", "بطاقة HBA"], ["ethernet kartı", "Ethernet Card", "بطاقة إيثرنت"], ["ağ adaptörü", "Network Adapter", "محوّل شبكة"], ["fiber kablo", "Fiber Cable", "كابل ألياف"], ["fiber", "Fiber", "ألياف"], ["tek mod", "Single-Mode", "أحادي النمط"], ["çok mod", "Multi-Mode", "متعدد الأنماط"], ["çoklu mod", "Multi-Mode", "متعدد الأنماط"], ["ek kutusu", "Splice Box", "علبة لحام"], ["ek kaseti", "Splice Cassette", "كاسيت لحام"], ["füzyon ek makinesi", "Fusion Splicer", "جهاز لحام انصهاري"], ["ek makinesi", "Splicer", "جهاز لحام"], ["adaptör paneli", "Adapter Panel", "لوحة محولات"], ["duvar tipi", "Wall Mount", "للتثبيت على الجدار"], ["duvar", "Wall", "جدار"], ["sonlandırma kutusu", "Termination Box", "علبة إنهاء"], ["sonlandırma", "Termination", "إنهاء"], ["dağıtım kutusu", "Distribution Box", "علبة توزيع"], ["dağıtım", "Distribution", "توزيع"], ["zayıflatıcı", "Attenuator", "مخمّد"], ["kablo yönetim paneli", "Cable Management Panel", "لوحة إدارة الكابلات"], ["kablo yönetimi", "Cable Management", "إدارة الكابلات"], ["yönetim", "Management", "إدارة"], ["yönetilebilir", "Managed", "مُدار"], ["yönetilemez", "Unmanaged", "غير مُدار"], ["katmanlı", "Layer", "طبقة"], ["güvenlik duvarı", "Firewall", "جدار حماية"], ["depolama ünitesi", "Storage Unit", "وحدة تخزين"], ["disk kutusu", "Disk Enclosure", "حاوية أقراص"], ["disk yuvası", "Drive Bay", "حجرة قرص"], ["güç kablosu", "Power Cable", "كابل طاقة"], ["güç kaynağı ünitesi", "Power Supply Unit", "وحدة إمداد الطاقة"], ["yedekli", "Redundant", "احتياطي"], ["çalışır durumda", "Working", "يعمل"], ["sıfır", "New", "جديد"], ["ikinci el", "Second-Hand", "مستعمل"], ["sunucu kasası", "Server Chassis", "هيكل خادم"], ["rack sunucu", "Rack Server", "خادم رفّي"], ["kule sunucu", "Tower Server", "خادم برجي"], ["blade sunucu", "Blade Server", "خادم شفرة"], ["sanallaştırma", "Virtualization", "المحاكاة الافتراضية"], ["sanal sunucu", "Virtual Server", "خادم افتراضي"], ["veri merkezi", "Data Centre", "مركز بيانات"], ["veri kurtarma", "Data Recovery", "استعادة البيانات"], ["veri", "Data", "بيانات"], ["yedekleme", "Backup", "نسخ احتياطي"], ["yedekleme ünitesi", "Backup Unit", "وحدة نسخ احتياطي"], ["teyp sürücü", "Tape Drive", "محرك شريط"], ["teyp", "Tape", "شريط"], ["katı hal sürücüsü", "Solid State Drive", "محرك أقراص صلب"], ["bellek modülü", "Memory Module", "وحدة ذاكرة"], ["ram", "RAM", "ذاكرة RAM"], ["işlemci soğutucu", "CPU Cooler", "مبرد معالج"], ["ısı emici", "Heat Sink", "مشتت حرارة"], ["termal macun", "Thermal Paste", "معجون حراري"], ["güç dağıtım ünitesi", "Power Distribution Unit", "وحدة توزيع الطاقة"], ["konsol", "Console", "وحدة تحكم"], ["kvm anahtarı", "KVM Switch", "مبدّل KVM"], ["uzaktan yönetim", "Remote Management", "إدارة عن بعد"], ["lisanslı", "Licensed", "مرخّص"], ["siber güvenlik", "Cybersecurity", "الأمن السيبراني"], ["güvenlik", "Security", "أمن"], ["güvenlik yazılımı", "Security Software", "برنامج أمني"], ["antivirüs", "Antivirus", "مكافحة الفيروسات"], ["şifreleme", "Encryption", "تشفير"], ["şifreli", "Encrypted", "مشفّر"], ["kimlik doğrulama", "Authentication", "مصادقة"], ["erişim kontrolü", "Access Control", "التحكم في الوصول"], ["erişim", "Access", "وصول"], ["saldırı tespit sistemi", "Intrusion Detection System", "نظام كشف التسلل"], ["sızma testi", "Penetration Test", "اختبار اختراق"], ["zafiyet taraması", "Vulnerability Scan", "فحص الثغرات"], ["zafiyet", "Vulnerability", "ثغرة"], ["güvenlik açığı", "Security Vulnerability", "ثغرة أمنية"], ["olay müdahale", "Incident Response", "الاستجابة للحوادث"], ["izleme", "Monitoring", "مراقبة"], ["günlük kaydı", "Logging", "تسجيل السجلات"], ["sertifika", "Certificate", "شهادة"], ["dijital sertifika", "Digital Certificate", "شهادة رقمية"], ["vpn", "VPN", "VPN"], ["proxy", "Proxy", "وكيل"], ["yük dengeleyici", "Load Balancer", "موازن أحمال"], ["ağ geçidi", "Gateway", "بوابة"], ["bulut", "Cloud", "سحابة"], ["bulut hizmeti", "Cloud Service", "خدمة سحابية"], ["barındırma", "Hosting", "استضافة"], ["alan adı", "Domain Name", "اسم نطاق"], ["e-posta", "E-mail", "بريد إلكتروني"], ["işletim sistemi", "Operating System", "نظام تشغيل"], ["veritabanı", "Database", "قاعدة بيانات"], ["yazılım geliştirme", "Software Development", "تطوير البرمجيات"], ["uygulama", "Application", "تطبيق"], ["entegrasyon", "Integration", "تكامل"], ["proje yönetimi", "Project Management", "إدارة المشاريع"], ["bilgi işlem", "IT", "تقنية المعلومات"], ["bilişim", "Information Technology", "تقنية المعلومات"], ["bilgisayar", "Computer", "حاسوب"], ["dizüstü bilgisayar", "Laptop", "حاسوب محمول"], ["masaüstü bilgisayar", "Desktop Computer", "حاسوب مكتبي"], ["tablet", "Tablet", "جهاز لوحي"], ["iş istasyonu", "Workstation", "محطة عمل"], ["elektronik kart", "Electronic Board", "لوحة إلكترونية"], ["elektronik", "Electronic", "إلكتروني"], ["baskılı devre kartı", "Printed Circuit Board", "لوحة دارة مطبوعة"], ["entegre devre", "Integrated Circuit", "دارة متكاملة"], ["entegre", "Integrated Circuit", "دارة متكاملة"], ["mikrodenetleyici", "Microcontroller", "متحكم دقيق"], ["mikroişlemci", "Microprocessor", "معالج دقيق"], ["geliştirme kartı", "Development Board", "لوحة تطوير"], ["programlayıcı", "Programmer", "مبرمج"], ["osilatör", "Oscillator", "مذبذب"], ["kristal", "Crystal", "بلورة"], ["rezonatör", "Resonator", "رنان"], ["bobin", "Inductor", "ملف"], ["endüktans", "Inductance", "محاثة"], ["kapasitans", "Capacitance", "سعة كهربائية"], ["elektrolitik kondansatör", "Electrolytic Capacitor", "مكثف إلكتروليتي"], ["seramik kondansatör", "Ceramic Capacitor", "مكثف سيراميكي"], ["tantal kondansatör", "Tantalum Capacitor", "مكثف تنتالوم"], ["potansiyometre", "Potentiometer", "مقياس جهد"], ["trimpot", "Trimmer Potentiometer", "مقاومة متغيرة دقيقة"], ["termistör", "Thermistor", "ثرمستور"], ["varistör", "Varistor", "فاريستور"], ["sigorta yuvası", "Fuse Holder", "حامل فيوز"], ["zener diyot", "Zener Diode", "ديود زينر"], ["köprü diyot", "Bridge Rectifier", "مقوم جسري"], ["doğrultucu", "Rectifier", "مقوم"], ["mosfet", "MOSFET", "MOSFET"], ["tristör", "Thyristor", "ثايرستور"], ["triyak", "Triac", "ترياك"], ["optokuplör", "Optocoupler", "مقرن ضوئي"], ["fotodiyot", "Photodiode", "ديود ضوئي"], ["fototransistör", "Phototransistor", "ترانزستور ضوئي"], ["kızılötesi", "Infrared", "أشعة تحت الحمراء"], ["lazer", "Laser", "ليزر"], ["display", "Display", "شاشة عرض"], ["lcd ekran", "LCD Display", "شاشة LCD"], ["dokunmatik ekran", "Touchscreen", "شاشة لمس"], ["dokunmatik", "Touch", "لمسي"], ["gösterge paneli", "Indicator Panel", "لوحة مؤشرات"], ["sinyal lambası", "Indicator Lamp", "مصباح إشارة"], ["buzzer", "Buzzer", "طنان"], ["sesli ikaz", "Audible Alarm", "إنذار صوتي"], ["alarm", "Alarm", "إنذار"], ["zamanlayıcı", "Timer", "مؤقت"], ["sayıcı", "Counter", "عداد"], ["sayaç", "Meter", "عداد"], ["enkoder", "Encoder", "مرمّز"], ["step motor", "Stepper Motor", "محرك خطوي"], ["servo motor", "Servo Motor", "محرك سيرفو"], ["fırçasız motor", "Brushless Motor", "محرك بدون فرش"], ["motor sürücü", "Motor Driver", "مشغل محرك"], ["hız kontrol cihazı", "Speed Controller", "منظم سرعة"], ["frekans invertörü", "Frequency Inverter", "عاكس تردد"], ["plc", "PLC", "PLC"], ["operatör paneli", "Operator Panel", "لوحة المشغل"], ["genişleme modülü", "Expansion Module", "وحدة توسعة"], ["analog modül", "Analogue Module", "وحدة تناظرية"], ["dijital giriş", "Digital Input", "دخل رقمي"], ["dijital çıkış", "Digital Output", "خرج رقمي"], ["haberleşme modülü", "Communication Module", "وحدة اتصال"], ["haberleşme", "Communication", "اتصالات"], ["seri port", "Serial Port", "منفذ تسلسلي"], ["usb kablo", "USB Cable", "كابل USB"], ["usb", "USB", "USB"], ["hdmi kablo", "HDMI Cable", "كابل HDMI"], ["koaksiyel kablo", "Coaxial Cable", "كابل محوري"], ["blendajlı", "Shielded", "مدرّع"], ["blendajsız", "Unshielded", "غير مدرّع"], ["ekranlı", "Shielded", "مدرّع"], ["çok damarlı", "Multi-Core", "متعدد الأسلاك"], ["damarlı", "Core", "سلك"], ["kesit", "Cross-Section", "مقطع"], ["halojen free", "Halogen-Free", "خالٍ من الهالوجين"], ["alev geciktirici", "Flame Retardant", "مقاوم للهب"], ["pin header", "Pin Header", "رأس دبابيس"], ["jumper", "Jumper", "وصلة"], ["terminal", "Terminal", "طرف توصيل"], ["klemens bloğu", "Terminal Block", "كتلة أطراف توصيل"], ["ray klemens", "DIN Rail Terminal", "طرف توصيل على سكة DIN"], ["din rayı", "DIN Rail", "سكة DIN"], ["kablo pabucu", "Cable Lug", "طرف كابل"], ["kablo rakoru", "Cable Gland", "جلبة كابل"], ["rakor", "Gland", "جلبة"], ["buat", "Junction Box", "علبة توصيل"], ["anahtar priz", "Switch Socket", "مفتاح ومقبس"], ["toprak kaçak rölesi", "Residual Current Device", "قاطع التيار المتبقي"], ["kaçak akım rölesi", "Residual Current Device", "قاطع التيار المتبقي"], ["termik manyetik şalter", "Thermal Magnetic Circuit Breaker", "قاطع دارة حراري مغناطيسي"], ["otomatik sigorta", "Miniature Circuit Breaker", "قاطع دارة مصغر"], ["parafudr", "Surge Arrester", "مانعة صواعق"], ["aşırı gerilim koruyucu", "Surge Protector", "واقي من زيادة الجهد"], ["gerilim regülatörü", "Voltage Regulator", "منظم جهد"], ["akım trafosu", "Current Transformer", "محول تيار"], ["enerji analizörü", "Energy Analyser", "محلل طاقة"], ["elektrik sayacı", "Electricity Meter", "عداد كهرباء"], ["osiloskop", "Oscilloscope", "راسم إشارة"], ["sinyal jeneratörü", "Signal Generator", "مولد إشارات"], ["güç kaynağı modülü", "Power Supply Module", "وحدة إمداد طاقة"], ["smps", "SMPS", "SMPS"], ["dc-dc dönüştürücü", "DC-DC Converter", "محوّل تيار مستمر"], ["akü şarj cihazı", "Battery Charger", "شاحن بطاريات"], ["lityum pil", "Lithium Battery", "بطارية ليثيوم"], ["kuru pil", "Dry Cell Battery", "بطارية جافة"], ["şarjlı pil", "Rechargeable Battery", "بطارية قابلة للشحن"]];
   var TERMS = [
     ['mike konnektör', 'Aviation Connector', 'موصل طيران'], ['havacılık konnektörü', 'Aviation Connector', 'موصل طيران'],
     ['su geçirmez', 'Waterproof', 'مقاوم للماء'], ['toz geçirmez', 'Dustproof', 'مقاوم للغبار'],
@@ -1095,7 +1098,9 @@
     ['yedek parça', 'Spare Part', 'قطعة غيار'], ['uçak', 'Aircraft', 'طائرة'], ['iniş takımı', 'Landing Gear', 'جهاز الهبوط'],
     ['yüksek', 'High', 'عالي'], ['düşük', 'Low', 'منخفض'], ['akım', 'Current', 'تيار'], ['gerilim', 'Voltage', 'جهد'],
     ['ve', 'and', 'و'], ['ile', 'with', 'مع'], ['için', 'for', 'لـ']
-  ].sort(function (a, b) { return b[0].length - a[0].length; });
+  ].concat(TERMS2).sort(function (a, b) { return b[0].length - a[0].length; });
+  var TR_SUF = ['larının', 'lerinin', 'ları', 'leri', 'lar', 'ler', 'sının', 'sinin', 'nın', 'nin', 'ının', 'inin', 'sı', 'si', 'su', 'sü', 'yla', 'yle', 'dan', 'den', 'tan', 'ten', 'da', 'de', 'ta', 'te', 'ı', 'i', 'u', 'ü'];
+  var TERM1 = null;
   function offlineName(s, lg) {
     var src = String(s || ''), low = src.toLocaleLowerCase('tr');
     if (low.length !== src.length) low = src.toLowerCase();
@@ -1106,13 +1111,40 @@
       if (!isL(low[i - 1])) for (var k = 0; k < TERMS.length; k++) { var w = TERMS[k][0]; if (low.substr(i, w.length) === w && !isL(low[i + w.length])) { m = TERMS[k]; break; } }
       if (m) { out += m[lg === 'ar' ? 2 : 1]; i += m[0].length; hit++; } else { out += src[i]; i++; }
     }
+    // v1.73: sayıya bitişik birimler («1Metre», «2Mt») ve ekli kelimeler («Modülü», «Kartları»): kök sözlükte varsa çevrilir
+    if (!TERM1) { TERM1 = {}; TERMS.forEach(function (x) { if (x[0].indexOf(' ') < 0) TERM1[x[0]] = x; }); }
+    out = out.replace(/(\d)\s*(metre|mt)\b/gi, function (_a, d) { return d + (lg === 'ar' ? ' م' : ' m'); });
+    out = out.replace(/[A-Za-zÇĞİÖŞÜçğıöşüÂÎÛâîû]{3,}/g, function (wd) {
+      var lw = wd.toLocaleLowerCase('tr'), x = TERM1[lw];
+      for (var j = 0; !x && j < TR_SUF.length; j++) { var sf = TR_SUF[j]; if (lw.length > sf.length + 2 && lw.slice(-sf.length) === sf) { var st = lw.slice(0, -sf.length); x = TERM1[st] || TERM1[st.replace(/ğ$/, 'k')] || TERM1[st.replace(/c$/, 'ç')]; } }
+      if (x) { hit++; return x[lg === 'ar' ? 2 : 1]; }
+      return wd;
+    });
     return { text: out.replace(/\s+/g, ' ').trim(), hit: hit };
   }
   function nameCache(v) {
     if (v) return F().settings.set('invoice_name_tr', JSON.stringify(v)).catch(function () {});
     return Promise.resolve(F().settings.get('invoice_name_tr')).then(function (x) { var o = jparse(x, {}); return o && typeof o === 'object' ? o : {}; }, function () { return {}; });
   }
-  function translateNames(list, lg) {
+  // v1.73: yapay zekâ çevirisi en çok NM_FAST ms beklenir; gecikirse çevrimdışı çeviri (yerel zekâ NLLB / TranslateGemma, yoksa sözlük) hemen
+  // kullanılır, yapay zekâ çevirisi geldiğinde önbelleğe yazılır ve onLate ile önizleme kendiliğinden güncellenir.
+  var NM_FAST = 8000, NM_OFF = 20000;
+  function offlineNames(miss, lg) {
+    var Y = window.FCYZ, dict = function () { var o = {}; miss.forEach(function (x) { o[x] = offlineName(x, lg).text; }); return o; };
+    if (!Y || !Y.available || !Y.available()) return Promise.resolve({ map: dict(), via: 'dict' });
+    var t0 = Date.now();
+    return Promise.resolve(Y.ready('mt')).then(function (ok) {
+      if (!ok) return { map: dict(), via: 'dict' };
+      var o = dict(), i = 0;
+      var step = function () {
+        if (i >= miss.length || Date.now() - t0 > NM_OFF) return { map: o, via: 'yz' };
+        var x = miss[i++];
+        return Promise.resolve(Y.translate(x, 'auto', lg)).then(function (r) { if (r && r.text && String(r.text).trim()) o[x] = String(r.text).trim(); }, function () {}).then(step);
+      };
+      return step();
+    }, function () { return { map: dict(), via: 'dict' }; });
+  }
+  function translateNames(list, lg, onLate) {
     var uniq = list.filter(function (x, i) { return list.indexOf(x) === i; });
     if (lg === 'tr') { var id = {}; uniq.forEach(function (x) { id[x] = x; }); return Promise.resolve({ map: id, src: 'same' }); }
     return nameCache().then(function (cache) {
@@ -1120,13 +1152,24 @@
       var done = function (src) { var map = {}; uniq.forEach(function (x) { map[x] = c[x] != null ? c[x] : x; }); return { map: map, src: src }; };
       if (!miss.length) return done('ai');
       var ai = window.FalconFaturaPdf && window.FalconFaturaPdf.translate;
-      return (ai ? ai(miss, lg) : Promise.reject(new Error('no-ai'))).then(function (arr) {
-        miss.forEach(function (x, i) { var v = String(arr[i] == null ? '' : arr[i]).trim(); if (v) c[x] = v; });
-        cache[lg] = c; nameCache(cache); return done('ai');
-      }, function () {
-        // çevrimdışı: önbelleğe yazılmaz (internet gelince yapay zekâ ile yeniden çevrilir)
-        var map = {}; uniq.forEach(function (x) { map[x] = c[x] != null ? c[x] : offlineName(x, lg).text; });
-        return { map: map, src: 'offline' };
+      var aiP = ai ? Promise.resolve(ai(miss, lg)) : Promise.reject(new Error('no-ai'));
+      var keep = function (arr) { miss.forEach(function (x, i) { var v = String(arr[i] == null ? '' : arr[i]).trim(); if (v) c[x] = v; }); cache[lg] = c; nameCache(cache); };
+      var offline = function (pending) {
+        // çevrimdışı çeviri önbelleğe yazılmaz (internet gelince yapay zekâ ile yeniden çevrilir)
+        return offlineNames(miss, lg).then(function (o) {
+          var map = {}; uniq.forEach(function (x) { map[x] = c[x] != null ? c[x] : o.map[x] != null ? o.map[x] : x; });
+          return { map: map, src: 'offline', via: o.via, pending: !!pending };
+        });
+      };
+      var timer = null;
+      var fast = new Promise(function (ok) { timer = setTimeout(function () { ok('slow'); }, NM_FAST); });
+      return Promise.race([aiP.then(function (arr) { return { arr: arr }; }, function (e) { return { err: e }; }), fast]).then(function (w) {
+        clearTimeout(timer);
+        if (w && w.arr) { keep(w.arr); return done('ai'); }
+        if (w && w.err) return offline(false);
+        // yapay zekâ gecikti: çevrimdışıyla devam, yapay zekâ gelince güncelle
+        aiP.then(function (arr) { keep(arr); if (onLate) try { onLate(done('ai')); } catch (e) {} }, function () {});
+        return offline(true);
       });
     });
   }
@@ -1576,7 +1619,7 @@
             } }));
           });
           nmInfo.className = 'fat-pv-nm' + (tr.busy ? ' busy' : '');
-          nmInfo.textContent = names !== 'tr' ? '' : tr.busy ? '⏳ ' + t('pvNamesBusy') : tr.lg === cur.lang && tr.src ? (tr.src === 'ai' ? '✓ ' + t('pvNamesAi') : tr.src === 'same' ? t('pvNamesSame') : '⚠ ' + t('pvNamesOffline')) : '';
+          nmInfo.textContent = names !== 'tr' ? '' : tr.busy ? '⏳ ' + t('pvNamesBusy') : tr.lg === cur.lang && tr.src ? (tr.src === 'ai' ? '✓ ' + t('pvNamesAi') : tr.src === 'same' ? t('pvNamesSame') : tr.pending ? '⌁ ' + t('pvNamesWait') : '⚠ ' + t('pvNamesOffline')) : '';
         };
         var ensureNames = function () {
           if (names !== 'tr' || (tr.lg === cur.lang && tr.map)) { drawNm(); return Promise.resolve(); }
@@ -1584,9 +1627,13 @@
           var list = its.map(function (it) { return String(it.name || ''); }).filter(Boolean);
           var lg = cur.lang;
           tr.busy = true; drawNm();
-          return translateNames(list, lg).then(function (r) {
+          return translateNames(list, lg, function (r2) {
+            // geç gelen yapay zekâ çevirisi: dil ve seçim aynıysa önizleme güncellenir
+            if (cur.lang !== lg || names !== 'tr') return;
+            tr = { lg: lg, map: r2.map, src: r2.src, busy: false }; drawNm(); render(); toast(t('pvNamesLate'));
+          }).then(function (r) {
             if (cur.lang !== lg) return;
-            tr = { lg: lg, map: r.map, src: r.src, busy: false }; drawNm();
+            tr = { lg: lg, map: r.map, src: r.src, busy: false, pending: r.pending }; drawNm();
           }, function () { tr.busy = false; drawNm(); });
         };
         // 3) düzelt
@@ -1740,7 +1787,7 @@
       return { number: (cfg.prefix || 'FAL') + '-' + today().slice(0, 4) + '-0001', date: today(), due_date: '', customer_name: t('previewSampleCust'),
         customer_phone: '+90 555 000 00 00', customer_address: 'Örnek Mah. 1. Cad. No: 5', customer_tax: '1234567890', currency_code: c, items: JSON.stringify(items), subtotal: tt.subtotal, discount: 0, tax_rate: pl ? 0 : tr, tax: tt.tax,
         total: tt.total, paid: 0, status: 'pending', template: d.template || 'falcon', lang: d.lang || lang(), note: '',
-        meta: JSON.stringify({ ettn: uuid(), scenario: d.scenario || 'TEMELFATURA', inv_type: d.inv_type || 'SATIS', customization: d.customization || 'TR1.2', issue_time: nowTime(), 'c.tax_office': 'Örnek V.D.', 'c.city': 'İSTANBUL' }) };
+        meta: JSON.stringify({ scenario: d.scenario || 'TEMELFATURA', inv_type: d.inv_type || 'SATIS', customization: d.customization || 'TR1.2', issue_time: nowTime(), 'c.tax_office': 'Örnek V.D.', 'c.city': 'İSTANBUL' }) };
     }
 
     // ----- tahsilat -----
@@ -2028,13 +2075,17 @@
       Promise.all([CFG ? Promise.resolve(CFG) : loadCfg(),
         q('SELECT id, name, code, unit, sale_price, cost_currency, vat_rate, depot FROM products ORDER BY name COLLATE NOCASE').catch(function () { return []; }),
         q('SELECT * FROM customers ORDER BY name COLLATE NOCASE').catch(function () { return []; }),
-        q('SELECT customer_name, customer_phone, customer_email, customer_address, customer_tax FROM invoices ORDER BY id DESC LIMIT 400')]).then(function (r) {
+        q('SELECT customer_name, customer_phone, customer_email, customer_address, customer_tax FROM invoices ORDER BY id DESC LIMIT 400'),
+        sget('invoice_last')]).then(function (r) {
         var cfg = r[0], products = r[1], customers = r[2], past = r[3];
+        // v1.73: son faturada yapılan seçimler yeni faturanın varsayılanı (senaryo, fatura tipi, özelleştirme no, para birimi, şablon, dil, KDV) — ayar eşitlenir
+        var LAST = jparse(r[4], {}) || {};
         var dft = cfg.defaults || {};
         var isNew = !inv;
         var M0 = inv ? jparse(inv.meta, {}) || {} : {};
         var perLine = perLineVat(cfg);
         var dVat = dft.tax_rate != null && dft.tax_rate !== '' ? num(dft.tax_rate) : 0;
+        if (!inv && LAST.vat != null && LAST.vat !== '') dVat = num(LAST.vat);
         var newItem = function () { var o = { name: '', qty: 1, unit: '', price: '' }; if (perLine) o.vat = dVat; return o; };
         var st = {
           number: inv ? inv.number : '', date: inv ? inv.date : today(), due_date: inv ? inv.due_date || '' : '',
@@ -2053,6 +2104,12 @@
           if (layHas(cfg, 'meta', 'ettn')) st.meta.ettn = uuid();
           if (layHas(cfg, 'meta', 'issue_time')) st.meta.issue_time = nowTime();
           ['scenario', 'inv_type', 'customization'].forEach(function (k) { if (dft[k] && layHas(cfg, 'meta', k)) st.meta[k] = dft[k]; });
+          var LM = LAST.meta || {};
+          ['scenario', 'inv_type', 'customization', 'campaign', 'cargo'].forEach(function (k) { if (LM[k] && layHas(cfg, 'meta', k)) st.meta[k] = LM[k]; });
+          if (LAST.currency && CUR.indexOf(LAST.currency) >= 0) st.currency = LAST.currency;
+          if (LAST.template) st.template = LAST.template;
+          if (LAST.lang) st.lang = LAST.lang;
+          if (LAST.tax_rate != null && LAST.tax_rate !== '') st.tax_rate = LAST.tax_rate;
         }
         if (pre) {
           Object.keys(pre).forEach(function (k) { if (k !== 'meta' && k !== 'cx' && pre[k] !== undefined) st[k] = pre[k]; });
@@ -2294,6 +2351,7 @@
         var tbody = el('tbody');
         var totBox = el('div', { class: 'fat-tot' });
         function recalc() {
+          if (kvSum) drawKvSum();
           var c = st.currency, tt = calcTotals(st.items, st.discount, vatOn ? st.tax_rate : 0, c, perLine);
           var k = tt.subtotal > 0 ? (tt.subtotal - tt.discount) / tt.subtotal : 0;
           st.items.forEach(function (it, i) {
@@ -2420,6 +2478,47 @@
           drawMkSum();
         }
         drawMk();
+        // v1.72: «KDV ekle» (Kâr ekle gibi): oran + hazır oranlar → tüm kalemler (kalem bazında KDV açıksa her kaleme, değilse faturanın KDV oranına); kaldır = KDV'siz
+        var kvBox = el('div', { class: 'fat-mk fat-kv' }), kvSum = el('span', { class: 'fat-mk-s' });
+        function drawKvSum() {
+          var c = st.currency, tt = calcTotals(st.items, st.discount, vatOn ? st.tax_rate : 0, c, perLine);
+          var rates = {}; if (vatOn) { if (perLine) st.items.forEach(function (it) { if (String(it.name || '').trim()) rates[num(it.vat)] = 1; }); else rates[num(st.tax_rate)] = 1; }
+          var rs = Object.keys(rates);
+          var on = vatOn && tt.tax > 0;
+          kvSum.className = 'fat-mk-s' + (on ? '' : ' z');
+          kvSum.textContent = !on ? t('kdvYok') : rs.length === 1 ? t('kvSum', { r: pctTxt(num(rs[0])).replace(/^%/, ''), a: money(tt.tax, c) }) : t('kvSumMix', { a: money(tt.tax, c) });
+        }
+        function drawKv() {
+          kvBox.innerHTML = '';
+          if (st._kvR == null) st._kvR = vatOn ? String(perLine ? (st.items[0] && st.items[0].vat != null ? st.items[0].vat : dVat) : num(st.tax_rate) || '') : '';
+          var rIn = el('input', { type: 'number', step: 'any', min: '0', max: '100', dir: 'ltr', placeholder: '20', value: st._kvR || '', oninput: function (e) { st._kvR = e.target.value; chips(); } });
+          var chipBox = el('span', { class: 'fat-mk-r', style: 'margin:0' });
+          var chips = function () {
+            chipBox.innerHTML = '';
+            [1, 8, 10, 18, 20].forEach(function (v) {
+              chipBox.appendChild(el('button', { type: 'button', class: 'fat-mk-c' + (String(st._kvR).trim() !== '' && num(st._kvR) === v ? ' on' : ''), text: '%' + v, onclick: function () { st._kvR = String(v); rIn.value = st._kvR; chips(); } }));
+            });
+          };
+          chips();
+          var applyAll = function () {
+            var r = num(rIn.value);
+            if (!String(rIn.value).trim() || !(r > 0) || r > 100) { toast(t('kvBad'), 'error'); rIn.focus(); return; }
+            if (!vatOn) setVat(true);
+            if (perLine) st.items.forEach(function (it) { it.vat = r; });
+            else { st.tax_rate = r; var ti = taxField && taxField.querySelector('input'); if (ti) ti.value = String(r); }
+            drawItems(); recalc(); toast(t('kvDone', { r: pctTxt(r).replace(/^%/, '') }));
+          };
+          var clearAll = function () { if (vatOn) setVat(false); recalc(); toast(t('kvRemoved')); };
+          kvBox.appendChild(el('span', { class: 'field-label', text: '🧾 ' + t('kvTitle') }));
+          kvBox.appendChild(el('div', { class: 'fat-mk-r' }, [el('span', { text: t('kvRate') }), rIn, chipBox]));
+          kvBox.appendChild(el('div', { class: 'fat-mk-r' }, [
+            el('button', { type: 'button', class: 'btn small primary', text: '＋ ' + t('kvAll'), onclick: applyAll }),
+            el('button', { type: 'button', class: 'btn small', text: '⊘ ' + t('kvClear'), onclick: clearAll }),
+            kvSum
+          ]));
+          kvBox.appendChild(el('div', { class: 'field-hint', text: t('kvHint') }));
+          drawKvSum();
+        }
         function drawItems() {
           mkClose();
           tbody.innerHTML = '';
@@ -2499,7 +2598,7 @@
           if (perLine) st.items.forEach(function (it) { if (it.vat == null || it.vat === '') it.vat = dVat; });
           cols = calcCols(); itemsHead.innerHTML = ''; itemsHead.appendChild(headTr());
           if (taxField) taxField.style.display = perLine || !vatOn ? 'none' : '';
-          drawVt(); drawItems();
+          drawVt(); drawItems(); if (kvSum) drawKvSum();
         }
         function drawVt() {
           vtBox.innerHTML = '';
@@ -2508,6 +2607,7 @@
           });
         }
         drawVt();
+        drawKv();
 
         // gelir kaydı (yalnız yeni faturada; sonra "Kasaya işle")
         var cashBox = el('div', { class: 'fat-cash span-2' });
@@ -2561,7 +2661,7 @@
           field(t('vatField'), vtBox, { span: 2, group: true, hint: t('vatFieldHint') }),
           (cfg.layout || {}).qr !== false || (cfg.layout || {}).barcode !== false ? field(t('codeField'), cdBox, { span: 2, group: true, hint: t('codeFieldHint') }) : null,
           el('div', { class: 'field span-2' }, [el('span', { class: 'field-label', text: t('items') }), el('div', { class: 'fat-items-wrap' }, [itemsTable]),
-            el('div', null, [el('button', { type: 'button', class: 'btn small', text: t('addItem'), onclick: function () { st.items.push(newItem()); drawItems(); var ins = tbody.querySelectorAll('tr:last-child textarea'); if (ins[0]) ins[0].focus(); } })]), mkBox]),
+            el('div', null, [el('button', { type: 'button', class: 'btn small', text: t('addItem'), onclick: function () { st.items.push(newItem()); drawItems(); var ins = tbody.querySelectorAll('tr:last-child textarea'); if (ins[0]) ins[0].focus(); } })]), mkBox, kvBox]),
           field(t('discount'), (discIn = inpS('discount', { type: 'number', step: 'any', min: '0', dir: 'ltr', after: function () { st.discFx = null; recalc(); } }))),
           (taxField = field(t('taxRate'), inpS('tax_rate', { type: 'number', step: 'any', min: '0', max: '100', dir: 'ltr', after: recalc }))),
           el('div', { class: 'span-2' }, [totBox]),
@@ -2604,6 +2704,12 @@
             record_cash: isNew && st.cash, account_id: st.account_id ? Number(st.account_id) : null, pay_amount: payTouched ? num(st.pay_amount) : ''
           };
           run('saveInvoice', payload, t('saved')).then(function (res) {
+            // v1.73: son seçimler sonraki yeni faturanın varsayılanı olur
+            try {
+              var lm = {}; ['scenario', 'inv_type', 'customization', 'campaign', 'cargo'].forEach(function (k) { lm[k] = String(st.meta[k] || '').trim(); });
+              var fv = st.items.filter(function (x) { return String(x.name || '').trim() && x.vat != null && x.vat !== ''; })[0];
+              Promise.resolve(sset('invoice_last', JSON.stringify({ meta: lm, currency: st.currency, template: st.template, lang: st.lang, tax_rate: st.tax_rate, vat: fv ? num(fv.vat) : (LAST.vat != null ? LAST.vat : null) }))).catch(function () {});
+            } catch (e) {}
             // v1.71: bekleyen özel dosyalar (belgeden okunan belge / yeni faturaya eklenenler)
             if (res && res.id && st._files.length) run('addInvoiceFiles', { invoice_id: res.id, files: st._files.slice() }).then(function () { load(); }, function () {});
             m.close(); load();
@@ -2873,7 +2979,7 @@
         cBox.appendChild(g);
       };
       // fatura bilgileri: Fatura No ve ETTN bizde üretilir; senaryo / tip / özelleştirme varsayılan olarak alınır
-      var MK = ['date', 'number', 'ettn', 'scenario', 'inv_type', 'customization', 'issue_time', 'campaign', 'cargo', 'order_no', 'waybill_no', 'due_date'];
+      var MK = ['date', 'number', 'scenario', 'inv_type', 'customization', 'issue_time', 'campaign', 'cargo', 'order_no', 'waybill_no', 'due_date'];
       var TAKE = { scenario: 1, inv_type: 1, customization: 1 };
       var mSel = {};
       var mRows = MK.filter(function (k) { return r.meta[k]; }).map(function (k) {

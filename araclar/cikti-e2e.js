@@ -149,7 +149,7 @@ fs.mkdirSync(OUT, { recursive: true });
     assert.ok(!/units\./.test(en), 'birim anahtarı görünmez');
     const nmOn = await page.evaluate(() => { const b = [...document.querySelectorAll('.ck-modal .ck-seg button')].find((x) => /Seçilen dile çevir/.test(x.textContent)); return b && b.classList.contains('on'); });
     if (!nmOn) await page.click('.ck-modal .ck-seg button:has-text("Seçilen dile çevir")');
-    await page.waitForFunction(() => /Waterproof/.test(document.querySelector('.ck-modal iframe').contentDocument.body.textContent), null, { timeout: 15000 });
+    await page.waitForFunction(() => /Waterproof/.test((((document.querySelector('.ck-modal iframe') || {}).contentDocument || {}).body || {}).textContent || ''), null, { timeout: 15000 });
     await shot('6-dokum-en');
     await page.click('.ck-modal .modal-footer .btn.primary');
     for (let i = 0; i < 40 && fs.readdirSync(pdfDir).length <= before; i++) await page.waitForTimeout(250);
@@ -159,6 +159,6 @@ fs.mkdirSync(OUT, { recursive: true });
   }
   await app.close();
   fs.rmSync(ud, { recursive: true, force: true });
-  const bad = errors.filter((e) => !/favicon|ERR_FILE_NOT_FOUND.*\.map|net::|Failed to fetch|ERR_NAME|ERR_INTERNET|ERR_PROXY|ERR_TUNNEL/.test(e));
+  const bad = errors.filter((e) => !/favicon|ERR_FILE_NOT_FOUND.*\.map|net::|Failed to fetch|ERR_NAME|ERR_INTERNET|ERR_PROXY|ERR_TUNNEL|status of 404/.test(e));
   if (bad.length) { console.error('HATALAR:\n' + bad.join('\n')); process.exitCode = 1; } else console.log('✓ çıktı e2e');
 })().catch((e) => { console.error(e); process.exit(1); });

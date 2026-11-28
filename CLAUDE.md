@@ -153,3 +153,9 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
 - 1.72.0 TAHSİL EDİLDİ (KASAYA EKLENMEZ): `openPay` üçüncü mod `nocash` («✓ Tahsil edildi (kasaya eklenmez)»; hatırlanmaz, kasa yoksa tek yol) → `addInvoicePayment { no_cash: true }`
   → `invoicePay` kasa hareketi yazmaz (invoice_payments.account_id / cash_transaction_id NULL), fatura paid / partial olur. Listede «✓ kasaya eklenmedi» etiketi. Servis yaması
   `araclar/patch-srv-172.py` (electron/services.js + telefon index; telefon-hazirla.sh'ta). Test: `araclar/fatura-172-e2e.js`.
+- 1.73.0 KDV EKLE: düzenleyicide `kvBox` («🧾 KDV ekle», Kâr ekle panelinin altında): oran + hazır oranlar (1/8/10/18/20) → «Tüm kalemlere uygula» = `setVat(true)` +
+  kalem bazında KDV açıksa her kalemin `vat`'ı, değilse `st.tax_rate`; «KDV'yi kaldır» = `setVat(false)`. Özet `drawKvSum` (recalc ve setVat'ta). Test: `araclar/fatura-172-e2e.js` (4. adım).
+  1.73.0 ayrıca: son seçimler `settings.invoice_last` {meta: scenario/inv_type/customization/campaign/cargo, currency, template, lang, tax_rate, vat} (kayıtta yazılır, yeni faturada uygulanır);
+  ETTN `layOn` meta'dan her zaman düşer (düzenleyici, çıktı, barkod metni, karekod `ettn: ''`, belgeden okuma MK listesi). Ürün adı çevirisi `translateNames(list, lg, onLate)`: en güçlü model
+  (fatura-pdf `translateAi`, istek 120 sn) `NM_FAST` 8 sn içinde gelmezse `offlineNames` (yerel zekâ mt, ≤20 sn; yoksa `offlineName` sözlüğü) → önizleme açılır, yapay zekâ gelince
+  önbelleğe + `onLate` ile önizleme güncellenir. Sözlük `TERMS2` (~590 terim) + ekli kelimelerde kök arama (`TR_SUF`), «1Metre» → «1 m».
