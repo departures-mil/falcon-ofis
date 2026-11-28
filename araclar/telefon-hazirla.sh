@@ -16,4 +16,6 @@ for f in "$W"/assets/index-*.js; do python3 araclar/patch-srv-160.py "$f"; pytho
 # v1.65: Sham Cash dekontu (gömülü services + schema; arayüz: Kasa düğmesi, süzgeç, arama, ayrıntı penceresi)
 for f in "$W"/assets/index-*.js; do python3 araclar/patch-srv-165.py "$f"; done
 for f in "$W"/assets/main-*.js; do python3 araclar/patch-ui-165.py "$f"; done
+# v1.65.1: Kasa tablosunda TUTAR başlığına tıklayınca tutara göre sıralama
+for f in "$W"/assets/main-*.js; do python3 araclar/patch-ui-1651.py "$f"; done
 echo "hazır: $W ($V)"
