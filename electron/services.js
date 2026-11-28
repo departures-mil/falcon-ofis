@@ -184,6 +184,20 @@ function createServices(db, { removeFile = () => {} } = {}) {
   function cleanContacts(c) {
     const out = {};
     for (const k of CONTACT_KEYS) if (c && c[k]) out[k] = 1;
+    // falcon-178-reach: programa özel numara ve @kullanıcı adı (boşsa kişinin genel telefonu kullanılır)
+    const d = c && c._d && typeof c._d === 'object' ? c._d : null;
+    if (d) {
+      const od = {};
+      for (const k of CONTACT_KEYS) {
+        const x = d[k]; if (!x || typeof x !== 'object') continue;
+        const no = String(x.no == null ? '' : x.no).trim().slice(0, 40);
+        let user = String(x.user == null ? '' : x.user).trim().replace(/\s+/g, '').slice(0, 64);
+        if (user && user[0] !== '@') user = '@' + user;
+        if (user === '@') user = '';
+        if (no || user) { od[k] = {}; if (no) od[k].no = no; if (user) od[k].user = user; }
+      }
+      if (Object.keys(od).length) out._d = od;
+    }
     return JSON.stringify(out);
   }
 

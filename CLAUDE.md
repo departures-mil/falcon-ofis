@@ -212,3 +212,8 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   1.77.0 FATURA ALANLARI: yeni faturada senaryo / fatura tipi / özelleştirme no / kampanya / kargo `invoice_last.meta`'daki gibi (anahtar VARSA boş da olsa uygulanır); hiç kayıt yoksa yalnız
   Ayarlar'da elle girilmiş (`defaults.meta_set`) varsayılan; oluşma zamanı silindiyse (`meta.issue_time === ''`) yeni faturada da boş. Düzenleyicide Enter = Kaydet (input; ürün satırları,
   Kâr/KDV panelleri, tahsilat, özel dosyalar ve açık öneri listesi hariç). Test: `test/app.test.js` (1.77), `araclar/fatura-172-e2e.js` 6. adım.
+- 1.78.0 KİŞİ ULAŞIM BİLGİLERİ: `people.contacts` JSON'u bayraklara (whatsapp/telegram/conversations/signal/phone = 1) ek olarak `_d: {<program>: {no, user}}` tutar
+  (servis `cleanContacts`: no ≤40, user boşluksuz ≤64 ve «@» ile başlar; `togglePersonContact` `_d`'yi korur). Yamalar `araclar/patch-srv-178.py` (electron/services.js + telefon index)
+  ve `araclar/patch-ui-178.py` (masaüstü index + telefon main; adlar paketten regex ile yakalanır): kişi formunda `FalconReachEd` (program başına kutu: simge aç/kapa + alt alta
+  Numara / @kullanıcı adı; normal aramada yalnız numara; yazınca simge açılır; blur'da @ eklenir), listede simge ipucu `FalconReachTip`, kişi aramasında `contacts` da aranır,
+  `reachHint` tr/en/ar. telefon-hazirla.sh'ta. Test: `araclar/kisi-178-e2e.js`, `test/app.test.js` (1.78).

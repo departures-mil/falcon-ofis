@@ -542,3 +542,16 @@ test('1.77: güçlü teknik sözlük — İngilizce adlar → Arapça, Arapça s
   assert.ok(!ui.includes("scenario: 'TEMELFATURA', inv_type: 'SATIS', customization: 'TR1.2' }, cfg.defaults)"), 'Ayarlar varsayılanı kendiliğinden TEMELFATURA değil');
   assert.ok(ui.includes("form.addEventListener('keydown'") && ui.includes('if (!b1.disabled) submit(false, b1);'), 'Enter = Kaydet');
 });
+
+test('1.78: kişi ulaşım — program başına numara + @kullanıcı adı', () => {
+  const srv = read('electron/services.js'), ui = read('dist/assets/' + fs.readdirSync(path.join(ROOT, 'dist/assets')).find((f) => /^index-.*\.js$/.test(f)));
+  assert.ok(srv.includes('falcon-178-reach') && srv.includes("if (user && user[0] !== '@') user = '@' + user;"), 'cleanContacts _d saklar');
+  assert.ok(ui.includes('function FalconReachEd') && ui.includes('(FalconReachEd,{value:i.contacts') && ui.includes('+FalconReachTip(e,i)'), 'kişi formu + ipucu');
+  assert.ok(ui.includes("COALESCE(phone,'') || ' ' || COALESCE(contacts,'')) LIKE"), 'aramada programa özel bilgiler');
+  assert.ok(read('araclar/telefon-hazirla.sh').includes('patch-ui-178.py') && read('araclar/telefon-hazirla.sh').includes('patch-srv-178.py'), 'telefona da girer');
+  // servis davranışı (cleanContacts) — kopyasını çalıştır
+  const m = /const CONTACT_KEYS = [^\n]+\n  function cleanContacts\(c\) \{[\s\S]*?\n  \}\n/.exec(srv)[0];
+  const cleanContacts = new Function(m + 'return cleanContacts;')();
+  assert.deepStrictEqual(JSON.parse(cleanContacts({ telegram: true, x: 1, _d: { telegram: { user: ' nuh ', no: '' }, whatsapp: { no: ' +963 9 ' }, bad: { no: '1' } } })),
+    { telegram: 1, _d: { telegram: { user: '@nuh' }, whatsapp: { no: '+963 9' } } });
+});

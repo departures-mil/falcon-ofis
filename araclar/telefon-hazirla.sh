@@ -32,4 +32,7 @@ for f in "$W"/assets/index-*.js; do python3 araclar/patch-srv-168.py "$f"; done
 for f in "$W"/assets/index-*.js; do python3 araclar/patch-srv-171.py "$f"; done
 # v1.72: fatura tahsilatı kasaya eklenmeden (no_cash)
 for f in "$W"/assets/index-*.js; do python3 araclar/patch-srv-172.py "$f"; done
+# v1.78: kişi ulaşım bilgileri — program başına numara + @kullanıcı adı (servis cleanContacts + kişi formu)
+for f in "$W"/assets/index-*.js; do python3 araclar/patch-srv-178.py "$f"; done
+for f in "$W"/assets/main-*.js; do python3 araclar/patch-ui-178.py "$f"; done
 echo "hazır: $W ($V)"
