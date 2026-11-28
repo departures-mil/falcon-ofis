@@ -429,7 +429,7 @@
       pfTitle: '🔒 Özel dosyalar', pfHint: 'Yalnız sen görürsün: fatura çıktısında, PDF\'te ve müşteriye gönderilenlerde yer almaz. Cihazların arasında eşitlenir.',
       pfAdd: '＋ Dosya ekle', pfDrop: 'Dosyaları buraya sürükleyin ya da yapıştırın (Ctrl+V) — PDF, resim, Word, Excel, metin, arşiv…', pfEmpty: 'Bu faturaya eklenmiş özel dosya yok.',
       pfOpen: 'Aç', pfSave: 'Farklı kaydet', pfDel: 'Sil', pfNote: 'Not', pfDelQ: '«{n}» dosyası silinsin mi? (Silinenler kutusundan 30 gün geri alınabilir)', pfAdded: '{n} dosya eklendi',
-      yesDo: 'Evet', impSrcCur: 'Belgedeki fiyatların para birimi', impTotals: 'Kalemlerin toplamı {a} · belgedeki ara toplam {b}', pdfApplied: 'Belgeden okunan bilgiler dolduruldu — kontrol edip kaydedin', pfPending: 'Fatura kaydedilince eklenecek', pfTooBig: '«{n}» çok büyük (en çok 50 MB).', pfFail: 'Dosya eklenemedi:', pfBtn: 'Özel dosyalar (yalnız sen görürsün)'
+      yesDo: 'Evet', payModeNoCash: 'Tahsil edildi (kasaya eklenmez)', payNoCashHint: 'Fatura tahsil edildi olarak işaretlenir; kasaya para girişi yazılmaz, kasa bakiyesi değişmez.', payNoCashBtn: '✓ Tahsil edildi olarak işaretle', payNoCashTag: 'kasaya eklenmedi', impSrcCur: 'Belgedeki fiyatların para birimi', impTotals: 'Kalemlerin toplamı {a} · belgedeki ara toplam {b}', pdfApplied: 'Belgeden okunan bilgiler dolduruldu — kontrol edip kaydedin', pfPending: 'Fatura kaydedilince eklenecek', pfTooBig: '«{n}» çok büyük (en çok 50 MB).', pfFail: 'Dosya eklenemedi:', pfBtn: 'Özel dosyalar (yalnız sen görürsün)'
     },
     en: {
       fromPdf: 'Fill from document', fromPdfHint: 'Reads an invoice / quotation (PDF or photo: JPEG, PNG) and fills the customer, document details, products and prices — AI first, offline (OCR) without internet',
@@ -448,7 +448,7 @@
       pfTitle: '🔒 Private files', pfHint: 'Only you see these: they are not on the invoice printout, the PDF or anything sent to the customer. Synced between your devices.',
       pfAdd: '＋ Add file', pfDrop: 'Drag files here or paste them (Ctrl+V) — PDF, image, Word, Excel, text, archive…', pfEmpty: 'No private files on this invoice.',
       pfOpen: 'Open', pfSave: 'Save as', pfDel: 'Delete', pfNote: 'Note', pfDelQ: 'Delete «{n}»? (It can be restored from Deleted items for 30 days)', pfAdded: '{n} file(s) added',
-      yesDo: 'Yes', impSrcCur: 'Currency of the prices on the document', impTotals: 'Lines total {a} · subtotal on the document {b}', pdfApplied: 'Filled from the document — check and save', pfPending: 'Will be attached when the invoice is saved', pfTooBig: '«{n}» is too large (max 50 MB).', pfFail: 'The file could not be added:', pfBtn: 'Private files (only you see them)'
+      yesDo: 'Yes', payModeNoCash: 'Collected (not added to cash)', payNoCashHint: 'The invoice is marked as collected; no cash entry is written and the cash balance does not change.', payNoCashBtn: '✓ Mark as collected', payNoCashTag: 'not added to cash', impSrcCur: 'Currency of the prices on the document', impTotals: 'Lines total {a} · subtotal on the document {b}', pdfApplied: 'Filled from the document — check and save', pfPending: 'Will be attached when the invoice is saved', pfTooBig: '«{n}» is too large (max 50 MB).', pfFail: 'The file could not be added:', pfBtn: 'Private files (only you see them)'
     },
     ar: {
       fromPdf: 'التعبئة من مستند', fromPdfHint: 'يقرأ فاتورة / عرض سعر (PDF أو صورة: JPEG، PNG) ويعبّئ بيانات العميل والمستند والمنتجات والأسعار — بالذكاء الاصطناعي أولاً، ودون اتصال (OCR) عند انقطاع الإنترنت',
@@ -467,7 +467,7 @@
       pfTitle: '🔒 ملفات خاصة', pfHint: 'تراها أنت فقط: لا تظهر في مطبوع الفاتورة ولا في ملف PDF ولا فيما يُرسل إلى العميل. تتزامن بين أجهزتك.',
       pfAdd: '＋ إضافة ملف', pfDrop: 'اسحب الملفات إلى هنا أو الصقها (Ctrl+V) — PDF، صورة، Word، Excel، نص، أرشيف…', pfEmpty: 'لا توجد ملفات خاصة لهذه الفاتورة.',
       pfOpen: 'فتح', pfSave: 'حفظ باسم', pfDel: 'حذف', pfNote: 'ملاحظة', pfDelQ: 'حذف «{n}»؟ (يمكن استعادته من المحذوفات خلال 30 يوماً)', pfAdded: 'أُضيف {n} ملف',
-      yesDo: 'نعم', impSrcCur: 'عملة الأسعار في المستند', impTotals: 'مجموع البنود {a} · المجموع الفرعي في المستند {b}', pdfApplied: 'عُبّئت البيانات من المستند — راجعها ثم احفظ', pfPending: 'سيُرفق عند حفظ الفاتورة', pfTooBig: '«{n}» كبير جداً (الحد 50 ميغابايت).', pfFail: 'تعذّرت إضافة الملف:', pfBtn: 'ملفات خاصة (تراها أنت فقط)'
+      yesDo: 'نعم', payModeNoCash: 'تم التحصيل (دون إضافة إلى الصندوق)', payNoCashHint: 'تُعلَّم الفاتورة كمحصَّلة؛ لا يُسجَّل إيراد في الصندوق ولا يتغير رصيده.', payNoCashBtn: '✓ تعليمها كمحصَّلة', payNoCashTag: 'لم يُضف إلى الصندوق', impSrcCur: 'عملة الأسعار في المستند', impTotals: 'مجموع البنود {a} · المجموع الفرعي في المستند {b}', pdfApplied: 'عُبّئت البيانات من المستند — راجعها ثم احفظ', pfPending: 'سيُرفق عند حفظ الفاتورة', pfTooBig: '«{n}» كبير جداً (الحد 50 ميغابايت).', pfFail: 'تعذّرت إضافة الملف:', pfBtn: 'ملفات خاصة (تراها أنت فقط)'
     }
   };
   ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX171[l]).forEach(function (k) { TX[l][k] = TX171[l][k]; }); });
@@ -1225,6 +1225,7 @@
       '.fat-imp-dl{flex-basis:100%;margin:4px 0 0;padding-inline-start:18px;font-weight:500;font-size:12.5px;line-height:1.55}.fat-imp-t tr.fat-imp-diff td{background:#e2a40018}.fat-imp-t tr.fat-imp-diff td:first-child{box-shadow:inset 3px 0 #d69500}' +
       // v1.71: belge seçimi, aktarım seçenekleri, özel dosyalar
       '.fat-drop{border:2px dashed var(--border,#cbd5e1);border-radius:12px;padding:26px 16px;text-align:center;cursor:pointer;color:var(--muted,#64748b);line-height:1.5}.fat-drop.on,.fat-drop:hover{border-color:#38bdf8;background:#38bdf812}' +
+      '.fat-nocash{display:inline-block;margin-top:4px;font-size:11px}' +
       '.fat-drop-acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}' +
       '.fat-imp-opts{display:flex;flex-direction:column;gap:8px}.fat-imp-o{display:flex;gap:8px;align-items:flex-start}.fat-imp-o2{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding-inline-start:26px}.fat-imp-o2 select{max-width:100%}' +
       '.fat-imp-sub{margin-top:2px;line-height:1.35;overflow-wrap:anywhere}.fat-imp-doc{margin:2px 0 8px;overflow-wrap:anywhere}' +
@@ -1773,7 +1774,8 @@
         var openFile = function (rel) { try { F().files.open(rel); } catch (e) { toast(String(e && e.message || e), 'error'); } };
         var list = el('div', { class: 'fat-pays' }, pays.length ? pays.map(function (p) {
           return el('div', { class: 'row' }, [
-            el('div', null, [el('b', { dir: 'ltr', text: money(p.amount, C) }), el('div', { class: 'muted small', text: dmy(p.date) + (p.account_name ? ' · ' + p.account_name : '') + (p.note ? ' · ' + p.note : '') })]),
+            el('div', null, [el('b', { dir: 'ltr', text: money(p.amount, C) }), el('div', { class: 'muted small', text: dmy(p.date) + (p.account_name ? ' · ' + p.account_name : '') + (p.note ? ' · ' + p.note : '') }),
+              !p.cash_transaction_id ? el('span', { class: 'fat-st paid fat-nocash', text: '✓ ' + t('payNoCashTag') }) : null]),
             el('div', { class: 'fat-pay-act' }, [
               p.receipt ? el('button', { type: 'button', class: 'btn', title: t('rcView'), text: '📎 ' + t('rcView'), onclick: function () { openFile(p.receipt); } }) : null,
               el('button', { type: 'button', class: 'btn danger-soft', text: '🗑 ' + t('payDel'), onclick: function () {
@@ -1786,9 +1788,10 @@
         var foot = [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } })];
         var m;
         if (rem <= 0) kids.push(el('div', { class: 'notice', text: '✓ ' + t('payDone') }));
-        else if (!accs.length) kids.push(el('div', { class: 'notice error', text: t('noAccount') }));
         else {
-          var mode = payMode() === 'manual' ? 'manual' : 'sham';
+          // v1.72: «Tahsil edildi (kasaya eklenmez)» — kasa yoksa yalnız bu yol
+          var pm0 = payMode(), mode = !accs.length ? 'nocash' : pm0 === 'manual' ? 'manual' : 'sham';
+          if (!accs.length) kids.push(el('div', { class: 'notice error', text: t('noAccount') }));
           var rc = null; // okunan / eklenen dekont
           var amt = el('input', { type: 'number', step: 'any', min: '0', value: String(rem), dir: 'ltr' });
           var dt = el('input', { type: 'date', value: today() });
@@ -1805,9 +1808,9 @@
           var attachRow = el('div', { class: 'fat-rc-att' });
           var drawSeg = function () {
             seg.innerHTML = '';
-            [['sham', '💳 ' + t('payModeSham')], ['manual', '✍ ' + t('payModeManual')]].forEach(function (x) {
-              seg.appendChild(el('button', { type: 'button', class: mode === x[0] ? 'on' : '', text: x[1], onclick: function () {
-                if (mode === x[0]) return; mode = x[0]; payMode(mode); drawSeg(); drawZone();
+            [['sham', '💳 ' + t('payModeSham')], ['manual', '✍ ' + t('payModeManual')], ['nocash', '✓ ' + t('payModeNoCash')]].forEach(function (x) {
+              seg.appendChild(el('button', { type: 'button', class: mode === x[0] ? 'on' : '', disabled: !accs.length && x[0] !== 'nocash' ? 'disabled' : null, text: x[1], onclick: function () {
+                if (mode === x[0]) return; mode = x[0]; if (mode !== 'nocash') payMode(mode); drawSeg(); drawZone();
                 if (mode === 'sham' && shamAcc && !rc) ac.value = String(shamAcc.id);
               } }));
             });
@@ -1925,6 +1928,11 @@
           var take = function (f) { if (mode === 'sham') readReceipt(f); else attachOnly(f); };
           var drawZone = function () {
             zone.innerHTML = ''; attachRow.innerHTML = '';
+            // kasaya eklenmeyen tahsilatta dekont / kasa / gönderen alanları gizlenir
+            [fAcc, fSnd, fRef].forEach(function (f) { if (f) f.style.display = mode === 'nocash' ? 'none' : ''; });
+            if (ncHint) ncHint.style.display = mode === 'nocash' ? '' : 'none';
+            if (payBtn) payBtn.textContent = mode === 'nocash' ? t('payNoCashBtn') : t('pay');
+            if (mode === 'nocash') { zone.style.display = 'none'; flags.innerHTML = ''; return; }
             var cam = el('button', { type: 'button', class: 'btn', text: t('rcCamera'), onclick: function () { pickFile(true, take); } });
             if (mode === 'sham') {
               zone.className = 'fat-rc-zone' + (rc ? ' has' : '');
@@ -1955,12 +1963,21 @@
             }
           };
           document.addEventListener('paste', onPaste);
+          var fAcc = field(t('account'), ac), fSnd = field(t('rcSender'), snd), fRef = field(t('rcRef'), ref), payBtn = null;
+          var ncHint = el('div', { class: 'notice', text: 'ⓘ ' + t('payNoCashHint') });
           drawSeg(); drawZone();
-          kids.push(seg, zone, flags, el('div', { class: 'form' }, [
+          kids.push(seg, ncHint, zone, flags, el('div', { class: 'form' }, [
             field(t('payAmount') + ' (' + t('remaining') + ': ' + money(rem, C) + ')', amt, { hint: t('payAmountHint') }), field(t('payDate'), dt),
-            field(t('account'), ac), field(t('rcSender'), snd), field(t('rcRef'), ref), field(t('payNote'), nt)
+            fAcc, fSnd, fRef, field(t('payNote'), nt)
           ]), attachRow);
           var save = function (btn) {
+            if (mode === 'nocash') {
+              var a0 = num(amt.value);
+              if (!(a0 > 0)) { toast(t('payAmount'), 'error'); mark(amt, true); return; }
+              btn.disabled = true;
+              return run('addInvoicePayment', { invoice_id: inv.id, amount: a0, date: dt.value, note: String(nt.value || '').trim(), no_cash: true }, t('saved'))
+                .then(function () { m.close(); load(); }, function () { btn.disabled = false; });
+            }
             var refV = String(ref.value || '').trim(), sndV = String(snd.value || '').trim(), accName = (accs.filter(function (a) { return String(a.id) === String(ac.value); })[0] || {}).name || '';
             var parts = [];
             if ((mode === 'sham' && rc) || (rc && rc.provider === 'shamcash') || SHAM_RE.test(accName) && (refV || sndV)) parts.push('Sham Cash');
@@ -1998,7 +2015,8 @@
               }, function () { btn.disabled = false; });
             });
           };
-          foot.push(el('button', { type: 'button', class: 'btn primary', text: t('pay'), onclick: function (e) { save(e.currentTarget); } }));
+          payBtn = el('button', { type: 'button', class: 'btn primary', text: mode === 'nocash' ? t('payNoCashBtn') : t('pay'), onclick: function (e) { save(e.currentTarget); } });
+          foot.push(payBtn);
         }
         m = modal(t('payTitle') + ' · ' + cur.number, kids, foot, '');
       });

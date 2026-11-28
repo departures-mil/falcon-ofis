@@ -149,3 +149,7 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   ÖZEL DOSYALAR: tablo `invoice_files` (migration 31, eşitlenir; FILE_COLUMNS / FILE_REFS / lan-falcon.js), servis `addInvoiceFiles` / `deleteInvoiceFile` (Silinenler kutusu) /
   `setInvoiceFileNote`, IPC `files:saveFile` (her tür, ≤50 MB, `belgeler/`); telefon `araclar/patch-srv-171.py` (servis + schema + sync + `files.saveFile`). Listede 🔒 (sayı),
   düzenleyicide «🔒 Özel dosyalar» (yeni faturada kayıtta eklenir). Çıktıya / PDF'e girmez. Test: `araclar/fatura-171-e2e.js` (gerçek örnekler depoda YOK — açık depo; `FATURA_ORNEK=<klasör>`).
+
+- 1.72.0 TAHSİL EDİLDİ (KASAYA EKLENMEZ): `openPay` üçüncü mod `nocash` («✓ Tahsil edildi (kasaya eklenmez)»; hatırlanmaz, kasa yoksa tek yol) → `addInvoicePayment { no_cash: true }`
+  → `invoicePay` kasa hareketi yazmaz (invoice_payments.account_id / cash_transaction_id NULL), fatura paid / partial olur. Listede «✓ kasaya eklenmedi» etiketi. Servis yaması
+  `araclar/patch-srv-172.py` (electron/services.js + telefon index; telefon-hazirla.sh'ta). Test: `araclar/fatura-172-e2e.js`.

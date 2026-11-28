@@ -2317,7 +2317,7 @@ function createServices(db, { removeFile = () => {} } = {}) {
     const status = inv.status === 'cancelled' ? 'cancelled' : inv.total > 0 && paid >= inv.total - INV_PAY_EPS ? 'paid' : paid > INV_PAY_EPS ? 'partial' : 'pending';
     db.run(`UPDATE invoices SET paid=?, status=?, updated_at=${now} WHERE id=?`, [paid, status, id]);
   }
-  function invoicePay(invoiceId, { amount, date, account_id, note, sc }) {
+  function invoicePay(invoiceId, { amount, date, account_id, note, sc, no_cash }) {
     // v1.66: Sham Cash dekontu (sc) — aynı işlem no ikinci kez yazılmaz
     const scRef = sc && typeof sc === 'object' ? optText(sc.ref) : null;
     if (scRef && db.get('SELECT id FROM cash_transactions WHERE sc_ref = ? LIMIT 1', [scRef])) throw new AppError('ERR_SC_DUPLICATE');
@@ -2327,9 +2327,14 @@ function createServices(db, { removeFile = () => {} } = {}) {
     const amt = roundCur(positive(amount), inv.currency_code);
     const paid = db.get('SELECT COALESCE(SUM(amount), 0) AS s FROM invoice_payments WHERE invoice_id = ?', [invoiceId]).s;
     if (amt > inv.total - paid + INV_PAY_EPS) throw new AppError('ERR_INVOICE_OVERPAY');
+    const d = optText(date) || today();
+    // v1.72 no_cash: tahsil edildi sayılır, kasaya para eklenmez (kasa hareketi yok)
+    if (no_cash) {
+      return db.run(`INSERT INTO invoice_payments (invoice_id, date, amount, account_id, note, updated_at) VALUES (?,?,?,NULL,?,${now})`,
+        [invoiceId, d, amt, optText(note)]).lastInsertRowid;
+    }
     const acc = optId(account_id);
     if (acc && accountCurrency(acc) !== inv.currency_code) throw new AppError('ERR_INVALID_CURRENCY');
-    const d = optText(date) || today();
     const payId = db.run(`INSERT INTO invoice_payments (invoice_id, date, amount, account_id, note, updated_at) VALUES (?,?,?,?,?,${now})`,
       [invoiceId, d, amt, acc, optText(note)]).lastInsertRowid;
     const txId = upsertLinkedTx(null, {
@@ -2401,8 +2406,8 @@ function createServices(db, { removeFile = () => {} } = {}) {
     refreshInvoice(invId);
     return { id: invId, number: db.get('SELECT number FROM invoices WHERE id = ?', [invId]).number };
   }
-  function addInvoicePayment({ invoice_id, amount, date, account_id, note, sc }) {
-    const id = invoicePay(invoice_id, { amount, date, account_id, note, sc });
+  function addInvoicePayment({ invoice_id, amount, date, account_id, note, sc, no_cash }) {
+    const id = invoicePay(invoice_id, { amount, date, account_id, note, sc: no_cash ? null : sc, no_cash: !!no_cash });
     refreshInvoice(invoice_id);
     return { id };
   }

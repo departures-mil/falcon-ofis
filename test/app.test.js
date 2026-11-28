@@ -416,7 +416,7 @@ test('Fatura tahsilatı dekontu (1.66): Sham Cash / banka dekontu çevrimdışı
   assert.ok(read('dist/assets/dekont-falcon.js').includes("ocr/tesseract-core-simd-lstm.wasm.js"), 'Kasa okuyucusuyla aynı çekirdek dosyası');
   // sunucu: sc (Sham Cash dekontu) → sc_ref / sc_doc, aynı işlem no ikinci kez yazılmaz; telefon yaması hazırlamada
   const srv = read('electron/services.js');
-  assert.ok(srv.includes("function addInvoicePayment({ invoice_id, amount, date, account_id, note, sc })") && srv.includes("throw new AppError('ERR_SC_DUPLICATE')"));
+  assert.ok(srv.includes("function addInvoicePayment({ invoice_id, amount, date, account_id, note, sc, no_cash })") && srv.includes("throw new AppError('ERR_SC_DUPLICATE')"));
   assert.ok(read('araclar/telefon-hazirla.sh').includes('patch-srv-166.py'));
 });
 
