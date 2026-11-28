@@ -1,10 +1,10 @@
 {
- "version": "1.76.3",
- "notes": "Fatura: çevrimdışı teknik çeviri kütüphanesi (takım tezgâhı terimleri, kısaltmalar, MK → MT), ekran görüntüsünden ürün tablosu ve çoklu belge birleştirme, KDV oranı denetimi, tablo artık sayfadan taşmıyor, «📐 Şekli düzelt», önizleme düzeltmeleri doğru hücrede kalıyor.",
- "size": 16498518,
- "sha256": "7a06acb74c86fac076a79e8e135c0e36e1ec8871f1c02a646768e72129ef1349",
- "sig": "MEQCICjGtR+jdktnHbewjzTg3+hH6ITow6c/X3OYDFEAOmnTAiBISVDMle/tLefwLXhLaFypPrWlxciOnn3CLL5D4m1Lhg==",
- "file": "telefon-1.76.3.fopk",
+ "version": "1.77.0",
+ "notes": "Güçlü teknik çeviri sözlüğü (~3.900 terim), İngilizce ürün adları internetsiz Arapçaya, düzgün Arapça sözcük sırası, yapay zekâya zorunlu terim listesi; faturada senaryo / fatura tipi / özelleştirme no son bırakıldığı gibi (boş da), Enter = Kaydet.",
+ "size": 16527832,
+ "sha256": "7911f215c41368d945dc2a044f9c1103f45b89f6fb1109aa5397256bfb5f7f04",
+ "sig": "MEUCIH4eUIg3NJWoUk2tm9XMFzuroXWc75tY26FY9rxAPgzJAiEAkMY7+cgTcgp5e/uxN6p8jYz9MR63zbTWEW+GL3odukY=",
+ "file": "telefon-1.77.0.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-28T16:56:49.219Z"
+ "publishedAt": "2026-11-28T17:20:29.624Z"
 }
