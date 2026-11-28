@@ -7,11 +7,11 @@
   'use strict';
   if (window.FalconCikti) return;
   var TX = {
-    tr: { title: 'Çıktı', lang: 'Çıktı dili', edit: 'Önizle ve düzelt', names: 'Ürün adları', nKeep: 'Olduğu gibi bırak', nTr: 'Seçilen dile çevir', nBusy: '⏳ Ürün adları çevriliyor…', nAi: '✓ Yapay zekâ ile çevrildi', nOff: '⚠ İnternet / yapay zekâ yok: çevrimdışı teknik sözlükle çevrildi, gerekirse düzeltin', nSame: 'Ürün adları zaten Türkçe', nLeft: 'sözlükte olmayan', editOn: '✎ Düzelt', editOff: '✓ Düzeltmeyi bitir', pdf: '⬇ PDF olarak kaydet', close: 'Kapat',
+    tr: { shape: '📐 Şekli düzelt', shapeHint: 'Sayfadan taşan tabloları ve uzun yazıları sayfaya sığdırır', shapeOk: 'Belge sayfaya sığıyor', title: 'Çıktı', lang: 'Çıktı dili', edit: 'Önizle ve düzelt', names: 'Ürün adları', nKeep: 'Olduğu gibi bırak', nTr: 'Seçilen dile çevir', nBusy: '⏳ Ürün adları çevriliyor…', nAi: '✓ Yapay zekâ ile çevrildi', nOff: '⚠ İnternet / yapay zekâ yok: çevrimdışı teknik sözlükle çevrildi, gerekirse düzeltin', nSame: 'Ürün adları zaten Türkçe', nLeft: 'sözlükte olmayan', editOn: '✎ Düzelt', editOff: '✓ Düzeltmeyi bitir', pdf: '⬇ PDF olarak kaydet', close: 'Kapat',
       hint: 'Önizlemedeki herhangi bir yazıya tıklayıp düzeltebilirsiniz; düzeltmeler PDF\'e aynen girer. Dil değişirse düzeltmeler sıfırlanır.', busy: 'Hazırlanıyor…', lost: 'Dil değişti, düzeltmeler sıfırlandı' },
-    en: { title: 'Output', lang: 'Output language', edit: 'Preview and correct', names: 'Product names', nKeep: 'Keep as they are', nTr: 'Translate to the selected language', nBusy: '⏳ Translating product names…', nAi: '✓ Translated with AI', nOff: '⚠ No internet / AI: translated with the offline technical glossary, correct if needed', nSame: 'Product names are already in Turkish', nLeft: 'not in the glossary', editOn: '✎ Correct', editOff: '✓ Finish correcting', pdf: '⬇ Save as PDF', close: 'Close',
+    en: { shape: '📐 Fix layout', shapeHint: 'Fits tables and long texts that run off the page', shapeOk: 'The document fits the page', title: 'Output', lang: 'Output language', edit: 'Preview and correct', names: 'Product names', nKeep: 'Keep as they are', nTr: 'Translate to the selected language', nBusy: '⏳ Translating product names…', nAi: '✓ Translated with AI', nOff: '⚠ No internet / AI: translated with the offline technical glossary, correct if needed', nSame: 'Product names are already in Turkish', nLeft: 'not in the glossary', editOn: '✎ Correct', editOff: '✓ Finish correcting', pdf: '⬇ Save as PDF', close: 'Close',
       hint: 'Click any text in the preview to correct it; corrections go into the PDF exactly as shown. Changing the language resets them.', busy: 'Preparing…', lost: 'Language changed, corrections were reset' },
-    ar: { title: 'المستند', lang: 'لغة المستند', edit: 'المعاينة والتصحيح', names: 'أسماء المنتجات', nKeep: 'إبقاؤها كما هي', nTr: 'ترجمتها إلى اللغة المختارة', nBusy: '⏳ جارٍ ترجمة أسماء المنتجات…', nAi: '✓ تُرجمت بالذكاء الاصطناعي', nOff: '⚠ لا يوجد إنترنت / ذكاء اصطناعي: تُرجمت بالمعجم التقني دون اتصال، صحّحها عند الحاجة', nSame: 'أسماء المنتجات باللغة التركية أصلاً', nLeft: 'غير موجودة في المعجم', editOn: '✎ تصحيح', editOff: '✓ إنهاء التصحيح', pdf: '⬇ حفظ بصيغة PDF', close: 'إغلاق',
+    ar: { shape: '📐 إصلاح التنسيق', shapeHint: 'يضبط الجداول والنصوص الطويلة التي تخرج عن حدود الصفحة', shapeOk: 'المستند ضمن حدود الصفحة', title: 'المستند', lang: 'لغة المستند', edit: 'المعاينة والتصحيح', names: 'أسماء المنتجات', nKeep: 'إبقاؤها كما هي', nTr: 'ترجمتها إلى اللغة المختارة', nBusy: '⏳ جارٍ ترجمة أسماء المنتجات…', nAi: '✓ تُرجمت بالذكاء الاصطناعي', nOff: '⚠ لا يوجد إنترنت / ذكاء اصطناعي: تُرجمت بالمعجم التقني دون اتصال، صحّحها عند الحاجة', nSame: 'أسماء المنتجات باللغة التركية أصلاً', nLeft: 'غير موجودة في المعجم', editOn: '✎ تصحيح', editOff: '✓ إنهاء التصحيح', pdf: '⬇ حفظ بصيغة PDF', close: 'إغلاق',
       hint: 'انقر على أي نص في المعاينة لتصحيحه؛ تدخل التصحيحات إلى ملف PDF كما هي. تغيير اللغة يلغي التصحيحات.', busy: 'جارٍ التحضير…', lost: 'تغيّرت اللغة فأُلغيت التصحيحات' }
   };
   var ui = function () { var l = document.documentElement.lang; return TX[l] ? l : 'tr'; };
@@ -34,11 +34,38 @@
       '.ck-busy{padding:6px 2px;color:#38bdf8;font-weight:600}';
     document.head.appendChild(s);
   }
+  // v1.76.2: belge sayfadan taşmaz — taşan tablo / hücre varsa yazı kademeli küçülür (en çok %30), yine olmazsa her hücre satır kırar.
+  // Açılışta, düzeltme sırasında ve «Şekli düzelt» ile çalışır; satır içi stil PDF'e aynen girer.
+  function fitDoc(d) {
+    if (!d || !d.body) return false;
+    var W = d.documentElement.clientWidth || 794, any = false;
+    Array.prototype.forEach.call(d.querySelectorAll('table'), function (tb) {
+      if (tb.parentNode && tb.parentNode.closest && tb.parentNode.closest('table')) return;
+      var bad = function () {
+        var r = tb.getBoundingClientRect();
+        if (r.right > W + 1 || r.left < -1) return true;
+        var cs = tb.querySelectorAll('td,th');
+        for (var i = 0; i < cs.length; i++) if (cs[i].scrollWidth > cs[i].clientWidth + 1) return true;
+        return false;
+      };
+      if (!bad()) return;
+      any = true;
+      tb.style.maxWidth = '100%';
+      var base = parseFloat(d.defaultView.getComputedStyle(tb).fontSize) || 12, size = base;
+      while (bad() && size > base * 0.7) { size -= base * 0.04; tb.style.fontSize = size.toFixed(2) + 'px'; }
+      if (bad()) {
+        tb.style.tableLayout = 'fixed'; tb.style.width = '100%';
+        Array.prototype.forEach.call(tb.querySelectorAll('td,th'), function (c) { c.style.whiteSpace = 'normal'; c.style.overflowWrap = 'anywhere'; c.style.wordBreak = 'break-word'; });
+      }
+    });
+    if (d.documentElement.scrollWidth > W + 1) { any = true; d.body.style.overflowWrap = 'anywhere'; }
+    return any;
+  }
   function open(o) {
     css();
     var F = window.falcon || {};
     return new Promise(function (resolve) {
-      var lg = TX[o.lang] ? o.lang : ui(), html = o.html, editing = false, edited = false, done = false;
+      var lg = TX[o.lang] ? o.lang : ui(), html = o.html, editing = false, edited = false, fitted = false, done = false;
       var frame = el('iframe', { sandbox: 'allow-same-origin', title: 'pdf' });
       var pv = el('div', { class: 'ck-pv' }, [frame]);
       var busy = el('div', { class: 'ck-busy', hidden: true, text: '⏳ ' + t('busy') });
@@ -50,7 +77,7 @@
         var k = Math.min(1, (pv.clientWidth - 28) / w); frame.style.transform = 'scale(' + k + ')'; frame.style.marginBottom = (h * k - h) + 'px';
       };
       var load = function () {
-        frame.onload = function () { var d = doc(); if (d) { applyNames(d); d.designMode = editing ? 'on' : 'off'; d.addEventListener('input', function () { edited = true; }); } setTimeout(fit, 30); };
+        frame.onload = function () { var d = doc(); if (d) { applyNames(d); fitted = fitDoc(d); d.designMode = editing ? 'on' : 'off'; var ft = 0; d.addEventListener('input', function () { edited = true; clearTimeout(ft); ft = setTimeout(function () { if (fitDoc(d)) fitted = true; fit(); }, 150); }); } setTimeout(fit, 30); };
         frame.srcdoc = html;
       };
       var lgBox = el('div', { class: 'ck-seg' });
@@ -96,7 +123,7 @@
       var steps = el('div', { class: 'ck-steps' }, [
         o.regen ? el('div', { class: 'ck-st' }, [el('span', { class: 'n', text: '1' }), el('b', { text: t('lang') }), lgBox]) : null,
         canNames ? el('div', { class: 'ck-st' }, [el('span', { class: 'n', text: o.regen ? '2' : '1' }), el('b', { text: t('names') }), nmBox, nmInfo]) : null,
-        el('div', { class: 'ck-st' }, [el('span', { class: 'n', text: String((o.regen ? 2 : 1) + (canNames ? 1 : 0)) }), el('b', { text: t('edit') }), edBtn, el('span', { class: 'hint', text: t('hint') })]),
+        el('div', { class: 'ck-st' }, [el('span', { class: 'n', text: String((o.regen ? 2 : 1) + (canNames ? 1 : 0)) }), el('b', { text: t('edit') }), edBtn, el('button', { type: 'button', class: 'btn small', text: t('shape'), title: t('shapeHint'), onclick: function () { var d = doc(); if (fitDoc(d)) fitted = true; fit(); toast(t('shapeOk')); } }), el('span', { class: 'hint', text: t('hint') })]),
         busy
       ]);
       var bd = el('div', { class: 'modal-backdrop fat-modal ck-modal' });
@@ -104,7 +131,7 @@
       var onKey = function (e) { if (e.key === 'Escape') { var all = document.querySelectorAll('.modal-backdrop'); if (all[all.length - 1] === bd) { e.stopPropagation(); finish(null); } } };
       var pdfBtn = el('button', { type: 'button', class: 'btn primary', text: t('pdf'), onclick: function () {
         var d = doc(), out = html;
-        if (d && (edited || (names === 'tr' && nm.map))) { d.designMode = 'off'; out = '<!doctype html>' + d.documentElement.outerHTML; }
+        if (d && (edited || fitted || (names === 'tr' && nm.map))) { d.designMode = 'off'; out = '<!doctype html>' + d.documentElement.outerHTML; }
         pdfBtn.disabled = true;
         Promise.resolve(F.report.savePdf(out, o.name)).then(function (p) { pdfBtn.disabled = false; if (p) finish(p); }, function (e) { pdfBtn.disabled = false; toast(String(e && e.message || e)); });
       } });
@@ -120,5 +147,5 @@
     });
   }
   function toast(m) { try { var x = el('div', { class: 'toast error', text: m, style: 'position:fixed;bottom:20px;inset-inline-end:20px;z-index:100001;padding:10px 14px;border-radius:10px;background:#1f2937;color:#fff' }); document.body.appendChild(x); setTimeout(function () { x.remove(); }, 3500); } catch (e) {} }
-  window.FalconCikti = { open: open, version: '1.63.0' };
+  window.FalconCikti = { open: open, fitDoc: fitDoc, version: '1.76.2' };
 })();

@@ -328,6 +328,7 @@
   var TX6 = {
     tr: {
       pvEditHint: 'Önizlemedeki herhangi bir yazıya tıklayıp düzeltin. Düzeltmeler bu faturaya kaydedilir, her dil için ayrı saklanır, şablon değişince de korunur ve PDF\'e aynen girer.',
+      pvShape: 'Şekli düzelt', pvShapeHint: 'Bozulmuş düzeltmeleri onarır (başka hücreye kaymış yazılar, boşalmış hücreler) ve tabloyu sayfaya sığdırır. Bütün diller için.', pvShapeDone: '{n} bozuk düzeltme onarıldı, belge sayfaya sığdırıldı', pvShapeOk: 'Şekil düzgün: bozuk düzeltme yok, belge sayfaya sığıyor',
       pvEdits: '{n} düzeltme kayıtlı', pvEditsNone: 'Kayıtlı düzeltme yok', pvRevertAll: 'Tümünü orijinale döndür', pvRevertOne: 'Orijinale döndür',
       pvRevertAllQ: 'Bu dildeki bütün düzeltmeler silinip orijinal metin geri gelsin mi?', pvReverted: 'Orijinal metne dönüldü', pvSavedEd: 'Düzeltme kaydedildi',
       pvFx: 'Döviz kuru', pvCur: 'Para birimini çevir', pvCurOrig: 'asıl', pvRates: 'Kurlar (1 USD =)', pvRatesRefresh: 'Güncel kuru al',
@@ -337,6 +338,7 @@
     },
     en: {
       pvEditHint: 'Click any text in the preview to correct it. Corrections are saved with this invoice, kept separately for each language, survive template changes and go into the PDF exactly as shown.',
+      pvShape: 'Fix layout', pvShapeHint: 'Repairs damaged corrections (text that slid into another cell, emptied cells) and fits the table to the page. For every language.', pvShapeDone: '{n} damaged corrections repaired, document fitted to the page', pvShapeOk: 'Layout is fine: no damaged corrections, the document fits the page',
       pvEdits: '{n} corrections saved', pvEditsNone: 'No saved corrections', pvRevertAll: 'Restore all original text', pvRevertOne: 'Restore original',
       pvRevertAllQ: 'Delete all corrections in this language and restore the original text?', pvReverted: 'Original text restored', pvSavedEd: 'Correction saved',
       pvFx: 'Exchange rate', pvCur: 'Convert currency', pvCurOrig: 'original', pvRates: 'Rates (1 USD =)', pvRatesRefresh: 'Get current rate',
@@ -346,6 +348,7 @@
     },
     ar: {
       pvEditHint: 'انقر على أي نص في المعاينة لتصحيحه. تُحفظ التصحيحات مع هذه الفاتورة، وتُحفظ لكل لغة على حدة، وتبقى عند تغيير القالب، وتدخل إلى ملف PDF كما هي.',
+      pvShape: 'إصلاح التنسيق', pvShapeHint: 'يصلح التصحيحات المتضررة (نص انتقل إلى خلية أخرى، خلايا أفرغت) ويجعل الجدول ضمن حدود الصفحة. لجميع اللغات.', pvShapeDone: 'تم إصلاح {n} من التصحيحات المتضررة وضبط المستند ضمن الصفحة', pvShapeOk: 'التنسيق سليم: لا توجد تصحيحات متضررة والمستند ضمن الصفحة',
       pvEdits: '{n} تصحيحات محفوظة', pvEditsNone: 'لا توجد تصحيحات محفوظة', pvRevertAll: 'استعادة النص الأصلي كله', pvRevertOne: 'استعادة الأصل',
       pvRevertAllQ: 'هل تُحذف جميع التصحيحات في هذه اللغة ويُستعاد النص الأصلي؟', pvReverted: 'استُعيد النص الأصلي', pvSavedEd: 'حُفظ التصحيح',
       pvFx: 'سعر الصرف', pvCur: 'تحويل العملة', pvCurOrig: 'الأصلية', pvRates: 'الأسعار (1 USD =)', pvRatesRefresh: 'جلب السعر الحالي',
@@ -1615,7 +1618,7 @@
           return prev.length ? prev[prev.length - 1] : cand[0];
         };
         // eski düzeltme kayıtlarındaki «yapışma» bozulması: {o:'1', n:'1Fiber …'} + {o:'Fiber …', n:''} → yalnız {o:'Fiber …', n:'Fiber …'(düzeltilmiş)}
-        var repairEd = function (list, texts) {
+        var repairEd = function (list, texts, force) {
           if (!Array.isArray(list) || !list.length) return null;
           var K = function (v) { return String(v || '').toLocaleUpperCase('tr').replace(/[^0-9A-Za-zÇĞİÖŞÜÂÎÛ؀-ۿ]/g, ''); };
           var its = jparse(cur.items, []); if (!Array.isArray(its)) its = [];
@@ -1629,7 +1632,8 @@
             var rest = nv.slice(o.length), kr = K(rest); if (kr.length < 4) continue;
             var j = -1; for (var b = a + 1; b < out.length; b++) if (out[b] && out[b].o !== EMPTY && !String(out[b].n || '').trim() && String(out[b].o || '').trim()) { j = b; break; }
             var isText = known.some(function (k2) { return k2 === kr; });
-            if (j < 0 && !isText) continue;
+            // «Şekli düzelt»: sıra no hücresine yapışmış yazı her durumda geri alınır
+            if (j < 0 && !isText && !(force && /^\d{1,3}$/.test(o.trim()))) continue;
             if (j >= 0) { var r0 = rest.replace(/^\s+/, ''); out[j] = { o: out[j].o, i: out[j].i, n: r0 }; if (r0 === out[j].o) out.splice(j, 1); }
             out.splice(a, 1); a--; changed = true;
           }
@@ -1701,6 +1705,18 @@
             if (!ok) return;
             clearTimeout(saveTimer); pvs.ed[cur.lang] = []; ED.recs = []; savePv(); render(); toast(t('pvReverted'));
           });
+        } });
+        var shapeBtn = el('button', { type: 'button', class: 'btn small', text: '📐 ' + t('pvShape'), title: t('pvShapeHint'), onclick: function () {
+          clearTimeout(saveTimer); if (ED.recs.length) collect();
+          var n0 = 0, texts = ED.recs.map(function (r) { return r.o; });
+          Object.keys(pvs.ed || {}).forEach(function (lg) {
+            var l = pvs.ed[lg]; if (!Array.isArray(l)) return;
+            var f = repairEd(l, lg === cur.lang ? texts : [], true);
+            if (f) { n0 += Math.max(1, l.length - f.length); pvs.ed[lg] = f; }
+          });
+          var p0 = n0 ? savePv() : Promise.resolve();
+          render();
+          Promise.resolve(p0).then(function () { toast(n0 ? t('pvShapeDone', { n: n0 }) : t('pvShapeOk')); });
         } });
         function drawEd() {
           var n = Array.isArray(pvs.ed[cur.lang]) ? pvs.ed[cur.lang].length : 0;
@@ -1898,7 +1914,7 @@
         var steps = el('div', { class: 'fat-pv-steps' }, [
           el('div', { class: 'fat-pv-st' }, [el('span', { class: 'n', text: '1' }), el('b', { text: t('pvStepLang') }), lgBox]),
           el('div', { class: 'fat-pv-st' }, [el('span', { class: 'n', text: '2' }), el('b', { text: t('pvStepNames') }), nmBox, nmInfo]),
-          el('div', { class: 'fat-pv-st' }, [el('span', { class: 'n', text: '3' }), el('b', { text: t('pvStepEdit') }), edBtn, edInfo, edAll, el('span', { class: 'field-hint', text: t('pvEditHint') })])
+          el('div', { class: 'fat-pv-st' }, [el('span', { class: 'n', text: '3' }), el('b', { text: t('pvStepEdit') }), edBtn, shapeBtn, edInfo, edAll, el('span', { class: 'field-hint', text: t('pvEditHint') })])
         ]);
         var bar = el('div', { class: 'fat-pv-bar' }, [
           el('span', { class: 'field-label', text: t('template') }), tplSel,

@@ -194,3 +194,7 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   1.76.1 önizleme düzeltmeleri: `collect` yeni metin düğümünü yalnız KENDİ hücresindeki kayda ekler (`ownerRec`, `cellOf`: td/th/.box/.wd/.sg; önce silinmiş düğümün kaydı) — eskiden
   bir önceki kayda eklendiği için ad «#» / kod hücresine yapışıyordu. Boş td/th'lere boş metin düğümü konur (anahtar `EMPTY` = '\u0002' + sıra). `repairEd` (applyEdits'te, dil başına):
   {o, n: o + kalan} + sonraki boşaltılmış kayıt → kalan o kayda taşınır; boş eş yoksa kalan sayfadaki bir metnin / ürün adının AYNISIYSA düzeltme atılır; onarım kaydedilir.
+- 1.76.2 «📐 ŞEKLİ DÜZELT»: fatura önizlemesinde `shapeBtn` (Düzelt'in yanında) → `repairEd(liste, metinler, force=true)` bütün dillerin `pvs.ed`'ine (force: sıra no hücresine
+  yapışmış yazı eşi olmasa da geri alınır) + savePv + render (fitTable). Dökümler (`cikti-falcon.js`): `fitDoc(d)` (iframe belgesinde taşan tablo → font %4 adımla ≤%30 küçülür, olmazsa
+  fixed + her hücre kırar) açılışta, düzeltmede (150 ms) ve «📐 Şekli düzelt» düğmesiyle; `fitted` olunca PDF iframe HTML'inden alınır. `FalconCikti.fitDoc`. Test: fatura-1751-e2e 5. adım, cikti-e2e.
+

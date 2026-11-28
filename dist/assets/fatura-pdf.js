@@ -1572,7 +1572,7 @@
     });
   }
 
-  var api = { _g: { linesOf: linesOf, gHeaderAt: gHeaderAt, gGroups: gGroups, gKey: gKey, headPart: headPart }, gemini: gemini, renderPage: renderPage, b64: b64, translate: translate, read: read, readMany: readMany, kindOf: kindOf, parseLayout: parseLayout, parseGeneric: parseGeneric, parseBest: parseBest, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, rateNum: rateNum, fixVat: fixVat, codeClean: codeClean, isoDate: isoDate, extract: extract, version: '1.76.1' };
+  var api = { _g: { linesOf: linesOf, gHeaderAt: gHeaderAt, gGroups: gGroups, gKey: gKey, headPart: headPart }, gemini: gemini, renderPage: renderPage, b64: b64, translate: translate, read: read, readMany: readMany, kindOf: kindOf, parseLayout: parseLayout, parseGeneric: parseGeneric, parseBest: parseBest, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, rateNum: rateNum, fixVat: fixVat, codeClean: codeClean, isoDate: isoDate, extract: extract, version: '1.76.2' };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.FalconFaturaPdf = api;
 })(typeof window !== 'undefined' ? window : globalThis);

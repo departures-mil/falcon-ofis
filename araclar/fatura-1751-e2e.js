@@ -158,6 +158,19 @@ fs.mkdirSync(OUT, { recursive: true });
   assert.strictEqual(cells[1][0], '2'); assert.ok(cells[1].includes('25G SFP28 Transceiver Module'), JSON.stringify(cells[1]));
   await shot('5-onarim');
   await close(); await page.waitForTimeout(300);
+  // 5) «📐 Şekli düzelt»: öteki dillerdeki bozuk kayıtlar da onarılır (sıra no hücresine yapışmış, eşi olmayan yazı da geri alınır)
+  await page.evaluate(async () => {
+    const pv = JSON.parse(await window.falcon.settings.get('invoice_pv_FAL-2026-0010'));
+    pv.ed.tr = [{ o: '1', i: 1, n: '1Fiber Optik Yama Paneli' }, { o: 'Fiber Optic Patch Panel', i: 1, n: '' }, { o: '2', i: 1, n: '2xx bilinmeyen yazı' }];
+    await window.falcon.settings.set('invoice_pv_FAL-2026-0010', JSON.stringify(pv));
+  });
+  await open('FAL-2026-0010');
+  await page.click('.fat-pv-steps button:has-text("Şekli düzelt")');
+  await page.waitForTimeout(800);
+  pv = JSON.parse(await page.evaluate(() => window.falcon.settings.get('invoice_pv_FAL-2026-0010')));
+  assert.deepStrictEqual(pv.ed.tr, [{ o: 'Fiber Optic Patch Panel', i: 1, n: 'Fiber Optik Yama Paneli' }], 'şekli düzelt tr: ' + JSON.stringify(pv.ed.tr));
+  ok(await measure(), 'şekli düzelt');
+  await close(); await page.waitForTimeout(300);
   // 4) okuyucu: normalize kodu ayırır
   const nc = await page.evaluate(() => window.FalconFaturaPdf.normalize({ items: [{ name: 'BORING BAR SLEEVE D40 d12', code: 'OKT4012ABORING BAR SLEEVE D40 d12', qty: 1, price: 5 }] }).items[0].code);
   assert.strictEqual(nc, 'OKT4012A', 'normalize kod');
