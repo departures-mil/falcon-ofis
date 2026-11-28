@@ -1,0 +1,160 @@
+# v1.77 Bağlantı elemanları, rulmanlar, güç aktarma organları (tr | en | ar) — DIN / ISO katalog dili
+bağlantı elemanı | Fastener | عنصر تثبيت
+bağlantı elemanları | Fasteners | عناصر تثبيت
+cıvata | Bolt | برغي
+civata | Bolt | برغي
+cıvatası | Bolt | برغي
+altı köşe cıvata | Hexagon Head Bolt | برغي سداسي الرأس
+altıgen başlı cıvata | Hexagon Head Bolt | برغي سداسي الرأس
+imbus cıvata | Socket Head Cap Screw | برغي برأس مجوف سداسي
+alyan başlı cıvata | Socket Head Cap Screw | برغي برأس مجوف سداسي
+havşa başlı cıvata | Countersunk Screw | برغي برأس غاطس
+havşa başlı vida | Countersunk Screw | برغي برأس غاطس
+yuvarlak başlı vida | Pan Head Screw | برغي برأس مستدير
+mercimek başlı vida | Pan Head Screw | برغي برأس مستدير
+flanşlı cıvata | Flange Bolt | برغي بشفة
+saplama | Stud Bolt | مسمار ملولب
+saplama cıvata | Stud Bolt | مسمار ملولب
+tij | Threaded Rod | قضيب ملولب
+dişli çubuk | Threaded Rod | قضيب ملولب
+gijon | Threaded Rod | قضيب ملولب
+vida | Screw | برغي
+vidası | Screw | برغي
+akıllı vida | Self-Drilling Screw | برغي ذاتي الثقب
+sac vidası | Self-Tapping Screw | برغي ذاتي اللولبة
+ağaç vidası | Wood Screw | برغي خشب
+trapez vida | Trapezoidal Screw | برغي شبه منحرف
+ayar vidası | Set Screw | برغي ضبط
+setskur | Set Screw | برغي ضبط
+somun | Nut | صامولة
+somunu | Nut | صامولة
+somunlar | Nuts | صواميل
+altı köşe somun | Hexagon Nut | صامولة سداسية
+fiberli somun | Nylon Insert Lock Nut | صامولة قفل بحلقة نايلون
+kontra somun | Lock Nut | صامولة قفل
+flanşlı somun | Flange Nut | صامولة بشفة
+kelebek somun | Wing Nut | صامولة مجنحة
+kör somun | Cap Nut | صامولة مغلقة
+kaynak somunu | Weld Nut | صامولة لحام
+perçin somun | Rivet Nut | صامولة برشام
+rondela | Washer | وردة
+pul | Washer | وردة
+düz pul | Flat Washer | وردة مسطحة
+yaylı pul | Spring Washer | وردة نابضية
+yaylı rondela | Spring Washer | وردة نابضية
+tırtıllı pul | Serrated Lock Washer | وردة قفل مسننة
+segman | Retaining Ring | حلقة تثبيت
+dış segman | External Retaining Ring | حلقة تثبيت خارجية
+iç segman | Internal Retaining Ring | حلقة تثبيت داخلية
+pim | Pin | دبوس
+konik pim | Taper Pin | دبوس مخروطي
+silindirik pim | Dowel Pin | دبوس أسطواني
+yaylı pim | Spring Pin | دبوس نابضي
+kopilya | Cotter Pin | دبوس مشقوق
+kama | Key | خابور
+kama kanalı | Keyway | مجرى الخابور
+dübel | Wall Plug | خابور جداري
+çelik dübel | Steel Anchor | مرساة فولاذية
+kimyasal dübel | Chemical Anchor | مرساة كيميائية
+ankraj | Anchor Bolt | برغي تثبيت
+ankraj cıvatası | Anchor Bolt | برغي تثبيت
+çivi | Nail | مسمار
+kelepçe | Clamp | مشبك
+hortum kelepçesi | Hose Clamp | مشبك خرطوم
+boru kelepçesi | Pipe Clamp | مشبك أنابيب
+u cıvata | U-Bolt | برغي على شكل U
+paslanmaz çelik | Stainless Steel | فولاذ مقاوم للصدأ
+paslanmaz | Stainless Steel | فولاذ مقاوم للصدأ
+galvaniz | Galvanized | مجلفن
+galvanizli | Galvanized | مجلفن
+çinko kaplı | Zinc-Plated | مطلي بالزنك
+krom kaplı | Chrome-Plated | مطلي بالكروم
+nikel kaplı | Nickel-Plated | مطلي بالنيكل
+pirinç | Brass | نحاس أصفر
+bronz | Bronze | برونز
+alüminyum | Aluminium | ألمنيوم
+dökme demir | Cast Iron | حديد زهر
+döküm | Casting | مصبوب
+karbon çeliği | Carbon Steel | فولاذ كربوني
+alaşımlı çelik | Alloy Steel | فولاذ سبائكي
+takım çeliği | Tool Steel | فولاذ أدوات
+sertleştirilmiş | Hardened | مقسّى
+sertleştirilmiş çelik | Hardened Steel | فولاذ مقسّى
+ısıl işlemli | Heat-Treated | معالج حرارياً
+kalite sınıfı | Property Class | فئة المتانة
+rulman | Bearing | محمل
+rulmanı | Bearing | محمل
+rulmanlar | Bearings | محامل
+bilyalı rulman | Ball Bearing | محمل كريات
+sabit bilyalı rulman | Deep Groove Ball Bearing | محمل كريات ذو أخدود عميق
+eğik bilyalı rulman | Angular Contact Ball Bearing | محمل كريات بتلامس زاوي
+oynak bilyalı rulman | Self-Aligning Ball Bearing | محمل كريات ذاتي المحاذاة
+makaralı rulman | Roller Bearing | محمل أسطوانات
+silindirik makaralı rulman | Cylindrical Roller Bearing | محمل أسطوانات أسطوانية
+konik makaralı rulman | Tapered Roller Bearing | محمل أسطوانات مخروطية
+oynak makaralı rulman | Spherical Roller Bearing | محمل أسطوانات كروية
+iğneli rulman | Needle Roller Bearing | محمل إبري
+eksenel rulman | Thrust Bearing | محمل دفع
+axial rulman | Thrust Bearing | محمل دفع
+rulman yatağı | Bearing Housing | حاضن محمل
+yataklı rulman | Pillow Block Bearing | محمل بحاضن
+flanşlı rulman | Flanged Bearing Unit | وحدة محمل بشفة
+burç | Bushing | جلبة
+yatak burcu | Plain Bearing Bush | جلبة محمل انزلاقي
+kaymalı yatak | Plain Bearing | محمل انزلاقي
+keçe | Seal | مانع تسرب
+yağ keçesi | Oil Seal | مانع تسرب زيت
+sızdırmazlık elemanı | Seal | مانع تسرب
+o-ring | O-Ring | حلقة O
+oring | O-Ring | حلقة O
+o ring | O-Ring | حلقة O
+conta | Gasket | حشية
+contası | Gasket | حشية
+conta seti | Gasket Set | طقم حشيات
+mekanik salmastra | Mechanical Seal | مانع تسرب ميكانيكي
+salmastra | Gland Packing | حشوة حابسة
+dişlisi | Gear | ترس
+dişliler | Gears | تروس
+düz dişli | Spur Gear | ترس مستقيم
+helis dişli | Helical Gear | ترس حلزوني
+konik dişli | Bevel Gear | ترس مخروطي
+sonsuz vida | Worm Screw | لولب دودي
+sonsuz vida dişlisi | Worm Gear | ترس دودي
+kremayer | Gear Rack | جريدة مسننة
+kramayer | Gear Rack | جريدة مسننة
+pinyon | Pinion | ترس صغير
+redüktör | Gearbox | علبة تروس
+dişli kutusu | Gearbox | علبة تروس
+şanzıman | Transmission | ناقل الحركة
+planet redüktör | Planetary Gearbox | علبة تروس كوكبية
+sonsuz vidalı redüktör | Worm Gearbox | علبة تروس دودية
+kasnak | Pulley | بكرة
+v kayış kasnağı | V-Belt Pulley | بكرة سير V
+triger kasnak | Timing Pulley | بكرة توقيت
+kayış | Belt | سير
+v kayışı | V-Belt | سير V
+v kayış | V-Belt | سير V
+triger kayışı | Timing Belt | سير توقيت
+dişli kayış | Toothed Belt | سير مسنن
+düz kayış | Flat Belt | سير مسطح
+zincir dişlisi | Sprocket | ترس سلسلة
+makaralı zincir | Roller Chain | سلسلة أسطوانات
+zincir baklası | Chain Link | حلقة سلسلة
+mil | Shaft | عمود
+şaft | Shaft | عمود
+kardan mili | Cardan Shaft | عمود كاردان
+kavrama | Clutch | قابض
+elektromanyetik kavrama | Electromagnetic Clutch | قابض كهرومغناطيسي
+fren | Brake | فرامل
+elektromanyetik fren | Electromagnetic Brake | فرامل كهرومغناطيسية
+fren balatası | Brake Pad | وسادة فرامل
+yay | Spring | نابض
+basma yayı | Compression Spring | نابض ضغط
+çekme yayı | Extension Spring | نابض شد
+gaz yay | Gas Spring | نابض غازي
+gazlı amortisör | Gas Spring | نابض غازي
+amortisör | Shock Absorber | ممتص صدمات
+titreşim takozu | Anti-Vibration Mount | قاعدة مانعة للاهتزاز
+takoz | Rubber Mount | قاعدة مطاطية
+ayarlı ayak | Levelling Foot | قدم تسوية
+makine ayağı | Machine Foot | قدم آلة

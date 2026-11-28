@@ -1,0 +1,171 @@
+# v1.77 BT, depolama, ofis donanımı, güvenlik / CCTV, yazılım ve hizmet kalemleri (tr | en | ar)
+kurumsal sabit disk | Enterprise Hard Drive | قرص صلب للمؤسسات
+kurumsal disk | Enterprise Drive | قرص للمؤسسات
+kurumsal ssd | Enterprise SSD | قرص SSD للمؤسسات
+sabit disk | Hard Disk Drive | قرص صلب
+harddisk | Hard Disk Drive | قرص صلب
+hard disk | Hard Disk Drive | قرص صلب
+katı hal sürücü | Solid-State Drive | قرص الحالة الصلبة
+katı hal diski | Solid-State Drive | قرص الحالة الصلبة
+disk | Disk | قرص
+diski | Disk | قرص
+diskler | Disks | أقراص
+yedekleme ünitesi | Backup Unit | وحدة النسخ الاحتياطي
+yedekleme cihazı | Backup Appliance | جهاز النسخ الاحتياطي
+yedekleme yazılımı | Backup Software | برنامج النسخ الاحتياطي
+yedekleme | Backup | نسخ احتياطي
+teyp sürücü | Tape Drive | محرك أشرطة
+teyp kartuşu | Tape Cartridge | خرطوشة شريط
+teyp kütüphanesi | Tape Library | مكتبة أشرطة
+ağa bağlı depolama | Network Attached Storage | تخزين متصل بالشبكة
+depolama ünitesi | Storage Unit | وحدة تخزين
+disk kutusu | Disk Enclosure | حاوية أقراص
+disk genişletme ünitesi | Disk Expansion Enclosure | وحدة توسعة الأقراص
+raf tipi sunucu | Rack Server | خادم رفي
+rack sunucu | Rack Server | خادم رفي
+kule tipi sunucu | Tower Server | خادم برجي
+blade sunucu | Blade Server | خادم شفرة
+veri merkezi | Data Center | مركز بيانات
+sanallaştırma | Virtualization | المحاكاة الافتراضية
+sanal sunucu | Virtual Server | خادم افتراضي
+bulut sunucu | Cloud Server | خادم سحابي
+lisans | License | ترخيص
+lisansı | License | ترخيص
+abonelik | Subscription | اشتراك
+yıllık abonelik | Annual Subscription | اشتراك سنوي
+yıllık lisans | Annual License | ترخيص سنوي
+kalıcı lisans | Perpetual License | ترخيص دائم
+kullanıcı lisansı | User License | ترخيص مستخدم
+cihaz lisansı | Device License | ترخيص جهاز
+yazılım | Software | برمجيات
+yazılımı | Software | برمجيات
+işletim sistemi | Operating System | نظام التشغيل
+antivirüs | Antivirus | مضاد فيروسات
+virüs koruma | Antivirus Protection | حماية من الفيروسات
+garanti | Warranty | ضمان
+garantisi | Warranty | ضمان
+garanti uzatma | Warranty Extension | تمديد الضمان
+uzatılmış garanti | Extended Warranty | ضمان ممتد
+yerinde servis | On-Site Service | خدمة في الموقع
+teknik destek | Technical Support | دعم فني
+kurulum hizmeti | Installation Service | خدمة التركيب
+kurulum | Installation | تركيب
+devreye alma | Commissioning | تشغيل تجريبي
+yapılandırma | Configuration | إعداد
+konfigürasyon | Configuration | إعداد
+masaüstü bilgisayar | Desktop Computer | حاسوب مكتبي
+dizüstü bilgisayar | Laptop | حاسوب محمول
+diz üstü bilgisayar | Laptop | حاسوب محمول
+taşınabilir bilgisayar | Laptop | حاسوب محمول
+iş istasyonu | Workstation | محطة عمل
+hepsi bir arada bilgisayar | All-in-One Computer | حاسوب الكل في واحد
+mini bilgisayar | Mini PC | حاسوب مصغر
+tablet bilgisayar | Tablet | حاسوب لوحي
+bilgisayar | Computer | حاسوب
+monitör | Monitor | شاشة
+ekran | Display | شاشة
+ekran kartı | Graphics Card | بطاقة رسوميات
+klavye | Keyboard | لوحة مفاتيح
+klavye mouse seti | Keyboard and Mouse Set | طقم لوحة مفاتيح وفأرة
+mouse | Mouse | فأرة
+kablosuz mouse | Wireless Mouse | فأرة لاسلكية
+kablosuz klavye | Wireless Keyboard | لوحة مفاتيح لاسلكية
+mouse pad | Mouse Pad | لوحة فأرة
+kulaklık | Headphones | سماعات رأس
+mikrofonlu kulaklık | Headset with Microphone | سماعة رأس مع ميكروفون
+hoparlör | Speaker | مكبر صوت
+web kamerası | Webcam | كاميرا ويب
+yazıcı | Printer | طابعة
+lazer yazıcı | Laser Printer | طابعة ليزر
+renkli lazer yazıcı | Colour Laser Printer | طابعة ليزر ملونة
+mürekkep püskürtmeli yazıcı | Inkjet Printer | طابعة نافثة للحبر
+çok fonksiyonlu yazıcı | Multifunction Printer | طابعة متعددة الوظائف
+etiket yazıcı | Label Printer | طابعة ملصقات
+barkod yazıcı | Barcode Printer | طابعة باركود
+fiş yazıcı | Receipt Printer | طابعة إيصالات
+termal yazıcı | Thermal Printer | طابعة حرارية
+barkod okuyucu | Barcode Scanner | قارئ باركود
+tarayıcı | Scanner | ماسح ضوئي
+doküman tarayıcı | Document Scanner | ماسح مستندات
+fotokopi makinesi | Photocopier | آلة تصوير مستندات
+toner | Toner | حبر مسحوق
+toner kartuşu | Toner Cartridge | خرطوشة حبر مسحوق
+muadil toner | Compatible Toner | حبر مسحوق متوافق
+orijinal toner | Original Toner | حبر مسحوق أصلي
+kartuş | Cartridge | خرطوشة
+mürekkep kartuşu | Ink Cartridge | خرطوشة حبر
+drum ünitesi | Drum Unit | وحدة الأسطوانة
+tambur ünitesi | Drum Unit | وحدة الأسطوانة
+ribon | Ribbon | شريط
+termal etiket | Thermal Label | ملصق حراري
+fotokopi kağıdı | Copy Paper | ورق تصوير
+a4 kağıt | A4 Paper | ورق A4
+projeksiyon cihazı | Projector | جهاز عرض
+projektör cihazı | Projector | جهاز عرض
+projeksiyon perdesi | Projection Screen | شاشة عرض
+akıllı tahta | Interactive Whiteboard | سبورة تفاعلية
+etkileşimli ekran | Interactive Display | شاشة تفاعلية
+televizyon | Television | تلفاز
+duvar askı aparatı | Wall Mount Bracket | حامل تثبيت جداري
+tv askı aparatı | TV Wall Mount | حامل تلفاز جداري
+monitör kolu | Monitor Arm | ذراع شاشة
+dizüstü soğutucu | Laptop Cooling Pad | قاعدة تبريد للحاسوب المحمول
+dizüstü çantası | Laptop Bag | حقيبة حاسوب محمول
+yerleştirme istasyonu | Docking Station | محطة إرساء
+usb çoğaltıcı | USB Hub | موزع USB
+usb hub | USB Hub | موزع USB
+kart okuyucu | Card Reader | قارئ بطاقات
+harici kutu | External Enclosure | علبة خارجية
+güvenlik kamerası | Security Camera | كاميرا مراقبة
+ip kamera | IP Camera | كاميرا IP
+kamera | Camera | كاميرا
+dome kamera | Dome Camera | كاميرا قبة
+bullet kamera | Bullet Camera | كاميرا أسطوانية
+hareketli kamera | PTZ Camera | كاميرا متحركة
+speed dome kamera | Speed Dome Camera | كاميرا قبة سريعة
+termal kamera | Thermal Camera | كاميرا حرارية
+gece görüşlü | with Night Vision | مع رؤية ليلية
+ağ video kaydedici | Network Video Recorder | مسجل فيديو شبكي
+dijital video kaydedici | Digital Video Recorder | مسجل فيديو رقمي
+kamera kayıt cihazı | Video Recorder | مسجل فيديو
+kamera lensi | Camera Lens | عدسة كاميرا
+kamera ayağı | Camera Bracket | حامل كاميرا
+kamera muhafazası | Camera Housing | غلاف كاميرا
+geçiş kontrol sistemi | Access Control System | نظام التحكم في الدخول
+geçiş kontrol cihazı | Access Control Terminal | جهاز التحكم في الدخول
+geçiş kontrol | Access Control | التحكم في الدخول
+kartlı geçiş | Card Access | دخول بالبطاقة
+parmak izi okuyucu | Fingerprint Reader | قارئ بصمات
+yüz tanıma terminali | Face Recognition Terminal | جهاز التعرف على الوجه
+yüz tanıma | Face Recognition | التعرف على الوجه
+personel devam kontrol | Time Attendance | تسجيل حضور الموظفين
+manyetik kilit | Magnetic Lock | قفل مغناطيسي
+elektromanyetik kilit | Electromagnetic Lock | قفل كهرومغناطيسي
+kapı otomatiği | Door Operator | مشغل باب
+turnike | Turnstile | بوابة دوارة
+bariyer | Barrier | حاجز
+otopark bariyeri | Parking Barrier | حاجز موقف سيارات
+alarm paneli | Alarm Panel | لوحة إنذار
+alarm sistemi | Alarm System | نظام إنذار
+hırsız alarm sistemi | Intruder Alarm System | نظام إنذار ضد السرقة
+yangın alarm paneli | Fire Alarm Control Panel | لوحة إنذار الحريق
+yangın alarm sistemi | Fire Alarm System | نظام إنذار الحريق
+yangın ihbar butonu | Manual Call Point | نقطة نداء يدوية
+siren | Siren | صفارة إنذار
+flaşörlü siren | Siren with Strobe | صفارة إنذار مع وميض
+manyetik kontak | Magnetic Contact | تلامس مغناطيسي
+interkom | Intercom | إنتركم
+görüntülü diyafon | Video Door Phone | هاتف باب مرئي
+diyafon | Door Phone | هاتف باب
+santral | PBX | مقسم هاتفي
+telefon santrali | Telephone Exchange | مقسم هاتفي
+ip telefon | IP Phone | هاتف IP
+telsiz | Two-Way Radio | جهاز لاسلكي
+el telsizi | Handheld Radio | جهاز لاسلكي يدوي
+anten | Antenna | هوائي
+yönlü anten | Directional Antenna | هوائي اتجاهي
+omni anten | Omnidirectional Antenna | هوائي متعدد الاتجاهات
+uydu alıcısı | Satellite Receiver | جهاز استقبال الأقمار الصناعية
+modem | Modem | مودم
+4g modem | 4G Modem | مودم 4G
+sim kart | SIM Card | شريحة SIM

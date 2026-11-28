@@ -136,6 +136,19 @@ fs.mkdirSync(OUT, { recursive: true });
   assert.strictEqual(await getMeta('Senaryo'), 'TEMELFATURA'); assert.strictEqual(await getMeta('Fatura Tipi'), 'SATIS'); assert.strictEqual(await getMeta('Özelleştirme No'), 'TR1.2');
   assert.strictEqual(await getMeta('ETTN'), null, 'yeni faturada ETTN yok');
   await page.click('.modal .modal-footer button:has-text("Kapat")');
+  // 6) v1.77: alanlar boşaltılınca sonraki faturada da boş (varsayılan TEMELFATURA / SATIS / TR1.2 kendiliğinden gelmez); Enter = Kaydet
+  await openEd('FAL-2026-0002');
+  await setMeta('Senaryo', ''); await setMeta('Fatura Tipi', ''); await setMeta('Özelleştirme No', '');
+  const scIn = page.locator('.modal .field', { has: page.locator('.field-label', { hasText: /^Senaryo/ }) }).first().locator('input').first();
+  await scIn.focus(); await page.keyboard.press('Enter');
+  await page.waitForSelector('.modal .fat-kv', { state: 'detached', timeout: 10000 });
+  let m6 = await q("SELECT meta FROM invoices WHERE number = 'FAL-2026-0002'"); m6 = JSON.parse(m6[0].meta || '{}');
+  assert.ok(!m6.scenario && !m6.inv_type && !m6.customization, 'Enter ile kaydedildi, alanlar boş: ' + JSON.stringify(m6));
+  await page.click('.fatura-page button:has-text("Yeni fatura")');
+  await page.waitForSelector('.modal .fat-kv', { timeout: 10000 });
+  assert.strictEqual(await getMeta('Senaryo'), ''); assert.strictEqual(await getMeta('Fatura Tipi'), ''); assert.strictEqual(await getMeta('Özelleştirme No'), '');
+  await shot('6-yeni-fatura-bos-alanlar');
+  await page.click('.modal .modal-footer button:has-text("Kapat")');
   // fatura çıktısında ETTN yok
   const html = await page.evaluate(() => [...document.querySelectorAll('*')].length);
   void html;

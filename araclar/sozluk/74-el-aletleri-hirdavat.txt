@@ -1,0 +1,201 @@
+# v1.77 El aletleri, elektrikli el aletleri, hırdavat (tr | en | ar)
+el aleti | Hand Tool | أداة يدوية
+el aletleri | Hand Tools | أدوات يدوية
+elektrikli el aleti | Power Tool | أداة كهربائية
+akülü el aleti | Cordless Power Tool | أداة كهربائية لاسلكية
+alet çantası | Tool Bag | حقيبة أدوات
+takım çantası | Tool Case | حقيبة عدة
+takım dolabı | Tool Cabinet | خزانة عدة
+takım arabası | Tool Trolley | عربة عدة
+alet kutusu | Toolbox | صندوق عدة
+takım seti | Tool Set | طقم عدة
+lokma takımı | Socket Set | طقم لقم
+lokma anahtar takımı | Socket Wrench Set | طقم مفاتيح لقم
+lokma | Socket | لقمة
+lokma anahtar | Socket Wrench | مفتاح لقم
+cırcır kolu | Ratchet Handle | ذراع سقاطة
+cırcırlı anahtar | Ratchet Wrench | مفتاح سقاطة
+cırcır | Ratchet | سقاطة
+uzatma | Extension | تمديد
+kardan mafsal | Universal Joint | وصلة عامة
+tork anahtarı | Torque Wrench | مفتاح عزم
+tork tornavidası | Torque Screwdriver | مفك عزم
+yıldız anahtar | Ring Spanner | مفتاح حلقي
+açık ağız anahtar | Open-End Spanner | مفتاح مفتوح الطرف
+kombine anahtar | Combination Spanner | مفتاح مركب
+yıldız açık ağız anahtar | Combination Spanner | مفتاح مركب
+anahtar takımı | Spanner Set | طقم مفاتيح ربط
+anahtar seti | Spanner Set | طقم مفاتيح ربط
+ingiliz anahtarı | Adjustable Wrench | مفتاح إنجليزي
+kurbağacık | Adjustable Wrench | مفتاح إنجليزي
+boru anahtarı | Pipe Wrench | مفتاح أنابيب
+alyan anahtar | Hex Key | مفتاح ألن
+alyan anahtar takımı | Hex Key Set | طقم مفاتيح ألن
+alyan | Hex Key | مفتاح ألن
+torx anahtar | Torx Key | مفتاح توركس
+torx anahtar takımı | Torx Key Set | طقم مفاتيح توركس
+tornavida | Screwdriver | مفك براغي
+tornavida seti | Screwdriver Set | طقم مفكات
+tornavida takımı | Screwdriver Set | طقم مفكات
+düz tornavida | Flat Screwdriver | مفك مسطح
+yıldız tornavida | Phillips Screwdriver | مفك فيليبس
+izoleli tornavida | Insulated Screwdriver | مفك معزول
+kontrol kalemi | Voltage Tester Screwdriver | مفك فحص الجهد
+uç seti | Bit Set | طقم رؤوس
+bits uç | Screwdriver Bit | رأس مفك
+bits uç seti | Bit Set | طقم رؤوس مفكات
+pense | Pliers | زرادية
+kargaburun | Long Nose Pliers | زرادية بوز طويل
+yan keski | Diagonal Cutter | قصافة جانبية
+keski | Chisel | إزميل
+kerpeten | Pincers | كماشة
+segman pensesi | Circlip Pliers | زرادية حلقات
+grip pense | Locking Pliers | زرادية قفل
+su pompası pensesi | Water Pump Pliers | زرادية مضخة المياه
+izoleli pense | Insulated Pliers | زرادية معزولة
+çekiç | Hammer | مطرقة
+balyoz | Sledgehammer | مطرقة ثقيلة
+lastik tokmak | Rubber Mallet | مطرقة مطاطية
+tokmak | Mallet | مطرقة خشبية
+zımba | Punch | سنبك
+nokta zımbası | Centre Punch | سنبك تعليم
+pim zımbası | Pin Punch | سنبك دبوس
+eğe | File | مبرد
+törpü | Rasp | مبرد خشن
+demir testeresi | Hacksaw | منشار حديد
+testere | Saw | منشار
+testere ağzı | Saw Blade | شفرة منشار
+şerit testere | Band Saw | منشار شريطي
+şerit testere ağzı | Band Saw Blade | شفرة منشار شريطي
+daire testere | Circular Saw | منشار دائري
+daire testere bıçağı | Circular Saw Blade | شفرة منشار دائري
+dekupaj testere | Jigsaw | منشار تخريم
+dekupaj testere bıçağı | Jigsaw Blade | شفرة منشار تخريم
+tilki kuyruğu | Reciprocating Saw | منشار ترددي
+panç testere | Hole Saw | منشار ثقوب
+delik testeresi | Hole Saw | منشار ثقوب
+maket bıçağı | Utility Knife | سكين قاطع
+maket bıçağı yedeği | Utility Knife Blade | شفرة سكين قاطع
+makas | Scissors | مقص
+sac makası | Tin Snips | مقص صاج
+boru kesici | Pipe Cutter | قاطعة أنابيب
+cıvata makası | Bolt Cutter | قاطعة براغي
+mengene | Vice | ملزمة
+tezgah mengenesi | Bench Vice | ملزمة طاولة
+işkence | Clamp | مشبك
+işkence kelepçe | Clamp | مشبك
+mıknatıslı tutucu | Magnetic Holder | حامل مغناطيسي
+matkap | Drill | مثقاب
+darbeli matkap | Impact Drill | مثقاب ارتجاجي
+akülü matkap | Cordless Drill | مثقاب لاسلكي
+akülü vidalama | Cordless Screwdriver | مفك براغي لاسلكي
+vidalama makinesi | Screwdriver Drill | مفك براغي كهربائي
+somun sıkma makinesi | Impact Wrench | مفتاح ربط صدمي
+darbeli somun sıkma | Impact Wrench | مفتاح ربط صدمي
+kırıcı delici | Rotary Hammer | مثقاب مطرقي
+kırıcı | Demolition Hammer | مطرقة هدم
+taşlama makinesi | Angle Grinder | جلاخة زاوية
+avuç taşlama | Angle Grinder | جلاخة زاوية
+spiral taşlama | Angle Grinder | جلاخة زاوية
+taşlama | Grinding | تجليخ
+kesme taşı | Cutting Disc | قرص قطع
+taşlama taşı | Grinding Disc | قرص تجليخ
+zımpara taşı | Abrasive Disc | قرص صنفرة
+flap disk | Flap Disc | قرص صنفرة
+elmas testere | Diamond Saw Blade | شفرة منشار ماسية
+elmas kesme diski | Diamond Cutting Disc | قرص قطع ماسي
+tel fırça | Wire Brush | فرشاة سلكية
+çanak tel fırça | Cup Wire Brush | فرشاة سلكية كوبية
+zımpara | Sandpaper | ورق صنفرة
+zımpara kağıdı | Sandpaper | ورق صنفرة
+zımpara makinesi | Sander | آلة صنفرة
+eksantrik zımpara | Random Orbital Sander | آلة صنفرة مدارية
+polisaj makinesi | Polisher | آلة تلميع
+taş motoru | Bench Grinder | جلاخة طاولة
+sütunlu matkap | Drill Press | مثقاب عمودي
+manyetik matkap | Magnetic Drill | مثقاب مغناطيسي
+matkap ucu | Drill Bit | لقمة مثقاب
+matkap uçları | Drill Bits | لقم مثقاب
+matkap ucu seti | Drill Bit Set | طقم لقم مثقاب
+metal matkap ucu | HSS Drill Bit | لقمة مثقاب للمعادن
+beton matkap ucu | Masonry Drill Bit | لقمة مثقاب للخرسانة
+ahşap matkap ucu | Wood Drill Bit | لقمة مثقاب للخشب
+sds matkap ucu | SDS Drill Bit | لقمة مثقاب SDS
+kademeli matkap ucu | Step Drill Bit | لقمة مثقاب متدرجة
+karbür matkap ucu | Carbide Drill Bit | لقمة مثقاب كربيدية
+hss | HSS | فولاذ سريع القطع
+kobalt | Cobalt | كوبالت
+sıcak hava tabancası | Heat Gun | مسدس هواء ساخن
+silikon tabancası | Caulking Gun | مسدس سيليكون
+tutkal tabancası | Glue Gun | مسدس غراء
+çivi tabancası | Nail Gun | مسدس مسامير
+zımba tabancası | Staple Gun | مسدس دباسة
+perçin tabancası | Rivet Gun | مسدس برشام
+perçin | Rivet | برشام
+pop perçin | Blind Rivet | برشام أعمى
+boya tabancası | Spray Gun | مسدس رش
+hava tabancası | Air Blow Gun | مسدس هواء
+lehim havyası | Soldering Iron | كاوية لحام
+havya | Soldering Iron | كاوية لحام
+havya ucu | Soldering Tip | رأس كاوية اللحام
+lehim istasyonu | Soldering Station | محطة لحام
+lehim teli | Solder Wire | سلك لحام قصدير
+lehim pastası | Solder Paste | معجون لحام
+lehim | Solder | قصدير لحام
+lehim pompası | Desoldering Pump | مضخة إزالة اللحام
+sıcak hava istasyonu | Hot Air Rework Station | محطة هواء ساخن
+cımbız | Tweezers | ملقط
+büyüteç | Magnifier | عدسة مكبرة
+merdiven | Ladder | سلم
+alüminyum merdiven | Aluminium Ladder | سلم ألمنيوم
+iskele | Scaffold | سقالة
+el arabası | Wheelbarrow | عربة يدوية
+transpalet | Pallet Truck | رافعة منصات يدوية
+forklift | Forklift | رافعة شوكية
+vinç | Crane | رافعة
+caraskal | Chain Hoist | رافعة سلسلة
+zincirli vinç | Chain Hoist | رافعة سلسلة
+elektrikli vinç | Electric Hoist | رافعة كهربائية
+kriko | Jack | رافعة
+hidrolik kriko | Hydraulic Jack | رافعة هيدروليكية
+sapan | Lifting Sling | حمالة رفع
+kaldırma sapanı | Lifting Sling | حمالة رفع
+zincir | Chain | سلسلة
+mapa | Eye Bolt | مسمار حلقي
+kilit | Lock | قفل
+asma kilit | Padlock | قفل معلق
+menteşe | Hinge | مفصلة
+kapı kolu | Door Handle | مقبض باب
+çekmece rayı | Drawer Slide | سكة درج
+tekerlek | Wheel | عجلة
+döner tekerlek | Swivel Caster | عجلة دوارة
+frenli tekerlek | Caster with Brake | عجلة مع فرامل
+sabit tekerlek | Fixed Caster | عجلة ثابتة
+kulp | Handle | مقبض
+sap | Handle | مقبض
+silikon | Silicone | سيليكون
+mastik | Sealant | مانع تسرب
+yapıştırıcı | Adhesive | لاصق
+epoksi | Epoxy | إيبوكسي
+epoksi yapıştırıcı | Epoxy Adhesive | لاصق إيبوكسي
+japon yapıştırıcı | Cyanoacrylate Adhesive | لاصق سيانو أكريلات
+vida sabitleyici | Threadlocker | مثبت لولبي
+sıvı conta | Liquid Gasket | حشية سائلة
+köpük | Foam | رغوة
+poliüretan köpük | Polyurethane Foam | رغوة البولي يوريثان
+bant | Tape | شريط
+koli bandı | Packing Tape | شريط تغليف
+çift taraflı bant | Double-Sided Tape | شريط لاصق على الوجهين
+maskeleme bandı | Masking Tape | شريط تغطية
+alüminyum bant | Aluminium Tape | شريط ألمنيوم
+uyarı bandı | Warning Tape | شريط تحذير
+ikaz şeridi | Warning Tape | شريط تحذير
+streç film | Stretch Film | غشاء تغليف مطاطي
+balonlu naylon | Bubble Wrap | غلاف فقاعي
+karton kutu | Cardboard Box | صندوق كرتون
+koli | Carton Box | صندوق كرتون
+palet | Pallet | منصة نقالة
+ahşap palet | Wooden Pallet | منصة خشبية
+plastik palet | Plastic Pallet | منصة بلاستيكية
+çember | Strapping Band | شريط تحزيم
+çember makinesi | Strapping Machine | آلة تحزيم

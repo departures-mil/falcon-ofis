@@ -1,0 +1,182 @@
+# v1.77 Takım tezgâhları, CNC, kesici takımlar, takım tutucular, bağlama (60-takim-tezgahi.txt'in devamı; tr | en | ar)
+takım tezgahı | Machine Tool | آلة تشغيل
+takım tezgâhı | Machine Tool | آلة تشغيل
+cnc torna | CNC Lathe | مخرطة CNC
+cnc torna tezgahı | CNC Lathe | مخرطة CNC
+torna tezgahı | Lathe | مخرطة
+torna | Lathe | مخرطة
+universal torna | Universal Lathe | مخرطة عامة
+cnc freze | CNC Milling Machine | فريزة CNC
+freze tezgahı | Milling Machine | آلة تفريز
+dik işlem merkezi | Vertical Machining Center | مركز تشغيل رأسي
+yatay işlem merkezi | Horizontal Machining Center | مركز تشغيل أفقي
+işlem merkezi | Machining Center | مركز تشغيل
+5 eksen | 5-Axis | خماسي المحاور
+taşlama tezgahı | Grinding Machine | آلة تجليخ
+silindirik taşlama | Cylindrical Grinding | تجليخ أسطواني
+satıh taşlama | Surface Grinding | تجليخ سطحي
+tel erozyon | Wire EDM | قطع بالتفريغ الكهربائي السلكي
+dalma erozyon | Sinker EDM | تشغيل بالتفريغ الكهربائي الغاطس
+erozyon | EDM | تشغيل بالتفريغ الكهربائي
+lazer kesim makinesi | Laser Cutting Machine | آلة قطع بالليزر
+lazer kesim | Laser Cutting | قطع بالليزر
+abkant pres | Press Brake | مكبس ثني
+abkant | Press Brake | مكبس ثني
+giyotin makas | Guillotine Shear | مقص مقصلة
+hidrolik pres | Hydraulic Press | مكبس هيدروليكي
+eksantrik pres | Eccentric Press | مكبس لامركزي
+pres | Press | مكبس
+kalıp | Mould | قالب
+enjeksiyon kalıbı | Injection Mould | قالب حقن
+enjeksiyon makinesi | Injection Moulding Machine | آلة قولبة بالحقن
+kesme kalıbı | Blanking Die | قالب قطع
+büküm makinesi | Bending Machine | آلة ثني
+boru bükme makinesi | Pipe Bending Machine | آلة ثني الأنابيب
+kesme makinesi | Cutting Machine | آلة قطع
+iş mili | Spindle | محور الدوران
+fener mili | Spindle | محور الدوران
+spindle | Spindle | محور الدوران
+spindle motoru | Spindle Motor | محرك محور الدوران
+punta gövdesi | Tailstock | غراب متحرك
+gezer punta | Tailstock | غراب متحرك
+fener mili kafası | Headstock | غراب ثابت
+siper | Guard | واقي
+tezgah tablası | Machine Table | طاولة الآلة
+divizör | Dividing Head | رأس تقسيم
+döner tabla | Rotary Table | طاولة دوارة
+makine mengenesi | Machine Vice | ملزمة آلة
+hassas mengene | Precision Vice | ملزمة دقيقة
+hidrolik mengene | Hydraulic Vice | ملزمة هيدروليكية
+bağlama aparatı | Fixture | تجهيزة تثبيت
+fikstür | Fixture | تجهيزة تثبيت
+bağlama seti | Clamping Kit | طقم تثبيت
+bağlama pabucu | Step Clamp | ماسك مدرج
+t kanal somunu | T-Slot Nut | صامولة مجرى T
+t somun | T-Slot Nut | صامولة مجرى T
+paralel takımı | Parallel Set | طقم متوازيات
+manyetik tabla | Magnetic Chuck | ظرف مغناطيسي
+üç ayaklı ayna | 3-Jaw Chuck | ظرف ثلاثي الفكوك
+dört ayaklı ayna | 4-Jaw Chuck | ظرف رباعي الفكوك
+hidrolik ayna | Hydraulic Chuck | ظرف هيدروليكي
+pnömatik ayna | Pneumatic Chuck | ظرف هوائي
+çene | Jaw | فك
+pens | Collet | كوليت
+pensler | Collets | كوليتات
+pens seti | Collet Set | طقم كوليتات
+er pens | ER Collet | كوليت ER
+pens anahtarı | Collet Wrench | مفتاح الكوليت
+takım tutucu | Tool Holder | حامل أداة
+takım tutucusu | Tool Holder | حامل أداة
+takım tutucular | Tool Holders | حوامل أدوات
+takım bağlama | Tool Clamping | تثبيت الأداة
+takım sıkma aparatı | Tool Tightening Fixture | جهاز شد الأدوات
+bt40 | BT40 | BT40
+hsk tutucu | HSK Tool Holder | حامل أداة HSK
+pens tutucu sapı | Collet Chuck Holder | حامل ظرف الكوليت
+hidrolik tutucu | Hydraulic Chuck | ظرف هيدروليكي
+shrink tutucu | Shrink-Fit Holder | حامل بالتقلص الحراري
+weldon tutucu | Weldon Holder | حامل ويلدون
+matkap aynası | Drill Chuck | ظرف مثقاب
+anahtarlı matkap aynası | Keyed Drill Chuck | ظرف مثقاب بمفتاح
+anahtarsız matkap aynası | Keyless Drill Chuck | ظرف مثقاب بدون مفتاح
+çekme cıvatası | Pull Stud | مسمار سحب
+çektirme cıvatası | Pull Stud | مسمار سحب
+kesici takım | Cutting Tool | أداة قطع
+kesici takımlar | Cutting Tools | أدوات قطع
+karbür | Carbide | كربيد
+karbür uç | Carbide Insert | لقمة كربيدية
+karbür freze | Carbide End Mill | فريزة كربيدية
+sermet | Cermet | سيرميت
+kaplamalı | Coated | مطلي
+kaplamasız | Uncoated | غير مطلي
+tin kaplı | TiN-Coated | مطلي بنيتريد التيتانيوم
+elmas uç | Diamond Insert | لقمة ماسية
+cbn uç | CBN Insert | لقمة CBN
+torna ucu | Turning Insert | لقمة خراطة
+freze ucu | Milling Insert | لقمة تفريز
+kanal ucu | Grooving Insert | لقمة تخديد
+kesme ucu | Parting Insert | لقمة فصل
+diş açma ucu | Threading Insert | لقمة لولبة
+vida açma ucu | Threading Insert | لقمة لولبة
+kopya ucu | Profiling Insert | لقمة تشكيل
+torna kalemi | Turning Tool | أداة خراطة
+dış çap katerı | OD Turning Tool Holder | حامل أداة خراطة القطر الخارجي
+iç çap katerı | Boring Bar | قضيب تجويف
+kanal katerı | Grooving Tool Holder | حامل أداة تخديد
+kesme katerı | Parting Tool Holder | حامل أداة فصل
+diş katerı | Threading Tool Holder | حامل أداة لولبة
+kater bloğu | Tool Block | كتلة حامل الأداة
+blok kater | Tool Block | كتلة حامل الأداة
+kesme bıçağı | Parting Blade | شفرة فصل
+kesme lamasi | Parting Blade | شفرة فصل
+freze çakı | Milling Cutter | فريزة
+kaba freze | Roughing End Mill | فريزة تخشين
+küresel freze | Ball Nose End Mill | فريزة كروية الرأس
+radyüslü freze | Corner Radius End Mill | فريزة بنصف قطر
+kanal frezesi | Slot Drill | فريزة مجاري
+t kanal frezesi | T-Slot Cutter | فريزة مجرى T
+pah frezesi | Chamfer Mill | فريزة تشطيف
+yüzey frezesi | Face Mill | فريزة وجهية
+tarama frezesi | Face Mill | فريزة وجهية
+disk freze | Side and Face Cutter | فريزة قرصية
+modül freze | Gear Cutter | فريزة تروس
+freze gövdesi | Milling Cutter Body | جسم الفريزة
+takma uçlu freze | Indexable Milling Cutter | فريزة بلقم قابلة للتبديل
+takma uçlu matkap | Indexable Drill | مثقاب بلقم قابلة للتبديل
+karbür matkap | Carbide Drill | مثقاب كربيدي
+uzun matkap | Long Drill | مثقاب طويل
+derin delik matkabı | Deep Hole Drill | مثقاب ثقوب عميقة
+kılavuz çekme | Tapping | لولبة داخلية
+makine kılavuzu | Machine Tap | ذكر قلاووظ آلي
+el kılavuzu | Hand Tap | ذكر قلاووظ يدوي
+el kılavuzu takımı | Hand Tap Set | طقم ذكور قلاووظ يدوية
+helisel kılavuz | Spiral Flute Tap | ذكر قلاووظ حلزوني
+form kılavuz | Forming Tap | ذكر قلاووظ تشكيلي
+kılavuz kolu | Tap Wrench | مقبض ذكر القلاووظ
+pafta | Threading Die | لقمة لولبة خارجية
+pafta kolu | Die Stock | مقبض لقمة اللولبة
+pafta takımı | Tap and Die Set | طقم ذكور ولقم لولبة
+rayba tutucu | Reamer Holder | حامل موسع الثقوب
+havşa matkabı | Countersink Drill | مثقاب تشطيف
+çapak alma bıçağı | Deburring Tool | أداة إزالة النتوءات
+çapak alma | Deburring | إزالة النتوءات
+tırtıl çekme | Knurling Tool | أداة تخريش
+tırtıl | Knurl | تخريش
+merkezleme matkabı | Spot Drill | مثقاب تعليم
+punta matkap | Centre Drill | مثقاب مركزي
+kenar bulucu | Edge Finder | محدد الحواف
+merkez bulucu | Centre Finder | محدد المركز
+3d probe | 3D Probe | مجس ثلاثي الأبعاد
+takım boyu ölçer | Tool Length Setter | جهاز ضبط طول الأداة
+takım ön ayar cihazı | Tool Presetter | جهاز الضبط المسبق للأدوات
+soğutma sıvısı memesi | Coolant Nozzle | فوهة سائل التبريد
+soğutma pompası | Coolant Pump | مضخة سائل التبريد
+talaş | Chip | رايش
+talaş konveyörü | Chip Conveyor | ناقل الرايش
+talaş kırıcı | Chip Breaker | كاسر الرايش
+körük | Bellows Cover | غطاء منفاخي
+kızak koruyucu | Way Cover | غطاء المنزلقات
+teleskopik kapak | Telescopic Cover | غطاء تلسكوبي
+yağ sıyırıcı | Wiper Seal | حشية مسح
+tezgah lambası | Machine Lamp | مصباح الآلة
+dijital okuma ünitesi | Digital Readout | وحدة قراءة رقمية
+cnc kontrol ünitesi | CNC Control Unit | وحدة تحكم CNC
+servis | Service | خدمة
+bakım kiti | Maintenance Kit | طقم صيانة
+yedek parça seti | Spare Parts Kit | طقم قطع غيار
+kesme hızı | Cutting Speed | سرعة القطع
+ilerleme | Feed | تغذية
+devir | Speed | سرعة الدوران
+çap | Diameter | قطر
+boy | Length | طول
+uzunluk | Length | طول
+genişlik | Width | عرض
+kalınlık | Thickness | سماكة
+derinlik | Depth | عمق
+yükseklik | Height | ارتفاع
+sağ el | Right-Hand | يمين
+sol el | Left-Hand | يسار
+iç çap | Inner Diameter | القطر الداخلي
+dış çap | Outer Diameter | القطر الخارجي
+hassasiyet | Precision | دقة
+tolerans | Tolerance | تفاوت مسموح

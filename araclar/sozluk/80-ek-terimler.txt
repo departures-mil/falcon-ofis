@@ -1,0 +1,97 @@
+# v1.77 Kalite taramasında eksik çıkan terimler + sayı sözcükleri + İngilizce yazılmış adlar için terimler (tr | en | ar)
+çift etkili | Double-Acting | مزدوج الفعل
+tek etkili | Single-Acting | أحادي الفعل
+seviye | Level | مستوى
+bedeli | Cost | تكلفة
+bedel | Cost | تكلفة
+nakliye bedeli | Shipping Cost | تكلفة الشحن
+kargo bedeli | Shipping Cost | تكلفة الشحن
+montaj hizmeti | Installation Service | خدمة التركيب
+montaj bedeli | Installation Cost | تكلفة التركيب
+işçilik | Labour | أجور العمل
+işçilik bedeli | Labour Cost | تكلفة العمالة
+triger seti | Timing Belt Kit | طقم سير التوقيت
+triger | Timing Belt | سير التوقيت
+üç ayaklı | 3-Jaw | ثلاثي الفكوك
+dört ayaklı | 4-Jaw | رباعي الفكوك
+altlık | Base | قاعدة
+altlığı | Base | قاعدة
+sigorta altlığı | Fuse Base | قاعدة المصهر
+ağızlı | Flute | حدود قطع
+ağız | Flute | حد قطع
+arabalı | with Carriage | مع عربة
+iki | Two | اثنان
+üç | Three | ثلاثة
+dört | Four | أربعة
+beş | Five | خمسة
+yedi | Seven | سبعة
+sekiz | Eight | ثمانية
+dokuz | Nine | تسعة
+on iki | Twelve | اثنا عشر
+hex | Hex | سداسي
+hexagon | Hexagon | سداسي
+flute | Flute | حد قطع
+flutes | Flutes | حدود قطع
+chin strap | Chin Strap | حزام الذقن
+shock strut | Shock Strut | دعامة ممتصة للصدمات
+strut | Strut | دعامة
+interchangeable tips | Interchangeable Tips | رؤوس قابلة للتبديل
+interchangeable | Interchangeable | قابل للتبديل
+overhauled | Overhauled | معاد تأهيله
+hard drive | Hard Drive | قرص صلب
+end mill | End Mill | فريزة إصبعية
+tool holder | Tool Holder | حامل أداة
+turning tool holder | Turning Tool Holder | حامل أداة خراطة
+drill bit | Drill Bit | لقمة مثقاب
+insert | Insert | لقمة
+inserts | Inserts | لقم
+proximity sensor | Proximity Sensor | حساس تقارب
+hex bolt | Hex Bolt | برغي سداسي
+hex nut | Hex Nut | صامولة سداسية
+socket head cap screw | Socket Head Cap Screw | برغي برأس مجوف سداسي
+grub screw | Grub Screw | برغي ضبط
+shim | Shim | رقيقة ضبط
+spacer | Spacer | فاصل
+bracket | Bracket | كتيفة
+braket | Bracket | كتيفة
+housing | Housing | غلاف
+cover | Cover | غطاء
+kapak | Cover | غطاء
+kapağı | Cover | غطاء
+assembly | Assembly | مجموعة
+assy | Assembly | مجموعة
+kit | Kit | طقم
+gasket | Gasket | حشية
+seal kit | Seal Kit | طقم حشيات
+repair kit | Repair Kit | طقم إصلاح
+tamir takımı | Repair Kit | طقم إصلاح
+tamir kiti | Repair Kit | طقم إصلاح
+servo motor sürücü | Servo Motor Drive | مشغل محرك سيرفو
+servo motor sürücüsü | Servo Motor Drive | مشغل محرك سيرفو
+servo motor sürücü seti | Servo Motor and Drive Set | طقم محرك سيرفو ومشغل
+motor sürücüsü | Motor Drive | مشغل محرك
+step motor sürücüsü | Stepper Motor Driver | مشغل محرك خطوي
+pano tipi | Panel-Mount | لتركيب اللوحات
+duvar tipi | Wall-Mounted | جداري
+masa tipi | Desktop | مكتبي
+kurbağacık anahtar | Adjustable Wrench | مفتاح إنجليزي
+kurbağacık anahtarı | Adjustable Wrench | مفتاح إنجليزي
+döküm gövdeli | with Cast Housing | بهيكل مصبوب
+gövdeli | with Housing | بهيكل
+poliüretan | Polyurethane | بولي يوريثان
+poliüretan tekerlekli | with Polyurethane Wheels | بعجلات بولي يوريثان
+tekerlekli | with Wheels | بعجلات
+kalıpçı | Toolmaker's | لصانعي القوالب
+kalıpçı mengenesi | Toolmaker's Vice | ملزمة صانعي القوالب
+ray arabası | Rail Carriage | عربة سكة
+lineer ray arabası | Linear Guide Carriage | عربة دليل خطي
+kafa tipi | Head-Mount | للتركيب في الرأس
+tavan tipi | Ceiling-Mount | للتركيب في السقف
+bölge | Zone | منطقة
+bölgeli | Zone | منطقة
+pudrasız | Powder-Free | خالية من البودرة
+pudralı | Powdered | مع بودرة
+beden | Size | مقاس
+numara | Size | مقاس
+anahtarlı grup priz | Switched Power Strip | مشترك كهربائي بمفتاح
+dev/dk | rpm | دورة/دقيقة

@@ -1,0 +1,157 @@
+# v1.77 Endüstriyel otomasyon, sensörler, kontrol (tr | en | ar)
+programlanabilir lojik denetleyici | Programmable Logic Controller | وحدة تحكم منطقية قابلة للبرمجة
+plc modülü | PLC Module | وحدة PLC
+giriş modülü | Input Module | وحدة إدخال
+çıkış modülü | Output Module | وحدة إخراج
+dijital giriş modülü | Digital Input Module | وحدة إدخال رقمية
+dijital çıkış modülü | Digital Output Module | وحدة إخراج رقمية
+analog giriş modülü | Analog Input Module | وحدة إدخال تناظرية
+analog çıkış modülü | Analog Output Module | وحدة إخراج تناظرية
+haberleşme modülü | Communication Module | وحدة اتصال
+genişleme modülü | Expansion Module | وحدة توسعة
+güç kaynağı modülü | Power Supply Module | وحدة مزود الطاقة
+işlemci modülü | CPU Module | وحدة المعالج
+operatör paneli | Operator Panel | لوحة المشغل
+dokunmatik operatör paneli | Touch Operator Panel | لوحة مشغل تعمل باللمس
+dokunmatik panel | Touch Panel | لوحة لمس
+dokunmatik ekran | Touchscreen | شاشة لمس
+hmi panel | HMI Panel | لوحة HMI
+servo motor | Servo Motor | محرك سيرفو
+servo sürücü | Servo Drive | مشغل سيرفو
+step motor | Stepper Motor | محرك خطوي
+step motor sürücü | Stepper Motor Driver | مشغل محرك خطوي
+adım motoru | Stepper Motor | محرك خطوي
+enkoder | Encoder | مشفر
+enkoderi | Encoder | مشفر
+artımsal enkoder | Incremental Encoder | مشفر تزايدي
+mutlak enkoder | Absolute Encoder | مشفر مطلق
+döner enkoder | Rotary Encoder | مشفر دوار
+lineer cetvel | Linear Scale | مسطرة خطية
+lineer enkoder | Linear Encoder | مشفر خطي
+sensör | Sensor | حساس
+sensörü | Sensor | حساس
+algılayıcı | Sensor | حساس
+endüktif sensör | Inductive Sensor | حساس حثي
+kapasitif sensör | Capacitive Sensor | حساس سعوي
+optik sensör | Photoelectric Sensor | حساس كهروضوئي
+fotoelektrik sensör | Photoelectric Sensor | حساس كهروضوئي
+ultrasonik sensör | Ultrasonic Sensor | حساس فوق صوتي
+manyetik sensör | Magnetic Sensor | حساس مغناطيسي
+silindir sensörü | Cylinder Sensor | حساس الأسطوانة
+reed sensör | Reed Sensor | حساس ريد
+lazer sensör | Laser Sensor | حساس ليزري
+mesafe sensörü | Distance Sensor | حساس المسافة
+seviye sensörü | Level Sensor | حساس المستوى
+şamandıra | Float Switch | مفتاح عوامة
+şamandıralı seviye şalteri | Float Level Switch | مفتاح مستوى بعوامة
+seviye şalteri | Level Switch | مفتاح مستوى
+seviye rölesi | Level Control Relay | مرحل التحكم بالمستوى
+basınç sensörü | Pressure Sensor | حساس ضغط
+basınç transmitteri | Pressure Transmitter | مرسل ضغط
+basınç şalteri | Pressure Switch | مفتاح ضغط
+fark basınç transmitteri | Differential Pressure Transmitter | مرسل ضغط تفاضلي
+sıcaklık sensörü | Temperature Sensor | حساس حرارة
+sıcaklık transmitteri | Temperature Transmitter | مرسل حرارة
+sıcaklık kontrol cihazı | Temperature Controller | منظم حرارة
+termokupl | Thermocouple | مزدوجة حرارية
+termokapl | Thermocouple | مزدوجة حرارية
+termorezistans | Resistance Thermometer | ميزان حرارة مقاومي
+pt100 sensör | PT100 Sensor | حساس PT100
+termostat | Thermostat | ثرموستات
+nem sensörü | Humidity Sensor | حساس رطوبة
+debi sensörü | Flow Sensor | حساس تدفق
+debimetre | Flow Meter | مقياس التدفق
+akış ölçer | Flow Meter | مقياس التدفق
+manyetik debimetre | Electromagnetic Flow Meter | مقياس تدفق كهرومغناطيسي
+akış şalteri | Flow Switch | مفتاح تدفق
+yük hücresi | Load Cell | خلية تحميل
+loadcell | Load Cell | خلية تحميل
+tartı göstergesi | Weighing Indicator | مؤشر الوزن
+ivme sensörü | Accelerometer | مقياس التسارع
+titreşim sensörü | Vibration Sensor | حساس اهتزاز
+gaz sensörü | Gas Sensor | حساس غاز
+gaz dedektörü | Gas Detector | كاشف غاز
+duman dedektörü | Smoke Detector | كاشف دخان
+ısı dedektörü | Heat Detector | كاشف حرارة
+alev dedektörü | Flame Detector | كاشف لهب
+dedektör | Detector | كاشف
+limit şalter | Limit Switch | مفتاح حدي
+sınır anahtarı | Limit Switch | مفتاح حدي
+emniyet şalteri | Safety Switch | مفتاح أمان
+kapı emniyet şalteri | Safety Door Switch | مفتاح أمان الباب
+emniyet rölesi | Safety Relay | مرحل أمان
+güvenlik rölesi | Safety Relay | مرحل أمان
+güvenlik ışık perdesi | Safety Light Curtain | ستارة ضوئية للأمان
+ışık perdesi | Light Curtain | ستارة ضوئية
+ayak pedalı | Foot Switch | مفتاح قدم
+ayak pedal | Foot Switch | مفتاح قدم
+joystick | Joystick | عصا تحكم
+kumanda kolu | Control Lever | ذراع تحكم
+el kumandası | Hand Controller | وحدة تحكم يدوية
+uzaktan kumanda | Remote Control | جهاز تحكم عن بعد
+vinç kumandası | Crane Remote Control | جهاز تحكم الرافعة
+kablosuz kumanda | Wireless Remote Control | جهاز تحكم لاسلكي
+röle | Relay | مرحل
+rölesi | Relay | مرحل
+role | Relay | مرحل
+katı hal rölesi | Solid State Relay | مرحل الحالة الصلبة
+ssr röle | Solid State Relay | مرحل الحالة الصلبة
+ara röle | Interface Relay | مرحل وسيط
+röle soketi | Relay Socket | قاعدة المرحل
+röle kartı | Relay Board | لوحة مرحلات
+mini röle | Miniature Relay | مرحل مصغر
+güç rölesi | Power Relay | مرحل قدرة
+sinyal rölesi | Signal Relay | مرحل إشارة
+izolatör modülü | Signal Isolator | عازل إشارة
+sinyal dönüştürücü | Signal Converter | محول إشارة
+sinyal çevirici | Signal Converter | محول إشارة
+analog sinyal dönüştürücü | Analog Signal Converter | محول إشارة تناظرية
+proses kontrol cihazı | Process Controller | منظم العمليات
+pid kontrol cihazı | PID Controller | منظم PID
+kontrol cihazı | Controller | وحدة تحكم
+kontrolör | Controller | وحدة تحكم
+denetleyici | Controller | وحدة تحكم
+sayıcı | Counter | عداد
+dijital sayıcı | Digital Counter | عداد رقمي
+takometre | Tachometer | مقياس سرعة الدوران
+zamanlayıcı | Timer | مؤقت
+dijital zamanlayıcı | Digital Timer | مؤقت رقمي
+astronomik zaman saati | Astronomical Time Switch | مفتاح زمني فلكي
+zaman saati | Time Switch | مفتاح زمني
+kayıt cihazı | Recorder | جهاز تسجيل
+veri kaydedici | Data Logger | مسجل بيانات
+endüstriyel bilgisayar | Industrial PC | حاسوب صناعي
+endüstriyel switch | Industrial Ethernet Switch | محول إيثرنت صناعي
+endüstriyel modem | Industrial Modem | مودم صناعي
+ağ geçidi | Gateway | بوابة
+protokol dönüştürücü | Protocol Converter | محول بروتوكول
+seri port sunucusu | Serial Device Server | خادم المنافذ التسلسلية
+uzak giriş çıkış | Remote I/O | إدخال وإخراج عن بعد
+giriş çıkış | I/O | إدخال/إخراج
+konveyör | Conveyor | ناقل
+bant konveyör | Belt Conveyor | ناقل سيور
+rulolu konveyör | Roller Conveyor | ناقل بكرات
+konveyör bandı | Conveyor Belt | سير ناقل
+taşıma bandı | Conveyor Belt | سير ناقل
+robot kolu | Robotic Arm | ذراع روبوتية
+endüstriyel robot | Industrial Robot | روبوت صناعي
+vakum tutucu | Vacuum Gripper | ماسك تفريغ
+vantuz | Suction Cup | كأس شفط
+lineer kızak | Linear Guide | دليل خطي
+lineer ray | Linear Guide Rail | سكة دليل خطي
+lineer araba | Linear Guide Carriage | عربة دليل خطي
+lineer rulman | Linear Bearing | محمل خطي
+lineer mil | Linear Shaft | عمود خطي
+lineer aktüatör | Linear Actuator | مشغل خطي
+aktüatör | Actuator | مشغل
+vidalı mil | Ball Screw | عمود كروي لولبي
+bilyalı vida | Ball Screw | عمود كروي لولبي
+bilyalı vidalı mil | Ball Screw | عمود كروي لولبي
+trapez vidalı mil | Lead Screw | عمود لولبي شبه منحرف
+trapez mil | Lead Screw | عمود لولبي شبه منحرف
+mil somunu | Screw Nut | صامولة العمود
+kaplin | Coupling | قارنة
+esnek kaplin | Flexible Coupling | قارنة مرنة
+körüklü kaplin | Bellows Coupling | قارنة منفاخية
+yıldız kaplin | Jaw Coupling | قارنة فكية
+alüminyum kaplin | Aluminium Coupling | قارنة ألمنيوم

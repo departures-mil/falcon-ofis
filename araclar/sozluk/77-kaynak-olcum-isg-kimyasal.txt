@@ -1,0 +1,181 @@
+# v1.77 Kaynak, ölçü ve test aletleri, iş sağlığı ve güvenliği, kimyasal / yağ / sarf (tr | en | ar)
+kaynak makinesi | Welding Machine | آلة لحام
+inverter kaynak makinesi | Inverter Welding Machine | آلة لحام إنفرتر
+gazaltı kaynak makinesi | MIG/MAG Welding Machine | آلة لحام MIG/MAG
+gazaltı kaynağı | MIG/MAG Welding | لحام MIG/MAG
+argon kaynak makinesi | TIG Welding Machine | آلة لحام TIG
+tig kaynak makinesi | TIG Welding Machine | آلة لحام TIG
+elektrik ark kaynağı | Arc Welding | لحام القوس الكهربائي
+punta kaynak makinesi | Spot Welding Machine | آلة لحام نقطي
+plazma kesme makinesi | Plasma Cutter | آلة قطع بالبلازما
+plazma kesme | Plasma Cutting | قطع بالبلازما
+oksijen kaynağı | Oxy-Fuel Welding | لحام بالأكسجين والوقود
+kaynak teli | Welding Wire | سلك لحام
+gazaltı kaynak teli | MIG Welding Wire | سلك لحام MIG
+kaynak elektrodu | Welding Electrode | قطب لحام
+elektrod | Electrode | قطب كهربائي
+elektrot | Electrode | قطب كهربائي
+rutil elektrod | Rutile Electrode | قطب روتيلي
+bazik elektrod | Basic Electrode | قطب قاعدي
+tungsten elektrod | Tungsten Electrode | قطب تنغستن
+kaynak torcu | Welding Torch | مشعل لحام
+kaynak pensesi | Electrode Holder | ماسك القطب
+şase pensesi | Earth Clamp | مشبك الأرضي
+kaynak kablosu | Welding Cable | كابل لحام
+kaynak maskesi | Welding Helmet | خوذة لحام
+otomatik kararan kaynak maskesi | Auto-Darkening Welding Helmet | خوذة لحام ذاتية التعتيم
+kaynak eldiveni | Welding Gloves | قفازات لحام
+kaynak önlüğü | Welding Apron | مريلة لحام
+kaynak masası | Welding Table | طاولة لحام
+kontak meme | Contact Tip | رأس التلامس
+gaz memesi | Gas Nozzle | فوهة الغاز
+meme | Nozzle | فوهة
+nozul | Nozzle | فوهة
+argon tüpü | Argon Cylinder | أسطوانة أرغون
+gaz tüpü | Gas Cylinder | أسطوانة غاز
+oksijen tüpü | Oxygen Cylinder | أسطوانة أكسجين
+gaz regülatörü | Gas Regulator | منظم غاز
+argon regülatörü | Argon Regulator | منظم أرغون
+ölçü aleti | Measuring Instrument | أداة قياس
+ölçüm cihazı | Measuring Device | جهاز قياس
+test cihazı | Tester | جهاز اختبار
+multimetre | Multimeter | مقياس متعدد
+dijital multimetre | Digital Multimeter | مقياس متعدد رقمي
+pens ampermetre | Clamp Meter | أميتر كلابي
+pens ampermetre dijital | Digital Clamp Meter | أميتر كلابي رقمي
+izolasyon test cihazı | Insulation Resistance Tester | جهاز اختبار مقاومة العزل
+megger | Insulation Tester | جهاز اختبار العزل
+toprak test cihazı | Earth Resistance Tester | جهاز اختبار مقاومة الأرضي
+kaçak akım test cihazı | RCD Tester | جهاز اختبار قاطع التيار المتبقي
+faz sırası test cihazı | Phase Rotation Tester | جهاز اختبار تسلسل الأطوار
+osiloskop | Oscilloscope | راسم الذبذبات
+sinyal jeneratörü | Signal Generator | مولد إشارات
+fonksiyon jeneratörü | Function Generator | مولد دوال
+spektrum analizörü | Spectrum Analyzer | محلل الطيف
+lcr metre | LCR Meter | مقياس LCR
+ayarlı güç kaynağı | Adjustable Power Supply | مزود طاقة قابل للضبط
+laboratuvar güç kaynağı | Laboratory Power Supply | مزود طاقة مختبري
+kumpas | Caliper | قدمة
+dijital kumpas | Digital Caliper | قدمة رقمية
+verniyeli kumpas | Vernier Caliper | قدمة ورنية
+mikrometre | Micrometer | ميكرومتر
+dış çap mikrometresi | Outside Micrometer | ميكرومتر خارجي
+iç çap mikrometresi | Inside Micrometer | ميكرومتر داخلي
+komparatör | Dial Indicator | مؤشر قرصي
+komparatör saati | Dial Indicator | مؤشر قرصي
+manyetik stand | Magnetic Base | قاعدة مغناطيسية
+mihengir | Height Gauge | مقياس ارتفاع
+yükseklik mihengiri | Height Gauge | مقياس ارتفاع
+mastar | Gauge | محدد قياس
+tampon mastar | Plug Gauge | محدد قياس سدادي
+bilezik mastar | Ring Gauge | محدد قياس حلقي
+vida mastarı | Thread Gauge | محدد قياس اللولب
+sentil | Feeler Gauge | محدد قياس الخلوص
+şerit metre | Tape Measure | شريط قياس
+çelik cetvel | Steel Rule | مسطرة فولاذية
+gönye | Square | زاوية قائمة
+açıölçer | Protractor | منقلة
+su terazisi | Spirit Level | ميزان ماء
+lazer metre | Laser Distance Meter | مقياس مسافة ليزري
+lazer distomat | Laser Distance Meter | مقياس مسافة ليزري
+lazer nivo | Laser Level | ميزان ليزري
+nivo | Level | ميزان
+teodolit | Theodolite | مزواة
+takeometre | Total Station | محطة شاملة
+sertlik ölçer | Hardness Tester | جهاز قياس الصلادة
+kalınlık ölçer | Thickness Gauge | جهاز قياس السماكة
+ultrasonik kalınlık ölçer | Ultrasonic Thickness Gauge | جهاز قياس السماكة بالموجات فوق الصوتية
+boya kalınlık ölçer | Coating Thickness Gauge | جهاز قياس سماكة الطلاء
+pürüzlülük ölçer | Surface Roughness Tester | جهاز قياس خشونة السطح
+devir ölçer | Tachometer | مقياس سرعة الدوران
+lazer termometre | Infrared Thermometer | ميزان حرارة بالأشعة تحت الحمراء
+kızılötesi termometre | Infrared Thermometer | ميزان حرارة بالأشعة تحت الحمراء
+nem ölçer | Hygrometer | مقياس الرطوبة
+higrometre | Hygrometer | مقياس الرطوبة
+ses seviyesi ölçer | Sound Level Meter | مقياس مستوى الصوت
+ışık ölçer | Lux Meter | مقياس شدة الإضاءة
+lüksmetre | Lux Meter | مقياس شدة الإضاءة
+anemometre | Anemometer | مقياس سرعة الرياح
+ph metre | pH Meter | مقياس الحموضة
+iletkenlik ölçer | Conductivity Meter | مقياس الموصلية
+hassas terazi | Precision Balance | ميزان دقيق
+terazi | Scale | ميزان
+baskül | Platform Scale | ميزان منصة
+kalibrasyon | Calibration | معايرة
+kalibrasyon sertifikası | Calibration Certificate | شهادة معايرة
+kalibrasyon hizmeti | Calibration Service | خدمة المعايرة
+iş güvenliği | Occupational Safety | السلامة المهنية
+iş sağlığı ve güvenliği | Occupational Health and Safety | الصحة والسلامة المهنية
+kişisel koruyucu donanım | Personal Protective Equipment | معدات الحماية الشخصية
+baret | Safety Helmet | خوذة أمان
+koruyucu baret | Safety Helmet | خوذة أمان
+iş eldiveni | Work Gloves | قفازات عمل
+eldiven | Gloves | قفازات
+nitril eldiven | Nitrile Gloves | قفازات نتريل
+kesilmez eldiven | Cut-Resistant Gloves | قفازات مقاومة للقطع
+dielektrik eldiven | Dielectric Gloves | قفازات عازلة للكهرباء
+izole eldiven | Insulating Gloves | قفازات عازلة
+koruyucu gözlük | Safety Glasses | نظارات واقية
+iş gözlüğü | Safety Glasses | نظارات واقية
+yüz siperi | Face Shield | واقي الوجه
+kulak tıkacı | Ear Plugs | سدادات أذن
+kulaklık koruyucu | Ear Muffs | واقيات أذن
+toz maskesi | Dust Mask | قناع غبار
+yarım yüz maske | Half-Face Respirator | كمامة نصف وجه
+tam yüz maske | Full-Face Respirator | كمامة كاملة الوجه
+gaz maskesi | Gas Mask | قناع غاز
+maske filtresi | Respirator Filter | مرشح الكمامة
+iş ayakkabısı | Safety Shoes | أحذية أمان
+çelik burunlu | Steel Toe | مقدمة فولاذية
+iş botu | Safety Boots | أحذية أمان طويلة
+reflektörlü yelek | High-Visibility Vest | سترة عاكسة
+ikaz yeleği | High-Visibility Vest | سترة عاكسة
+iş elbisesi | Work Overalls | بدلة عمل
+tulum | Coverall | أفرول
+emniyet kemeri | Safety Harness | حزام أمان
+paraşüt tipi emniyet kemeri | Full-Body Safety Harness | حزام أمان كامل للجسم
+lanyard | Lanyard | حبل تثبيت
+yaşam hattı | Lifeline | خط الحياة
+düşüş durdurucu | Fall Arrester | مانع السقوط
+ilk yardım çantası | First Aid Kit | حقيبة إسعافات أولية
+ilk yardım dolabı | First Aid Cabinet | خزانة إسعافات أولية
+göz duşu | Eye Wash Station | محطة غسل العيون
+acil duş | Emergency Shower | دش طوارئ
+uyarı levhası | Warning Sign | لافتة تحذير
+ikaz levhası | Warning Sign | لافتة تحذير
+güvenlik levhası | Safety Sign | لافتة سلامة
+trafik konisi | Traffic Cone | مخروط مروري
+kilitleme etiketleme | Lockout Tagout | القفل والتعليم
+yağ | Oil | زيت
+yağı | Oil | زيت
+motor yağı | Engine Oil | زيت محرك
+dişli yağı | Gear Oil | زيت تروس
+kesme yağı | Cutting Oil | زيت قطع
+bor yağı | Soluble Cutting Oil | زيت قطع قابل للذوبان
+kızak yağı | Slideway Oil | زيت المنزلقات
+kompresör yağı | Compressor Oil | زيت ضاغط
+trafo yağı | Transformer Oil | زيت محولات
+gres | Grease | شحم
+gres yağı | Grease | شحم
+gresörlük | Grease Nipple | حلمة تشحيم
+gres tabancası | Grease Gun | مسدس تشحيم
+yağlama | Lubrication | تزييت
+yağlayıcı sprey | Lubricant Spray | بخاخ تزييت
+pas sökücü | Rust Remover | مزيل الصدأ
+pas sökücü sprey | Penetrating Oil Spray | بخاخ زيت مزيل للصدأ
+kontak temizleyici | Contact Cleaner | منظف تلامسات
+elektronik temizleyici | Electronic Cleaner | منظف إلكترونيات
+yağ çözücü | Degreaser | مزيل الشحوم
+temizleyici | Cleaner | منظف
+temizlik malzemesi | Cleaning Supplies | مستلزمات تنظيف
+izopropil alkol | Isopropyl Alcohol | كحول إيزوبروبيلي
+tiner | Thinner | مرقق
+boya | Paint | طلاء
+sprey boya | Spray Paint | طلاء بخاخ
+astar boya | Primer | طلاء أساس
+epoksi boya | Epoxy Paint | طلاء إيبوكسي
+elektrostatik toz boya | Powder Coating | طلاء بودرة
+antifriz | Antifreeze | مانع تجمد
+soğutma sıvısı | Coolant | سائل تبريد
+termal macun | Thermal Paste | معجون حراري
+termal ped | Thermal Pad | وسادة حرارية

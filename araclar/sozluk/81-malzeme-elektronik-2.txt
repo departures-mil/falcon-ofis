@@ -1,0 +1,124 @@
+# v1.77 Metal / plastik yarı mamuller, yapı malzemeleri ve elektronik ek terimler (tr | en | ar)
+sac | Sheet Metal | صاج
+siyah sac | Hot-Rolled Steel Sheet | صاج فولاذي مدلفن على الساخن
+dkp sac | Cold-Rolled Steel Sheet | صاج فولاذي مدلفن على البارد
+galvaniz sac | Galvanized Steel Sheet | صاج مجلفن
+paslanmaz sac | Stainless Steel Sheet | صاج فولاذ مقاوم للصدأ
+alüminyum sac | Aluminium Sheet | صاج ألمنيوم
+baklavalı sac | Chequered Plate | صاج مضلع
+delikli sac | Perforated Sheet | صاج مثقب
+plaka | Plate | لوح
+profil | Profile | مقطع
+kutu profil | Rectangular Hollow Section | مقطع مجوف مستطيل
+alüminyum profil | Aluminium Profile | مقطع ألمنيوم
+sigma profil | Aluminium Extrusion Profile | مقطع ألمنيوم مبثوق
+köşebent | Angle Bar | زاوية حديدية
+lama | Flat Bar | قضيب مسطح
+lama demir | Flat Bar | قضيب مسطح
+npu | U-Channel | مقطع على شكل U
+npi | I-Beam | جسر على شكل I
+hea | H-Beam | جسر على شكل H
+kare demir | Square Bar | قضيب مربع
+yuvarlak demir | Round Bar | قضيب دائري
+transmisyon mili | Transmission Shaft | عمود نقل الحركة
+çubuk | Rod | قضيب
+mil çeliği | Shaft Steel | فولاذ أعمدة
+inşaat demiri | Rebar | حديد تسليح
+hasır çelik | Steel Mesh | شبكة فولاذية
+tel örgü | Wire Mesh | شبكة سلكية
+izgara | Grating | شبكة
+ızgara | Grating | شبكة
+rulo | Roll | لفة
+bobin sac | Steel Coil | لفة صاج
+pirinç çubuk | Brass Rod | قضيب نحاس أصفر
+bakır lama | Copper Flat Bar | قضيب نحاسي مسطح
+teflon | PTFE | تفلون
+poliamid | Polyamide | بولي أميد
+delrin | Acetal (POM) | أسيتال
+kestamid | Cast Nylon | نايلون مصبوب
+polietilen | Polyethylene | بولي إيثيلين
+polipropilen | Polypropylene | بولي بروبيلين
+polikarbonat | Polycarbonate | بولي كربونات
+pleksiglas | Acrylic Sheet | لوح أكريليك
+akrilik | Acrylic | أكريليك
+kauçuk | Rubber | مطاط
+silikon hortum | Silicone Hose | خرطوم سيليكون
+lastik conta | Rubber Gasket | حشية مطاطية
+lastik hortum | Rubber Hose | خرطوم مطاطي
+kompozit | Composite | مركب
+karbon fiber | Carbon Fibre | ألياف الكربون
+cam elyaf | Fibreglass | ألياف زجاجية
+çimento | Cement | إسمنت
+beton | Concrete | خرسانة
+alçı | Gypsum | جبس
+alçıpan | Plasterboard | لوح جبسي
+tuğla | Brick | طوب
+seramik | Ceramic | سيراميك
+fayans | Wall Tile | بلاط جدران
+cam | Glass | زجاج
+temperli cam | Tempered Glass | زجاج مقسى
+boya fırçası | Paint Brush | فرشاة طلاء
+rulo fırça | Paint Roller | أسطوانة طلاء
+baskılı devre kartı | Printed Circuit Board | لوحة دارة مطبوعة
+baskı devre | Printed Circuit Board | لوحة دارة مطبوعة
+pcb kart | PCB | لوحة دارة مطبوعة
+elektronik kart | Electronic Board | لوحة إلكترونية
+anakart | Motherboard | لوحة أم
+kontrol kartı | Control Board | لوحة تحكم
+güç kartı | Power Board | لوحة طاقة
+sürücü kartı | Driver Board | لوحة مشغل
+arayüz kartı | Interface Board | لوحة واجهة
+geliştirme kartı | Development Board | لوحة تطوير
+mikrodenetleyici | Microcontroller | متحكم دقيق
+mikroişlemci | Microprocessor | معالج دقيق
+işlemci | Processor | معالج
+bellek | Memory | ذاكرة
+kristal osilatör | Crystal Oscillator | مذبذب بلوري
+kristal | Crystal | بلورة
+osilatör | Oscillator | مذبذب
+indüktör | Inductor | محث
+trimpot | Trimmer Potentiometer | مقياس جهد قابل للضبط
+varistör | Varistor | مقاومة متغيرة بالجهد
+termistör | Thermistor | ثرمستور
+optokuplör | Optocoupler | مقرن ضوئي
+köprü diyot | Bridge Rectifier | مقوم قنطري
+led diyot | LED | ثنائي باعث للضوء
+igbt modülü | IGBT Module | وحدة IGBT
+tristör | Thyristor | ثايرستور
+triyak | Triac | ترياك
+röle modülü | Relay Module | وحدة مرحل
+ekran modülü | Display Module | وحدة عرض
+lcd ekran | LCD Display | شاشة LCD
+oled ekran | OLED Display | شاشة OLED
+7 segment gösterge | 7-Segment Display | شاشة سباعية المقاطع
+buzzer | Buzzer | طنان
+zil | Buzzer | جرس
+hoparlör modülü | Speaker Module | وحدة مكبر صوت
+mikrofon | Microphone | ميكروفون
+anten modülü | Antenna Module | وحدة هوائي
+bluetooth modülü | Bluetooth Module | وحدة بلوتوث
+wifi modülü | Wi-Fi Module | وحدة واي فاي
+gps modülü | GPS Module | وحدة GPS
+gsm modülü | GSM Module | وحدة GSM
+pin header | Pin Header | رأس دبابيس
+dişi pin header | Female Pin Header | رأس دبابيس أنثى
+erkek pin header | Male Pin Header | رأس دبابيس ذكر
+jumper kablo | Jumper Wire | سلك توصيل
+breadboard | Breadboard | لوحة تجارب
+delikli plaket | Perfboard | لوحة مثقبة
+plaket | Circuit Board | لوحة دارة
+soğutucu fan | Cooling Fan | مروحة تبريد
+fan soğutucu | Cooling Fan | مروحة تبريد
+izolasyon pedi | Insulating Pad | وسادة عازلة
+mika | Mica Insulator | عازل ميكا
+distans | Standoff | فاصل
+pcb distans | PCB Standoff | فاصل لوحة الدارة
+klemens bloğu | Terminal Block | كتلة أطراف توصيل
+pcb klemens | PCB Terminal Block | كتلة أطراف للوحة الدارة
+entegre soketi | IC Socket | قاعدة دارة متكاملة
+entegre | Integrated Circuit | دارة متكاملة
+elektrolitik kondansatör | Electrolytic Capacitor | مكثف إلكتروليتي
+tantal kondansatör | Tantalum Capacitor | مكثف تنتالوم
+kondansatör | Capacitor | مكثف
+direnç | Resistor | مقاومة
+transistör | Transistor | ترانزستور

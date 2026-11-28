@@ -9,8 +9,12 @@
   var TRCH = /[çğıöşüÇĞİÖŞÜâîûÂÎÛ]/;
   var fold = function (s) { return s.replace(/ç/g, 'c').replace(/ğ/g, 'g').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ş/g, 's').replace(/ü/g, 'u').replace(/[âà]/g, 'a').replace(/î/g, 'i').replace(/û/g, 'u'); };
   var lower = function (s) { var l = s.toLocaleLowerCase('tr'); return l.length === s.length ? l : s.toLowerCase(); };
+  // v1.77: İngilizce → Arapça ters dizin (İngilizce yazılmış ürün adlarının Arapçası için; «with …» kalıpları hariç)
+  var ENLEX = Object.create(null), MAXE = 1;
+  var enKey = function (s) { return String(s).toLowerCase().replace(/[‐-―]/g, '-').replace(/\s+/g, ' ').trim(); };
   LEX_DATA.forEach(function (r) {
     var k = r[0]; LEX[k] = [r[1], r[2]];
+    if (!/^(with|without|for|and|or)\b/i.test(r[1]) && /[a-z]/i.test(r[1]) && r[1] !== r[2]) { var ek = enKey(r[1]); ENLEX[ek] = r[2]; var ne = ek.split(' ').length; if (ne > MAXE) MAXE = ne; }
     var n = k.split(' ').length; if (n > MAXW) MAXW = n;
     var f = fold(k); if (f !== k) { if (FOLD[f] == null) FOLD[f] = k; else if (FOLD[f] !== k) FOLD[f] = ''; }
   });
@@ -80,6 +84,14 @@
     if (/[^aeiou]y$/i.test(w)) return m[1] + w.slice(0, -1) + 'ies';
     return m[1] + w + 's';
   };
+  // iyelik eki: kapak → kapağı, cihaz → cihazı, kutu → kutusu (ünlü uyumu + yumuşama)
+  function POSS(k) {
+    var lv = (k.match(/[aeıioöuü]/g) || []).pop() || 'e', v = 'aı'.indexOf(lv) >= 0 ? 'ı' : 'ei'.indexOf(lv) >= 0 ? 'i' : 'ou'.indexOf(lv) >= 0 ? 'u' : 'ü';
+    var last = k.slice(-1), r = [];
+    if (/[aeıioöuü]/.test(last)) r.push(k + 's' + v);
+    else { r.push(k + v); var sf = { 'k': 'ğ', 'p': 'b', 'ç': 'c', 't': 'd' }[last]; if (sf) r.push(k.slice(0, -1) + sf + v); }
+    return r;
+  }
   var isAl = function (c) { return !!c && /[0-9A-Za-zÇĞİÖŞÜçğıöşüÂÎÛâîû]/.test(c); };
   var isWordChAt = function (s, i) { var c = s[i]; return isAl(c) || (c === '+' && isAl(s[i - 1]) && !isAl(s[i + 1])); };
   // «24PortSC» → «24 Port SC», «1Metre» → «1 Metre»: bitişik yazılmış sözlük kelimelerini ayır.
@@ -117,7 +129,7 @@
   }
   function presplit(s) {
     s = expand(s);
-    s = s.replace(/(\d)\s*(mt|metre)\b/gi, '$1 metre');
+    s = s.replace(/(\d)\s*(mt|metre)\b/gi, '$1 metre').replace(/\b(dev|devir)\s*\/\s*(dk|dak|dakika)\b/gi, 'rpm').replace(/\bd\/dk\b/gi, 'rpm');
     s = s.replace(/(\d+)\s*[’']?(?:lı|li|lu|lü)(?![A-Za-zçğıöşü])/gi, function (a, n, off, all) { var rest = all.slice(off + a.length); return n + (/^\s*$/.test(rest) || /^\s+(paket|kutu|adet|koli)/i.test(rest) ? '-Pack' : '-Way'); });
     s = s.replace(/([0-9A-Za-zÇĞİÖŞÜçğıöşü])[’'](?:dan|den|tan|ten|da|de|ta|te|ya|ye|yı|yi|yu|yü|nın|nin|nun|nün|ın|in|un|ün|a|e|ı|i|u|ü|lar|ler|ları|leri|lı|li|lu|lü)(?![A-Za-zçğıöşü])/g, '$1');
     s = s.replace(/(\d)([A-Za-zÇĞİÖŞÜçğıöşü]{2,})/g, function (a, d, w) { var l = lower(w); return (analyze(l) || /^(metre|mt|adet|port|pin|kanal|li|lı|lu|lü)/.test(l)) && !/^(mm|cm|km|gb|tb|mb|kb|mhz|ghz|khz|hz|kva|kw|mw|mah|ah|vac|vdc|nm|kg|gr|lt|ml|ms|ns|us|ma|kv|va|dbi|db|ohm|bit|bps|gbps|mbps|pin|pf|nf|uf|mh|uh|ft|in|ip|nit|lm|rpm|bar|psi|awg|dtex|th|st|nd|rd|ch|cat|base)$/.test(l) ? d + ' ' + w : a; });
@@ -133,8 +145,29 @@
   function translate(text, lg, opts) {
     var r0 = translate0(text, lg); r0.text = stdCodes(text, r0.text, opts && opts.keepCodes); r0.abbr = abbrs(text); return r0;
   }
+  var TFW = { 've': 1, 'veya': 1, 'ile': 1, 'ya da': 1 };
+  var LABEL = /^(seviye|seviyesi|tip|tipi|sınıf|sınıfı|kategori|kademe|numara|beden|boyut|ebat|seri|serisi|grup|grubu)$/;
+  var EFW = { 'with': 'مع', 'without': 'بدون', 'for': 'لـ', 'and': 'و', 'incl.': 'شامل', 'including': 'شامل' };
+  var ADJW = /^(rutile|nitrile|toolmaker's|conventional|optical|black|white|red|blue|green|yellow|gr[ae]y|orange|purple|brown|silver|gold|transparent|clear|stainless|stainless steel|galvani[sz]ed|brass|copper|alumini?um|plastic|steel|digital|analog|adjustable|portable|waterproof|single-phase|three-phase|double|single|dual|manual|automatic|electric|hydraulic|pneumatic|magnetic|flexible|original|compatible|new|front|rear|left|right|upper|lower|inner|outer|short|long|large|small|mini|heavy-duty|industrial)$/i;
+  function isAdj(g) {
+    if (!g || g.kind === 'x') return false;
+    var en = g.enSrc || (g.key && LEX[g.key] ? LEX[g.key][0] : ''); if (!en) return false;
+    // Türkçe niteleme ekleri (-lı / -sız / -lık değil): «Çelik Burunlu», «Pudrasız» → sıfat
+    if (g.key && /(l[ıiuü]|s[ıiuü]z)$/.test(g.key) && !/^with /i.test(en)) return true;
+    if (/^[A-Za-z-]+$/.test(en) && /(al|ic|ive|ous)$/i.test(en) && !/^(metal|terminal|signal|pedal|panel|crystal|interval|manual|material|rental|dial|seal|steel|tool|wheel|coal|goal|disc|logic|plastic|fabric|ceramic|cable|valve|drive|olive|relative|explosive|adhesive|abrasive)$/i.test(en)) return true;
+    return ADJW.test(en) || (/^[A-Za-z-]+$/.test(en) && /(ed|able|ible|proof)$/i.test(en) && !/(shed|bed|seed|speed|feed|head|thread)$/i.test(en));
+  }
+  function lookupEn(parts) {
+    var k = parts.join(' ');
+    if (ENLEX[k]) return ENLEX[k];
+    var last = parts[parts.length - 1], sg = null;
+    if (/ies$/.test(last)) sg = last.slice(0, -3) + 'y'; else if (/(ches|shes|xes|sses)$/.test(last)) sg = last.slice(0, -2); else if (/[^s]s$/.test(last) && last.length > 3) sg = last.slice(0, -1);
+    if (sg) { var k2 = parts.slice(0, -1).concat([sg]).join(' '); if (ENLEX[k2]) return ENLEX[k2]; }
+    return null;
+  }
   function translate0(text, lg) {
     var ar = lg === 'ar', src = presplit(String(text == null ? '' : text));
+    if (ar) src = src.replace(/(\d+)-Pack\b/g, '$1 قطع').replace(/(\d+)-Way\b/g, '$1 مخارج');
     // belirteçler: sözcük / ayraç
     var tok = [], i = 0;
     while (i < src.length) {
@@ -146,7 +179,7 @@
     var lw = words.map(function (ix) { return lower(tok[ix].t); });
     // adda kesin Türkçe kelime var mı (belirsiz kısa kelimeler için)
     var trName = lw.some(function (l, li) { if (TRCH.test(l)) return true; var a = analyze(l, tok[words[li]].t); return !!(a && !AMB[a.key] && !AMB[l] && lower(LEX[a.key][0]) !== a.key); });
-    var seg = [], hit = 0, left = [], p = 0;
+    var seg = [], hit = 0, left = [], p = 0, terms = [];
     while (p < words.length) {
       var m = null;
       for (var n = Math.min(MAXW, words.length - p); n >= 1 && !m; n--) {
@@ -154,18 +187,35 @@
         var ok = true; for (var q = p; q < p + n - 1; q++) { var between = tok.slice(words[q] + 1, words[q + 1]).map(function (x) { return x.t; }).join(''); if (!/^[\s-]+$/.test(between)) { ok = false; break; } }
         if (!ok) continue;
         var parts = lw.slice(p, p + n), key = parts.join(' '), hitk = lookup1(key), kind = '';
-        if (!hitk && n > 1) { var a2 = analyze(parts[n - 1], tok[words[p + n - 1]].t); if (a2) { var k2 = parts.slice(0, n - 1).concat([a2.key]).join(' '); var h2 = lookup1(k2); if (h2) { hitk = h2; kind = a2.kind; } } }
+        if (!hitk && n > 1) { var a2 = analyze(parts[n - 1], tok[words[p + n - 1]].t); if (a2) { var pre2 = parts.slice(0, n - 1), k2 = pre2.concat([a2.key]).join(' '); var h2 = lookup1(k2);
+          // v1.77: tamlama sözlükte iyelikli («şarj kontrol cihazı»), addaki kelime başka ek almış («… cihazlı») → iyelikli biçimi de dene
+          if (!h2) { var pk = POSS(a2.key); for (var pq = 0; pq < pk.length && !h2; pq++) h2 = lookup1(pre2.concat([pk[pq]]).join(' ')); }
+          if (h2) { hitk = h2; kind = a2.kind; } } }
         if (!hitk && n === 1) { var a1 = analyze(parts[0], tok[words[p]].t); if (a1) { hitk = a1.key; kind = a1.kind; } }
-        if (!hitk) continue;
-        if (n === 1 && (AMB[parts[0]] || AMB[hitk]) && !trName) continue;
-        if (n === 1 && !TRCH.test(parts[0]) && !LEX[parts[0]] && FOLD[parts[0]] === hitk && !trName && tok[words[p]].t !== tok[words[p]].t.toUpperCase()) continue;
+        var trOk = !!hitk && !(n === 1 && (AMB[parts[0]] || AMB[hitk]) && (!trName || (tok[words[p]].t.length <= 3 && tok[words[p]].t === tok[words[p]].t.toUpperCase() && /[A-Z]/.test(tok[words[p]].t)))) && !(n === 1 && !TRCH.test(parts[0]) && !LEX[parts[0]] && FOLD[parts[0]] === hitk && !trName && tok[words[p]].t !== tok[words[p]].t.toUpperCase());
+        // v1.77: Türkçe değilse ve Arapçaya çevriliyorsa İngilizce terim (adı İngilizce yazılmış ürünler: «Boring Bar Sleeve» → «جلبة قضيب التجويف»)
+        var eparts = ar && n <= MAXE ? words.slice(p, p + n).map(function (ix) { return tok[ix].t.toLowerCase(); }) : null;
+        if (eparts && n === 1 && EFW[eparts[0]]) { m = { n: 1, en: EFW[eparts[0]], fw: true }; break; }
+        if (eparts && !eparts.some(function (x) { return TRCH.test(x); }) && !(trOk && (n > 1 || trName || !lookupEn(eparts)))) {
+          var ea = lookupEn(eparts);
+          var rw0 = tok[words[p]].t;
+          if (ea && !(n === 1 && (/^\d/.test(parts[0]) || (rw0.length <= 3 && rw0 === rw0.toUpperCase())))) { m = { n: n, en: ea }; break; }
+        }
+        if (!trOk) continue;
         m = { n: n, key: hitk, kind: kind };
+      }
+      if (m && m.en) {
+        var e0 = words[p], e1 = words[p + m.n - 1];
+        terms.push({ src: tok.slice(e0, e1 + 1).map(function (x) { return x.t; }).join(''), out: m.en });
+        seg.push({ a: e0, b: e1, out: m.en, kind: m.fw ? 'f' : '', key: '', word: true, enSrc: tok.slice(e0, e1 + 1).map(function (x) { return x.t; }).join('') }); hit++; p += m.n; continue;
       }
       if (m) {
         var s0 = words[p], s1 = words[p + m.n - 1], raw = tok.slice(s0, s1 + 1).map(function (x) { return x.t; }).join('');
+        if (!NOGL[m.key]) terms.push({ src: raw, out: LEX[m.key][ar ? 1 : 0] });
         var tr = LEX[m.key][ar ? 1 : 0];
         if (m.kind === 'p' && !ar) tr = plural(tr);
-        if (!m.kind && /^with /i.test(LEX[m.key][0]) && m.n === 1) m.kind = 'W';
+        if (!m.kind && /^with /i.test(LEX[m.key][0]) && (m.n === 1 || /l[ıiuü]$/.test(m.key))) m.kind = 'W';
+        if (ar && TFW[m.key]) m.kind = 'f';
         seg.push({ a: s0, b: s1, out: caseLike(raw, tr), kind: m.kind, key: m.key, word: true }); hit++; p += m.n;
       } else {
         var ix = words[p], t = tok[ix].t; if (TRCH.test(t)) left.push(t);
@@ -175,13 +225,19 @@
     // sayı + birim: «1 Metre» / «2 Mt» → «1 m»; «10 Adet» → «10 pcs»; «24 Portlu» → «24-Port»
     for (var s = 0; s < seg.length; s++) {
       var g = seg[s], prev = s > 0 ? seg[s - 1] : null, prevNum = prev && /^\d+([.,]\d+)?$/.test(tok[prev.a].t) && /^\s*$/.test(tok.slice(prev.b + 1, g.a).map(function (x) { return x.t; }).join(''));
-      if (g.key === 'metre' || g.key === 'mt' || g.key === 'metrelik') { if (prevNum) g.out = ar ? 'م' : 'm'; }
-      if (g.kind === 'W') { if (prevNum && !ar) { g.out = LEX[g.key][0].replace(/^with /i, ''); g.join = '-'; } else if (!ar) { g.out = 'with ' + LEX[g.key][0].replace(/^with /i, ''); g.move = true; } continue; }
+      // v1.77: «24 Portlu» → «24-Port» yalnız küçük sayılarda; «1605 Somunlu» gibi kodlardan sonra «with Nut»
+      if (prevNum && (parseFloat(tok[prev.a].t) >= 1000 || (prev.a > 0 && !/^\s+$/.test(tok[prev.a - 1].t)))) prevNum = false;
+      if ((g.key === 'parça' || g.key === 'parçalı') && prevNum && !ar) { g.out = 'Piece'; g.join = '-'; continue; }
+      if (g.key === 'metre' || g.key === 'mt' || g.key === 'metrelik') { if (prevNum) { g.out = ar ? 'م' : 'm'; if (ar) g.kind = 'x'; } }
+      // Arapça: sayıya bağlı sözcük («16 Kanal», «Seviye 5») kendi başına kalır, öbeğe katılmaz
+      if (ar && g.kind !== 'x' && g.kind !== 'f' && (prevNum || (LABEL.test(g.key || '') && s + 1 <= seg.length && /^\s*\d/.test(tok.slice(g.b + 1).map(function (x) { return x.t; }).join(''))))) g.kind = 'x';
+      if (g.kind === 'W') { if (prevNum && !ar) { g.out = LEX[g.key][0].replace(/^with /i, ''); g.join = '-'; } else if (!ar) { var wb = LEX[g.key][0].replace(/^with /i, ''), wo = caseLike(tok.slice(g.a, g.b + 1).map(function (x) { return x.t; }).join(''), 'With ' + wb); g.out = wo === wo.toUpperCase() ? wo : 'with ' + wb; g.move = true; } continue; }
       if (!g.kind && g.key && /l[ıiuü]$/.test(g.key) && !/^with /i.test(LEX[g.key][0]) && prevNum && !ar) { var stm = g.key.slice(0, -2), sa = analyze(stm) || analyze(stm.replace(/ğ$/, 'k')); if (sa && LEX[sa.key]) g.out = caseLike(tok[g.a].t, LEX[sa.key][0]); if (/^[A-Z]/.test(g.out)) g.join = '-'; continue; }
+      if (g.kind === 'w' && prevNum && ar) { g.out = LEX[g.key][1]; g.kind = 'x'; continue; }
       if (g.kind === 'w' && prevNum && !ar) { g.out = LEX[g.key][0]; g.join = '-'; }
       else if ((g.kind === 'w' || g.kind === 'o') && g.key) {
         var base = LEX[g.key][ar ? 1 : 0];
-        g.out = ar ? (g.kind === 'w' ? 'مع ' : 'بدون ') + base : (g.kind === 'w' ? 'with ' : 'without ') + caseLike(tok[g.a].t, base);
+        g.out = ar ? (g.kind === 'w' ? 'مع ' : 'بدون ') + base : (g.kind === 'w' ? 'with ' : 'without ') + caseLike(tok.slice(g.a, g.b + 1).map(function (x) { return x.t; }).join(''), base);
         g.move = true;
       }
     }
@@ -215,14 +271,19 @@
       var runs = [], cur = [];
       for (var r = 0; r < seg.length; r++) {
         var gp = r > 0 ? tok.slice(seg[r - 1].b + 1, seg[r].a).map(function (x) { return x.t; }).join('') : '';
-        if (r > 0 && (!/^\s+$/.test(gp) || seg[r].code || seg[r - 1].code || seg[r].kind === 'x' || seg[r - 1].kind === 'x')) { runs.push(cur); cur = []; }
+        if (r > 0 && (!/^\s+$/.test(gp) || seg[r].code || seg[r - 1].code || seg[r].kind === 'x' || seg[r - 1].kind === 'x' || seg[r].kind === 'f' || seg[r - 1].kind === 'f')) { runs.push(cur); cur = []; }
         cur.push(r);
       }
       if (cur.length) runs.push(cur);
       order = []; runs.forEach(function (rn) {
         if (!(rn.length > 1 && rn.every(function (k) { return seg[k].kind !== 'x'; }))) { order = order.concat(rn); return; }
-        var post = rn.filter(function (k) { return / tipi$|^tipi$|^tip$/.test(seg[k].key || ''); }), pre = rn.filter(function (k) { return post.indexOf(k) < 0; });
-        order = order.concat(pre.reverse(), post);
+        // v1.77: «مع …» / «بدون …» öbekleri dizinin sonuna; baş isimden SONRA gelen sıfatlar (renk, malzeme, -li/-ed) yerinde kalır
+        var tipK = function (k) { return / tipi$|^tipi$|^tip$/.test(seg[k].key || ''); };
+        var withK = function (k) { return seg[k].kind === 'w' || seg[k].kind === 'o' || seg[k].kind === 'W'; };
+        var body = rn.filter(function (k) { return !tipK(k) && !withK(k); });
+        var h = body.length - 1; while (h > 0 && isAdj(seg[body[h]])) h--;
+        var head = body.slice(0, h + 1), tail = body.slice(h + 1);
+        order = order.concat(head.reverse(), tail, rn.filter(tipK), rn.filter(withK));
       });
     }
     // yeniden birleştir: sözcük olmayan belirteçler kendi yerinde kalır; taşınan öbekler kelime aralıklarına yerleşir
@@ -240,9 +301,22 @@
     out = out.replace(/\s+/g, ' ').replace(/\s+([,.;:)])/g, '$1').trim();
     out = out.replace(/\b((?:[A-Za-z][\w+-]*\s+){0,2}[A-Za-z][\w+-]*)\s+\1\b/gi, '$1');
     if (!ar) out = out.replace(/^(with|without|for|and|or)\b/, function (w) { return w[0].toUpperCase() + w.slice(1); });
-    return { text: out, hit: hit, left: left };
+    else out = out.replace(/لـ\s+ال/g, 'لل').replace(/لـ\s+/g, 'ل').replace(/(^|\s)و\s+(?=\S)/g, '$1و').replace(/(\d+)-(?:عبوة|Pack)/g, '$1 قطع').replace(/(\d+)-Way/g, '$1 اتجاهات');
+    return { text: out, hit: hit, left: left, terms: terms };
   }
-  var api = { translate: translate, stdCodes: stdCodes, abbrs: abbrs, expand: expand, size: LEX_DATA.length, has: function (w) { return !!analyze(lower(String(w))); }, version: 2 };
+  // zorunlu terim listesine girmeyen bağlaç / genel kelimeler
+  var NOGL = {}; 've ile için veya ya da adet set seti takım takımı kit yeni orijinal muadil'.split(' ').forEach(function (w) { NOGL[w] = 1; });
+  // v1.77: yapay zekâya verilecek zorunlu terim listesi — adlarda sözlükte bulunan teknik terimler (kaynak → sözlükteki karşılık)
+  function glossary(list, lg) {
+    var seen = Object.create(null), out = [];
+    (list || []).forEach(function (x) {
+      var r; try { r = translate0(expandOnly(x), lg); } catch (e) { return; }
+      (r.terms || []).forEach(function (t) { var k = t.src.toLocaleLowerCase('tr'); if (!seen[k] && t.src.replace(/[^A-Za-zÇĞİÖŞÜçğıöşü]/g, '').length >= 3) { seen[k] = 1; out.push([t.src, t.out]); } });
+    });
+    return out;
+  }
+  function expandOnly(x) { return String(x == null ? '' : x); }
+  var api = { translate: translate, glossary: glossary, stdCodes: stdCodes, abbrs: abbrs, expand: expand, size: LEX_DATA.length, has: function (w) { return !!analyze(lower(String(w))); }, version: 3 };
   if (typeof window !== 'undefined') window.FalconSozluk = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })();

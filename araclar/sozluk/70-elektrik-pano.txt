@@ -1,0 +1,300 @@
+# v1.77 Elektrik tesisatı, pano, şalt, koruma, enerji (tr | en | ar) — IEC / üretici katalog dili
+elektrik panosu | Electrical Panel | لوحة كهربائية
+elektrik pano | Electrical Panel | لوحة كهربائية
+dağıtım panosu | Distribution Board | لوحة توزيع
+ana dağıtım panosu | Main Distribution Board | لوحة التوزيع الرئيسية
+tali dağıtım panosu | Sub-Distribution Board | لوحة توزيع فرعية
+sigorta kutusu | Fuse Box | علبة المصهرات
+sıva altı sigorta kutusu | Flush-Mounted Consumer Unit | علبة مصهرات غاطسة
+sıva üstü sigorta kutusu | Surface-Mounted Consumer Unit | علبة مصهرات سطحية
+kompanzasyon panosu | Power Factor Correction Panel | لوحة تحسين معامل القدرة
+kompanzasyon | Power Factor Correction | تحسين معامل القدرة
+reaktif güç rölesi | Reactive Power Controller | منظم القدرة غير الفعالة
+kondansatör bataryası | Capacitor Bank | مجموعة مكثفات
+şönt reaktör | Shunt Reactor | مفاعل تحويلي
+harmonik filtre | Harmonic Filter | مرشح التوافقيات
+otomatik sigorta | Miniature Circuit Breaker | قاطع دارة مصغر
+anahtarlı otomatik sigorta | Miniature Circuit Breaker | قاطع دارة مصغر
+minyatür devre kesici | Miniature Circuit Breaker | قاطع دارة مصغر
+kompakt şalter | Moulded Case Circuit Breaker | قاطع دارة بغلاف مقولب
+kompakt tip şalter | Moulded Case Circuit Breaker | قاطع دارة بغلاف مقولب
+açık tip şalter | Air Circuit Breaker | قاطع دارة هوائي
+hava devre kesici | Air Circuit Breaker | قاطع دارة هوائي
+motor koruma şalteri | Motor Protection Circuit Breaker | قاطع حماية المحرك
+motor koruma rölesi | Motor Protection Relay | مرحل حماية المحرك
+kaçak akım rölesi | Residual Current Device | جهاز التيار المتبقي
+kaçak akım koruma rölesi | Residual Current Device | جهاز التيار المتبقي
+kaçak akım şalteri | Residual Current Circuit Breaker | قاطع التيار المتبقي
+kaçak akım | Residual Current | تيار متبقٍ
+toprak kaçak rölesi | Earth Leakage Relay | مرحل التسرب الأرضي
+yük ayırıcı | Load Break Switch | مفتاح فصل الحمل
+yük ayırıcısı | Load Break Switch | مفتاح فصل الحمل
+ayırıcı | Disconnector | فاصل
+sigortalı yük ayırıcı | Fuse Switch Disconnector | فاصل حمل بمصهر
+pako şalter | Rotary Cam Switch | مفتاح كامة دوار
+pako | Cam Switch | مفتاح كامة
+kollu şalter | Lever Switch | مفتاح ذو ذراع
+şalter | Circuit Breaker | قاطع دارة
+devre kesici | Circuit Breaker | قاطع دارة
+buşon sigorta | Screw-In Fuse | مصهر لولبي
+bıçaklı sigorta | NH Blade Fuse | مصهر سكيني
+bıçaklı sigorta altlığı | NH Fuse Base | قاعدة مصهر سكيني
+cam sigorta | Glass Fuse | مصهر زجاجي
+seramik sigorta | Ceramic Fuse | مصهر خزفي
+silindirik sigorta | Cylindrical Fuse | مصهر أسطواني
+sigorta yuvası | Fuse Holder | حامل المصهر
+sigorta | Fuse | مصهر
+kontaktör | Contactor | كونتاكتور
+yardımcı kontak bloğu | Auxiliary Contact Block | كتلة تلامسات مساعدة
+yardımcı kontak | Auxiliary Contact | تلامس مساعد
+termik röle | Thermal Overload Relay | مرحل حراري للحمل الزائد
+termik aşırı akım rölesi | Thermal Overload Relay | مرحل حراري للحمل الزائد
+aşırı akım rölesi | Overcurrent Relay | مرحل التيار الزائد
+faz koruma rölesi | Phase Protection Relay | مرحل حماية الطور
+faz sırası rölesi | Phase Sequence Relay | مرحل تسلسل الأطوار
+gerilim koruma rölesi | Voltage Protection Relay | مرحل حماية الجهد
+zaman rölesi | Timer Relay | مرحل زمني
+zaman ayarlı röle | Time-Delay Relay | مرحل تأخير زمني
+yıldız üçgen rölesi | Star-Delta Timer | مرحل نجمة دلتا
+yıldız üçgen | Star-Delta | نجمة دلتا
+yıldız üçgen yolverici | Star-Delta Starter | بادئ نجمة دلتا
+yolverici | Starter | بادئ تشغيل
+yumuşak yolverici | Soft Starter | بادئ تشغيل ناعم
+direkt yolverici | Direct-On-Line Starter | بادئ تشغيل مباشر
+motor sürücü | Motor Drive | محرك تحكم بالمحرك
+hız kontrol cihazı | Variable Frequency Drive | محول تردد متغير
+frekans konvertörü | Frequency Converter | محول تردد
+frekans invertörü | Frequency Inverter | عاكس تردد
+invertör | Inverter | عاكس
+evirici | Inverter | عاكس
+doğrultucu | Rectifier | مقوّم
+redresör | Rectifier | مقوّم
+akü şarj cihazı | Battery Charger | شاحن البطاريات
+şarj cihazı | Charger | شاحن
+şarj aleti | Charger | شاحن
+kesintisiz güç kaynağı | Uninterruptible Power Supply | مزود طاقة غير منقطع
+regülatör | Regulator | منظم
+voltaj regülatörü | Voltage Regulator | منظم جهد
+gerilim regülatörü | Voltage Regulator | منظم جهد
+servo motorlu regülatör | Servo Voltage Stabilizer | منظم جهد بمحرك سيرفو
+stabilizatör | Stabilizer | مثبت جهد
+izolasyon trafosu | Isolation Transformer | محول عزل
+güç trafosu | Power Transformer | محول قدرة
+dağıtım trafosu | Distribution Transformer | محول توزيع
+kuru tip trafo | Dry-Type Transformer | محول من النوع الجاف
+yağlı trafo | Oil-Immersed Transformer | محول مغمور بالزيت
+kumanda trafosu | Control Transformer | محول تحكم
+akım trafosu | Current Transformer | محول تيار
+gerilim trafosu | Voltage Transformer | محول جهد
+toroid trafo | Toroidal Transformer | محول حلقي
+oto trafo | Autotransformer | محول ذاتي
+ototrafo | Autotransformer | محول ذاتي
+trafo | Transformer | محول
+transformatör | Transformer | محول
+jeneratör | Generator | مولد
+dizel jeneratör | Diesel Generator | مولد ديزل
+benzinli jeneratör | Petrol Generator | مولد بنزين
+jeneratör seti | Generator Set | مجموعة توليد
+alternatör | Alternator | مولد تيار متناوب
+transfer panosu | Transfer Switch Panel | لوحة التحويل
+otomatik transfer şalteri | Automatic Transfer Switch | مفتاح تحويل أوتوماتيكي
+transfer şalteri | Transfer Switch | مفتاح تحويل
+enerji analizörü | Power Analyzer | محلل الطاقة
+enerji sayacı | Energy Meter | عداد طاقة
+elektrik sayacı | Electricity Meter | عداد كهرباء
+kombi sayaç | Combined Meter | عداد مركب
+analizör | Analyzer | محلل
+dijital panel metre | Digital Panel Meter | مقياس لوحة رقمي
+panel metre | Panel Meter | مقياس لوحة
+pano tipi ampermetre | Panel Ammeter | أميتر لوحة
+pano tipi voltmetre | Panel Voltmeter | فولتميتر لوحة
+ampermetre | Ammeter | أميتر
+voltmetre | Voltmeter | فولتميتر
+frekansmetre | Frequency Meter | مقياس التردد
+cosinüsfimetre | Power Factor Meter | مقياس معامل القدرة
+saat sayacı | Hour Meter | عداد ساعات التشغيل
+sinyal lambası | Indicator Lamp | مصباح إشارة
+pano sinyal lambası | Panel Indicator Lamp | مصباح إشارة اللوحة
+ikaz lambası | Warning Light | مصباح تحذير
+buton | Push Button | زر ضغط
+start butonu | Start Button | زر التشغيل
+stop butonu | Stop Button | زر الإيقاف
+acil stop butonu | Emergency Stop Button | زر الإيقاف الطارئ
+acil durdurma butonu | Emergency Stop Button | زر الإيقاف الطارئ
+mantar buton | Mushroom Push Button | زر ضغط فطري
+kalıcı buton | Latching Push Button | زر ضغط ماسك
+yaylı buton | Momentary Push Button | زر ضغط لحظي
+buton kutusu | Push Button Station | علبة أزرار
+kumanda butonu | Control Push Button | زر تحكم
+selektör şalter | Selector Switch | مفتاح اختيار
+seçici anahtar | Selector Switch | مفتاح اختيار
+potansiyometre | Potentiometer | مقياس جهد
+ray tipi | DIN-Rail Mount | تثبيت على سكة DIN
+din ray | DIN Rail | سكة DIN
+din rayı | DIN Rail | سكة DIN
+omega ray | DIN Rail | سكة DIN
+klemens | Terminal Block | كتلة أطراف توصيل
+ray klemens | DIN-Rail Terminal Block | كتلة أطراف على سكة DIN
+vidalı klemens | Screw Terminal Block | كتلة أطراف لولبية
+yaylı klemens | Spring Terminal Block | كتلة أطراف نابضية
+sigortalı klemens | Fuse Terminal Block | كتلة أطراف بمصهر
+toprak klemensi | Earth Terminal Block | كتلة أطراف أرضية
+klemens kapağı | Terminal Block End Cover | غطاء نهاية كتلة الأطراف
+klemens etiketi | Terminal Marker | علامة أطراف
+bara | Busbar | قضيب توزيع
+bakır bara | Copper Busbar | قضيب نحاسي
+bara izolatörü | Busbar Insulator | عازل قضيب التوزيع
+bara tutucu | Busbar Support | حامل قضيب التوزيع
+bara sistemi | Busbar System | نظام قضبان التوزيع
+taraklı bara | Comb Busbar | قضيب توزيع مشطي
+izolatör | Insulator | عازل
+mesnet izolatörü | Support Insulator | عازل دعامة
+kablo kanalı | Cable Trunking | مجرى الكابلات
+delikli kablo kanalı | Slotted Wiring Duct | مجرى أسلاك مثقب
+pano kablo kanalı | Wiring Duct | مجرى أسلاك
+kablo tavası | Cable Tray | حامل كابلات
+delikli kablo tavası | Perforated Cable Tray | حامل كابلات مثقب
+merdiven tipi kablo tavası | Cable Ladder | سلم كابلات
+tel kablo tavası | Wire Mesh Cable Tray | حامل كابلات شبكي
+kablo merdiveni | Cable Ladder | سلم كابلات
+spiral boru | Flexible Conduit | أنبوب مرن
+spiral hortum | Flexible Conduit | أنبوب مرن
+koruge boru | Corrugated Conduit | أنبوب مموج
+koruge | Corrugated Conduit | أنبوب مموج
+elektrik borusu | Electrical Conduit | أنبوب كهربائي
+pvc boru | PVC Conduit | أنبوب PVC
+çelik boru | Steel Conduit | أنبوب فولاذي
+buat | Junction Box | علبة توصيل
+sıva altı buat | Flush Junction Box | علبة توصيل غاطسة
+sıva üstü buat | Surface Junction Box | علبة توصيل سطحية
+ek kutusu | Junction Box | علبة توصيل
+dağıtım kutusu | Distribution Box | علبة توزيع
+priz | Socket Outlet | مقبس
+topraklı priz | Earthed Socket | مقبس مؤرض
+sanayi prizi | Industrial Socket | مقبس صناعي
+sanayi fişi | Industrial Plug | قابس صناعي
+uzatma kablosu | Extension Cord | سلك تمديد
+grup priz | Power Strip | مشترك كهربائي
+çoklu priz | Power Strip | مشترك كهربائي
+akım korumalı priz | Surge-Protected Power Strip | مشترك كهربائي بحماية من التدفق
+anahtar priz | Switch and Socket | مفتاح ومقبس
+vavien anahtar | Two-Way Switch | مفتاح ثنائي الاتجاه
+komütatör anahtar | Double Switch | مفتاح مزدوج
+dimmer | Dimmer | معتم الإضاءة
+zil butonu | Doorbell Button | زر الجرس
+parafudr | Surge Arrester | مانع الصواعق
+aşırı gerilim koruyucu | Surge Protective Device | جهاز حماية من زيادة الجهد
+yıldırım koruma | Lightning Protection | حماية من الصواعق
+paratoner | Lightning Rod | مانعة صواعق
+topraklama | Earthing | تأريض
+topraklama çubuğu | Earth Rod | قضيب التأريض
+topraklama barası | Earth Busbar | قضيب التأريض
+topraklama klemensi | Earthing Clamp | مشبك التأريض
+topraklama kablosu | Earthing Cable | كابل التأريض
+topraklama ölçer | Earth Resistance Tester | جهاز قياس مقاومة الأرضي
+eşpotansiyel bara | Equipotential Busbar | قضيب تساوي الجهد
+pano kilidi | Panel Lock | قفل اللوحة
+pano menteşesi | Panel Hinge | مفصلة اللوحة
+pano fanı | Enclosure Fan | مروحة اللوحة
+pano filtreli fan | Filter Fan | مروحة بمرشح
+pano termostatı | Enclosure Thermostat | ثرموستات اللوحة
+pano ısıtıcı | Enclosure Heater | سخان اللوحة
+pano klima | Enclosure Air Conditioner | مكيف اللوحة
+pano aydınlatma | Enclosure Light | إنارة اللوحة
+pano gövdesi | Enclosure Body | هيكل اللوحة
+dahili montaj plakası | Mounting Plate | لوح تثبيت
+montaj plakası | Mounting Plate | لوح تثبيت
+dikili tip pano | Floor-Standing Enclosure | لوحة أرضية
+duvar tipi pano | Wall-Mounted Enclosure | لوحة جدارية
+polyester pano | Polyester Enclosure | لوحة بوليستر
+sac pano | Sheet Steel Enclosure | لوحة من الصاج
+paslanmaz pano | Stainless Steel Enclosure | لوحة من الفولاذ المقاوم للصدأ
+kablo rakoru | Cable Gland | جلبة كابل
+metal rakor | Metal Cable Gland | جلبة كابل معدنية
+plastik rakor | Plastic Cable Gland | جلبة كابل بلاستيكية
+kablo pabucu | Cable Lug | طرف كابل
+kablo yüksüğü | Ferrule | جلبة طرف السلك
+izoleli kablo pabucu | Insulated Cable Lug | طرف كابل معزول
+bakır pabuç | Copper Lug | طرف نحاسي
+kablo bağı | Cable Tie | رباط كابلات
+plastik kablo bağı | Nylon Cable Tie | رباط كابلات نايلون
+kablo bağı kelepçesi | Cable Tie Mount | قاعدة رباط الكابلات
+kablo etiketi | Cable Marker | علامة الكابل
+kablo makarası | Cable Reel | بكرة كابل
+kablo sıyırıcı | Wire Stripper | مقشرة أسلاك
+kablo sıyırma pensesi | Wire Stripping Pliers | زرادية تقشير الأسلاك
+pabuç sıkma pensesi | Crimping Pliers | زرادية كبس الأطراف
+kablo kesici | Cable Cutter | قاطعة كابلات
+kablo makası | Cable Cutter | قاطعة كابلات
+makaron | Heat Shrink Tubing | أنبوب حراري قابل للانكماش
+daralan makaron | Heat Shrink Tubing | أنبوب حراري قابل للانكماش
+izole bant | Insulating Tape | شريط عازل
+elektrik bandı | Electrical Tape | شريط كهربائي
+kablo ek seti | Cable Joint Kit | طقم وصلة كابل
+kablo başlığı | Cable Termination | نهاية كابل
+terminasyon | Termination | إنهاء
+orta gerilim | Medium Voltage | جهد متوسط
+alçak gerilim | Low Voltage | جهد منخفض
+yüksek gerilim | High Voltage | جهد عالٍ
+monofaze | Single-Phase | أحادي الطور
+tek fazlı | Single-Phase | أحادي الطور
+trifaze | Three-Phase | ثلاثي الأطوار
+üç fazlı | Three-Phase | ثلاثي الأطوار
+faz | Phase | طور
+nötr | Neutral | محايد
+toprak hattı | Earth Line | خط الأرضي
+kutup | Pole | قطب
+tek kutuplu | Single-Pole | أحادي القطب
+iki kutuplu | Double-Pole | ثنائي القطب
+üç kutuplu | Three-Pole | ثلاثي الأقطاب
+dört kutuplu | Four-Pole | رباعي الأقطاب
+kısa devre | Short Circuit | دارة قصر
+kısa devre kesme kapasitesi | Breaking Capacity | سعة القطع
+nominal akım | Rated Current | التيار المقنن
+nominal gerilim | Rated Voltage | الجهد المقنن
+anma akımı | Rated Current | التيار المقنن
+anma gerilimi | Rated Voltage | الجهد المقنن
+güç faktörü | Power Factor | معامل القدرة
+aktif güç | Active Power | القدرة الفعالة
+reaktif güç | Reactive Power | القدرة غير الفعالة
+görünür güç | Apparent Power | القدرة الظاهرية
+güneş paneli | Solar Panel | لوح شمسي
+güneş enerjisi | Solar Energy | طاقة شمسية
+fotovoltaik panel | Photovoltaic Panel | لوح كهروضوئي
+solar panel | Solar Panel | لوح شمسي
+şarj kontrol cihazı | Charge Controller | منظم الشحن
+şarj regülatörü | Charge Controller | منظم الشحن
+mppt şarj kontrol cihazı | MPPT Charge Controller | منظم شحن MPPT
+hibrit invertör | Hybrid Inverter | عاكس هجين
+şebeke bağlantılı invertör | On-Grid Inverter | عاكس متصل بالشبكة
+off grid invertör | Off-Grid Inverter | عاكس منفصل عن الشبكة
+tam sinüs invertör | Pure Sine Wave Inverter | عاكس موجة جيبية نقية
+modifiye sinüs invertör | Modified Sine Wave Inverter | عاكس موجة جيبية معدلة
+solar kablo | Solar Cable | كابل شمسي
+solar konnektör | Solar Connector | موصل شمسي
+panel montaj konstrüksiyonu | Panel Mounting Structure | هيكل تثبيت الألواح
+akü | Battery | بطارية
+jel akü | Gel Battery | بطارية جل
+kuru akü | Sealed Lead-Acid Battery | بطارية رصاص حمضية مغلقة
+lityum akü | Lithium Battery | بطارية ليثيوم
+lityum demir fosfat | Lithium Iron Phosphate | فوسفات حديد الليثيوم
+akü kutup başı | Battery Terminal | طرف البطارية
+akü kablosu | Battery Cable | كابل البطارية
+akü kabini | Battery Cabinet | خزانة البطاريات
+akü grubu | Battery Bank | مجموعة بطاريات
+pil | Battery | بطارية
+şarjlı pil | Rechargeable Battery | بطارية قابلة لإعادة الشحن
+pil yuvası | Battery Holder | حامل البطارية
+elektrik motoru | Electric Motor | محرك كهربائي
+asenkron motor | Induction Motor | محرك حثي
+senkron motor | Synchronous Motor | محرك تزامني
+redüktörlü motor | Geared Motor | محرك مع علبة تروس
+motor redüktör | Gear Motor | محرك مع علبة تروس
+fren motoru | Brake Motor | محرك بفرامل
+motor freni | Motor Brake | فرامل المحرك
+motor sargısı | Motor Winding | ملف المحرك
+motor fanı | Motor Fan | مروحة المحرك
+motor klemens kutusu | Motor Terminal Box | علبة أطراف المحرك
+ex-proof motor | Explosion-Proof Motor | محرك مقاوم للانفجار
+patlama korumalı | Explosion-Proof | مقاوم للانفجار
+ex-proof | Explosion-Proof | مقاوم للانفجار

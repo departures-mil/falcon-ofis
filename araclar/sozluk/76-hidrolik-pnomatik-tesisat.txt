@@ -1,0 +1,188 @@
+# v1.77 Hidrolik, pnömatik, vana, pompa, tesisat, iklimlendirme (tr | en | ar)
+hidrolik | Hydraulic | هيدروليكي
+pnömatik | Pneumatic | هوائي
+hidrolik silindir | Hydraulic Cylinder | أسطوانة هيدروليكية
+pnömatik silindir | Pneumatic Cylinder | أسطوانة هوائية
+silindir | Cylinder | أسطوانة
+kompakt silindir | Compact Cylinder | أسطوانة مدمجة
+çift etkili silindir | Double-Acting Cylinder | أسطوانة مزدوجة الفعل
+tek etkili silindir | Single-Acting Cylinder | أسطوانة أحادية الفعل
+kılavuzlu silindir | Guided Cylinder | أسطوانة موجهة
+döner aktüatör | Rotary Actuator | مشغل دوار
+silindir contası | Cylinder Seal Kit | طقم حشيات الأسطوانة
+hidrolik pompa | Hydraulic Pump | مضخة هيدروليكية
+dişli pompa | Gear Pump | مضخة تروس
+pistonlu pompa | Piston Pump | مضخة مكبسية
+paletli pompa | Vane Pump | مضخة ريشية
+hidrolik motor | Hydraulic Motor | محرك هيدروليكي
+hidrolik ünite | Hydraulic Power Unit | وحدة طاقة هيدروليكية
+hidrolik güç ünitesi | Hydraulic Power Unit | وحدة طاقة هيدروليكية
+hidrolik yağ | Hydraulic Oil | زيت هيدروليكي
+hidrolik hortum | Hydraulic Hose | خرطوم هيدروليكي
+hidrolik rakor | Hydraulic Fitting | وصلة هيدروليكية
+hidrolik filtre | Hydraulic Filter | مرشح هيدروليكي
+hidrolik akümülatör | Hydraulic Accumulator | مركم هيدروليكي
+akümülatör | Accumulator | مركم
+yön kontrol valfi | Directional Control Valve | صمام تحكم اتجاهي
+yön valfi | Directional Valve | صمام اتجاهي
+oransal valf | Proportional Valve | صمام تناسبي
+emniyet valfi | Safety Valve | صمام أمان
+basınç düşürücü | Pressure Reducing Valve | صمام تخفيض الضغط
+basınç düşürme valfi | Pressure Reducing Valve | صمام تخفيض الضغط
+basınç ayar valfi | Pressure Relief Valve | صمام تنفيس الضغط
+çek valf | Check Valve | صمام عدم رجوع
+çekvalf | Check Valve | صمام عدم رجوع
+geri dönüşsüz valf | Non-Return Valve | صمام عدم رجوع
+akış kontrol valfi | Flow Control Valve | صمام تحكم بالتدفق
+hız ayar valfi | Flow Control Valve | صمام تحكم بالتدفق
+selenoid valf | Solenoid Valve | صمام كهرومغناطيسي
+solenoid valf | Solenoid Valve | صمام كهرومغناطيسي
+selenoid bobini | Solenoid Coil | ملف الصمام الكهرومغناطيسي
+bobin | Coil | ملف
+valf | Valve | صمام
+valfi | Valve | صمام
+valfler | Valves | صمامات
+valf adası | Valve Terminal | محطة صمامات
+pnömatik valf | Pneumatic Valve | صمام هوائي
+hava hazırlayıcı | Air Preparation Unit | وحدة تحضير الهواء
+şartlandırıcı | Filter Regulator Lubricator | وحدة ترشيح وتنظيم وتزييت
+filtre regülatör | Filter Regulator | مرشح منظم
+basınç regülatörü | Pressure Regulator | منظم ضغط
+yağlayıcı | Lubricator | مزيت
+susturucu | Silencer | كاتم صوت
+pnömatik susturucu | Pneumatic Silencer | كاتم صوت هوائي
+pnömatik hortum | Pneumatic Tubing | أنبوب هوائي
+poliüretan hortum | Polyurethane Tubing | أنبوب بولي يوريثان
+spiral hava hortumu | Recoil Air Hose | خرطوم هواء حلزوني
+hava hortumu | Air Hose | خرطوم هواء
+hortum | Hose | خرطوم
+hortumu | Hose | خرطوم
+hortum rakoru | Hose Fitting | وصلة خرطوم
+rakor | Fitting | وصلة
+rakoru | Fitting | وصلة
+rakorlar | Fittings | وصلات
+pnömatik rakor | Push-In Fitting | وصلة دفع
+geçmeli rakor | Push-In Fitting | وصلة دفع
+düz rakor | Straight Fitting | وصلة مستقيمة
+dirsek rakor | Elbow Fitting | وصلة كوع
+te rakor | Tee Fitting | وصلة حرف T
+nipel | Nipple | حلمة توصيل
+redüksiyon | Reducer | مخفض
+manşon | Coupling | جلبة توصيل
+dirsek | Elbow | كوع
+tapa | Plug | سدادة
+kör tapa | Blanking Plug | سدادة صماء
+rekor | Union | وصلة اتحاد
+hızlı bağlantı | Quick Coupling | وصلة سريعة
+hızlı bağlantı kaplini | Quick Coupling | وصلة سريعة
+hava kompresörü | Air Compressor | ضاغط هواء
+kompresör | Compressor | ضاغط
+vidalı kompresör | Screw Compressor | ضاغط لولبي
+pistonlu kompresör | Piston Compressor | ضاغط مكبسي
+hava kurutucu | Air Dryer | مجفف هواء
+hava tankı | Air Receiver Tank | خزان هواء
+vakum pompası | Vacuum Pump | مضخة تفريغ
+vakum jeneratörü | Vacuum Generator | مولد تفريغ
+manometre | Pressure Gauge | مقياس ضغط
+basınç göstergesi | Pressure Gauge | مقياس ضغط
+gliserinli manometre | Glycerine-Filled Pressure Gauge | مقياس ضغط مملوء بالجلسرين
+vakummetre | Vacuum Gauge | مقياس تفريغ
+termometre | Thermometer | ميزان حرارة
+vana | Valve | صمام
+vanası | Valve | صمام
+küresel vana | Ball Valve | صمام كروي
+sürgülü vana | Gate Valve | صمام بوابي
+kelebek vana | Butterfly Valve | صمام فراشة
+glob vana | Globe Valve | صمام كروي الشكل
+iğne vana | Needle Valve | صمام إبري
+pislik tutucu | Strainer | مصفاة
+y tipi pislik tutucu | Y-Strainer | مصفاة على شكل Y
+motorlu vana | Motorized Valve | صمام بمحرك
+aktüatörlü vana | Actuated Valve | صمام بمشغل
+pnömatik aktüatör | Pneumatic Actuator | مشغل هوائي
+elektrikli aktüatör | Electric Actuator | مشغل كهربائي
+flanş | Flange | شفة
+flanşı | Flange | شفة
+kör flanş | Blind Flange | شفة صماء
+kaynak boyunlu flanş | Weld Neck Flange | شفة برقبة لحام
+boru | Pipe | أنبوب
+borusu | Pipe | أنبوب
+borular | Pipes | أنابيب
+dikişsiz boru | Seamless Pipe | أنبوب غير ملحوم
+dikişli boru | Welded Pipe | أنبوب ملحوم
+galvaniz boru | Galvanized Pipe | أنبوب مجلفن
+paslanmaz boru | Stainless Steel Pipe | أنبوب فولاذي مقاوم للصدأ
+bakır boru | Copper Pipe | أنبوب نحاسي
+pprc boru | PPR Pipe | أنبوب PPR
+pe boru | PE Pipe | أنبوب PE
+hdpe boru | HDPE Pipe | أنبوب HDPE
+pompa | Pump | مضخة
+pompası | Pump | مضخة
+santrifüj pompa | Centrifugal Pump | مضخة طرد مركزي
+dalgıç pompa | Submersible Pump | مضخة غاطسة
+sirkülasyon pompası | Circulation Pump | مضخة تدوير
+hidrofor | Booster Pump Set | مجموعة مضخات رفع الضغط
+dozaj pompası | Dosing Pump | مضخة جرعات
+yangın pompası | Fire Pump | مضخة حريق
+pompa çarkı | Pump Impeller | دافع المضخة
+çark | Impeller | دافع
+su sayacı | Water Meter | عداد مياه
+su filtresi | Water Filter | مرشح مياه
+filtre | Filter | مرشح
+filtresi | Filter | مرشح
+filtre elemanı | Filter Element | عنصر ترشيح
+filtre kartuşu | Filter Cartridge | خرطوشة ترشيح
+hava filtresi | Air Filter | مرشح هواء
+yağ filtresi | Oil Filter | مرشح زيت
+yakıt filtresi | Fuel Filter | مرشح وقود
+torba filtre | Bag Filter | مرشح كيسي
+hepa filtre | HEPA Filter | مرشح HEPA
+klima | Air Conditioner | مكيف هواء
+split klima | Split Air Conditioner | مكيف منفصل
+inverter klima | Inverter Air Conditioner | مكيف إنفرتر
+iç ünite | Indoor Unit | وحدة داخلية
+dış ünite | Outdoor Unit | وحدة خارجية
+klima santrali | Air Handling Unit | وحدة مناولة الهواء
+fan coil | Fan Coil Unit | وحدة ملف المروحة
+soğutma grubu | Chiller | مبرد مياه
+chiller | Chiller | مبرد مياه
+soğutucu akışkan | Refrigerant | مادة تبريد
+soğutucu gaz | Refrigerant Gas | غاز تبريد
+kombi | Combi Boiler | مرجل مركب
+kazan | Boiler | مرجل
+brülör | Burner | حارق
+radyatör | Radiator | مشع حراري
+ısıtıcı | Heater | سخان
+elektrikli ısıtıcı | Electric Heater | سخان كهربائي
+rezistans | Heating Element | عنصر تسخين
+ısıtıcı rezistans | Heating Element | عنصر تسخين
+kartuş ısıtıcı | Cartridge Heater | سخان خرطوشي
+şofben | Water Heater | سخان مياه
+termosifon | Electric Water Heater | سخان مياه كهربائي
+eşanjör | Heat Exchanger | مبادل حراري
+ısı eşanjörü | Heat Exchanger | مبادل حراري
+plakalı eşanjör | Plate Heat Exchanger | مبادل حراري لوحي
+genleşme tankı | Expansion Tank | خزان تمدد
+aspiratör | Exhaust Fan | مروحة شفط
+havalandırma fanı | Ventilation Fan | مروحة تهوية
+kanal fanı | Duct Fan | مروحة مجرى
+radyal fan | Centrifugal Fan | مروحة طرد مركزي
+aksiyel fan | Axial Fan | مروحة محورية
+fan | Fan | مروحة
+fanı | Fan | مروحة
+menfez | Air Grille | فتحة تهوية
+difüzör | Diffuser | ناشر هواء
+hava kanalı | Air Duct | مجرى هواء
+yalıtım | Insulation | عزل
+izolasyon | Insulation | عزل
+ısı yalıtımı | Thermal Insulation | عزل حراري
+kauçuk köpük | Elastomeric Foam Insulation | عزل رغوي مطاطي
+taş yünü | Rock Wool | صوف صخري
+cam yünü | Glass Wool | صوف زجاجي
+yangın söndürücü | Fire Extinguisher | طفاية حريق
+yangın söndürme tüpü | Fire Extinguisher | طفاية حريق
+kuru kimyevi tozlu | Dry Powder | بودرة كيميائية جافة
+yangın dolabı | Fire Hose Cabinet | خزانة خرطوم الحريق
+yangın hortumu | Fire Hose | خرطوم حريق
+sprinkler | Sprinkler | رشاش إطفاء
+yangın sprinkleri | Fire Sprinkler | رشاش إطفاء الحريق

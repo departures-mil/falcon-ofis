@@ -507,3 +507,38 @@ test('1.76.3: fatura PDF kaydedilince dosya kendiliğinden açılmaz', () => {
   assert.ok(main.includes("handle('report:savePdf', wrap(async (_e, html, name, opts)") && main.includes('if (!(opts && opts.open === false)) shell.openPath(target);'), 'ana süreç open:false\'ta açmaz');
   assert.ok(read('electron/preload.js').includes("savePdf: (html, name, opts) => ipcRenderer.invoke('report:savePdf', html, name, opts)"), 'preload seçeneği geçirir');
 });
+
+test('1.77: güçlü teknik sözlük — İngilizce adlar → Arapça, Arapça sözcük sırası, zorunlu terim listesi', () => {
+  delete require.cache[require.resolve(path.join(ROOT, 'dist/assets/sozluk-falcon.js'))];
+  const S = require(path.join(ROOT, 'dist/assets/sozluk-falcon.js'));
+  const en = (x) => S.translate(x, 'en').text, ar = (x) => S.translate(x, 'ar').text;
+  assert.ok(S.size > 3800, 'sözlük ' + S.size + ' terim');
+  // Türkçe → İngilizce: alan terimleri, iyelikli tamlama + -lı, sayılar
+  assert.strictEqual(en('Hibrit İnvertör 5kW MPPT Şarj Kontrol Cihazlı'), 'Hybrid Inverter 5kW with MPPT Charge Controller');
+  assert.strictEqual(en('Hareket Sensörlü Tavan Armatürü'), 'Ceiling Luminaire with Motion Sensor');
+  assert.strictEqual(en('Bilyalı Vidalı Mil 1605 Somunlu'), 'Ball Screw 1605 with Nut');
+  assert.strictEqual(en('HSS Matkap Ucu Seti 1-13mm 25 Parça'), 'HSS Drill Bit Set 1-13mm 25-Piece');
+  assert.strictEqual(en('Kaçak Akım Rölesi 40A 30mA 4 Kutuplu'), 'Residual Current Device 40A 30mA 4-Pole');
+  assert.strictEqual(en('Monofaze Asenkron Motor 1,5 kW 1400 dev/dk'), 'Single-Phase Induction Motor 1,5 kW 1400 rpm');
+  // İngilizce yazılmış ad → Arapça
+  assert.strictEqual(ar('BORING BAR SLEEVE D40 d12'), 'جلبة قضيب التجويف D40 d12');
+  assert.strictEqual(ar('Safety Helmet with Chin Strap'), 'خوذة أمان مع حزام الذقن');
+  assert.strictEqual(ar('Deep Groove Ball Bearing 6205-2RS'), 'محمل كريات ذو أخدود عميق 6205-2RS');
+  // Arapça sıra: sonradan gelen sıfat yerinde, «مع …» sonda, «için» → «لـ», «ve» → «و»
+  assert.strictEqual(ar('Acil Stop Butonu Kırmızı 40mm'), 'زر الإيقاف الطارئ أحمر 40mm');
+  assert.strictEqual(ar('Pano Filtreli Fanı 230V'), 'مروحة لوحة مع مرشح 230V');
+  assert.strictEqual(ar('Planet Redüktör 1:10 Servo Motor İçin'), 'علبة تروس كوكبية 1:10 لمحرك سيرفو');
+  assert.strictEqual(ar('Montaj Hizmeti ve Devreye Alma'), 'خدمة التركيب وتشغيل تجريبي');
+  assert.strictEqual(ar('Kesilmez Eldiven Seviye 5'), 'قفازات مقاومة للقطع مستوى 5');
+  assert.strictEqual(ar('Endüktif Sensör M18 PNP NO'), 'حساس حثي M18 PNP NO', 'büyük harfli NO kontak tipidir');
+  // yapay zekâya zorunlu terim listesi
+  const g = S.glossary(['Dış Çap Mikrometresi 0-25mm', 'BORING BAR SLEEVE D40 d12'], 'ar');
+  assert.deepStrictEqual(g.map((x) => x[1]), ['ميكرومتر خارجي', 'جلبة قضيب التجويف']);
+  const pdf = read('dist/assets/fatura-pdf.js'), ui = read('dist/assets/fatura-falcon.js');
+  assert.ok(pdf.includes('function glossaryLines') && pdf.includes('MANDATORY GLOSSARY') && pdf.includes('.concat(glossaryLines(list, lg))'), 'istemde zorunlu terim listesi');
+  assert.ok(ui.includes('function aiCheck') && ui.includes('var v = aiCheck(x,'), 'Türkçe kalan yapay zekâ çevirisi sözlükle düzeltilir');
+  // fatura: son bırakılan senaryo / tip / özelleştirme no (boş da) + Enter = Kaydet
+  assert.ok(ui.includes("if (Object.prototype.hasOwnProperty.call(LM, k)) { if (LM[k]) st.meta[k] = LM[k]; else delete st.meta[k]; }"), 'boş bırakılan alan boş kalır');
+  assert.ok(!ui.includes("scenario: 'TEMELFATURA', inv_type: 'SATIS', customization: 'TR1.2' }, cfg.defaults)"), 'Ayarlar varsayılanı kendiliğinden TEMELFATURA değil');
+  assert.ok(ui.includes("form.addEventListener('keydown'") && ui.includes('if (!b1.disabled) submit(false, b1);'), 'Enter = Kaydet');
+});

@@ -1228,6 +1228,17 @@
       });
     });
   }
+  // v1.77: adlarda geçen ve Falcon teknik sözlüğünde bulunan terimler yapay zekâya ZORUNLU terim listesi olarak verilir
+  // (yapay zekâ ile çevrimdışı çeviri aynı resmî terimleri kullanır; yanlış / günlük dil karşılık engellenir)
+  function glossaryLines(list, lg) {
+    var S = root.FalconSozluk, g = [];
+    try { g = S && S.glossary ? S.glossary(list, lg) : []; } catch (e) { g = []; }
+    if (!g.length) return [];
+    g = g.slice(0, 250);
+    return ['MANDATORY GLOSSARY (the company\'s approved technical dictionary). Whenever a source phrase below occurs in a name, render it with EXACTLY this target term '
+      + '(only adapt plural / word order / Arabic definiteness as the target grammar requires). These terms override your own wording:',
+      g.map(function (x) { return '- ' + x[0] + ' => ' + x[1]; }).join('\n')];
+  }
   function translateAi(list, lg) {
     var LN = { en: 'English', ar: 'Arabic (Modern Standard, as used on official commercial invoices)', tr: 'Turkish' }[lg];
     if (!LN || !list || !list.length) return Promise.resolve(list || []);
@@ -1240,8 +1251,7 @@
         'Machine-tool terms (Turkish → English): döner punta = Live Center; takma uçlu = with Interchangeable Tips; punta ucu = Center Tip; gövde = Body; anahtar (ANHT.) = Wrench; dış çap tutucu = OD Turning Tool Holder; iç çap tutucu = ID Boring Tool Holder; delik kater = Boring Bar; delik kater soketi / kovanı = Boring Bar Sleeve; DKT = Boring Bar Holder; UDT = U-Drill Holder; pens = Collet; mandren / ayna = Chuck; kılavuz = Tap; kısa = Short. In Arabic use the equivalent formal Modern Standard Arabic technical terms (e.g. ذنبة دوّارة, حامل قضيب التجويف, جلبة قضيب التجويف).',
         'Expand Turkish abbreviations into full terms (e.g. "TAK.UC" = takma uçlu, "4UC" = 4 tips, "ANHT." = wrench). Keep Morse-taper codes such as "MK5" exactly as written (the app converts them itself).',
         'Keep model numbers, part numbers, codes, brand names, sizes, voltages, currents and units (e.g. "LP-12-C04PE-02-001", "GX-16", "SE2600M", "BMT55", "CUTEX-160A-B/MC_BMT55", "Ø40 H60", "D40 d12", "19mm", "6-36V", "200A", "2NO+2NC", "PNP", "NC") exactly as written.',
-        'Do not add or drop information. Return ONLY a JSON array of strings, same length and order as the input.',
-        'Input:', JSON.stringify(list)].join('\n');
+        'Do not add or drop information. Return ONLY a JSON array of strings, same length and order as the input.'].concat(glossaryLines(list, lg)).concat(['Input:', JSON.stringify(list)]).join('\n');
       var body = { contents: [{ role: 'user', parts: [{ text: prompt }] }], generationConfig: { temperature: 0, responseMimeType: 'application/json' } };
       // en güçlü model önce (kullanıcı kuralı); gecikirse arayüz çevrimdışı çeviriyle devam eder, bu çeviri gelince önizleme güncellenir
       return models(key).then(function (ms) {

@@ -201,3 +201,14 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
 - 1.76.3 FATURA PDF'İ AÇILMAZ: `report:savePdf(html, name, opts)` — `opts.open === false` ise kaydedilen PDF `shell.openPath` ile açılmaz (preload üçüncü argümanı geçirir).
   Faturanın bütün PDF kayıtları (`savePdfHtml`, `savePdf`) `{ open: false }`; bildirim «PDF kaydedildi: <dosya adı>». Öteki dökümler (cikti-falcon.js, etiket, Excel) eskisi gibi açılır.
   Test: `test/app.test.js` (1.76.3).
+- 1.77.0 GÜÇLÜ TEKNİK SÖZLÜK: `araclar/sozluk/70…81-*.txt` (~3.900 terim; elektrik/pano, kablo/aydınlatma, otomasyon, BT/CCTV, el aletleri, bağlantı/rulman, hidrolik/pnömatik/tesisat,
+  kaynak/ölçü/İSG/kimyasal, takım tezgâhı 2, havacılık/otomotiv, ek terimler, malzeme/elektronik). Yeni dosya eklerken ÇAKIŞMA denetle (sonraki dosya öncekini ezer; tek kelimelik
+  belirsiz anahtarları — anahtar, kesici, ayna, takım, kater, motor, gövde, lastik, sürücü — yeni anlamla ezme). Motor `version: 3`: `ENLEX` (İngilizce → Arapça ters dizin, İngilizce
+  yazılmış adlar; «with/without/for/and» → مع/بدون/لـ/و, `EFW`), `POSS` (iyelikli tamlama + başka ek: «şarj kontrol cihazlı»), çok kelimeli -lı «with» sona, sayı + -lı yalnız <1000 ve
+  boşlukla ayrılmış sayıda («1605 Somunlu» → «with Nut»), «25 Parça» → «25-Piece», «dev/dk» → rpm. Arapça sıra: öbekte baş isimden sonraki sıfatlar (`isAdj`: renk/malzeme, -ed/-al…,
+  Türkçe -lı/-sız) yerinde, «مع/بدون» sonda, `TFW` (ve/veya/ile) ve sayıya bağlı / `LABEL` sözcükleri öbeği böler, «لـ X» → «لX», «N-Pack» → «N قطع». `glossary(list, lg)` → [[kaynak, karşılık]];
+  `fatura-pdf.js glossaryLines` Gemini istemine «MANDATORY GLOSSARY» olarak ekler; `fatura-falcon.js aiCheck`: yapay zekâ çevirisinde Türkçe harf kaldıysa / Arapçaya hiç çevrilmediyse
+  sözlük tam çevirebiliyorsa sözlük sonucu. Kalite taraması: `/tmp/qa/qa.js` benzeri (Türkçe harf kalmamalı; Arapçada 4+ harfli Latin kelime yalnız marka / kod).
+  1.77.0 FATURA ALANLARI: yeni faturada senaryo / fatura tipi / özelleştirme no / kampanya / kargo `invoice_last.meta`'daki gibi (anahtar VARSA boş da olsa uygulanır); hiç kayıt yoksa yalnız
+  Ayarlar'da elle girilmiş (`defaults.meta_set`) varsayılan; oluşma zamanı silindiyse (`meta.issue_time === ''`) yeni faturada da boş. Düzenleyicide Enter = Kaydet (input; ürün satırları,
+  Kâr/KDV panelleri, tahsilat, özel dosyalar ve açık öneri listesi hariç). Test: `test/app.test.js` (1.77), `araclar/fatura-172-e2e.js` 6. adım.

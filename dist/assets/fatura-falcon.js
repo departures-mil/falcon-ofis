@@ -1234,6 +1234,15 @@
       return step();
     }, function () { return { map: o, via: 'dict', left: all() }; });
   }
+  // v1.77: yapay zekâ çevirisinin denetimi — Türkçe kelime kalmışsa (ya da Arapçaya hiç çevrilmemişse) ve sözlük tam çevirebiliyorsa sözlük sonucu kullanılır
+  function aiCheck(src, v, lg) {
+    if (lg === 'tr') return v;
+    var trLeft = /[çğıöşüÇĞİÖŞÜ]/.test(v), noAr = lg === 'ar' && /[A-Za-z]{3,}/.test(src) && !/[\u0600-\u06FF]/.test(v);
+    if (v && !trLeft && !noAr) return v;
+    var o; try { o = offlineName(src, lg); } catch (e) { o = null; }
+    if (o && o.text && !/[çğıöşüÇĞİÖŞÜ]/.test(o.text) && !(o.left && o.left.length) && (lg !== 'ar' || /[\u0600-\u06FF]/.test(o.text))) return o.text;
+    return v;
+  }
   function translateNames(list, lg, onLate) {
     var uniq = list.filter(function (x, i) { return list.indexOf(x) === i; });
     if (lg === 'tr') { var id = {}; uniq.forEach(function (x) { id[x] = x; }); return Promise.resolve({ map: id, src: 'same' }); }
@@ -1245,7 +1254,7 @@
       if (!miss.length) return done('ai');
       var ai = window.FalconFaturaPdf && window.FalconFaturaPdf.translate;
       var aiP = ai ? Promise.resolve(ai(miss, lg)) : Promise.reject(new Error('no-ai'));
-      var keep = function (arr) { miss.forEach(function (x, i) { var v = String(arr[i] == null ? '' : arr[i]).trim(); if (v) c[x] = v; }); cache[lg] = c; nameCache(cache); };
+      var keep = function (arr) { miss.forEach(function (x, i) { var v = aiCheck(x, String(arr[i] == null ? '' : arr[i]).trim(), lg); if (v) c[x] = v; }); cache[lg] = c; nameCache(cache); };
       var offline = function (pending) {
         // çevrimdışı çeviri önbelleğe yazılmaz (internet gelince yapay zekâ ile yeniden çevrilir)
         return offlineNames(miss, lg).then(function (o) {
@@ -2296,10 +2305,15 @@
         Object.keys(M0).forEach(function (k) { if (k.slice(0, 2) === 'c.') st.cx[k.slice(2)] = M0[k]; else st.meta[k] = M0[k]; });
         if (isNew) {
           if (layHas(cfg, 'meta', 'ettn')) st.meta.ettn = uuid();
-          if (layHas(cfg, 'meta', 'issue_time')) st.meta.issue_time = nowTime();
-          ['scenario', 'inv_type', 'customization'].forEach(function (k) { if (dft[k] && layHas(cfg, 'meta', k)) st.meta[k] = dft[k]; });
+          if (layHas(cfg, 'meta', 'issue_time') && (LAST.meta || {}).issue_time !== '') st.meta.issue_time = nowTime();
+          // v1.77: senaryo / fatura tipi / özelleştirme no / kampanya / kargo: en son nasıl bırakıldıysa öyle (boş bırakıldıysa boş);
+          // hiç fatura kaydedilmemişse yalnız Ayarlar'da elle girilmiş varsayılan, o da yoksa boş (TEMELFATURA / SATIS / TR1.2 kendiliğinden gelmez)
           var LM = LAST.meta || {};
-          ['scenario', 'inv_type', 'customization', 'campaign', 'cargo'].forEach(function (k) { if (LM[k] && layHas(cfg, 'meta', k)) st.meta[k] = LM[k]; });
+          ['scenario', 'inv_type', 'customization', 'campaign', 'cargo'].forEach(function (k) {
+            if (!layHas(cfg, 'meta', k)) return;
+            if (Object.prototype.hasOwnProperty.call(LM, k)) { if (LM[k]) st.meta[k] = LM[k]; else delete st.meta[k]; }
+            else if (dft[k] && dft.meta_set) st.meta[k] = dft[k];
+          });
           if (LAST.currency && CUR.indexOf(LAST.currency) >= 0) st.currency = LAST.currency;
           if (LAST.template) st.template = LAST.template;
           if (LAST.lang) st.lang = LAST.lang;
@@ -2901,6 +2915,7 @@
             // v1.73: son seçimler sonraki yeni faturanın varsayılanı olur
             try {
               var lm = {}; ['scenario', 'inv_type', 'customization', 'campaign', 'cargo'].forEach(function (k) { lm[k] = String(st.meta[k] || '').trim(); });
+              lm.issue_time = String(st.meta.issue_time || '').trim() ? 'auto' : ''; // v1.77: oluşma zamanı silindiyse sonraki faturada da boş
               var fv = st.items.filter(function (x) { return String(x.name || '').trim() && x.vat != null && x.vat !== ''; })[0];
               Promise.resolve(sset('invoice_last', JSON.stringify({ meta: lm, currency: st.currency, template: st.template, lang: st.lang, tax_rate: st.tax_rate, vat: fv ? num(fv.vat) : (LAST.vat != null ? LAST.vat : null) }))).catch(function () {});
             } catch (e) {}
@@ -2949,6 +2964,16 @@
         if (!Array.isArray(st._files)) st._files = [];
         var pfSec = el('div', { class: 'fat-pf-sec' }, [el('h3', { class: 'section-title', text: t('pfTitle') }), pfBox(inv ? inv.id : null, st._files, function () { if (inv) load(); })]);
         var m = modal(isNew ? t('newInv') : t('editInv') + ' · ' + inv.number, [form, pfSec], [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }), b0, b1, b2], 'xwide');
+        // v1.77: düzenleyicide bir alanda Enter = Kaydet (çok satırlı alanlar, ürün satırları ve açık seçim listeleri hariç)
+        form.addEventListener('keydown', function (e) {
+          if (e.key !== 'Enter' || e.defaultPrevented || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || e.isComposing) return;
+          var tg = e.target, tn = tg && tg.tagName;
+          if (tn !== 'INPUT' || /^(checkbox|radio|button|submit|file|color|range)$/i.test(tg.type || '')) return;
+          if (tg.closest && tg.closest('.fat-items, .fat-sug, .fat-cash, .fat-mk, .fat-kv, .fat-pf-sec')) return;
+          var acw = tg.closest && tg.closest('.fat-acw'), sg = acw && acw.querySelector('.fat-sug'); if (sg && !sg.hidden) return;
+          e.preventDefault(); try { tg.blur(); } catch (x) {}
+          if (!b1.disabled) submit(false, b1);
+        });
         drawItems(); drawCash();
         if (pre && pre._fromPdf) toast(t('pdfApplied'));
         setTimeout(function () { try { if (!st.customer) custIn.focus(); } catch (e) {} }, 30);
@@ -3623,7 +3648,7 @@
     // ----- ayarlar -----
     function openSettings() {
       loadCfg().then(function (cfg) {
-        var c = Object.assign({}, cfg.company), d = Object.assign({ currency: 'USD', tax_rate: 0, template: 'falcon', lang: lang(), scenario: 'TEMELFATURA', inv_type: 'SATIS', customization: 'TR1.2' }, cfg.defaults);
+        var c = Object.assign({}, cfg.company), d = Object.assign({ currency: 'USD', tax_rate: 0, template: 'falcon', lang: lang(), scenario: '', inv_type: '', customization: '' }, cfg.defaults);
         var img = { signature: cfg.signature, stamp: cfg.stamp, logo: cfg.logo, logo2: cfg.logo2 || '' };
         // v1.60: fatura düzeni (sütunlar, fatura bilgileri, müşteri ve ürün alanları), karekod / barkod
         var lay = { cols: layOf(cfg, 'cols'), meta: layOf(cfg, 'meta'), cust: layOf(cfg, 'cust'), prod: layOf(cfg, 'prod'), qr: (cfg.layout || {}).qr !== false, barcode: (cfg.layout || {}).barcode !== false };
@@ -3727,9 +3752,9 @@
           ]),
           el('h3', { class: 'section-title', style: 'margin-top:16px', text: t('sDefaults') }),
           el('div', { class: 'form' }, [field(t('currency'), dCur), field(t('taxRate'), dTax, { hint: t('dVatHint') }), field(t('template'), dTpl), field(t('lang'), dLg), el('label', { class: 'check span-2' }, [dSd, el('span', { text: t('statusDefault') })]), el('label', { class: 'check span-2' }, [dVt, el('span', { text: t('vatDefault') })]),
-            field(fLabel('meta', { k: 'scenario' }, lang()), el('input', { value: d.scenario || '', list: 'fat-dl-sc', oninput: function (e) { d.scenario = e.target.value; } })),
-            field(fLabel('meta', { k: 'inv_type' }, lang()), el('input', { value: d.inv_type || '', list: 'fat-dl-it', oninput: function (e) { d.inv_type = e.target.value; } })),
-            field(fLabel('meta', { k: 'customization' }, lang()), el('input', { value: d.customization || '', dir: 'ltr', oninput: function (e) { d.customization = e.target.value; } })),
+            field(fLabel('meta', { k: 'scenario' }, lang()), el('input', { value: d.scenario || '', list: 'fat-dl-sc', oninput: function (e) { d.scenario = e.target.value; d.meta_set = true; } })),
+            field(fLabel('meta', { k: 'inv_type' }, lang()), el('input', { value: d.inv_type || '', list: 'fat-dl-it', oninput: function (e) { d.inv_type = e.target.value; d.meta_set = true; } })),
+            field(fLabel('meta', { k: 'customization' }, lang()), el('input', { value: d.customization || '', dir: 'ltr', oninput: function (e) { d.customization = e.target.value; d.meta_set = true; } })),
             el('datalist', { id: 'fat-dl-sc' }, ['TEMELFATURA', 'TICARIFATURA', 'EARSIVFATURA', 'IHRACAT', 'KAMU'].map(function (v) { return el('option', { value: v }); })),
             el('datalist', { id: 'fat-dl-it' }, ['SATIS', 'IADE', 'TEVKIFAT', 'ISTISNA', 'OZELMATRAH', 'IHRACKAYITLI'].map(function (v) { return el('option', { value: v }); }))])
         ];

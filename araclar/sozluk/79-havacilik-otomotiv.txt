@@ -1,0 +1,185 @@
+# v1.77 Havacılık (ICAO / ATA iSpec 2200 / EASA dili) ve otomotiv yedek parça (tr | en | ar)
+uçak | Aircraft | طائرة
+hava aracı | Aircraft | طائرة
+helikopter | Helicopter | مروحية
+insansız hava aracı | Unmanned Aerial Vehicle | طائرة بدون طيار
+dron | Drone | طائرة مسيّرة
+uçak yedek parçası | Aircraft Spare Part | قطعة غيار طائرة
+uçak parçası | Aircraft Part | قطعة طائرة
+uçak gövdesi | Airframe | هيكل الطائرة
+kanat | Wing | جناح
+kanatçık | Aileron | جنيح
+flap | Flap | قلاب
+irtifa dümeni | Elevator | دفة الارتفاع
+istikamet dümeni | Rudder | دفة الاتجاه
+dikey stabilize | Vertical Stabilizer | مثبت عمودي
+yatay stabilize | Horizontal Stabilizer | مثبت أفقي
+kuyruk | Empennage | ذيل الطائرة
+spoiler | Spoiler | مفسد الرفع
+burun iniş takımı | Nose Landing Gear | جهاز الهبوط الأمامي
+ana iniş takımı | Main Landing Gear | جهاز الهبوط الرئيسي
+iniş takımı | Landing Gear | جهاز الهبوط
+tekerlek ve fren | Wheel and Brake | العجلة والفرامل
+uçak lastiği | Aircraft Tyre | إطار طائرة
+uçak freni | Aircraft Brake | فرامل الطائرة
+uçak motoru | Aircraft Engine | محرك طائرة
+turbofan motor | Turbofan Engine | محرك مروحي توربيني
+turboprop motor | Turboprop Engine | محرك توربيني مروحي
+jet motoru | Jet Engine | محرك نفاث
+yardımcı güç ünitesi | Auxiliary Power Unit | وحدة الطاقة المساعدة
+pervane | Propeller | مروحة دافعة
+pervane göbeği | Propeller Hub | محور المروحة الدافعة
+türbin | Turbine | توربين
+türbin kanadı | Turbine Blade | ريشة توربين
+kompresör kanadı | Compressor Blade | ريشة ضاغط
+yanma odası | Combustion Chamber | غرفة الاحتراق
+yakıt nozulu | Fuel Nozzle | فوهة الوقود
+yakıt pompası | Fuel Pump | مضخة وقود
+yakıt kontrol ünitesi | Fuel Control Unit | وحدة التحكم بالوقود
+yakıt sistemi | Fuel System | نظام الوقود
+yakıt tankı | Fuel Tank | خزان وقود
+yakıt | Fuel | وقود
+jet yakıtı | Jet Fuel | وقود الطائرات
+havacılık yakıtı | Aviation Fuel | وقود الطيران
+marş motoru | Starter Motor | محرك بدء التشغيل
+ateşleme bujisi | Igniter Plug | شمعة إشعال
+ateşleme sistemi | Ignition System | نظام الإشعال
+aviyonik | Avionics | إلكترونيات الطيران
+aviyonik sistemler | Avionics Systems | أنظمة إلكترونيات الطيران
+uçuş kontrol sistemi | Flight Control System | نظام التحكم بالطيران
+uçuş kontrol bilgisayarı | Flight Control Computer | حاسوب التحكم بالطيران
+uçuş yönetim sistemi | Flight Management System | نظام إدارة الطيران
+otomatik pilot | Autopilot | الطيار الآلي
+uçuş veri kaydedici | Flight Data Recorder | مسجل بيانات الرحلة
+kokpit ses kaydedici | Cockpit Voice Recorder | مسجل صوت قمرة القيادة
+kara kutu | Flight Recorder | مسجل الرحلة
+kokpit | Cockpit | قمرة القيادة
+gösterge paneli | Instrument Panel | لوحة العدادات
+uçuş göstergesi | Flight Instrument | عداد طيران
+irtifa göstergesi | Altimeter | مقياس الارتفاع
+altimetre | Altimeter | مقياس الارتفاع
+hız göstergesi | Airspeed Indicator | مؤشر السرعة الجوية
+yapay ufuk | Attitude Indicator | مؤشر الوضع
+dikey hız göstergesi | Vertical Speed Indicator | مؤشر السرعة العمودية
+pusula | Compass | بوصلة
+jiroskop | Gyroscope | جيروسكوب
+transponder | Transponder | جهاز مستجيب
+telsiz haberleşme | Radio Communication | الاتصال اللاسلكي
+seyrüsefer | Navigation | الملاحة الجوية
+navigasyon | Navigation | ملاحة
+radar | Radar | رادار
+hava radarı | Weather Radar | رادار الطقس
+çarpışma önleme sistemi | Traffic Collision Avoidance System | نظام تجنب التصادم الجوي
+yere yaklaşma uyarı sistemi | Ground Proximity Warning System | نظام التحذير من الاقتراب من الأرض
+acil durum konum vericisi | Emergency Locator Transmitter | جهاز إرسال تحديد الموقع في حالات الطوارئ
+pitot tüpü | Pitot Tube | أنبوب بيتو
+statik port | Static Port | منفذ الضغط الساكن
+hidrolik sistem | Hydraulic System | نظام هيدروليكي
+pnömatik sistem | Pneumatic System | نظام هوائي
+basınçlandırma sistemi | Pressurization System | نظام الضغط
+kabin basınçlandırma | Cabin Pressurization | ضغط المقصورة
+klima sistemi | Air Conditioning System | نظام تكييف الهواء
+buz önleme sistemi | Anti-Ice System | نظام منع التجمد
+buz çözme | De-Icing | إزالة الجليد
+oksijen sistemi | Oxygen System | نظام الأكسجين
+oksijen maskesi | Oxygen Mask | قناع أكسجين
+yolcu koltuğu | Passenger Seat | مقعد راكب
+pilot koltuğu | Pilot Seat | مقعد الطيار
+can yeleği | Life Vest | سترة نجاة
+tahliye kaydırağı | Evacuation Slide | زلاقة إخلاء
+kargo kapısı | Cargo Door | باب الشحن
+yolcu kapısı | Passenger Door | باب الركاب
+apron | Apron | ساحة وقوف الطائرات
+pist | Runway | مدرج
+pist ışıkları | Runway Lights | أضواء المدرج
+yer destek ekipmanı | Ground Support Equipment | معدات الدعم الأرضي
+yer güç ünitesi | Ground Power Unit | وحدة الطاقة الأرضية
+çekme barı | Tow Bar | قضيب السحب
+uçak çekici | Aircraft Tug | جرار طائرات
+yakıt ikmal | Refuelling | التزود بالوقود
+bakım onarım ve revizyon | Maintenance, Repair and Overhaul | الصيانة والإصلاح والعمرة
+revizyon | Overhaul | عمرة
+ağır bakım | Heavy Maintenance | صيانة ثقيلة
+hat bakımı | Line Maintenance | صيانة خطية
+bakım kılavuzu | Maintenance Manual | دليل الصيانة
+uçak bakım kılavuzu | Aircraft Maintenance Manual | دليل صيانة الطائرة
+resimli parça kataloğu | Illustrated Parts Catalogue | كتالوج القطع المصور
+servis bülteni | Service Bulletin | نشرة خدمة
+uçuşa elverişlilik | Airworthiness | صلاحية الطيران
+uçuşa elverişlilik direktifi | Airworthiness Directive | توجيه صلاحية الطيران
+uçuşa elverişlilik sertifikası | Certificate of Airworthiness | شهادة صلاحية الطيران
+yetkili serbest bırakma sertifikası | Authorized Release Certificate | شهادة الإفراج المعتمدة
+uygunluk sertifikası | Certificate of Conformity | شهادة المطابقة
+parça numarası | Part Number | رقم القطعة
+seri numarası | Serial Number | الرقم التسلسلي
+lot numarası | Lot Number | رقم الدفعة
+sertifika | Certificate | شهادة
+sertifikası | Certificate | شهادة
+servis edilebilir | Serviceable | صالح للخدمة
+yeni | New | جديد
+revizyonlu | Overhauled | معاد تأهيله
+onarılmış | Repaired | مُصلح
+test edilmiş | Tested | مُختبَر
+değişim parçası | Exchange Unit | قطعة تبادل
+ömürlü parça | Life-Limited Part | قطعة محدودة العمر
+sarf malzeme | Consumable | مادة مستهلكة
+sarf malzemesi | Consumables | مواد مستهلكة
+sarf malzemeleri | Consumables | مواد مستهلكة
+havacılık kablosu | Aerospace Cable | كابل طيران
+emniyet teli | Safety Wire | سلك أمان
+emniyet teli pensesi | Safety Wire Pliers | زرادية سلك الأمان
+tork değeri | Torque Value | قيمة عزم الشد
+otomotiv | Automotive | سيارات
+otomobil | Automobile | سيارة
+araç | Vehicle | مركبة
+aracı | Vehicle | مركبة
+kamyon | Truck | شاحنة
+yedek parça | Spare Part | قطعة غيار
+yedek parçalar | Spare Parts | قطع غيار
+oto yedek parça | Auto Spare Part | قطعة غيار سيارات
+akü takviye kablosu | Jumper Cables | كابلات اشتراك البطارية
+buji | Spark Plug | شمعة إشعال
+ateşleme bobini | Ignition Coil | ملف الإشعال
+far | Headlight | مصباح أمامي
+stop lambası | Tail Light | مصباح خلفي
+silecek | Wiper | ماسحة زجاج
+silecek süpürgesi | Wiper Blade | شفرة الماسحة
+ayna camı | Mirror Glass | زجاج المرآة
+dikiz aynası | Rear-View Mirror | مرآة الرؤية الخلفية
+tampon | Bumper | مصد
+kaporta | Body Panel | هيكل السيارة
+çamurluk | Fender | رفرف
+kaput | Bonnet | غطاء المحرك
+egzoz | Exhaust | عادم
+susturucu egzoz | Exhaust Muffler | كاتم صوت العادم
+katalitik konvertör | Catalytic Converter | محول حفاز
+turbo | Turbocharger | شاحن توربيني
+turbo şarj | Turbocharger | شاحن توربيني
+enjektör | Injector | حاقن
+yakıt enjektörü | Fuel Injector | حاقن وقود
+silindir kapağı | Cylinder Head | رأس الأسطوانة
+silindir kapak contası | Cylinder Head Gasket | حشية رأس الأسطوانة
+piston | Piston | مكبس
+piston segmanı | Piston Ring | حلقة مكبس
+krank mili | Crankshaft | عمود المرفق
+eksantrik mili | Camshaft | عمود الكامات
+supap | Valve | صمام
+debriyaj | Clutch | قابض
+debriyaj seti | Clutch Kit | طقم قابض
+balata | Brake Pad | وسادة فرامل
+fren diski | Brake Disc | قرص فرامل
+fren kampanası | Brake Drum | طبلة فرامل
+fren hidroliği | Brake Fluid | سائل فرامل
+direksiyon | Steering | توجيه
+direksiyon kutusu | Steering Gear | علبة التوجيه
+rot başı | Tie Rod End | طرف ذراع التوجيه
+rotil | Ball Joint | وصلة كروية
+salıncak | Control Arm | ذراع التحكم
+aks | Axle | محور
+aks mili | Drive Shaft | عمود الإدارة
+porya | Wheel Hub | محور العجلة
+porya rulmanı | Wheel Bearing | محمل العجلة
+jant | Rim | جنط
+devirdaim pompası | Water Pump | مضخة مياه
+şarj dinamosu | Alternator | مولد تيار متناوب
+dinamo | Alternator | مولد تيار متناوب

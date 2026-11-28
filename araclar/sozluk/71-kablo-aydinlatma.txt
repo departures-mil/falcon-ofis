@@ -1,0 +1,113 @@
+# v1.77 Kablolar, iletkenler, aydınlatma (tr | en | ar)
+enerji kablosu | Power Cable | كابل طاقة
+güç kablosu | Power Cable | كابل طاقة
+kumanda kablosu | Control Cable | كابل تحكم
+sinyal kablosu | Signal Cable | كابل إشارة
+ekranlı kablo | Shielded Cable | كابل مدرع
+blendajlı kablo | Shielded Cable | كابل مدرع
+ekransız kablo | Unshielded Cable | كابل غير مدرع
+zırhlı kablo | Armoured Cable | كابل مسلح
+çelik zırhlı kablo | Steel Wire Armoured Cable | كابل مسلح بأسلاك فولاذية
+halojen free kablo | Halogen-Free Cable | كابل خالٍ من الهالوجين
+halojensiz kablo | Halogen-Free Cable | كابل خالٍ من الهالوجين
+yangına dayanıklı kablo | Fire-Resistant Cable | كابل مقاوم للحريق
+alev geciktirici | Flame-Retardant | مثبط للهب
+alev geciktirici kablo | Flame-Retardant Cable | كابل مثبط للهب
+silikon kablo | Silicone Cable | كابل سيليكون
+teflon kablo | PTFE Cable | كابل PTFE
+yüksek sıcaklık kablosu | High-Temperature Cable | كابل مقاوم للحرارة العالية
+termokupl kablosu | Thermocouple Cable | كابل مزدوجة حرارية
+kompanzasyon kablosu | Compensating Cable | كابل تعويض
+hareketli kablo | Flexible Drag Chain Cable | كابل مرن للسلاسل المتحركة
+enerji zinciri | Cable Drag Chain | سلسلة سحب الكابلات
+kablo zinciri | Cable Drag Chain | سلسلة سحب الكابلات
+çok damarlı kablo | Multi-Core Cable | كابل متعدد النوى
+tek damarlı kablo | Single-Core Cable | كابل أحادي النواة
+damar | Core | نواة
+çok telli | Stranded | مجدول
+tek telli | Solid | مصمت
+bükülgen | Flexible | مرن
+nyy kablo | NYY Cable | كابل NYY
+nym kablo | NYM Cable | كابل NYM
+nyaf kablo | NYAF Wire | سلك NYAF
+nya kablo | NYA Wire | سلك NYA
+ttr kablo | TTR Flexible Cable | كابل TTR مرن
+h05vv-f | H05VV-F | H05VV-F
+h07rn-f | H07RN-F | H07RN-F
+xlpe kablo | XLPE Cable | كابل XLPE
+pvc kablo | PVC Cable | كابل PVC
+alüminyum kablo | Aluminium Cable | كابل ألمنيوم
+bakır kablo | Copper Cable | كابل نحاسي
+bakır tel | Copper Wire | سلك نحاسي
+emaye tel | Enamelled Copper Wire | سلك نحاسي مطلي بالمينا
+bobin teli | Winding Wire | سلك لف
+çelik halat | Steel Wire Rope | حبل فولاذي
+çelik tel | Steel Wire | سلك فولاذي
+galvaniz tel | Galvanized Wire | سلك مجلفن
+örgülü tel | Braided Wire | سلك مضفر
+koaksiyel kablo | Coaxial Cable | كابل محوري
+koaksiyel | Coaxial | محوري
+anten kablosu | Antenna Cable | كابل هوائي
+uydu kablosu | Satellite Cable | كابل أقمار صناعية
+hoparlör kablosu | Speaker Cable | كابل مكبر الصوت
+mikrofon kablosu | Microphone Cable | كابل ميكروفون
+alarm kablosu | Alarm Cable | كابل إنذار
+yangın alarm kablosu | Fire Alarm Cable | كابل إنذار الحريق
+telefon kablosu | Telephone Cable | كابل هاتف
+ara kablo | Patch Cable | كابل توصيل
+dönüştürücü kablo | Adapter Cable | كابل محول
+şarj kablosu | Charging Cable | كابل شحن
+data kablosu | Data Cable | كابل بيانات
+veri kablosu | Data Cable | كابل بيانات
+güç kablosu adaptörü | Power Adapter | محول طاقة
+adaptör | Adapter | محول
+güç adaptörü | Power Adapter | محول طاقة
+kablo | Cable | كابل
+kablosu | Cable | كابل
+kablolar | Cables | كابلات
+kesit | Cross-Section | مقطع
+aydınlatma | Lighting | إنارة
+aydınlatma armatürü | Lighting Fixture | وحدة إنارة
+armatür | Luminaire | وحدة إنارة
+led armatür | LED Luminaire | وحدة إنارة LED
+sıva altı armatür | Recessed Luminaire | وحدة إنارة غاطسة
+sıva üstü armatür | Surface-Mounted Luminaire | وحدة إنارة سطحية
+etanj armatür | Waterproof Luminaire | وحدة إنارة مقاومة للماء
+yüksek tavan armatürü | High Bay Luminaire | وحدة إنارة للأسقف العالية
+sokak armatürü | Street Light | إنارة شوارع
+yol aydınlatma armatürü | Street Light | إنارة شوارع
+projektör | Floodlight | كشاف ضوئي
+led projektör | LED Floodlight | كشاف LED
+spot | Spotlight | ضوء موجه
+spot lamba | Spotlight | ضوء موجه
+ray spot | Track Light | ضوء مسار
+panel led | LED Panel | لوح LED
+led panel | LED Panel | لوح LED
+led şerit | LED Strip | شريط LED
+şerit led | LED Strip | شريط LED
+led ampul | LED Bulb | مصباح LED
+ampul | Light Bulb | مصباح
+floresan | Fluorescent Lamp | مصباح فلورسنت
+floresan lamba | Fluorescent Lamp | مصباح فلورسنت
+balast | Ballast | كابح
+elektronik balast | Electronic Ballast | كابح إلكتروني
+led sürücü | LED Driver | مشغل LED
+led driver | LED Driver | مشغل LED
+duy | Lamp Holder | دواية المصباح
+acil aydınlatma | Emergency Lighting | إنارة الطوارئ
+acil aydınlatma armatürü | Emergency Luminaire | وحدة إنارة طوارئ
+acil çıkış armatürü | Emergency Exit Sign | لافتة مخرج الطوارئ
+exit armatürü | Exit Sign | لافتة مخرج
+hareket sensörü | Motion Sensor | حساس حركة
+hareket sensörlü | with Motion Sensor | مع حساس حركة
+fotosel | Photocell | خلية ضوئية
+alacakaranlık sensörü | Twilight Switch | مفتاح الشفق
+gün ışığı | Warm White | أبيض دافئ
+sıcak beyaz | Warm White | أبيض دافئ
+soğuk beyaz | Cool White | أبيض بارد
+renk sıcaklığı | Colour Temperature | درجة حرارة اللون
+ışık akısı | Luminous Flux | التدفق الضوئي
+el feneri | Flashlight | مصباح يدوي
+kafa lambası | Headlamp | مصباح رأس
+şarjlı fener | Rechargeable Flashlight | مصباح يدوي قابل للشحن
+çalışma lambası | Work Light | مصباح عمل
