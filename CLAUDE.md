@@ -136,3 +136,16 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
 - 1.70.0 TELEFON YEREL ZEKÂ: telefon www'sine `assets/yz/` (ortak-cekirdek `web/yerel-zeka/telefon` + fc-ocr/fc-mt), `cekirdek/fc-yerel-zeka-ui.js` ve `assets/yz-falcon.js`
   (Ayarlar'da Telegram kartından sonra «Çevrimdışı yapay zekâ» kartı; yalnız `fcYerelZeka.telefon`) — `telefon-yayinla.js` kopyalar, etiketleri ve CSP (`cdn.jsdelivr.net`) ekler.
   Paketler `ortak-cekirdek` `yerel-zeka-telefon` dalından (PP-OCRv5 mobil + Tesseract ~36 MB, NLLB-200 8 bit ~896 MB), IndexedDB. `FalconDekont.ocr` ve Sham Cash `viaYz` telefonda da çalışır.
+
+- 1.71.0 BELGEDEN DOLDUR (PDF + FOTOĞRAF) + ÜRÜN KAYDI + ÖZEL DOSYALAR: `fatura-pdf.js` `read` dosya türünü baytlardan alır (PDF / JPEG / PNG / WEBP). Resim ve metinsiz (taranmış) PDF:
+  Gemini'ye resmin kendisi (`inline_data` image/*), çevrimdışı `FalconDekont.docOcr` (dekont-falcon.js): yerel zekâ kuruluysa PP-OCRv5 kutuları, yoksa Tesseract **tur+eng**
+  (`ocr/tur.traineddata.gz` tessdata_best; TSV sözcük kutuları, psm 6) — ön işlem `docCanvas`: izdüşümle eğiklik (≥0,4°), yerel uyarlamalı eşik, tablo çizgisi silme; `docClean`
+  ile temiz görüntü önce 'soft', fotoğraf önce 'lat', tutarsızsa öteki. Ayrıştırma `parseBest` = e-Fatura `parseLayout` ile genel `parseGeneric` (TR/EN sütun başlıkları, çok
+  sayfa, liste fiyatı + iskonto + net, dikey ortalı / alta taşan açıklamalar, iki para birimli toplamlar, belgedeki kur «doc_fx_rate» / TL karşılığı, teklif no / geçerlilik);
+  başlık okunamazsa `gItemsLoose` («15 ADET 700,00 $ 10.500,00 $» kalıbı). `normalize` Model / P/N / S/N'yi addan ayrıca çıkarır (alan yalnız varsa). ABD tarihi (10/22/2026).
+  Arayüz (fatura-falcon.js): «Belgeden doldur» seçim penceresi (dosya, kamera, sürükle-bırak, Ctrl+V), önizlemede «Aktarım» seçenekleri (`localStorage.fat_imp_opts`): ürün
+  kayıtlarına işle (`saveProducts` → saveProductCard; aynı ürün kod > seçili eşleşme > ad; fiyat güncelle / dokunma), müşteriyi aktar, kalemleri ekle / yerine koy, okunan
+  belgeyi özel dosya yap; «Yalnız ürünlere kaydet»; Ürünler sekmesinde «Belgeden ürün ekle». `confirmBox` fat-modal açıkken kendi onay penceresi (programınki arkada kalıyordu).
+  ÖZEL DOSYALAR: tablo `invoice_files` (migration 31, eşitlenir; FILE_COLUMNS / FILE_REFS / lan-falcon.js), servis `addInvoiceFiles` / `deleteInvoiceFile` (Silinenler kutusu) /
+  `setInvoiceFileNote`, IPC `files:saveFile` (her tür, ≤50 MB, `belgeler/`); telefon `araclar/patch-srv-171.py` (servis + schema + sync + `files.saveFile`). Listede 🔒 (sayı),
+  düzenleyicide «🔒 Özel dosyalar» (yeni faturada kayıtta eklenir). Çıktıya / PDF'e girmez. Test: `araclar/fatura-171-e2e.js` (gerçek örnekler depoda YOK — açık depo; `FATURA_ORNEK=<klasör>`).

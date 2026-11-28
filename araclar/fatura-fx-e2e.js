@@ -166,7 +166,7 @@ fs.mkdirSync(OUT, { recursive: true });
     window.FalconFaturaPdf = { read: async () => ({ source: 'offline', currency: 'TRY', warnings: [], buyer: { name: 'PDF Alıcı' }, seller: { name: 'PDF Satıcı' }, meta: {},
       totals: { subtotal: 600 }, items: [{ name: 'P1', qty: 1, price: 100 }, { name: 'P2', qty: 2, price: 100 }, { name: 'P3', qty: 3, price: 100 }] }) };
   });
-  const [fc] = await Promise.all([page.waitForEvent('filechooser'), page.click('.fatura-page .toolbar button:has-text("PDF\'den doldur")')]);
+  const [fc] = await Promise.all([page.waitForEvent('filechooser'), page.click('.fatura-page .toolbar button:has-text("Belgeden doldur")').then(() => page.click('.modal button:has-text("Dosya seç")'))]);
   await fc.setFiles(path.join(ROOT, 'package.json'));
   await page.waitForSelector('.fat-imp-bulk', { timeout: 10000 });
   assert.ok(/3 \/ 3 aktif/.test(await page.textContent('.fat-imp-bulk')));

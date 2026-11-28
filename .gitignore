@@ -5,3 +5,5 @@ node_modules/
 release/
 out/
 onarim/out/
+# gerçek müşteri belgeleri (açık depo): yalnız yerelde — araclar/fatura-171-e2e.js FATURA_ORNEK ile okur
+araclar/fatura-ornek/

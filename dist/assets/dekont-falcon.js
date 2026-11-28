@@ -150,7 +150,7 @@
     var w = src.naturalWidth || src.width, h = src.naturalHeight || src.height, k = 1, big = Math.max(w, h);
     if (big > maxSide) k = maxSide / big; else if (minSide && big < minSide) k = minSide / big;
     var cv = document.createElement('canvas'); cv.width = Math.round(w * k); cv.height = Math.round(h * k);
-    var cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(src, 0, 0, cv.width, cv.height);
+    var cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.imageSmoothingEnabled = true; cx.imageSmoothingQuality = 'high'; cx.drawImage(src, 0, 0, cv.width, cv.height);
     return cv;
   }
   function canvasBytes(cv, type, q) {
@@ -251,6 +251,175 @@
       });
     });
   }
+  // ---------- v1.71: belge (fatura / teklif) OCR'ı — sözcükler konumlarıyla ----------
+  // Dönüş: { width, height, items: [{ str, x, y, w, h, conf }], via } — fatura-pdf.js'in konumlu ayrıştırıcısına (pdf.js öğeleriyle aynı biçim) verilir.
+  // Yerel zekâ (PP-OCRv5) kuruluysa o; değilse Tesseract (tur + eng, en iyi model) sözcük kutuları (TSV), eğiklik düzeltilerek.
+  var docEngP = null;
+  function docEngine() {
+    if (!docEngP) {
+      docEngP = engine().then(function (E) {
+        return asset(base + 'ocr/tur.traineddata.gz').then(gunzip).then(function (d) { E.m.FS.writeFile('/tur.traineddata', d); }).then(function () { return 'tur+eng'; }, function () { return 'eng'; }).then(function (lg) {
+          var api = new E.m.TessBaseAPI();
+          if (api.Init('/', lg, 1) !== 0) throw new Error('ocr-init');
+          api.SetVariable('tessedit_pageseg_mode', '6');
+          api.SetVariable('preserve_interword_spaces', '1');
+          return { m: E.m, api: api, lg: lg };
+        });
+      });
+      docEngP.catch(function () { docEngP = null; });
+    }
+    return docEngP;
+  }
+  // Belge görüntüsü (v1.71): eğiklik düzeltilir (izdüşüm yöntemi), gri ton, koyu zemin çevrilir, en uzun kenar ~3000 px;
+  // mode 'lat' = yerel uyarlamalı eşik (ekran fotoğrafındaki hare ve parlama için), 'soft' = hafif yumuşatma
+  function skewOf(cv) {
+    var s = toCanvas(cv, 900), W = s.width, H = s.height, d = s.getContext('2d').getImageData(0, 0, W, H).data, sum = 0, n = W * H, g = new Uint8Array(n);
+    for (var i = 0, k = 0; k < n; i += 4, k++) { g[k] = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) | 0; sum += g[k]; }
+    var mean = sum / n, inv = mean < 110, pts = [];
+    for (var y = 0; y < H; y++) for (var x = 0; x < W; x++) { var v = g[y * W + x]; if (inv ? v > mean + 40 : v < mean - 50) pts.push(x, y); }
+    if (pts.length < 200) return 0;
+    var step = Math.max(1, Math.floor(pts.length / 2 / 60000)) * 2, best = 0, bs = -1;
+    for (var a = -5; a <= 5.001; a += 0.1) {
+      var t = Math.tan(a * Math.PI / 180), bins = new Float64Array(H * 2 + 20), sc = 0;
+      for (var j = 0; j < pts.length; j += step) { var yy = Math.round(pts[j + 1] - pts[j] * t) + H; if (yy >= 0 && yy < bins.length) bins[yy]++; }
+      for (var q = 0; q < bins.length; q++) sc += bins[q] * bins[q];
+      if (sc > bs) { bs = sc; best = a; }
+    }
+    return Math.abs(best) < 0.15 ? 0 : best;
+  }
+  function rotated(cv, deg) {
+    if (!deg) return cv;
+    var r = -deg * Math.PI / 180, W = cv.width, H = cv.height;
+    var nw = Math.ceil(Math.abs(W * Math.cos(r)) + Math.abs(H * Math.sin(r))), nh = Math.ceil(Math.abs(W * Math.sin(r)) + Math.abs(H * Math.cos(r)));
+    var c = document.createElement('canvas'); c.width = nw; c.height = nh;
+    var cx = c.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, nw, nh);
+    cx.translate(nw / 2, nh / 2); cx.rotate(r); cx.drawImage(cv, -W / 2, -H / 2);
+    return c;
+  }
+  // temiz belge mi (ekran görüntüsü / PDF sayfası: zeminin çoğu saf beyaz) — öyleyse önce yumuşak gri ton denenir
+  function docClean(cv) {
+    var c = toCanvas(cv, 600), d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data, w = 0, n = d.length / 4;
+    for (var i = 0; i < d.length; i += 4) if (d[i] > 243 && d[i + 1] > 243 && d[i + 2] > 243) w++;
+    return w / n;
+  }
+  function docCanvas(cv, mode) {
+    var sk = skewOf(cv);
+    var c = toCanvas(Math.abs(sk) >= 0.4 ? rotated(cv, sk) : cv, 3000, 2600), cx = c.getContext('2d'), W = c.width, H = c.height, img = cx.getImageData(0, 0, W, H), d = img.data, sum = 0, n = W * H;
+    var g = new Float32Array(n), x, y;
+    for (var i = 0, k = 0; k < n; i += 4, k++) { g[k] = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]; sum += g[k]; }
+    if (sum / n < 110) for (var k2 = 0; k2 < n; k2++) g[k2] = 255 - g[k2];
+    // yerel ortalama (tümlev görüntüsü), pencere ≈ en uzun kenarın %2'si; ortalamanın %9 altı yazı (gölgeli satır / parlama / hare için)
+    var ink = new Uint8Array(n), I = new Float64Array((W + 1) * (H + 1)), r = Math.max(8, Math.round(Math.max(W, H) * 0.01));
+    for (y = 0; y < H; y++) { var row = 0; for (x = 0; x < W; x++) { row += g[y * W + x]; I[(y + 1) * (W + 1) + x + 1] = I[y * (W + 1) + x + 1] + row; } }
+    for (y = 0; y < H; y++) {
+      var y0 = Math.max(0, y - r), y1 = Math.min(H, y + r + 1);
+      for (x = 0; x < W; x++) {
+        var x0 = Math.max(0, x - r), x1 = Math.min(W, x + r + 1);
+        var m = (I[y1 * (W + 1) + x1] - I[y0 * (W + 1) + x1] - I[y1 * (W + 1) + x0] + I[y0 * (W + 1) + x0]) / ((y1 - y0) * (x1 - x0));
+        ink[y * W + x] = g[y * W + x] < m * 0.91 ? 1 : 0;
+      }
+    }
+    // tablo çizgileri (yatayda genişliğin %4'ünden, dikeyde yüksekliğin %2,5'inden uzun kesintisiz koyu çizgiler) silinir:
+    // OCR çizgileri harf sanmaz, hücre yazıları satırlarına doğru dağılır
+    var LH = Math.round(W * 0.04), LV = Math.round(H * 0.025), kill = new Uint8Array(n), run, st0;
+    for (y = 0; y < H; y++) {
+      run = 0;
+      for (x = 0; x <= W; x++) {
+        if (x < W && ink[y * W + x]) { if (!run) st0 = x; run++; }
+        else { if (run >= LH) for (var kx = st0; kx < st0 + run; kx++) kill[y * W + kx] = 1; run = 0; }
+      }
+    }
+    for (x = 0; x < W; x++) {
+      run = 0;
+      for (y = 0; y <= H; y++) {
+        if (y < H && ink[y * W + x]) { if (!run) st0 = y; run++; }
+        else { if (run >= LV) for (var ky = st0; ky < st0 + run; ky++) kill[ky * W + x] = 1; run = 0; }
+      }
+    }
+    var o = new Float32Array(n);
+    if (mode === 'soft') {
+      // hafif yumuşatılmış gri ton (temiz ekran görüntüsü), çizgiler beyaza boyanır
+      for (y = 0; y < H; y++) for (x = 0; x < W; x++) {
+        var s9 = 0, c9 = 0;
+        for (var dy = -1; dy <= 1; dy++) { var yy = y + dy; if (yy < 0 || yy >= H) continue; for (var dx = -1; dx <= 1; dx++) { var xx = x + dx; if (xx < 0 || xx >= W) continue; s9 += g[yy * W + xx]; c9++; } }
+        o[y * W + x] = kill[y * W + x] ? 255 : s9 / c9;
+      }
+    } else for (var z = 0; z < n; z++) o[z] = ink[z] && !kill[z] ? 0 : 255;
+    for (var j = 0, q = 0; q < n; j += 4, q++) { d[j] = d[j + 1] = d[j + 2] = o[q]; d[j + 3] = 255; }
+    cx.putImageData(img, 0, 0);
+    return c;
+  }
+  // Eğiklik: aynı satırdaki sözcüklerin eğimi (ortanca) → y' = y − eğim·x
+  function deskewItems(items, lineKey) {
+    var by = {};
+    items.forEach(function (it) { var k = lineKey(it); if (k != null) (by[k] = by[k] || []).push(it); });
+    var sl = [];
+    Object.keys(by).forEach(function (k) {
+      var l = by[k]; if (l.length < 3) return;
+      var mx = 0, my = 0; l.forEach(function (i) { mx += i.x + i.w / 2; my += i.y + i.h / 2; }); mx /= l.length; my /= l.length;
+      var a = 0, b = 0; l.forEach(function (i) { var dx = i.x + i.w / 2 - mx; a += dx * (i.y + i.h / 2 - my); b += dx * dx; });
+      if (b > 0) sl.push(a / b);
+    });
+    if (sl.length < 3) return items;
+    sl.sort(function (p, q) { return p - q; });
+    var m = sl[Math.floor(sl.length / 2)];
+    if (Math.abs(m) < 0.002 || Math.abs(m) > 0.2) return items;
+    items.forEach(function (it) { it.y = it.y - m * (it.x + it.w / 2); });
+    return items;
+  }
+  function tessWords(cv, mode) {
+    return docEngine().then(function (E) {
+      var c = docCanvas(cv, mode);
+      return canvasBytes(c, 'image/png').then(function (png) {
+        E.m.FS.writeFile('/input', png);
+        if (E.api.SetImageFile(1, 0) === 1) throw new Error('ocr-image');
+        E.api.Recognize(null);
+        var tsv = E.api.GetTSVText(0);
+        try { E.api.Clear(); } catch (e) {}
+        var items = [];
+        String(tsv || '').split('\n').forEach(function (ln) {
+          var f = ln.split('\t');
+          if (f.length < 12 || f[0] !== '5') return;
+          var txt = f.slice(11).join('\t').trim(), conf = Number(f[10]);
+          if (!txt || conf < 0) return;
+          items.push({ str: txt, x: +f[6], y: +f[7], w: +f[8], h: +f[9], conf: conf, ln: f[2] + '.' + f[3] + '.' + f[4] });
+        });
+        deskewItems(items, function (i) { return i.ln; });
+        // aynı OCR satırındaki sözcükler aynı yükseklikte sayılır (köşeli parantez / büyük harf gibi uzun sözcükler satırı bölmesin)
+        var byLn = {}, allH = items.map(function (i) { return i.h; }).sort(function (a, b) { return a - b; }), gH = allH.length ? allH[Math.floor(allH.length / 2)] : 20;
+        items.forEach(function (i) { (byLn[i.ln] = byLn[i.ln] || []).push(i); });
+        Object.keys(byLn).forEach(function (k) {
+          var l = byLn[k], cs = l.map(function (i) { return i.y + i.h / 2; }).sort(function (a, b) { return a - b; }), hs = l.map(function (i) { return i.h; }).sort(function (a, b) { return a - b; });
+          var mc = cs[Math.floor(cs.length / 2)], mh = Math.min(hs[Math.floor(hs.length / 2)], gH * 1.3);
+          l.forEach(function (i) { i.h = mh; i.y = mc - mh / 2; });
+        });
+        return { width: c.width, height: c.height, items: items, via: 'tesseract-' + E.lg + '-' + (mode || 'lat') };
+      });
+    });
+  }
+  // opts.mode: 'lat' (varsayılan) | 'soft' (Tesseract ikinci deneme); opts.tess: yerel zekâ kurulu olsa da Tesseract
+  function docOcr(cv, opts) {
+    opts = opts || {};
+    var tw = function () { return tessWords(cv, opts.mode); };
+    if (!opts.tess && root.FCYZ && root.FCYZ.available()) {
+      return root.FCYZ.ready('ocr').then(function (ok) {
+        if (!ok) return tw();
+        var big = toCanvas(cv, 4000, 2000);
+        return root.FCYZ.ocr(big, { langs: ['tr', 'en'] }).then(function (r) {
+          var its = (r && r.items || []).filter(function (i) { return i && i.text && String(i.text).trim(); }).map(function (i) {
+            var xs = (i.box || []).map(function (p) { return p[0]; }), ys = (i.box || []).map(function (p) { return p[1]; });
+            var x0 = xs.length ? Math.min.apply(null, xs) : i.cx - 10, x1 = xs.length ? Math.max.apply(null, xs) : i.cx + 10;
+            var hh = i.h || (ys.length ? Math.max.apply(null, ys) - Math.min.apply(null, ys) : 12);
+            return { str: String(i.text).trim(), x: x0, y: i.cy - hh / 2, w: x1 - x0, h: hh, conf: Math.round((i.score || 0) * 100) };
+          });
+          if (its.length < 5) return tw();
+          return { width: big.width, height: big.height, items: its, via: 'yerel-zeka' };
+        }, function () { return tw(); });
+      });
+    }
+    return tw();
+  }
+
   // Çevrimdışı okuma: PDF'te yazı varsa onun metni (satırlara dizilmiş), yoksa OCR
   function offlineText(P) {
     var fromPdf = P.kind === 'pdf' && root.FalconFaturaPdf && root.FalconFaturaPdf.extract
@@ -348,7 +517,7 @@
     });
   }
 
-  var api = { read: read, parse: parse, num: num, isoDate: isoDate, curOf: curOf, verify: verify, norm: norm, refKey: refKey, prepare: prepare, ocr: ocr, version: '1.65.0' };
+  var api = { read: read, parse: parse, num: num, isoDate: isoDate, curOf: curOf, verify: verify, norm: norm, refKey: refKey, prepare: prepare, ocr: ocr, docOcr: docOcr, docClean: docClean, loadImg: loadImg, toCanvas: toCanvas, canvasBytes: canvasBytes, kindOf: kindOf, version: '1.71.0' };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.FalconDekont = api;
 })(typeof window !== 'undefined' ? window : globalThis);

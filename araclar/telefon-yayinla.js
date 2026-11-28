@@ -18,6 +18,8 @@ const pem = fs.readFileSync(process.env.OZEL_ANAHTAR || '', 'utf8');
 for (const f of ['kullanim.js', 'kullanim-falcon.js', 'fatura-falcon.js', 'duyuru-falcon.js', 'fatura-pdf.js', 'qrcode-gen.js', 'pdfjs/pdf.min.mjs', 'pdfjs/pdf.worker.min.mjs', 'pdfjs/LICENSE.txt', 'shamcash-falcon.js',
   // v1.66: fatura tahsilatı dekont okuyucu (Sham Cash / genel; çevrimdışı OCR ana iş parçacığında: Tesseract çekirdeği + Arapça / İngilizce)
   'dekont-falcon.js', 'ocr/tesseract-core-simd-lstm.wasm.js', 'ocr/ara.traineddata.gz', 'ocr/eng.traineddata.gz', 'ocr/LICENSE-tesseract-core.txt',
+  // v1.71: belge (fatura / teklif fotoğrafı) OCR'ı için Türkçe model; faturaya özel dosyalar Wi‑Fi eşitlemesinde de (lan-falcon.js FILE_COLUMNS)
+  'ocr/tur.traineddata.gz', 'ocr/LICENSE-tessdata.txt', 'lan-falcon.js',
   // v1.68: Telegram «Kayıtlı Mesajlar» → Sham Cash dekontu otomatik kayıt (GramJS tarayıcı paketi yalnız açılınca yüklenir)
   'telegram-falcon.js', 'telegram-vendor.js', 'LICENSE-gramjs.txt',
   // v1.70: çevrimdışı yapay zekâ (telefon çalışma zamanı + kart): PP-OCRv5 + Tesseract OCR, NLLB-200 çeviri; paketler GitHub'dan bir kez iner

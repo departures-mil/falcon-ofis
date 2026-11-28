@@ -983,3 +983,22 @@ migrations.push({
     CREATE INDEX idx_cash_sc_ref ON cash_transactions(sc_ref);
   `,
 });
+
+migrations.push({
+  version: 31,
+  name: 'v1.71-invoice-files',
+  sql: `
+    -- v1.71: faturaya eklenen özel dosyalar (yalnız programda görünür; fatura çıktısına girmez)
+    CREATE TABLE invoice_files (
+      id            INTEGER PRIMARY KEY AUTOINCREMENT,
+      invoice_id    INTEGER NOT NULL,
+      file_path     TEXT NOT NULL,
+      original_name TEXT,
+      mime_type     TEXT,
+      note          TEXT,
+      created_at    TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+      updated_at    TEXT
+    );
+    CREATE INDEX idx_invoice_files_inv ON invoice_files(invoice_id);
+  `,
+});

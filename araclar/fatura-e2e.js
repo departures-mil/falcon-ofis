@@ -45,7 +45,7 @@ fs.mkdirSync(OUT, { recursive: true });
   const shot = (n) => page.screenshot({ path: path.join(OUT, n + '.png') });
 
   // 1) PDF'den doldur (yapay zeka anahtarı yok → çevrimdışı)
-  const [fc] = await Promise.all([page.waitForEvent('filechooser'), page.click('.fatura-page .toolbar button:has-text("PDF\'den doldur")')]);
+  const [fc] = await Promise.all([page.waitForEvent('filechooser'), page.click('.fatura-page .toolbar button:has-text("Belgeden doldur")').then(() => page.click('.modal button:has-text("Dosya seç")'))]);
   await fc.setFiles(PDF);
   await page.waitForSelector('.fat-imp-st', { timeout: 30000 });
   await page.waitForTimeout(400);
@@ -84,7 +84,7 @@ fs.mkdirSync(OUT, { recursive: true });
   await page.waitForTimeout(400);
   await shot('4-liste');
   // 3) aynı PDF ikinci kez: müşteri ve ürünler kayıtlı görünür
-  const [fc2] = await Promise.all([page.waitForEvent('filechooser'), page.click('.fatura-page .toolbar button:has-text("PDF\'den doldur")')]);
+  const [fc2] = await Promise.all([page.waitForEvent('filechooser'), page.click('.fatura-page .toolbar button:has-text("Belgeden doldur")').then(() => page.click('.modal button:has-text("Dosya seç")'))]);
   await fc2.setFiles(PDF);
   await page.waitForSelector('.fat-imp-st', { timeout: 30000 });
   const st2 = await page.textContent('.fat-imp-c .fat-imp-st');

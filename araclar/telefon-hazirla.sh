@@ -28,4 +28,6 @@ for f in "$W"/assets/main-*.js; do python3 araclar/patch-ui-1671.py "$f"; done
 for f in "$W"/assets/main-*.js; do python3 araclar/patch-ui-1672.py "$f"; done
 # v1.68: files.saveReceipt (Telegram dekontu bayt bayt receipts/ altına)
 for f in "$W"/assets/index-*.js; do python3 araclar/patch-srv-168.py "$f"; done
+# v1.71: faturaya özel dosyalar (invoice_files, migration 31) + files.saveFile; belge okuma eklentileri telefon-yayinla.js'te kopyalanır
+for f in "$W"/assets/index-*.js; do python3 araclar/patch-srv-171.py "$f"; done
 echo "hazır: $W ($V)"

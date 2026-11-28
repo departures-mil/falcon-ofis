@@ -2422,12 +2422,36 @@ function createServices(db, { removeFile = () => {} } = {}) {
     refreshInvoice(id);
     return { ok: true };
   }
+
+  // v1.71 invoice_files: faturaya özel dosyalar (yalnız programda; çıktıya girmez)
+  function addInvoiceFiles({ invoice_id, files }) {
+    const id = optId(invoice_id);
+    if (!id || !db.get('SELECT id FROM invoices WHERE id = ?', [id])) throw new AppError('ERR_NOT_FOUND');
+    const out = [];
+    for (const f of files || []) {
+      db.run(`INSERT INTO invoice_files (invoice_id, file_path, original_name, mime_type, note, updated_at) VALUES (?,?,?,?,?,${now})`,
+        [id, required(f.relPath), f.originalName ?? null, f.mime ?? null, optText(f.note)]);
+      out.push(db.get('SELECT last_insert_rowid() AS id').id);
+    }
+    return { ids: out };
+  }
+  // satır Silinenler kutusuna gider (30 gün geri alınabilir); dosya diskte kalır
+  function deleteInvoiceFile({ id }) {
+    db.run('DELETE FROM invoice_files WHERE id = ?', [optId(id)]);
+    return { ok: true };
+  }
+  function setInvoiceFileNote({ id, note }) {
+    if (!db.get('SELECT id FROM invoice_files WHERE id = ?', [optId(id)])) throw new AppError('ERR_NOT_FOUND');
+    db.run(`UPDATE invoice_files SET note = ?, updated_at = ${now} WHERE id = ?`, [optText(note), optId(id)]);
+    return { ok: true };
+  }
   function deleteInvoice({ id }) {
     const inv = db.get('SELECT id FROM invoices WHERE id = ?', [id]);
     if (!inv) return { ok: true };
     for (const p of db.all('SELECT cash_transaction_id AS t FROM invoice_payments WHERE invoice_id = ?', [id])) deleteTx(p.t);
     db.run('DELETE FROM invoice_payments WHERE invoice_id = ?', [id]);
     db.run('DELETE FROM product_prices WHERE invoice_id = ?', [id]);
+    db.run('DELETE FROM invoice_files WHERE invoice_id = ?', [id]);
     db.run('DELETE FROM invoices WHERE id = ?', [id]);
     return { ok: true };
   }
@@ -2617,7 +2641,7 @@ function createServices(db, { removeFile = () => {} } = {}) {
     deleteCashCategory: 'cash_categories', deleteWallet: 'crypto_wallets', deleteInternetPayment: 'internet_payments', deleteInternet: 'internet_services',
     deleteMeter: 'electricity_meters', deleteReading: 'electricity_readings', deleteMaterialPlace: 'material_places', deleteNote: 'notes',
     deleteRecurringPayment: 'recurring_payments', deleteRecurringPlan: 'recurring_plans', deleteTask: 'tasks',
-    deleteInvoice: 'invoices', deleteInvoicePayment: 'invoice_payments', deleteCustomer: 'customers',
+    deleteInvoice: 'invoices', deleteInvoicePayment: 'invoice_payments', deleteCustomer: 'customers', deleteInvoiceFile: 'invoice_files',
   };
   const trashQi = (n) => `"${String(n).replace(/"/g, '""')}"`;
   const trashHash = (s) => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); };
@@ -2862,14 +2886,14 @@ function createServices(db, { removeFile = () => {} } = {}) {
     saveShamPayee, deleteShamPayee,
     restoreTrash, purgeTrash, emptyTrash, purgeOldTrash,
     saveTask, setTaskStatus, deleteTask,
-    saveInvoice, addInvoicePayment, deleteInvoicePayment, setInvoiceCancelled, deleteInvoice, setTxPayment,
+    saveInvoice, addInvoicePayment, deleteInvoicePayment, setInvoiceCancelled, deleteInvoice, setTxPayment, addInvoiceFiles, deleteInvoiceFile, setInvoiceFileNote,
     saveCustomer, deleteCustomer, importInvoiceCustomers, saveProductCard,
   };
   const reads = { nextSerial: ({ type }) => ({ serial: SERIAL[type] ? nextSerial(type) : null }), productUnitCost, accountBalance: ({ id }) => ({ balance: accountBalance(id) }), latestRates: () => latestRates(), shareDefaults, listWallets, recentWalletTx, listWalletSwaps, swapCandidates };
 
   const FILE_REFS = [['receipts', 'file_path'], ['product_images', 'file_path'], ['materials', 'image_path'], ['fixed_assets', 'image_path'], ['asset_images', 'file_path'],
     ['trade_files', 'file_path'], ['item_codes', 'image_path'], ['internet_services', 'qr_path'], ['electricity_meters', 'photo_path'], ['electricity_readings', 'photo_path'], ['recurring_plans', 'qr_path'], ['recurring_files', 'file_path'],
-    ['cash_transactions', 'sc_qr_path'], ['shamcash_payees', 'qr_path']];
+    ['cash_transactions', 'sc_qr_path'], ['shamcash_payees', 'qr_path'], ['invoice_files', 'file_path']];
   function fileInUse(rel) {
     return FILE_REFS.some(([t, c]) => {
       try { return !!db.get(`SELECT 1 AS x FROM ${t} WHERE ${c} = ? LIMIT 1`, [rel]); } catch { return false; }

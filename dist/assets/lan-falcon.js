@@ -6,7 +6,7 @@
 (function () {
   'use strict';
   // Bulut eşitlemesindeki dosya sütunları (sync.js FILE_COLUMNS ile aynı)
-  var FILE_COLUMNS = { electricity_meters: 'photo_path', electricity_readings: 'photo_path', internet_services: 'qr_path', recurring_plans: 'qr_path', recurring_files: 'file_path', receipts: 'file_path', product_images: 'file_path', materials: 'image_path', fixed_assets: 'image_path', asset_images: 'file_path', trade_files: 'file_path', item_codes: 'image_path', cash_transactions: 'sc_qr_path', shamcash_payees: 'qr_path' };
+  var FILE_COLUMNS = { electricity_meters: 'photo_path', electricity_readings: 'photo_path', internet_services: 'qr_path', recurring_plans: 'qr_path', recurring_files: 'file_path', receipts: 'file_path', product_images: 'file_path', materials: 'image_path', fixed_assets: 'image_path', asset_images: 'file_path', trade_files: 'file_path', item_codes: 'image_path', cash_transactions: 'sc_qr_path', shamcash_payees: 'qr_path', invoice_files: 'file_path' };
   var META_KEY = 'falcon-lan-meta';
   var cache = { account: '', files: new Set(), cols: FILE_COLUMNS };
   var cbSeq = 0;

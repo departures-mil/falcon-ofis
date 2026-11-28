@@ -1,1 +1,1 @@
-Tesseract OCR traineddata (eng, ara; tessdata 4.0.0 best_int) — Apache License 2.0, https://github.com/tesseract-ocr/tessdata
+Tesseract OCR traineddata (eng, ara: tessdata 4.0.0 best_int; tur: tessdata_best) — Apache License 2.0, https://github.com/tesseract-ocr/tessdata, https://github.com/tesseract-ocr/tessdata_best

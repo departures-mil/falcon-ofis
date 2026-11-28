@@ -410,6 +410,67 @@
     }
   };
   ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX7[l]).forEach(function (k) { TX[l][k] = TX7[l][k]; }); });
+  // v1.71: belgeden okuma (PDF + fotoğraf), ürün kaydı, faturaya özel (yalnız bana) dosyalar
+  var TX171 = {
+    tr: {
+      fromPdf: 'Belgeden doldur', fromPdfHint: 'Fatura / teklif belgesini (PDF ya da fotoğraf: JPEG, PNG) okuyup müşteri, belge bilgileri, ürün ve fiyatları doldurur — önce yapay zeka, internet yoksa çevrimdışı (OCR)',
+      docPickT: 'Belge seç', docDrop: 'Belgeyi buraya sürükleyin, yapıştırın (Ctrl+V) ya da seçin — PDF, JPEG, PNG (telefonla çekilmiş ekran / kâğıt fotoğrafı da olur)',
+      docPick: '📄 Dosya seç', docCamera: '📷 Fotoğraf çek', docReading: 'Belge okunuyor…', docOcr: 'Görüntüden yazı okunuyor (çevrimdışı OCR)…', docOcr2: 'Çevrimdışı okuma ikinci ayarla tekrarlanıyor…',
+      docUnreadable: 'Belgeden bilgi okunamadı. İnternet varsa yapay zeka anahtarıyla (Ayarlar → Asistan) daha iyi okunur.',
+      impTitle: 'Belgeden okunan bilgiler', impDoc: 'Belge', impKind_quote: 'Teklif', impKind_proforma: 'Proforma', impKind_invoice: 'Fatura', impKind_other: 'Belge',
+      impValid: 'Geçerlilik', impRep: 'Satış temsilcisi', impTerms: 'Ödeme şekli', impDocFx: 'Belgedeki kur', impDocTry: 'TL karşılığı', impOcr: 'OCR',
+      impList: 'Liste', impDisc: 'İsk.', impModel: 'Model', impPn: 'P/N', impSn: 'S/N',
+      impOpts: 'Aktarım', impSaveProd: 'Seçili kalemleri ürün kayıtlarına işle (yeni ürün eklenir, aynı ürün tekrar açılmaz)', impPriceMode: 'Fiyat',
+      impPriceUpd: 'Kayıtlı ürünün fiyatını belgedeki fiyatla güncelle (fiyat geçmişine yazılır)', impPriceKeep: 'Kayıtlı ürünlerin fiyatına dokunma (yalnız yeni ürünler)',
+      impTakeCust: 'Müşteri bilgilerini faturaya aktar', impItemsMode: 'Kalemler', impAppend: 'Faturadaki kalemlere ekle', impReplace: 'Faturadaki kalemlerin yerine koy',
+      impAttach: 'Okunan belgeyi bu faturaya özel dosya olarak ekle (🔒 yalnız sen görürsün, çıktıda yer almaz)',
+      impProdOnly: '📦 Yalnız ürünlere kaydet', impProdDone: '📦 Ürün kayıtları: {a} yeni, {b} fiyat güncellendi, {c} değişmedi', impProdSkip: '{n} ürünün fiyatı farklı para biriminde kayıtlı olduğu için değiştirilmedi',
+      impProdNone: 'Kaydedilecek kalem seçilmedi.', impSrcDoc: 'Kaynak: {s}', prodFromDoc: '📄 Belgeden ürün ekle', prodFromDocHint: 'Fatura / teklif belgesindeki (PDF ya da fotoğraf) ürünleri ve fiyatlarını ürün kayıtlarına ekler',
+      pfTitle: '🔒 Özel dosyalar', pfHint: 'Yalnız sen görürsün: fatura çıktısında, PDF\'te ve müşteriye gönderilenlerde yer almaz. Cihazların arasında eşitlenir.',
+      pfAdd: '＋ Dosya ekle', pfDrop: 'Dosyaları buraya sürükleyin ya da yapıştırın (Ctrl+V) — PDF, resim, Word, Excel, metin, arşiv…', pfEmpty: 'Bu faturaya eklenmiş özel dosya yok.',
+      pfOpen: 'Aç', pfSave: 'Farklı kaydet', pfDel: 'Sil', pfNote: 'Not', pfDelQ: '«{n}» dosyası silinsin mi? (Silinenler kutusundan 30 gün geri alınabilir)', pfAdded: '{n} dosya eklendi',
+      yesDo: 'Evet', impSrcCur: 'Belgedeki fiyatların para birimi', impTotals: 'Kalemlerin toplamı {a} · belgedeki ara toplam {b}', pdfApplied: 'Belgeden okunan bilgiler dolduruldu — kontrol edip kaydedin', pfPending: 'Fatura kaydedilince eklenecek', pfTooBig: '«{n}» çok büyük (en çok 50 MB).', pfFail: 'Dosya eklenemedi:', pfBtn: 'Özel dosyalar (yalnız sen görürsün)'
+    },
+    en: {
+      fromPdf: 'Fill from document', fromPdfHint: 'Reads an invoice / quotation (PDF or photo: JPEG, PNG) and fills the customer, document details, products and prices — AI first, offline (OCR) without internet',
+      docPickT: 'Choose a document', docDrop: 'Drag the document here, paste it (Ctrl+V) or choose it — PDF, JPEG, PNG (a phone photo of a screen or paper works too)',
+      docPick: '📄 Choose file', docCamera: '📷 Take photo', docReading: 'Reading the document…', docOcr: 'Reading text from the image (offline OCR)…', docOcr2: 'Repeating the offline reading with a second setting…',
+      docUnreadable: 'No data could be read from the document. With internet, an AI key (Settings → Assistant) reads it much better.',
+      impTitle: 'Data read from the document', impDoc: 'Document', impKind_quote: 'Quotation', impKind_proforma: 'Proforma', impKind_invoice: 'Invoice', impKind_other: 'Document',
+      impValid: 'Valid until', impRep: 'Sales rep', impTerms: 'Payment terms', impDocFx: 'Rate on document', impDocTry: 'TRY equivalent', impOcr: 'OCR',
+      impList: 'List', impDisc: 'Disc.', impModel: 'Model', impPn: 'P/N', impSn: 'S/N',
+      impOpts: 'Transfer', impSaveProd: 'Save the selected lines to product records (new products are added, the same product is not duplicated)', impPriceMode: 'Price',
+      impPriceUpd: 'Update the saved product\'s price with the document price (kept in price history)', impPriceKeep: 'Do not change saved products\' prices (new products only)',
+      impTakeCust: 'Transfer the customer details to the invoice', impItemsMode: 'Lines', impAppend: 'Add to the invoice\'s lines', impReplace: 'Replace the invoice\'s lines',
+      impAttach: 'Attach the document to this invoice as a private file (🔒 only you see it, not on the printout)',
+      impProdOnly: '📦 Save to products only', impProdDone: '📦 Product records: {a} new, {b} prices updated, {c} unchanged', impProdSkip: '{n} product prices were not changed because they are kept in another currency',
+      impProdNone: 'No lines selected to save.', impSrcDoc: 'Source: {s}', prodFromDoc: '📄 Add products from document', prodFromDocHint: 'Adds the products and prices on an invoice / quotation (PDF or photo) to the product records',
+      pfTitle: '🔒 Private files', pfHint: 'Only you see these: they are not on the invoice printout, the PDF or anything sent to the customer. Synced between your devices.',
+      pfAdd: '＋ Add file', pfDrop: 'Drag files here or paste them (Ctrl+V) — PDF, image, Word, Excel, text, archive…', pfEmpty: 'No private files on this invoice.',
+      pfOpen: 'Open', pfSave: 'Save as', pfDel: 'Delete', pfNote: 'Note', pfDelQ: 'Delete «{n}»? (It can be restored from Deleted items for 30 days)', pfAdded: '{n} file(s) added',
+      yesDo: 'Yes', impSrcCur: 'Currency of the prices on the document', impTotals: 'Lines total {a} · subtotal on the document {b}', pdfApplied: 'Filled from the document — check and save', pfPending: 'Will be attached when the invoice is saved', pfTooBig: '«{n}» is too large (max 50 MB).', pfFail: 'The file could not be added:', pfBtn: 'Private files (only you see them)'
+    },
+    ar: {
+      fromPdf: 'التعبئة من مستند', fromPdfHint: 'يقرأ فاتورة / عرض سعر (PDF أو صورة: JPEG، PNG) ويعبّئ بيانات العميل والمستند والمنتجات والأسعار — بالذكاء الاصطناعي أولاً، ودون اتصال (OCR) عند انقطاع الإنترنت',
+      docPickT: 'اختيار مستند', docDrop: 'اسحب المستند إلى هنا أو الصقه (Ctrl+V) أو اختره — PDF، JPEG، PNG (تصلح صورة الشاشة أو الورقة الملتقطة بالهاتف)',
+      docPick: '📄 اختيار ملف', docCamera: '📷 التقاط صورة', docReading: 'جارٍ قراءة المستند…', docOcr: 'جارٍ قراءة النص من الصورة (OCR دون اتصال)…', docOcr2: 'إعادة القراءة دون اتصال بإعداد ثانٍ…',
+      docUnreadable: 'تعذّرت قراءة بيانات من المستند. مع الإنترنت يقرؤه مفتاح الذكاء الاصطناعي (الإعدادات ← المساعد) أفضل بكثير.',
+      impTitle: 'البيانات المقروءة من المستند', impDoc: 'المستند', impKind_quote: 'عرض سعر', impKind_proforma: 'فاتورة مبدئية', impKind_invoice: 'فاتورة', impKind_other: 'مستند',
+      impValid: 'صالح حتى', impRep: 'مندوب المبيعات', impTerms: 'شروط الدفع', impDocFx: 'سعر الصرف في المستند', impDocTry: 'المقابل بالليرة التركية', impOcr: 'OCR',
+      impList: 'سعر القائمة', impDisc: 'خصم', impModel: 'الطراز', impPn: 'رقم القطعة', impSn: 'الرقم التسلسلي',
+      impOpts: 'النقل', impSaveProd: 'حفظ البنود المحددة في سجلات المنتجات (تُضاف المنتجات الجديدة ولا يتكرر المنتج نفسه)', impPriceMode: 'السعر',
+      impPriceUpd: 'تحديث سعر المنتج المحفوظ بسعر المستند (يُحفظ في سجل الأسعار)', impPriceKeep: 'عدم تغيير أسعار المنتجات المحفوظة (المنتجات الجديدة فقط)',
+      impTakeCust: 'نقل بيانات العميل إلى الفاتورة', impItemsMode: 'البنود', impAppend: 'إضافتها إلى بنود الفاتورة', impReplace: 'استبدال بنود الفاتورة بها',
+      impAttach: 'إرفاق المستند بهذه الفاتورة كملف خاص (🔒 تراه أنت فقط، ولا يظهر في المطبوع)',
+      impProdOnly: '📦 الحفظ في المنتجات فقط', impProdDone: '📦 سجلات المنتجات: {a} جديد، {b} سعر محدَّث، {c} دون تغيير', impProdSkip: 'لم تتغير أسعار {n} منتج لأنها محفوظة بعملة أخرى',
+      impProdNone: 'لم تُحدَّد بنود للحفظ.', impSrcDoc: 'المصدر: {s}', prodFromDoc: '📄 إضافة منتجات من مستند', prodFromDocHint: 'يضيف المنتجات وأسعارها من فاتورة / عرض سعر (PDF أو صورة) إلى سجلات المنتجات',
+      pfTitle: '🔒 ملفات خاصة', pfHint: 'تراها أنت فقط: لا تظهر في مطبوع الفاتورة ولا في ملف PDF ولا فيما يُرسل إلى العميل. تتزامن بين أجهزتك.',
+      pfAdd: '＋ إضافة ملف', pfDrop: 'اسحب الملفات إلى هنا أو الصقها (Ctrl+V) — PDF، صورة، Word، Excel، نص، أرشيف…', pfEmpty: 'لا توجد ملفات خاصة لهذه الفاتورة.',
+      pfOpen: 'فتح', pfSave: 'حفظ باسم', pfDel: 'حذف', pfNote: 'ملاحظة', pfDelQ: 'حذف «{n}»؟ (يمكن استعادته من المحذوفات خلال 30 يوماً)', pfAdded: 'أُضيف {n} ملف',
+      yesDo: 'نعم', impSrcCur: 'عملة الأسعار في المستند', impTotals: 'مجموع البنود {a} · المجموع الفرعي في المستند {b}', pdfApplied: 'عُبّئت البيانات من المستند — راجعها ثم احفظ', pfPending: 'سيُرفق عند حفظ الفاتورة', pfTooBig: '«{n}» كبير جداً (الحد 50 ميغابايت).', pfFail: 'تعذّرت إضافة الملف:', pfBtn: 'ملفات خاصة (تراها أنت فقط)'
+    }
+  };
+  ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX171[l]).forEach(function (k) { TX[l][k] = TX171[l][k]; }); });
   // Faturanın kendi dilindeki resmi metinler (PDF)
   var DOC = {
     tr: { title: 'FATURA', no: 'Fatura No', date: 'Fatura Tarihi', due: 'Vade Tarihi', billTo: 'Sayın', desc: 'Açıklama', qty: 'Miktar', unit: 'Birim',
@@ -1162,6 +1223,13 @@
       '.fat-imp-src{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}.fat-imp-st{border-radius:10px;padding:8px 12px;margin:6px 0 10px;font-weight:600}.fat-imp-st.ok{background:#22a06b1f;color:#22a06b}.fat-imp-st.new{background:#0ea5e91f;color:#38bdf8}.fat-imp-st.warn{background:#e2a4001f;color:#d69500}' +
       '.fat-imp-v{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}.fat-imp-v .btn.link{padding:0 4px;min-height:0;background:none;border:0;color:inherit;text-decoration:underline;cursor:pointer;font-weight:600}' +
       '.fat-imp-dl{flex-basis:100%;margin:4px 0 0;padding-inline-start:18px;font-weight:500;font-size:12.5px;line-height:1.55}.fat-imp-t tr.fat-imp-diff td{background:#e2a40018}.fat-imp-t tr.fat-imp-diff td:first-child{box-shadow:inset 3px 0 #d69500}' +
+      // v1.71: belge seçimi, aktarım seçenekleri, özel dosyalar
+      '.fat-drop{border:2px dashed var(--border,#cbd5e1);border-radius:12px;padding:26px 16px;text-align:center;cursor:pointer;color:var(--muted,#64748b);line-height:1.5}.fat-drop.on,.fat-drop:hover{border-color:#38bdf8;background:#38bdf812}' +
+      '.fat-drop-acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}' +
+      '.fat-imp-opts{display:flex;flex-direction:column;gap:8px}.fat-imp-o{display:flex;gap:8px;align-items:flex-start}.fat-imp-o2{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding-inline-start:26px}.fat-imp-o2 select{max-width:100%}' +
+      '.fat-imp-sub{margin-top:2px;line-height:1.35;overflow-wrap:anywhere}.fat-imp-doc{margin:2px 0 8px;overflow-wrap:anywhere}' +
+      '.fat-pf{display:flex;flex-direction:column;gap:8px}.fat-pf-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 10px;border:1px solid var(--border,#e2e8f0);border-radius:10px}' +
+      '.fat-pf-row .nm{flex:1 1 220px;min-width:0;overflow-wrap:anywhere;font-weight:600}.fat-pf-row .nt{flex:1 1 100%}.fat-pf-row .nt input{width:100%}.fat-pf-drop{padding:14px 12px;font-size:13px}.fat-pf-badge{font-size:11px;font-weight:700;margin-inline-start:2px}' +
       '.fat-imp-ms{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px 14px}.fat-imp-m{display:flex;gap:6px;align-items:center;font-size:13px}.fat-imp-m b{overflow-wrap:anywhere}' +
       '.fat-fx{border:1px solid var(--border,#ffffff1f);border-radius:12px;padding:10px 12px}.fat-fx-h{display:flex;align-items:center;gap:8px;margin-bottom:6px}.fat-fx-h .sp{flex:1}' +
       '.fat-fx-r{display:flex;flex-wrap:wrap;gap:10px 18px}.fat-fx-i{display:flex;align-items:center;gap:6px;font-weight:600;white-space:nowrap}.fat-fx-i input{width:130px}.fat-fx-i input.bad{border-color:#e5484d}' +
@@ -1196,7 +1264,19 @@
       }
       return F().call(name, payload).then(function (r) { if (!r.ok) { var e = new Error(r.error); e.code = r.error; toast(errText(e) || r.error, 'error'); throw e; } if (okMsg) toast(okMsg); return r.data; });
     };
-    var confirmBox = function (m) { return ctx.confirm ? ctx.confirm(m) : Promise.resolve(window.confirm(m)); };
+    // v1.71: fatura penceresi (fat-modal) açıkken programın onay kutusu onun ARKASINDA kalıyordu (tıklanamıyordu): o durumda kendi onay penceremiz
+    var confirmBox = function (m) {
+      if (!document.querySelector('.fat-modal') && ctx.confirm) return ctx.confirm(m);
+      if (!document.querySelector('.fat-modal') && !ctx.confirm) return Promise.resolve(window.confirm(m));
+      return new Promise(function (ok) {
+        var done = false, fin = function (v) { if (done) return; done = true; cm.close(); ok(v); };
+        var cm = modal('⚠', [el('p', { text: m, dir: 'auto', style: 'margin:0;line-height:1.5' })], [
+          el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { fin(false); } }),
+          el('button', { type: 'button', class: 'btn danger fat-confirm-yes', text: '✓ ' + t('yesDo'), onclick: function () { fin(true); } })
+        ], 'fat-confirm');
+        var obs = setInterval(function () { if (!cm.box.isConnected) { clearInterval(obs); if (!done) { done = true; ok(false); } } }, 400);
+      });
+    };
 
     var head = el('div', { class: 'toolbar' });
     var sumBox = el('div', { class: 'fat-sum' });
@@ -1248,8 +1328,9 @@
       if (flt.q.trim()) { w.push("lower(number || ' ' || customer_name || ' ' || COALESCE(customer_phone,'') || ' ' || COALESCE(note,'') || ' ' || items) LIKE '%' || lower(?) || '%'"); p.push(flt.q.trim()); }
       return Promise.all([
         q('SELECT * FROM invoices' + (w.length ? ' WHERE ' + w.join(' AND ') : '') + ' ORDER BY date DESC, id DESC LIMIT 1000', p),
-        q('SELECT COUNT(*) AS n FROM invoices')
-      ]).then(function (r) { if (!alive || my !== seq) return; drawSum(r[0]); drawList(r[0], r[1][0] ? r[1][0].n : 0); })
+        q('SELECT COUNT(*) AS n FROM invoices'),
+        q('SELECT invoice_id AS id, COUNT(*) AS n FROM invoice_files GROUP BY invoice_id').catch(function () { return []; })
+      ]).then(function (r) { if (!alive || my !== seq) return; var pf = {}; r[2].forEach(function (x) { pf[x.id] = x.n; }); drawSum(r[0]); drawList(r[0], r[1][0] ? r[1][0].n : 0, pf); })
         .catch(function (e) { listBox.textContent = String(e && e.message || e); });
     }
     function drawSum(rows) {
@@ -1266,7 +1347,8 @@
         ]));
       });
     }
-    function drawList(rows, all) {
+    function drawList(rows, all, pfc) {
+      pfc = pfc || {};
       listBox.innerHTML = '';
       if (!rows.length) { listBox.appendChild(el('div', { class: 'empty-state', style: 'padding:28px;text-align:center', text: all ? t('noMatch') : t('empty') })); return; }
       var td = today();
@@ -1277,6 +1359,7 @@
           el('button', { type: 'button', class: 'btn', title: t('preview'), text: '👁', onclick: function () { openPreview(r); } }),
           el('button', { type: 'button', class: 'btn', text: '⬇ ' + t('pdf'), onclick: function () { openPreview(r); } }),
           r.status !== 'cancelled' ? el('button', { type: 'button', class: 'btn ' + (rem > 0 ? 'success' : ''), text: rem > 0 ? '₊ ' + t('pay') : t('payments'), onclick: function () { openPay(r); } }) : null,
+          el('button', { type: 'button', class: 'btn', title: t('pfBtn'), onclick: function () { openFiles(r); } }, [el('span', { text: '🔒' }), pfc[r.id] ? el('span', { class: 'fat-pf-badge', text: String(pfc[r.id]) }) : null]),
           el('button', { type: 'button', class: 'btn', text: '✎', title: t('edit'), onclick: function () { openEditor(r); } }),
           el('button', { type: 'button', class: 'btn', title: r.status === 'cancelled' ? t('uncancel') : t('cancel'), text: r.status === 'cancelled' ? '↺' : '⊘', onclick: function () { toggleCancel(r); } }),
           el('button', { type: 'button', class: 'btn danger-soft', title: t('del'), text: '🗑', onclick: function () { del(r); } })
@@ -2439,7 +2522,14 @@
           delete a.after; var tag = a.tag || 'input'; delete a.tag; var x = el(tag, a); if (tag === 'textarea') x.value = st[k] || ''; return x;
         };
         var pdfBtn = el('button', { type: 'button', class: 'btn fat-pdfbtn', text: '📄 ' + t('fromPdf'), title: t('fromPdfHint'), onclick: function () {
-          pickPdf(function (data) { m.close(); openEditor(inv, Object.assign({}, st, data, { meta: Object.assign({}, st.meta, data.meta || {}), cx: Object.assign({}, st.cx, data.cx || {}) })); });
+          var hasItems = st.items.some(function (x) { return String(x.name || '').trim(); });
+          pickPdf(function (data) {
+            m.close();
+            // v1.71: kalemler eklenebilir (yerine konmaz), müşteri istenirse aktarılır, okunan belge özel dosya olur
+            if (data._append) data.items = st.items.filter(function (x) { return String(x.name || '').trim(); }).concat(data.items || []);
+            data._files = (st._files || []).concat(data._files || []);
+            openEditor(inv, Object.assign({}, st, data, { meta: Object.assign({}, st.meta, data.meta || {}), cx: Object.assign({}, st.cx, data.cx || {}) }));
+          }, { hasItems: hasItems, hasCust: !!String(st.customer || '').trim() });
         } });
         var form = el('div', { class: 'form' }, [
           el('div', { class: 'span-2 fat-sec' }, [el('h3', { class: 'section-title', text: t('secCustomer') }), custLbl, el('span', { class: 'sp' }), pdfBtn]),
@@ -2496,6 +2586,8 @@
             record_cash: isNew && st.cash, account_id: st.account_id ? Number(st.account_id) : null, pay_amount: payTouched ? num(st.pay_amount) : ''
           };
           run('saveInvoice', payload, t('saved')).then(function (res) {
+            // v1.71: bekleyen özel dosyalar (belgeden okunan belge / yeni faturaya eklenenler)
+            if (res && res.id && st._files.length) run('addInvoiceFiles', { invoice_id: res.id, files: st._files.slice() }).then(function () { load(); }, function () {});
             m.close(); load();
             if (withPdf && res && res.id) q('SELECT * FROM invoices WHERE id = ?', [res.id]).then(function (x) { if (x[0]) openPreview(x[0]); });
           }, function () { btn.disabled = false; });
@@ -2536,27 +2628,123 @@
         var b0 = el('button', { type: 'button', class: 'btn', text: '👁 ' + t('preview'), onclick: function () { showPreview(); } });
         var b1 = el('button', { type: 'button', class: 'btn', text: t('save'), onclick: function (e) { submit(false, e.target); } });
         var b2 = el('button', { type: 'button', class: 'btn primary', text: '⬇ ' + t('saveAndPdf'), onclick: function (e) { submit(true, e.target); } });
-        var m = modal(isNew ? t('newInv') : t('editInv') + ' · ' + inv.number, [form], [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }), b0, b1, b2], 'xwide');
+        if (!Array.isArray(st._files)) st._files = [];
+        var pfSec = el('div', { class: 'fat-pf-sec' }, [el('h3', { class: 'section-title', text: t('pfTitle') }), pfBox(inv ? inv.id : null, st._files, function () { if (inv) load(); })]);
+        var m = modal(isNew ? t('newInv') : t('editInv') + ' · ' + inv.number, [form, pfSec], [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }), b0, b1, b2], 'xwide');
         drawItems(); drawCash();
         if (pre && pre._fromPdf) toast(t('pdfApplied'));
         setTimeout(function () { try { if (!st.customer) custIn.focus(); } catch (e) {} }, 30);
       });
     }
 
-    // ----- PDF'den doldur -----
-    // Dosya seçilir → önce çevrimiçi yapay zeka, olmazsa çevrimdışı okuma → önizleme (düzeltilebilir) → onay → done(taslak)
-    function pickPdf(done) {
-      var inp = el('input', { type: 'file', accept: 'application/pdf,.pdf', style: 'display:none' });
-      document.body.appendChild(inp);
-      var fin = false, end = function () { if (fin) return; fin = true; if (inp.parentNode) inp.parentNode.removeChild(inp); };
-      inp.addEventListener('change', function () { var f = inp.files && inp.files[0]; end(); if (f) readPdf(f, done); });
-      inp.addEventListener('cancel', end);
-      inp.click();
+    // ----- v1.71: faturaya özel dosyalar (yalnız programda görünür; fatura çıktısına / PDF'e / müşteriye giden hiçbir şeye girmez) -----
+    function saveAnyFile(bytes, name) {
+      var Fl = F().files || {};
+      if (bytes.length > 50 * 1024 * 1024) { var e = new Error(t('pfTooBig', { n: name })); e.code = 'ERR_TOO_BIG'; return Promise.reject(e); }
+      // masaüstü IPC { ok, data } döner, telefon doğrudan sonucu
+      var un = function (r) { if (r && typeof r.ok === 'boolean') { if (!r.ok) { var e2 = new Error(r.error || 'ERR'); e2.code = r.error; throw e2; } return r.data; } return r; };
+      if (Fl.saveFile) return Promise.resolve(Fl.saveFile(bytes, name || '')).then(un);
+      if (Fl.saveReceipt) return Promise.resolve(Fl.saveReceipt(bytes, name || '')).then(un);
+      return Promise.reject(new Error('files'));
+    }
+    var pfIcon = function (n) { return /\.pdf$/i.test(n) ? '📕' : /\.(jpe?g|png|webp|gif|heic|bmp)$/i.test(n) ? '🖼' : /\.(xlsx?|csv|ods)$/i.test(n) ? '📊' : /\.(docx?|odt|rtf|txt)$/i.test(n) ? '📄' : /\.(zip|rar|7z)$/i.test(n) ? '🗜' : '📎'; };
+    // invId: kayıtlı fatura (dosya hemen eklenir) · pending: henüz eklenmemiş dosyalar (fatura kaydedilince eklenir)
+    function pfBox(invId, pending, onChange) {
+      var box = el('div', { class: 'fat-pf' }), listEl = el('div', { class: 'fat-pf' });
+      var inp = el('input', { type: 'file', multiple: 'multiple', style: 'display:none' });
+      var addFiles = function (files) {
+        files = Array.prototype.slice.call(files || []);
+        if (!files.length) return;
+        var out = [], i = 0;
+        var next = function () {
+          if (i >= files.length) return Promise.resolve();
+          var f = files[i++];
+          if (f.size > 50 * 1024 * 1024) { toast(t('pfTooBig', { n: f.name }), 'error'); return next(); }
+          return f.arrayBuffer().then(function (b) { return saveAnyFile(new Uint8Array(b), f.name || 'dosya'); }).then(function (x) { out.push(x); }, function (e) { toast(t('pfFail') + ' ' + (f.name || '') + ' — ' + String(e && (e.code || e.message) || e), 'error'); }).then(next);
+        };
+        next().then(function () {
+          if (!out.length) return;
+          if (invId) return run('addInvoiceFiles', { invoice_id: invId, files: out }).then(function () { toast(t('pfAdded', { n: out.length })); draw(); if (onChange) onChange(); }, function () {});
+          out.forEach(function (x) { pending.push(x); });
+          toast(t('pfAdded', { n: out.length })); draw(); if (onChange) onChange();
+        });
+      };
+      inp.addEventListener('change', function () { addFiles(inp.files); inp.value = ''; });
+      var zone = el('div', { class: 'fat-drop fat-pf-drop', tabindex: '0', text: t('pfDrop'), onclick: function () { inp.click(); } });
+      zone.addEventListener('dragover', function (e) { e.preventDefault(); zone.classList.add('on'); });
+      zone.addEventListener('dragleave', function () { zone.classList.remove('on'); });
+      zone.addEventListener('drop', function (e) { e.preventDefault(); zone.classList.remove('on'); addFiles(e.dataTransfer && e.dataTransfer.files); });
+      zone.addEventListener('paste', function (e) { var fs = Array.prototype.slice.call(e.clipboardData && e.clipboardData.items || []).filter(function (x) { return x.kind === 'file'; }).map(function (x) { return x.getAsFile(); }); if (fs.length) { e.preventDefault(); addFiles(fs); } });
+      var openF = function (rel) { try { Promise.resolve(F().files.open(rel)).catch(function (e) { toast(String(e && e.message || e), 'error'); }); } catch (e) { toast(String(e && e.message || e), 'error'); } };
+      var saveF = function (rel, nm) { try { Promise.resolve(F().files.saveAs(rel, nm)).catch(function () {}); } catch (e) {} };
+      function draw() {
+        var rowsP = invId ? q('SELECT * FROM invoice_files WHERE invoice_id = ? ORDER BY id', [invId]).catch(function () { return []; }) : Promise.resolve([]);
+        rowsP.then(function (rs) {
+          listEl.innerHTML = '';
+          var all = rs.map(function (x) { return { row: x }; }).concat(pending.map(function (x) { return { pend: x }; }));
+          if (!all.length) { listEl.appendChild(el('div', { class: 'muted small', text: t('pfEmpty') })); return; }
+          all.forEach(function (o) {
+            var rel = o.row ? o.row.file_path : o.pend.relPath, nm = (o.row ? o.row.original_name : o.pend.originalName) || String(rel).split('/').pop();
+            var note = el('input', { value: (o.row ? o.row.note : o.pend.note) || '', placeholder: t('pfNote'), dir: 'auto', onchange: function (e) {
+              if (o.row) run('setInvoiceFileNote', { id: o.row.id, note: e.target.value }).catch(function () {}); else o.pend.note = e.target.value;
+            } });
+            listEl.appendChild(el('div', { class: 'fat-pf-row' }, [
+              el('span', { text: pfIcon(nm) }), el('span', { class: 'nm', dir: 'auto', text: nm }),
+              el('span', { class: 'muted small', text: o.pend ? t('pfPending') : dmy(o.row.created_at) }),
+              el('button', { type: 'button', class: 'btn small', text: t('pfOpen'), onclick: function () { openF(rel); } }),
+              el('button', { type: 'button', class: 'btn small', text: t('pfSave'), onclick: function () { saveF(rel, nm); } }),
+              el('button', { type: 'button', class: 'btn small danger-soft', text: '🗑', title: t('pfDel'), onclick: function () {
+                confirmBox(t('pfDelQ', { n: nm })).then(function (ok) {
+                  if (!ok) return;
+                  if (o.row) run('deleteInvoiceFile', { id: o.row.id }, t('deleted')).then(function () { draw(); if (onChange) onChange(); }, function () {});
+                  else { pending.splice(pending.indexOf(o.pend), 1); draw(); }
+                });
+              } }),
+              el('div', { class: 'nt' }, [note])
+            ]));
+          });
+        });
+      }
+      box.appendChild(el('div', { class: 'field-hint', text: t('pfHint') }));
+      box.appendChild(listEl);
+      box.appendChild(zone);
+      box.appendChild(el('div', { class: 'fat-drop-acts' }, [el('button', { type: 'button', class: 'btn', text: t('pfAdd'), onclick: function () { inp.click(); } }), inp]));
+      draw();
+      return box;
+    }
+    function openFiles(inv) {
+      var m = modal(t('pfTitle') + ' · ' + inv.number, [pfBox(inv.id, [], function () { load(); })], [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } })], '');
+    }
+
+    // ----- Belgeden doldur (v1.71: PDF + fotoğraf; sürükle-bırak, yapıştır, kamera) -----
+    // opts: { hasItems, hasCust, productsOnly } → importPreview seçenekleri
+    function pickPdf(done, opts) {
+      opts = opts || {};
+      var fin = false, m = null;
+      var go = function (f) { if (fin || !f) return; fin = true; cleanup(); if (m) m.close(); readPdf(f, done, opts); };
+      var mkInp = function (cap) {
+        var inp = el('input', { type: 'file', accept: 'application/pdf,.pdf,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp', style: 'display:none' });
+        if (cap) inp.setAttribute('capture', 'environment');
+        inp.addEventListener('change', function () { var f = inp.files && inp.files[0]; if (f) go(f); });
+        return inp;
+      };
+      var i1 = mkInp(false), i2 = mkInp(true);
+      var onPaste = function (e) { var it = e.clipboardData && Array.prototype.slice.call(e.clipboardData.items || []).filter(function (x) { return x.kind === 'file'; })[0]; if (it) { e.preventDefault(); go(it.getAsFile()); } };
+      var cleanup = function () { document.removeEventListener('paste', onPaste, true); };
+      document.addEventListener('paste', onPaste, true);
+      var zone = el('div', { class: 'fat-drop', tabindex: '0', text: t('docDrop'), onclick: function () { i1.click(); } });
+      zone.addEventListener('dragover', function (e) { e.preventDefault(); zone.classList.add('on'); });
+      zone.addEventListener('dragleave', function () { zone.classList.remove('on'); });
+      zone.addEventListener('drop', function (e) { e.preventDefault(); zone.classList.remove('on'); var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (f) go(f); });
+      m = modal('📄 ' + t('docPickT'), [zone, el('div', { class: 'fat-drop-acts' }, [
+        el('button', { type: 'button', class: 'btn primary', text: t('docPick'), onclick: function () { i1.click(); } }),
+        el('button', { type: 'button', class: 'btn', text: t('docCamera'), onclick: function () { i2.click(); } }), i1, i2
+      ])], [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { fin = true; cleanup(); m.close(); } })], '');
     }
     // v1.61.2: yapay zeka okurken çevrimdışı okuma da yapılır ve sonucu teyit eder; beklemek istemeyen "Beklemeden çevrimdışı oku"ya basar
-    function readPdf(file, done) {
+    function readPdf(file, done, opts) {
       if (!window.FalconFaturaPdf) { toast(t('pdfNoReader'), 'error'); return; }
-      var msg = el('div', { class: 'fat-busy' }, [el('span', { class: 'spin' }), el('span', { text: t('pdfReading') })]);
+      var msg = el('div', { class: 'fat-busy' }, [el('span', { class: 'spin' }), el('span', { text: t('docReading') })]);
       var sub = el('div', { class: 'muted small', style: 'margin-top:6px' });
       var clock = el('span', { class: 'muted small', dir: 'ltr', style: 'margin-inline-start:auto' });
       var ctl = {}, t0 = Date.now(), aiOn = false;
@@ -2564,18 +2752,66 @@
       var bm = modal('📄 ' + t('fromPdf'), [msg, sub], [clock, skipB], '');
       var tick = setInterval(function () { var s = Math.round((Date.now() - t0) / 1000); clock.textContent = s >= 3 ? t('pdfSec', { s: s }) : ''; if (aiOn && s >= 8) skipB.style.display = ''; }, 1000);
       var stop = function () { clearInterval(tick); bm.close(); };
+      var ocrMsg = '';
       window.FalconFaturaPdf.read(file, { ctl: ctl, onStep: function (step, model) {
+        if (step === 'ocr' || step === 'ocr2') { ocrMsg = t(step === 'ocr' ? 'docOcr' : 'docOcr2'); if (!aiOn) msg.lastChild.textContent = ocrMsg; else sub.textContent = '✦ ' + (model || '') + ' · ' + ocrMsg; return; }
         aiOn = step === 'ai';
-        msg.lastChild.textContent = step === 'ai' ? t('pdfAi') : step === 'verify' ? t('pdfVerify') : t('pdfOffline');
+        msg.lastChild.textContent = step === 'ai' ? t('pdfAi') : step === 'verify' ? t('pdfVerify') : ocrMsg || t('pdfOffline');
         sub.textContent = step === 'ai' && model ? '✦ ' + model : file.name || '';
         if (!aiOn) skipB.style.display = 'none';
       } }).then(function (r) {
         stop();
         r._file = file;
-        if (!r.items.length && !r.buyer.name && !r.seller.name) { toast(r.warnings.indexOf('scanned') >= 0 ? t('pdfScanned') : t('pdfNothing'), 'error'); return; }
+        if (!r.items.length && !r.buyer.name && !r.seller.name) { toast(r.warnings.indexOf('scanned') >= 0 && r.kind === 'pdf' && !r.ocr ? t('pdfScanned') : t('docUnreadable'), 'error'); return; }
         return Promise.all([q('SELECT * FROM customers').catch(function () { return []; }), q('SELECT id, name, code, unit, sale_price, cost_currency, vat_rate, depot FROM products').catch(function () { return []; })])
-          .then(function (x) { importPreview(r, x[0], x[1], done); });
+          .then(function (x) { importPreview(r, x[0], x[1], done, opts || {}); });
       }, function (e) { stop(); toast(t('pdfFail') + ' ' + String(e && e.message || e), 'error'); });
+    }
+    // v1.71: okunan kalemleri ürün kayıtlarına işler (saveProductCard: yeni ürün + fiyat geçmişi; aynı ürün kod > seçilen eşleşme > ad ile tanınır)
+    // rows: [{ it, pick }] (yalnız seçili olanlar), cur: belgenin para birimi, upd: kayıtlı ürünün fiyatı güncellensin mi, src: açıklamaya yazılacak kaynak
+    function saveProducts(rows, cur, upd, src) {
+      var call = function (name, payload) { return Promise.resolve(F().call(name, payload)).then(function (r) { if (!r || !r.ok) { var e = new Error(r && r.error || 'ERR'); e.code = r && r.error; throw e; } return r.data; }); };
+      var stat = { a: 0, b: 0, c: 0, skip: 0 }, seen = {};
+      var nkey = function (x) { return low(x).replace(/[^\p{L}\p{N}]+/gu, ' ').trim(); };
+      var i = 0;
+      var next = function () {
+        if (i >= rows.length) return stat;
+        var o = rows[i++], it = o.it, name = String(it.name || '').trim();
+        if (!name) return next();
+        var price = it.price == null || it.price === '' ? '' : Number(it.price);
+        var k = it.code ? 'c:' + String(it.code).trim() : 'n:' + nkey(name);
+        if (seen[k]) { o.pick = String(seen[k]); return next(); }
+        var extra = [];
+        if (it.model) extra.push(t('impModel') + ': ' + it.model);
+        if (it.part_no) extra.push(t('impPn') + ': ' + it.part_no);
+        if (it.serial) extra.push(t('impSn') + ': ' + it.serial);
+        if (src) extra.push(t('impSrcDoc', { s: src }));
+        var p0 = o.pick ? q('SELECT * FROM products WHERE id = ?', [Number(o.pick)]).then(function (x) { return x[0] || null; }).catch(function () { return null; }) : Promise.resolve(null);
+        return p0.then(function (ex) {
+          if (ex) {
+            seen[k] = ex.id;
+            var same = ex.sale_price != null && price !== '' && Math.abs(Number(ex.sale_price) - price) < 0.00001 && (ex.cost_currency || cur) === cur;
+            if (!upd || price === '' || same) { stat.c++; return next(); }
+            return call('saveProductCard', { id: ex.id, name: ex.name, code: ex.code || '', unit: ex.unit || '', sale_price: price, currency: cur, vat_rate: ex.vat_rate == null ? '' : ex.vat_rate, depot: ex.depot || '', description: ex.description || '' })
+              .then(function () { stat.b++; }, function (e) { if (e.code === 'ERR_INVALID_CURRENCY') stat.skip++; else stat.c++; }).then(next);
+          }
+          var payload = { name: name, code: it.code || '', unit: it.unit || '', sale_price: price, currency: cur, vat_rate: it.vat == null ? '' : it.vat, depot: it.depot || '', description: extra.join('\n') };
+          var add = function (pl) { return call('saveProductCard', pl).then(function (r) { stat.a++; seen[k] = r.id; o.pick = String(r.id); }); };
+          return add(payload).catch(function (e) {
+            if (e.code === 'ERR_DUPLICATE_CODE') {
+              // aynı stok kodlu ürün var: o ürün kullanılır
+              return q('SELECT id FROM products WHERE code = ?', [payload.code]).then(function (x) { if (x[0]) { o.pick = String(x[0].id); seen[k] = x[0].id; stat.c++; } });
+            }
+            if (e.code === 'ERR_INVALID_CURRENCY') return add(Object.assign({}, payload, { sale_price: '', currency: 'USD' }));
+            throw e;
+          }).then(next);
+        });
+      };
+      return Promise.resolve(next());
+    }
+    // v1.71: okunan belge faturaya özel dosya olarak eklenmek üzere kaydedilir (bayt bayt)
+    function keepSourceFile(file) {
+      return (file && file.arrayBuffer ? file.arrayBuffer() : Promise.reject(new Error('file'))).then(function (b) { return saveAnyFile(new Uint8Array(b), file.name || 'belge'); });
     }
     // Ad benzerliği (0–1): harf ikilileri (Dice)
     function simil(a, b) {
@@ -2588,7 +2824,8 @@
       Object.keys(B).forEach(function (g) { nb += B[g]; });
       return (2 * inter) / (na + nb || 1);
     }
-    function importPreview(r, customers, products, done) {
+    function importPreview(r, customers, products, done, opts) {
+      opts = opts || {};
       var cfg = CFG || {};
       var side = 'buyer';
       var P = { buyer: Object.assign({}, r.buyer), seller: Object.assign({}, r.seller) };
@@ -2654,7 +2891,10 @@
         })));
         var ni = function (k, cls) { return el('input', { class: cls, type: 'number', step: 'any', dir: 'ltr', value: it[k] == null ? '' : String(it[k]), oninput: function (e) { it[k] = e.target.value === '' ? null : num(e.target.value); } }); };
         var ti = function (k, cls) { return el('input', { class: cls, value: it[k] || '', oninput: function (e) { it[k] = e.target.value; } }); };
-        return (o.tr = el('tr', { class: diffRows[i] ? 'fat-imp-diff' : null }, [el('td', null, [cb]), el('td', null, [ti('code', 'cd')]), el('td', null, [ti('name', 'nm2')]), el('td', null, [ni('qty', 'q')]), el('td', null, [ti('unit', 'u')]),
+        // v1.71: liste fiyatı / iskonto ve Model · P/N · S/N bilgisi (yalnız gösterilir)
+        var subTxt = [it.list_price != null ? t('impList') + ' ' + fmt(it.list_price, cur || 'TRY') : '', it.disc_rate ? t('impDisc') + ' %' + it.disc_rate : '', it.amount != null ? '= ' + fmt(it.amount, cur || 'TRY') : '',
+          it.model ? t('impModel') + ': ' + it.model : '', it.part_no ? t('impPn') + ': ' + it.part_no : '', it.serial ? t('impSn') + ': ' + it.serial : ''].filter(Boolean).join(' · ');
+        return (o.tr = el('tr', { class: diffRows[i] ? 'fat-imp-diff' : null }, [el('td', null, [cb]), el('td', null, [ti('code', 'cd')]), el('td', null, [ti('name', 'nm2'), subTxt ? el('div', { class: 'muted small fat-imp-sub', dir: 'auto', text: subTxt }) : null]), el('td', null, [ni('qty', 'q')]), el('td', null, [ti('unit', 'u')]),
           el('td', null, [ni('price', 'p')]), el('td', null, [ni('vat', 'v')]), el('td', null, [sel])]));
       }));
       // v1.61: toplu aktif / pasif (pasif kalem faturaya ve ürün kayıtlarına girmez; silinmez)
@@ -2704,44 +2944,90 @@
         var altAi = r.alt.source === 'ai' && !(r.alt.check && r.alt.check.status === 'fixed');
         altB = el('button', { type: 'button', class: 'btn', text: altAi ? '✦ ' + t('useAi') : '⌁ ' + t('useOff'), onclick: function () {
           var o = r.alt; o.alt = r; o._file = r._file; if (!o.check || o.check.status !== 'fixed') o.check = Object.assign({}, ck, { status: 'diff', whole: false });
-          m.close(); importPreview(o, customers, products, done);
+          m.close(); importPreview(o, customers, products, done, opts);
         } });
       }
       var reB = r.source !== 'ai' && !r.verifiedBy && r._file && r.aiError && r.aiError !== 'skip' && r.aiError !== 'key'
-        ? el('button', { type: 'button', class: 'btn', text: '✦ ' + t('rereadAi'), onclick: function () { m.close(); readPdf(r._file, done); } }) : null;
+        ? el('button', { type: 'button', class: 'btn', text: '✦ ' + t('rereadAi'), onclick: function () { m.close(); readPdf(r._file, done, opts); } }) : null;
+      // v1.71: belge bilgisi (tür, no, tarih, geçerlilik, kur…) ve aktarım seçenekleri
+      var mt = r.meta || {};
+      var docInfo = [mt.doc_kind ? t('impKind_' + (/^(quote|proforma|invoice)$/.test(mt.doc_kind) ? mt.doc_kind : 'other')) : t('impDoc'), mt.number ? '№ ' + mt.number : '', mt.date ? dmy(mt.date) : '',
+        mt.valid_until ? t('impValid') + ': ' + dmy(mt.valid_until) : '', mt.sales_rep ? t('impRep') + ': ' + mt.sales_rep : '', mt.payment_terms ? t('impTerms') + ': ' + mt.payment_terms : '',
+        mt.doc_fx_rate ? t('impDocFx') + ': ' + (mt.doc_fx_cur || 'USD') + ' ' + mt.doc_fx_rate + ' TL' : '', mt.doc_try_total ? t('impDocTry') + ': ' + fmt(num(mt.doc_try_total), 'TRY') + ' TL' : '',
+        r.ocr ? t('impOcr') + ': ' + r.ocr : ''].filter(Boolean).join(' · ');
+      var O = { prod: true, upd: true, cust: !opts.hasCust, append: !!opts.hasItems, attach: !!(r._file && !opts.productsOnly) };
+      try { var sv = jparse(localStorage.getItem('fat_imp_opts') || '', {}); if (sv.prod != null) O.prod = !!sv.prod; if (sv.upd != null) O.upd = !!sv.upd; if (sv.attach != null && O.attach) O.attach = !!sv.attach; } catch (e) {}
+      var keepO = function () { try { localStorage.setItem('fat_imp_opts', JSON.stringify({ prod: O.prod, upd: O.upd, attach: O.attach })); } catch (e) {} };
+      var chk2 = function (k, label) { var c = el('input', { type: 'checkbox', onchange: function (e) { O[k] = e.target.checked; keepO(); if (k === 'prod') updSel.disabled = !O.prod; } }); c.checked = !!O[k]; return el('label', { class: 'check fat-imp-o' }, [c, el('span', { text: label })]); };
+      var updSel = el('select', { onchange: function (e) { O.upd = e.target.value === 'upd'; keepO(); } }, [opt('upd', t('impPriceUpd'), O.upd), opt('keep', t('impPriceKeep'), !O.upd)]);
+      updSel.disabled = !O.prod;
+      var modeSel = opts.hasItems ? el('select', { onchange: function (e) { O.append = e.target.value === 'append'; } }, [opt('append', t('impAppend'), O.append), opt('replace', t('impReplace'), !O.append)]) : null;
+      var optBox = el('div', { class: 'fat-imp-opts' }, [
+        chk2('prod', t('impSaveProd')),
+        el('div', { class: 'fat-imp-o2' }, [el('span', { class: 'muted small', text: t('impPriceMode') + ':' }), updSel]),
+        opts.productsOnly ? null : chk2('cust', t('impTakeCust')),
+        modeSel && !opts.productsOnly ? el('div', { class: 'fat-imp-o2' }, [el('span', { class: 'muted small', text: t('impItemsMode') + ':' }), modeSel]) : null,
+        O.attach || (r._file && !opts.productsOnly) ? chk2('attach', t('impAttach')) : null
+      ]);
       var body = [
         el('div', { class: 'fat-imp-src' }, [el('span', { class: 'fat-pv-tag', text: src }), cur ? el('span', { class: 'muted small', text: t('currency') + ': ' + cur }) : el('span', { class: 'notice error small', text: t('impCurUnknown', { c: r.currency || '?' }) })]),
+        docInfo ? el('div', { class: 'muted small fat-imp-doc', dir: 'auto', text: '📄 ' + docInfo }) : null,
         vBox,
-        el('h3', { class: 'section-title', text: t('secCustomer') }), cBox,
-        mRows.length ? el('h3', { class: 'section-title', text: t('secInfo') }) : null,
-        mRows.length ? el('div', { class: 'fat-imp-ms' }, mRows) : null,
-        mRows.length ? el('div', { class: 'field-hint', text: t('impMetaHint') }) : null,
+        opts.productsOnly ? null : el('h3', { class: 'section-title', text: t('secCustomer') }), opts.productsOnly ? null : cBox,
+        mRows.length && !opts.productsOnly ? el('h3', { class: 'section-title', text: t('secInfo') }) : null,
+        mRows.length && !opts.productsOnly ? el('div', { class: 'fat-imp-ms' }, mRows) : null,
+        mRows.length && !opts.productsOnly ? el('div', { class: 'field-hint', text: t('impMetaHint') }) : null,
         el('h3', { class: 'section-title', text: t('items') + ' (' + rows.length + ')' }), curRow, el('div', { class: 'field-hint', text: t('impCurHint') }), bulk, itTable, el('div', { class: 'field-hint', text: t('impOffHint') }),
-        expect != null ? el('div', { class: 'fat-imp-st ' + (chk ? 'ok' : 'warn'), text: (chk ? '✓ ' : '⚠ ') + t('impTotals', { a: fmt(calc, cur || 'TRY'), b: fmt(expect, cur || 'TRY') }) }) : null
+        expect != null ? el('div', { class: 'fat-imp-st ' + (chk ? 'ok' : 'warn'), text: (chk ? '✓ ' : '⚠ ') + t('impTotals', { a: fmt(calc, cur || 'TRY'), b: fmt(expect, cur || 'TRY') }) }) : null,
+        el('h3', { class: 'section-title', text: t('impOpts') }), optBox
       ];
       drawC();
+      var srcName = function () { var sp = side === 'buyer' ? P.seller : P.buyer; return [sp && sp.name, mt.number, mt.date ? dmy(mt.date) : ''].filter(Boolean).join(' · '); };
+      var chosen = function () { return rows.filter(function (o) { return o.on && String(o.it.name || '').trim(); }); };
+      // ürün kayıtları (seçiliyse) → sonra devam
+      var withProducts = function (btn) {
+        var list = chosen();
+        if (!O.prod || !list.length) return Promise.resolve(null);
+        if (btn) btn.disabled = true;
+        // belgede okunan para biriminde (srcCur) kaydedilir
+        return saveProducts(list, srcCur, O.upd, srcName()).then(function (st) {
+          toast(t('impProdDone', { a: st.a, b: st.b, c: st.c }));
+          if (st.skip) toast(t('impProdSkip', { n: st.skip }), 'error');
+          return st;
+        }, function (e) { if (btn) btn.disabled = false; toast(String(e && (e.code || e.message) || e), 'error'); throw e; });
+      };
+      var prodOnlyB = el('button', { type: 'button', class: 'btn', text: t('impProdOnly'), onclick: function (e) {
+        if (!chosen().length) { toast(t('impProdNone'), 'error'); return; }
+        var o0 = O.prod; O.prod = true;
+        withProducts(e.currentTarget).then(function () { O.prod = o0; m.close(); if (opts.onProducts) opts.onProducts(); }, function () { O.prod = o0; });
+      } });
+      var applyB = opts.productsOnly ? null : el('button', { type: 'button', class: 'btn primary', text: '✓ ' + t('impApply'), onclick: function (e) {
+          var btn = e.currentTarget;
+          withProducts(btn).then(function () {
+            var p = P[side], mc = matchCust(p);
+            var cx = {};
+            ['tax_office', 'district', 'city', 'postal_code', 'web', 'country'].forEach(function (k) { if (p[k]) cx[k] = p[k]; });
+            var meta = {};
+            Object.keys(mSel).forEach(function (k) { if (mSel[k] && k !== 'date' && k !== 'number' && k !== 'due_date') meta[k] = r.meta[k]; });
+            var items = chosen().map(function (o) {
+              var it = o.it, x = { name: it.name, qty: it.qty == null ? 1 : it.qty, unit: it.unit || '', price: it.price == null ? '' : it.price, code: it.code || '', depot: it.depot || '' };
+              if (it.vat != null) x.vat = it.vat;
+              if (o.pick) { var pp = products.filter(function (pr) { return String(pr.id) === o.pick; })[0]; x.product_id = Number(o.pick); if (pp && !x.code && pp.code) x.code = pp.code; }
+              return x;
+            });
+            var data = { _fromPdf: true, meta: meta, items: items, _append: !!(opts.hasItems && O.append) };
+            if (O.cust) Object.assign(data, { customer: p.name, customer_id: mc ? mc.id : null, phone: p.phone || '', email: p.email || '', address: p.address || '', tax_no: p.tax_no || '', cx: cx });
+            if (mSel.date && r.meta.date) data.date = r.meta.date;
+            if (mSel.number && r.meta.number) data.number = r.meta.number;
+            if (mSel.due_date && r.meta.due_date) data.due_date = r.meta.due_date;
+            data.currency = dstCur;
+            if (srcCur !== dstCur) data._fxFrom = srcCur;
+            var fileP = O.attach && r._file ? keepSourceFile(r._file).then(function (f) { data._files = [f]; }, function (err) { toast(t('pfFail') + ' ' + String(err && (err.code || err.message) || err), 'error'); }) : Promise.resolve();
+            return fileP.then(function () { m.close(); done(data); });
+          }, function () {});
+        } });
       var m = modal('📄 ' + t('impTitle'), body, [
-        el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }), reB, altB,
-        el('button', { type: 'button', class: 'btn primary', text: '✓ ' + t('impApply'), onclick: function () {
-          var p = P[side], mc = matchCust(p);
-          var cx = {};
-          ['tax_office', 'district', 'city', 'postal_code', 'web', 'country'].forEach(function (k) { if (p[k]) cx[k] = p[k]; });
-          var meta = {};
-          Object.keys(mSel).forEach(function (k) { if (mSel[k] && k !== 'date' && k !== 'number' && k !== 'due_date') meta[k] = r.meta[k]; });
-          var items = rows.filter(function (o) { return o.on && String(o.it.name || '').trim(); }).map(function (o) {
-            var it = o.it, x = { name: it.name, qty: it.qty == null ? 1 : it.qty, unit: it.unit || '', price: it.price == null ? '' : it.price, code: it.code || '', depot: it.depot || '' };
-            if (it.vat != null) x.vat = it.vat;
-            if (o.pick) { var pp = products.filter(function (pr) { return String(pr.id) === o.pick; })[0]; if (pp) { x.product_id = pp.id; if (!x.code && pp.code) x.code = pp.code; } }
-            return x;
-          });
-          var data = { _fromPdf: true, customer: p.name, customer_id: mc ? mc.id : null, phone: p.phone || '', email: p.email || '', address: p.address || '', tax_no: p.tax_no || '', cx: cx, meta: meta, items: items };
-          if (mSel.date && r.meta.date) data.date = r.meta.date;
-          if (mSel.number && r.meta.number) data.number = r.meta.number;
-          if (mSel.due_date && r.meta.due_date) data.due_date = r.meta.due_date;
-          data.currency = dstCur;
-          if (srcCur !== dstCur) data._fxFrom = srcCur;
-          m.close(); done(data);
-        } })
+        el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { m.close(); } }), reB, altB, prodOnlyB, applyB
       ], 'xwide');
     }
 
@@ -2860,7 +3146,10 @@
       var qIn = el('input', { type: 'search', placeholder: t('prodSearch'), value: pflt, oninput: function (e) { pflt = e.target.value; paint(); } });
       prodBox.appendChild(el('div', { class: 'toolbar' }, [
         el('div', { class: 'filters' }, [el('div', { class: 'search' }, [qIn])]),
-        el('div', { class: 'actions' }, [el('button', { type: 'button', class: 'btn primary', text: '+ ' + t('prodNewBtn'), onclick: function () { openProduct(null); } })])
+        el('div', { class: 'actions' }, [
+          el('button', { type: 'button', class: 'btn', title: t('prodFromDocHint'), text: t('prodFromDoc'), onclick: function () { pickPdf(function () {}, { productsOnly: true, onProducts: function () { loadProd(); } }); } }),
+          el('button', { type: 'button', class: 'btn primary', text: '+ ' + t('prodNewBtn'), onclick: function () { openProduct(null); } })
+        ])
       ]));
       prodBox.appendChild(el('div', { class: 'field-hint', text: t('prodHint') }));
       var box = el('div', { class: 'card table-card' });

@@ -938,6 +938,17 @@ function registerIpc() {
     const base = path.basename(String(name || '')).replace(/[^\p{L}\p{N} ._()\-]/gu, '').slice(0, 120);
     return { relPath: rel, originalName: base || `dekont${type[0]}`, mime: type[1] };
   }));
+  // v1.71: her türlü dosya (faturaya özel dosyalar): baytlar değiştirilmeden belgeler/ altına, en çok 50 MB
+  handle('files:saveFile', wrap((_e, bytes, name) => {
+    const buf = Buffer.from(bytes);
+    if (buf.length < 1 || buf.length > 50 * 1024 * 1024) throw new Error('ERR_FILE_TYPE');
+    const base = path.basename(String(name || '')).replace(/[^\p{L}\p{N} ._()\-]/gu, '').slice(0, 120);
+    const ext = ((/\.([A-Za-z0-9]{1,6})$/.exec(base) || [])[1] || 'bin').toLowerCase();
+    fs.mkdirSync(path.join(filesDir(), 'belgeler'), { recursive: true });
+    const rel = `belgeler/${Date.now()}-${crypto.randomBytes(4).toString('hex')}.${ext}`;
+    fs.writeFileSync(safeFilePath(rel), buf);
+    return { relPath: rel, originalName: base || `dosya.${ext}`, mime: MIME['.' + ext] || 'application/octet-stream' };
+  }));
   handle('files:saveAs', wrap((_e, rel, name) => {
     const target = dialog.showSaveDialogSync(mainWindow, { defaultPath: name || path.basename(rel) });
     if (target) fs.copyFileSync(safeFilePath(rel), target);
