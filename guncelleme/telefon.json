@@ -1,10 +1,10 @@
 {
- "version": "1.73.0",
- "notes": "Faturada «🧾 KDV ekle» paneli; son seçimler (senaryo, fatura tipi, özelleştirme no…) varsayılan; ETTN kaldırıldı; ürün adı çevirisi beklemeden çevrimdışıyla açılır, yapay zekâ gelince güncellenir; geniş elektronik / BT / siber güvenlik sözlüğü; «Tahsil edildi (kasaya eklenmez)».",
- "size": 16436999,
- "sha256": "6d47c80fce53710c07253a827b3465e702720e75ae18d45189bc920fcde30023",
- "sig": "MEQCIB9uSC+owFbMxGs7SS0E6oq9MTzw3/ZqipGWqZMGysBSAiBzJDoE8OwyJsw61fIJuu+Gt9XAu3f6Ch4zHaahMlNSSA==",
- "file": "telefon-1.73.0.fopk",
+ "version": "1.76.3",
+ "notes": "Fatura: çevrimdışı teknik çeviri kütüphanesi (takım tezgâhı terimleri, kısaltmalar, MK → MT), ekran görüntüsünden ürün tablosu ve çoklu belge birleştirme, KDV oranı denetimi, tablo artık sayfadan taşmıyor, «📐 Şekli düzelt», önizleme düzeltmeleri doğru hücrede kalıyor.",
+ "size": 16498518,
+ "sha256": "7a06acb74c86fac076a79e8e135c0e36e1ec8871f1c02a646768e72129ef1349",
+ "sig": "MEQCICjGtR+jdktnHbewjzTg3+hH6ITow6c/X3OYDFEAOmnTAiBISVDMle/tLefwLXhLaFypPrWlxciOnn3CLL5D4m1Lhg==",
+ "file": "telefon-1.76.3.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-28T13:36:51.702Z"
+ "publishedAt": "2026-11-28T16:56:49.219Z"
 }
