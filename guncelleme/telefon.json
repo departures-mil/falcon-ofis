@@ -1,10 +1,10 @@
 {
- "version": "1.70.0",
- "notes": "Çevrimdışı yapay zekâ telefonda: Ayarlar → «Çevrimdışı yapay zekâ» kartından bir kez indirilen paketlerle dekont / fiş okuma (PaddleOCR PP-OCRv5 + Tesseract; Arapça rakamlar ve adlar) ve çevrimdışı çeviri (NLLB-200). Sham Cash dekontu çevrimdışı okuması da bu paketle daha doğru.",
- "size": 11573644,
- "sha256": "80b2f37f0ac7195adcfac8d1c54b6414c89949dab0e3652e7269e616eb6a9496",
- "sig": "MEQCICn/s/xLD9XwNdQleSUP+2jWju/+sEVkZJK13Rj5b/AoAiAZJQkKhS3VvFSfI6o8caTRTjg2qYzOf4khBd1NoIqJxA==",
- "file": "telefon-1.70.0.fopk",
+ "version": "1.71.0",
+ "notes": "Belgeden doldur artık fotoğraf da okur (JPEG / PNG / WEBP, taranmış PDF): teklif, proforma, e-Fatura; kalem kalem faturaya aktarma, ürün kayıtları, «Belgeden ürün ekle». Her faturaya 🔒 özel dosyalar (yalnız sen görürsün, çıktıya girmez).",
+ "size": 16424614,
+ "sha256": "5db6d8f93f49eb0f4aa7bfc9831811470d573f68ceb95f75da4c3d408f7d5464",
+ "sig": "MEQCICBkby675heqBC5w9WQ1pDOB+U0QaX+2RoTcnOJel4sUAiB9qSITJ8/xFLq0WL5fSGCwU7aZ4BiFogCG4D2tin5xOQ==",
+ "file": "telefon-1.71.0.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-28T12:04:40.268Z"
+ "publishedAt": "2026-11-28T13:09:44.556Z"
 }
