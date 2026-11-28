@@ -463,3 +463,21 @@ test('1.74: çevrimdışı teknik çeviri kütüphanesi güncel ve Türkçe keli
     .forEach((x) => { const r = S.translate(x, 'en'); assert.ok(!/[çğıöşüÇĞİÖŞÜ]/.test(r.text) && !r.left.length, x + ' → ' + r.text); });
   assert.ok(S.translate('Fiber Optik Kablo', 'ar').text.includes('ألياف'), 'Arapça');
 });
+
+test('1.75: KDV oranı — yapışık oran / tutar hücreleri ve genel KDV denetimi', () => {
+  const P = require('../dist/assets/fatura-pdf.js');
+  for (const [c, v] of [['% 20,00', 20], ['% 20,00) 2296.57', 20], ['% 20,00|%462/36', 20], ['20,002.896,47', 20], ['20,00334,21', 20], ['%18', 18], ['8 %', 8], ['2.896,47', null], ['', null]])
+    assert.strictEqual(P.rateNum(c), v, c);
+  const n = P.normalize({ items: [
+    { name: 'A', qty: 1, price: 14482.364, amount: 14482.36, vat: 2896.47 },
+    { name: 'B', qty: 2, price: 16710.42, amount: 33420.84, vat: 20, vat_amount: 6684.17 },
+    { name: 'C', qty: 2, price: 16153.406, amount: 32306.81, vat: 462 },
+    { name: 'D', qty: 1, price: 1671.042, amount: 1671.04, vat: 2, vat_amount: 334.21 },
+    { name: 'E', qty: 1, price: 10, amount: 10 }
+  ], totals: { subtotal: 85223.13, vat: 17044.63 } });
+  assert.deepStrictEqual(n.items.map((i) => i.vat), [20, 20, 20, 20, null]);
+  const m = P.normalize({ items: [{ name: 'X', qty: 3, price: 10, amount: 30, vat: 1800 }], totals: { subtotal: 30, vat: 5.4 } });
+  assert.strictEqual(m.items[0].vat, 18);
+  const ui = read('dist/assets/fatura-falcon.js');
+  assert.ok(ui.includes('impProdErr') && ui.includes("ERR_INVALID_AMOUNT: 'Geçersiz sayı"), 'aktarım hatası satır adıyla, anlaşılır mesaj');
+});

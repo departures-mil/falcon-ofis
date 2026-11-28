@@ -305,7 +305,7 @@
     var qm = /(-?[\d.,]+)\s*([^\d\s].*)?$/.exec(q);
     if (qm) { it.qty = num(qm[1]); it.unit = clean(qm[2] || o.unit || ''); } else it.unit = clean(o.unit || '');
     it.price = num(o.price); it.amount = num(o.amount); it.vat_amount = num(o.vat_amount);
-    it.vat = num(o.vat); it.disc_rate = num(o.disc_rate); it.disc_amount = num(o.disc_amount);
+    it.vat = rateNum(o.vat); it.disc_rate = num(o.disc_rate); it.disc_amount = num(o.disc_amount);
     it.cur = curOf([o.price, o.amount].join(' '));
     if (it.qty == null && it.amount != null && it.price) it.qty = Math.round(it.amount / it.price * 1000) / 1000;
     if (it.price == null && it.amount != null && it.qty) it.price = Math.round(it.amount / it.qty * 10000) / 10000;
@@ -560,6 +560,58 @@
     var m = String(s || '').match(/-?\d[\d.,]*/g);
     return m ? num(m[m.length - 1]) : null;
   }
+  // v1.75: KDV ORANI hücresi. OCR / dar sütunlarda oran ile yanındaki KDV TUTARI birleşebiliyor («% 20,00) 2296.57», «20,002.896,47»):
+  // önce «%» işaretli sayı, sonra 0–100 arasındaki ilk sayı, sonra yapışık sayının başındaki oran («20,00» + «2.896,47»). Bulunamazsa null.
+  function rateNum(s) {
+    if (s == null) return null;
+    if (typeof s === 'number') return isFinite(s) && s >= 0 && s <= 100 ? s : null;
+    s = String(s);
+    var m = /%\s*(\d{1,3}(?:[.,]\d{1,2})?)(?![\d])/.exec(s) || /(?:^|[^\d.,])(\d{1,3}(?:[.,]\d{1,2})?)\s*%/.exec(s);
+    if (m) { var v = num(m[1]); if (v != null && v >= 0 && v <= 100) return v; }
+    var toks = s.match(/\d[\d.,]*/g) || [];
+    for (var i = 0; i < toks.length; i++) { var w = num(toks[i]); if (w != null && w >= 0 && w <= 100) return w; }
+    // yapışık: «20,00» + «2.896,47» — başındaki oranın ondalık ayracı, kalan sayının ondalık ayracıyla aynı olmalı
+    for (var j = 0; j < toks.length; j++) {
+      var f = /^(\d{1,2})([.,])(\d{2})(\d[\d.,]*[.,]\d{1,2})$/.exec(toks[j]);
+      if (f && f[4].charAt(f[4].search(/[.,]\d{1,2}$/)) === f[2] && num(f[4]) != null) return Number(f[1] + '.' + f[3]);
+    }
+    return null;
+  }
+  // tam sayıya çok yakın oran tam sayı olur (19,98 → 20); en çok 2 ondalık
+  function snapRate(v) {
+    if (v == null || !isFinite(v)) return null;
+    var r = Math.round(v);
+    return Math.abs(v - r) < 0.06 ? r : Math.round(v * 100) / 100;
+  }
+  // v1.75: kalem KDV'sinin genel denetimi (çevrimdışı + yapay zekâ okuması, her belge türü):
+  // oran 0–100 dışındaysa (çoğunlukla KDV tutarı ya da birleşmiş hücre) atılır → KDV tutarı ÷ satır tutarı → belgenin oranı (öteki kalemler / toplamlar);
+  // oran geçerli ama satırın KDV tutarıyla açıkça çelişiyorsa (OCR «20» yerine «2») tutardan bulunan tam sayı oran kullanılır.
+  function fixVat(items, totals) {
+    var base = function (o) { return o.amount != null && o.amount > 0 ? o.amount : o.qty > 0 && o.price > 0 ? o.qty * o.price : null; };
+    var bad = [];
+    items.forEach(function (o, i) {
+      var b = base(o);
+      if (o.vat_amount != null && (!(o.vat_amount >= 0) || (b && o.vat_amount > b))) o.vat_amount = null;
+      var fa = o.vat_amount != null && b ? o.vat_amount / b * 100 : null;
+      var v = o.vat;
+      if (v != null && !(v >= 0 && v <= 100)) {
+        // oran yerine KDV tutarı okunmuş olabilir
+        if (o.vat_amount == null && b && v <= b && Math.abs(v / b * 100 - Math.round(v / b * 100)) < 0.3) { o.vat_amount = v; fa = v / b * 100; }
+        v = null; bad.push(i);
+      }
+      if (v == null && fa != null) v = fa;
+      else if (v != null && fa != null && Math.abs(fa - Math.round(fa)) < 0.3 && Math.abs(fa - v) > 1) v = Math.round(fa);
+      o.vat = snapRate(v);
+    });
+    if (bad.length) {
+      var cnt = {}, best = null;
+      items.forEach(function (o) { if (o.vat != null) { cnt[o.vat] = (cnt[o.vat] || 0) + 1; if (best == null || cnt[o.vat] > cnt[best]) best = o.vat; } });
+      var t = totals || {}, net = t.subtotal != null ? t.subtotal - (t.discount || 0) : null;
+      if (best == null && t.vat != null && net > 0 && t.vat / net * 100 <= 100) best = snapRate(t.vat / net * 100);
+      bad.forEach(function (i) { if (items[i].vat == null && best != null) items[i].vat = Number(best); });
+    }
+    return items;
+  }
   var NUM_TOK = /^[$€₺]?-?\d[\d.,]*[$€₺]?$/;
   function gItems(all, warnings) {
     var items = [], head = null, cur = null, sig = '', seg = null;
@@ -641,7 +693,7 @@
         it.list_price = c.list != null ? lastNum(c.list) : null;
         it.disc_rate = c.disc != null ? lastNum(c.disc) : null;
         it.price = net != null ? net : pri != null ? pri : null;
-        if (c.vat != null) it.vat = lastNum(c.vat);
+        if (c.vat != null) it.vat = rateNum(c.vat);
         // miktar sütunu yoksa ya da boşsa: adın / fiyatın içindeki "15 ADET" kalıbı
         if (it.qty == null) {
           var src = [c.name, c.unit, c.price].filter(Boolean).join(' ');
@@ -1237,7 +1289,13 @@
       var sn = /\b(?:s\/n|sn|serial\s*(?:no|number)?|seri\s*no)\s*[:：]\s*([A-Z0-9][\w\-.]+)/i.exec(o.name); if (sn && !o.serial) o.serial = sn[1];
       return o;
     }).filter(function (it) { return it.name; });
+    // v1.75: miktar / fiyat akla yatkın olmalı (OCR'dan gelen eksi işareti, sıfır miktar)
+    items.forEach(function (it) {
+      if (it.qty != null && !(it.qty > 0)) it.qty = it.qty < 0 ? -it.qty : null;
+      if (it.price != null && it.price < 0 && !(it.amount != null && it.amount < 0)) it.price = -it.price;
+    });
     var t = o.totals || {};
+    fixVat(items, { subtotal: num(t.subtotal), discount: num(t.discount), vat: num(t.vat) });
     var cur = String(o.currency || '').toUpperCase(); cur = cur === 'TL' ? 'TRY' : curOf(cur) || cur;
     return { source: o.source || 'offline', model: o.model || '', parser: o.parser || '', seller: P(o.seller), buyer: P(o.buyer), meta: meta, items: items,
       totals: { subtotal: num(t.subtotal), discount: num(t.discount), vat: num(t.vat), total: num(t.total), payable: num(t.payable) }, currency: cur, warnings: o.warnings || [] };
@@ -1490,7 +1548,7 @@
     });
   }
 
-  var api = { _g: { linesOf: linesOf, gHeaderAt: gHeaderAt, gGroups: gGroups, gKey: gKey, headPart: headPart }, gemini: gemini, renderPage: renderPage, b64: b64, translate: translate, read: read, readMany: readMany, kindOf: kindOf, parseLayout: parseLayout, parseGeneric: parseGeneric, parseBest: parseBest, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, isoDate: isoDate, extract: extract, version: '1.74.0' };
+  var api = { _g: { linesOf: linesOf, gHeaderAt: gHeaderAt, gGroups: gGroups, gKey: gKey, headPart: headPart }, gemini: gemini, renderPage: renderPage, b64: b64, translate: translate, read: read, readMany: readMany, kindOf: kindOf, parseLayout: parseLayout, parseGeneric: parseGeneric, parseBest: parseBest, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, rateNum: rateNum, fixVat: fixVat, isoDate: isoDate, extract: extract, version: '1.75.0' };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.FalconFaturaPdf = api;
 })(typeof window !== 'undefined' ? window : globalThis);

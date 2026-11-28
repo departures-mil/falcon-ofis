@@ -81,7 +81,7 @@ const AI_891 = {
     await sleep(400);
   };
   const rowsOf = () => page.evaluate(() => [...document.querySelectorAll('.fat-imp-t tbody tr')].map((tr) => ({
-    code: tr.querySelector('.cd').value, name: tr.querySelector('.nm2').value, qty: tr.querySelector('.q').value, price: tr.querySelector('.p').value,
+    code: tr.querySelector('.cd').value, name: tr.querySelector('.nm2').value, qty: tr.querySelector('.q').value, price: tr.querySelector('.p').value, vat: (tr.querySelector('.v') || {}).value,
   })));
 
   // 1) Yeni fatura → Belgeden doldur → AKKO teklifi (PDF, İngilizce, 3 sayfa, 19 kalem, liste fiyatı + %50 iskonto), çevrimdışı (internet yok)
@@ -198,7 +198,13 @@ const AI_891 = {
   assert.deepStrictEqual(rows.map((r) => Number(r.price)), [14482.364, 16710.42, 16153.406, 1671.042, 1671.042, 1671.042], 'birim fiyatlar');
   txt = await top().textContent();
   assert.ok(/85\.223,13/.test(txt), 'ara toplam TL');
-  await page.click('.modal button:has-text("Kapat")');
+  // 1.75: OCR'da KDV oranı ile KDV tutarı yapışık okunuyordu → oran 2.896 → ERR_INVALID_AMOUNT
+  assert.deepStrictEqual(rows.map((r) => Number(r.vat)), [20, 20, 20, 20, 20, 20], 'KDV oranları %20');
+  const nP0 = (await q('SELECT COUNT(*) AS n FROM products'))[0].n;
+  await page.click('.modal button:has-text("Yalnız ürünlere kaydet")');
+  await page.waitForFunction(() => !document.querySelector('.fat-imp-t'), null, { timeout: 30000 });
+  assert.ok((await q('SELECT COUNT(*) AS n FROM products'))[0].n > nP0, 'taranmış e-Faturanın ürünleri kaydedildi (ERR_INVALID_AMOUNT yok)');
+  assert.ok((await q("SELECT COUNT(*) AS n FROM products WHERE vat_rate IS NOT NULL AND (vat_rate < 0 OR vat_rate > 100)"))[0].n === 0, 'geçersiz KDV oranı kaydedilmedi');
 
   // 5) Özel dosyalar: listeden 🔒 → dosya ekle (Word) → not → sil (Silinenler kutusuna)
   await page.click('.fat-tabs button:has-text("Faturalar")');

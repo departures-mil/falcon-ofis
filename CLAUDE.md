@@ -171,3 +171,10 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   `status` (stok durumu), çok geçişli OCR (soft → lat → lat@3400, tutarlı satır puanı), `readMany(files)` (sırayla okur, sınırdaki tekrarları atar, toplam son sayfadan).
   Arayüz `pickPdf`: çoklu seçim / sürükle / art arda yapıştır listesi («▶ Oku ve birleştir (n)»), `r._files` hepsi özel dosya olur; belgede taraf yoksa müşteri bölümü gizli.
   Geliştirme aracı `araclar/ekran-oku.js <dosya…> [--birlestir] [--satirlar=lat:2600]`. Test: `araclar/fatura-174-e2e.js` (örnekler `araclar/fatura-ornek/ekran/`, depoda yok).
+
+- 1.75.0 KDV ORANI DENETİMİ (`fatura-pdf.js`): `rateNum(hücre)` — önce «%»li sayı, sonra 0–100 arasındaki ilk sayı, sonra yapışık hücrenin başındaki oran («20,002.896,47» = «20,00» + «2.896,47»;
+  ondalık ayracı kalanla aynı olmalı); `parseLayout`/`itemFrom` ve `gItems` `lastNum` yerine bunu kullanır. `normalize` → `fixVat(items, totals)` (çevrimdışı + yapay zekâ, her belge): 0–100 dışı oran
+  atılır (KDV tutarı gibi görünüyorsa vat_amount olur) → vat_amount ÷ satır tutarı → öteki kalemlerin en sık oranı → toplam KDV ÷ (ara − iskonto); geçerli ama satırın KDV tutarıyla >1 puan çelişen
+  oran tam sayı orana düzeltilir; `snapRate`. Miktar ≤ 0 → null (eksi işareti atılır), eksi fiyat (tutar eksi değilse) artı. Arayüz `saveProducts`: KDV 0–100 / fiyat ≥ 0 değilse alan boş gider,
+  ERR_INVALID_AMOUNT'ta fiyatsız / KDV'siz bir kez daha, olmazsa satır atlanır ve `impProdErr` ile adıyla bildirilir (aktarım durmaz); faturaya aktarılan kalemler de aynı süzgeçten geçer;
+  ERR tablosunda ERR_INVALID_AMOUNT / ERR_INVALID_QUANTITY (tr/en/ar). Örnek: NURSAN taranmış e-Fatura (örnek 5). Test: `test/app.test.js` (1.75), `araclar/fatura-171-e2e.js` 4b (KDV %20 + ürün kaydı).

@@ -425,7 +425,7 @@
       impPriceUpd: 'Kayıtlı ürünün fiyatını belgedeki fiyatla güncelle (fiyat geçmişine yazılır)', impPriceKeep: 'Kayıtlı ürünlerin fiyatına dokunma (yalnız yeni ürünler)',
       impTakeCust: 'Müşteri bilgilerini faturaya aktar', impItemsMode: 'Kalemler', impAppend: 'Faturadaki kalemlere ekle', impReplace: 'Faturadaki kalemlerin yerine koy',
       impAttach: 'Okunan belgeyi bu faturaya özel dosya olarak ekle (🔒 yalnız sen görürsün, çıktıda yer almaz)',
-      impProdOnly: '📦 Yalnız ürünlere kaydet', impProdDone: '📦 Ürün kayıtları: {a} yeni, {b} fiyat güncellendi, {c} değişmedi', impProdSkip: '{n} ürünün fiyatı farklı para biriminde kayıtlı olduğu için değiştirilmedi',
+      impProdOnly: '📦 Yalnız ürünlere kaydet', impProdDone: '📦 Ürün kayıtları: {a} yeni, {b} fiyat güncellendi, {c} değişmedi', impProdSkip: '{n} ürünün fiyatı farklı para biriminde kayıtlı olduğu için değiştirilmedi', impProdErr: '{n} ürün kaydedilemedi: {s}',
       impProdNone: 'Kaydedilecek kalem seçilmedi.', impSrcDoc: 'Kaynak: {s}', prodFromDoc: '📄 Belgeden ürün ekle', prodFromDocHint: 'Fatura / teklif belgesindeki (PDF ya da fotoğraf) ürünleri ve fiyatlarını ürün kayıtlarına ekler',
       pfTitle: '🔒 Özel dosyalar', pfHint: 'Yalnız sen görürsün: fatura çıktısında, PDF\'te ve müşteriye gönderilenlerde yer almaz. Cihazların arasında eşitlenir.',
       pfAdd: '＋ Dosya ekle', pfDrop: 'Dosyaları buraya sürükleyin ya da yapıştırın (Ctrl+V) — PDF, resim, Word, Excel, metin, arşiv…', pfEmpty: 'Bu faturaya eklenmiş özel dosya yok.',
@@ -445,7 +445,7 @@
       impPriceUpd: 'Update the saved product\'s price with the document price (kept in price history)', impPriceKeep: 'Do not change saved products\' prices (new products only)',
       impTakeCust: 'Transfer the customer details to the invoice', impItemsMode: 'Lines', impAppend: 'Add to the invoice\'s lines', impReplace: 'Replace the invoice\'s lines',
       impAttach: 'Attach the document to this invoice as a private file (🔒 only you see it, not on the printout)',
-      impProdOnly: '📦 Save to products only', impProdDone: '📦 Product records: {a} new, {b} prices updated, {c} unchanged', impProdSkip: '{n} product prices were not changed because they are kept in another currency',
+      impProdOnly: '📦 Save to products only', impProdDone: '📦 Product records: {a} new, {b} prices updated, {c} unchanged', impProdSkip: '{n} product prices were not changed because they are kept in another currency', impProdErr: '{n} products could not be saved: {s}',
       impProdNone: 'No lines selected to save.', impSrcDoc: 'Source: {s}', prodFromDoc: '📄 Add products from document', prodFromDocHint: 'Adds the products and prices on an invoice / quotation (PDF or photo) to the product records',
       pfTitle: '🔒 Private files', pfHint: 'Only you see these: they are not on the invoice printout, the PDF or anything sent to the customer. Synced between your devices.',
       pfAdd: '＋ Add file', pfDrop: 'Drag files here or paste them (Ctrl+V) — PDF, image, Word, Excel, text, archive…', pfEmpty: 'No private files on this invoice.',
@@ -465,7 +465,7 @@
       impPriceUpd: 'تحديث سعر المنتج المحفوظ بسعر المستند (يُحفظ في سجل الأسعار)', impPriceKeep: 'عدم تغيير أسعار المنتجات المحفوظة (المنتجات الجديدة فقط)',
       impTakeCust: 'نقل بيانات العميل إلى الفاتورة', impItemsMode: 'البنود', impAppend: 'إضافتها إلى بنود الفاتورة', impReplace: 'استبدال بنود الفاتورة بها',
       impAttach: 'إرفاق المستند بهذه الفاتورة كملف خاص (🔒 تراه أنت فقط، ولا يظهر في المطبوع)',
-      impProdOnly: '📦 الحفظ في المنتجات فقط', impProdDone: '📦 سجلات المنتجات: {a} جديد، {b} سعر محدَّث، {c} دون تغيير', impProdSkip: 'لم تتغير أسعار {n} منتج لأنها محفوظة بعملة أخرى',
+      impProdOnly: '📦 الحفظ في المنتجات فقط', impProdDone: '📦 سجلات المنتجات: {a} جديد، {b} سعر محدَّث، {c} دون تغيير', impProdSkip: 'لم تتغير أسعار {n} منتج لأنها محفوظة بعملة أخرى', impProdErr: 'تعذّر حفظ {n} منتج: {s}',
       impProdNone: 'لم تُحدَّد بنود للحفظ.', impSrcDoc: 'المصدر: {s}', prodFromDoc: '📄 إضافة منتجات من مستند', prodFromDocHint: 'يضيف المنتجات وأسعارها من فاتورة / عرض سعر (PDF أو صورة) إلى سجلات المنتجات',
       pfTitle: '🔒 ملفات خاصة', pfHint: 'تراها أنت فقط: لا تظهر في مطبوع الفاتورة ولا في ملف PDF ولا فيما يُرسل إلى العميل. تتزامن بين أجهزتك.',
       pfAdd: '＋ إضافة ملف', pfDrop: 'اسحب الملفات إلى هنا أو الصقها (Ctrl+V) — PDF، صورة، Word، Excel، نص، أرشيف…', pfEmpty: 'لا توجد ملفات خاصة لهذه الفاتورة.',
@@ -491,13 +491,13 @@
   };
   DOC.tr.fxRate = 'Döviz Kuru'; DOC.en.fxRate = 'Exchange Rate'; DOC.ar.fxRate = 'سعر الصرف';
   var ERR = {
-    tr: { ERR_INVOICE_ITEMS: 'En az bir kalem girin.', ERR_CUSTOMER_REQUIRED: 'Müşteri adını yazın.', ERR_INVOICE_OVERPAY: 'Tahsilat kalan tutardan büyük olamaz.',
+    tr: { ERR_INVALID_AMOUNT: 'Geçersiz sayı: fiyat eksi olamaz, KDV oranı %0 ile %100 arasında olmalı.', ERR_INVALID_QUANTITY: 'Miktar sıfırdan büyük olmalı.', ERR_INVOICE_ITEMS: 'En az bir kalem girin.', ERR_CUSTOMER_REQUIRED: 'Müşteri adını yazın.', ERR_INVOICE_OVERPAY: 'Tahsilat kalan tutardan büyük olamaz.',
       ERR_INVOICE_NUMBER_TAKEN: 'Bu fatura numarası zaten kullanılıyor.', ERR_INVOICE_HAS_PAYMENTS: 'Tahsilatı olan faturada bu yapılamaz — önce tahsilatları silin.',
       ERR_INVOICE_BELOW_PAID: 'Yeni toplam, tahsil edilen tutardan küçük olamaz.', ERR_INVOICE_CANCELLED: 'İptal edilmiş faturaya tahsilat girilemez.', ERR_SC_DUPLICATE: 'Bu işlem numarasıyla bir dekont zaten kayıtlı — ikinci kez işlenmedi.' },
-    en: { ERR_INVOICE_ITEMS: 'Enter at least one line.', ERR_CUSTOMER_REQUIRED: 'Enter the customer name.', ERR_INVOICE_OVERPAY: 'The payment cannot exceed the balance.',
+    en: { ERR_INVALID_AMOUNT: 'Invalid number: the price cannot be negative and the VAT rate must be between 0% and 100%.', ERR_INVALID_QUANTITY: 'The quantity must be greater than zero.', ERR_INVOICE_ITEMS: 'Enter at least one line.', ERR_CUSTOMER_REQUIRED: 'Enter the customer name.', ERR_INVOICE_OVERPAY: 'The payment cannot exceed the balance.',
       ERR_INVOICE_NUMBER_TAKEN: 'This invoice number is already in use.', ERR_INVOICE_HAS_PAYMENTS: 'Not possible on an invoice with payments — delete the payments first.',
       ERR_INVOICE_BELOW_PAID: 'The new total cannot be lower than the amount collected.', ERR_INVOICE_CANCELLED: 'A cancelled invoice cannot take payments.', ERR_SC_DUPLICATE: 'A receipt with this transaction number is already recorded — it was not posted twice.' },
-    ar: { ERR_INVOICE_ITEMS: 'أدخل بنداً واحداً على الأقل.', ERR_CUSTOMER_REQUIRED: 'اكتب اسم العميل.', ERR_INVOICE_OVERPAY: 'لا يمكن أن يتجاوز التحصيل المبلغ المتبقي.',
+    ar: { ERR_INVALID_AMOUNT: 'رقم غير صالح: لا يمكن أن يكون السعر سالباً، ويجب أن تكون نسبة ضريبة القيمة المضافة بين 0% و100%.', ERR_INVALID_QUANTITY: 'يجب أن تكون الكمية أكبر من صفر.', ERR_INVOICE_ITEMS: 'أدخل بنداً واحداً على الأقل.', ERR_CUSTOMER_REQUIRED: 'اكتب اسم العميل.', ERR_INVOICE_OVERPAY: 'لا يمكن أن يتجاوز التحصيل المبلغ المتبقي.',
       ERR_INVOICE_NUMBER_TAKEN: 'رقم الفاتورة هذا مستخدم من قبل.', ERR_INVOICE_HAS_PAYMENTS: 'غير ممكن في فاتورة لها تحصيلات — احذف التحصيلات أولاً.',
       ERR_INVOICE_BELOW_PAID: 'لا يمكن أن يكون الإجمالي الجديد أقل من المبلغ المحصّل.', ERR_INVOICE_CANCELLED: 'لا يمكن تسجيل تحصيل لفاتورة ملغاة.', ERR_SC_DUPLICATE: 'يوجد إشعار مسجَّل برقم العملية هذا — لم يُسجَّل مرة ثانية.' }
   };
@@ -2929,7 +2929,9 @@
     // rows: [{ it, pick }] (yalnız seçili olanlar), cur: belgenin para birimi, upd: kayıtlı ürünün fiyatı güncellensin mi, src: açıklamaya yazılacak kaynak
     function saveProducts(rows, cur, upd, src) {
       var call = function (name, payload) { return Promise.resolve(F().call(name, payload)).then(function (r) { if (!r || !r.ok) { var e = new Error(r && r.error || 'ERR'); e.code = r && r.error; throw e; } return r.data; }); };
-      var stat = { a: 0, b: 0, c: 0, skip: 0 }, seen = {};
+      var stat = { a: 0, b: 0, c: 0, skip: 0, err: [] }, seen = {};
+      // v1.75: okunan değer kayıt kurallarına uymuyorsa (KDV %0–100, fiyat ≥ 0) o alan boş bırakılır; bir satırın hatası aktarımı durdurmaz
+      var okVat = function (v) { if (v == null || v === '') return ''; var n = Number(v); return isFinite(n) && n >= 0 && n <= 100 ? n : ''; };
       var nkey = function (x) { return low(x).replace(/[^\p{L}\p{N}]+/gu, ' ').trim(); };
       var i = 0;
       var next = function () {
@@ -2937,6 +2939,7 @@
         var o = rows[i++], it = o.it, name = String(it.name || '').trim();
         if (!name) return next();
         var price = it.price == null || it.price === '' ? '' : Number(it.price);
+        if (price !== '' && !(isFinite(price) && price >= 0)) price = '';
         var k = it.code ? 'c:' + String(it.code).trim() : 'n:' + nkey(name);
         if (seen[k]) { o.pick = String(seen[k]); return next(); }
         var extra = [];
@@ -2950,10 +2953,10 @@
             seen[k] = ex.id;
             var same = ex.sale_price != null && price !== '' && Math.abs(Number(ex.sale_price) - price) < 0.00001 && (ex.cost_currency || cur) === cur;
             if (!upd || price === '' || same) { stat.c++; return next(); }
-            return call('saveProductCard', { id: ex.id, name: ex.name, code: ex.code || '', unit: ex.unit || '', sale_price: price, currency: cur, vat_rate: ex.vat_rate == null ? '' : ex.vat_rate, depot: ex.depot || '', description: ex.description || '' })
+            return call('saveProductCard', { id: ex.id, name: ex.name, code: ex.code || '', unit: ex.unit || '', sale_price: price, currency: cur, vat_rate: okVat(ex.vat_rate), depot: ex.depot || '', description: ex.description || '' })
               .then(function () { stat.b++; }, function (e) { if (e.code === 'ERR_INVALID_CURRENCY') stat.skip++; else stat.c++; }).then(next);
           }
-          var payload = { name: name, code: it.code || '', unit: it.unit || '', sale_price: price, currency: cur, vat_rate: it.vat == null ? '' : it.vat, depot: it.depot || '', description: extra.join('\n') };
+          var payload = { name: name, code: it.code || '', unit: it.unit || '', sale_price: price, currency: cur, vat_rate: okVat(it.vat), depot: it.depot || '', description: extra.join('\n') };
           var add = function (pl) { return call('saveProductCard', pl).then(function (r) { stat.a++; seen[k] = r.id; o.pick = String(r.id); }); };
           return add(payload).catch(function (e) {
             if (e.code === 'ERR_DUPLICATE_CODE') {
@@ -2961,7 +2964,9 @@
               return q('SELECT id FROM products WHERE code = ?', [payload.code]).then(function (x) { if (x[0]) { o.pick = String(x[0].id); seen[k] = x[0].id; stat.c++; } });
             }
             if (e.code === 'ERR_INVALID_CURRENCY') return add(Object.assign({}, payload, { sale_price: '', currency: 'USD' }));
-            throw e;
+            // geçersiz sayı: fiyat ve KDV'siz bir kez daha, olmazsa satır atlanır (adıyla bildirilir)
+            if (e.code === 'ERR_INVALID_AMOUNT' && (payload.sale_price !== '' || payload.vat_rate !== '')) return add(Object.assign({}, payload, { sale_price: '', vat_rate: '' })).catch(function (e2) { stat.err.push({ name: name, e: e2 }); });
+            stat.err.push({ name: name, e: e });
           }).then(next);
         });
       };
@@ -3155,8 +3160,9 @@
         return saveProducts(list, srcCur, O.upd, srcName()).then(function (st) {
           toast(t('impProdDone', { a: st.a, b: st.b, c: st.c }));
           if (st.skip) toast(t('impProdSkip', { n: st.skip }), 'error');
+          if (st.err.length) toast(t('impProdErr', { n: st.err.length, s: st.err.slice(0, 3).map(function (x) { return '«' + x.name.slice(0, 40) + '» (' + (errText(x.e) || x.e.code || x.e.message) + ')'; }).join(', ') }), 'error');
           return st;
-        }, function (e) { if (btn) btn.disabled = false; toast(String(e && (e.code || e.message) || e), 'error'); throw e; });
+        }, function (e) { if (btn) btn.disabled = false; toast(errText(e) || String(e && (e.code || e.message) || e), 'error'); throw e; });
       };
       var prodOnlyB = el('button', { type: 'button', class: 'btn', text: t('impProdOnly'), onclick: function (e) {
         if (!chosen().length) { toast(t('impProdNone'), 'error'); return; }
@@ -3172,8 +3178,9 @@
             var meta = {};
             Object.keys(mSel).forEach(function (k) { if (mSel[k] && k !== 'date' && k !== 'number' && k !== 'due_date') meta[k] = r.meta[k]; });
             var items = chosen().map(function (o) {
-              var it = o.it, x = { name: it.name, qty: it.qty == null ? 1 : it.qty, unit: it.unit || '', price: it.price == null ? '' : it.price, code: it.code || '', depot: it.depot || '' };
-              if (it.vat != null) x.vat = it.vat;
+              var it = o.it, q0 = Number(it.qty), p0 = Number(it.price), v0 = Number(it.vat);
+              var x = { name: it.name, qty: it.qty == null || it.qty === '' || !(q0 > 0) ? 1 : q0, unit: it.unit || '', price: it.price == null || it.price === '' || !(p0 >= 0) ? '' : p0, code: it.code || '', depot: it.depot || '' };
+              if (it.vat != null && it.vat !== '' && v0 >= 0 && v0 <= 100) x.vat = v0;
               if (o.pick) { var pp = products.filter(function (pr) { return String(pr.id) === o.pick; })[0]; x.product_id = Number(o.pick); if (pp && !x.code && pp.code) x.code = pp.code; }
               return x;
             });
