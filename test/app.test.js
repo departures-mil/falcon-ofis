@@ -481,3 +481,20 @@ test('1.75: KDV oranı — yapışık oran / tutar hücreleri ve genel KDV denet
   const ui = read('dist/assets/fatura-falcon.js');
   assert.ok(ui.includes('impProdErr') && ui.includes("ERR_INVALID_AMOUNT: 'Geçersiz sayı"), 'aktarım hatası satır adıyla, anlaşılır mesaj');
 });
+
+test('1.76: takım tezgâhı terimleri, kısaltmalar ve MK → MT', () => {
+  delete require.cache[require.resolve(path.join(ROOT, 'dist/assets/sozluk-falcon.js'))];
+  const S = require(path.join(ROOT, 'dist/assets/sozluk-falcon.js'));
+  const en = (x, o) => S.translate(x, 'en', o).text;
+  assert.strictEqual(en('DÖNER PUNTA MK5-05 TAK.UC- SET- GÖVDE+4UC+ANHT.'), 'LIVE CENTER MT5-05 WITH INTERCHANGEABLE TIPS - SET: BODY + 4 CENTER TIPS + WRENCH');
+  assert.strictEqual(en('DÖNER PUNTA MK5-05', { keepCodes: true }), 'LIVE CENTER MK5-05');
+  assert.strictEqual(en('HYUNDAI SE2600M BMT55 DIŞ ÇAP TUTUCU 25mm KISA'), 'HYUNDAI SE2600M BMT55 OD TURNING TOOL HOLDER 25mm SHORT');
+  assert.strictEqual(en('HWACHEON CUTEX-160A-B/MC_BMT55 DKT+UDT Ø40 H60'), 'HWACHEON CUTEX-160A-B/MC_BMT55 BORING BAR HOLDER + U-DRILL HOLDER Ø40 H60');
+  assert.strictEqual(en('DELİK KATER SOKETİ D40 d12'), 'BORING BAR SLEEVE D40 d12');
+  assert.strictEqual(S.translate('DELİK KATER SOKETİ D40 d12', 'ar').text, 'جلبة قضيب التجويف D40 d12');
+  assert.deepStrictEqual(S.abbrs('X DKT+UDT').filter((a) => !a.sure).map((a) => a.k), ['DKT', 'UDT']);
+  assert.strictEqual(S.stdCodes('Kablo MK5', 'Cable MK5', false), 'Cable MK5', 'bağlam yoksa MK değişmez');
+  assert.strictEqual(en('Röle 2NO+2NC 24V'), 'Relay 2 NO+2 NC 24V', 'kısaltma yoksa ad olduğu gibi işlenir');
+  const ui = read('dist/assets/fatura-falcon.js');
+  assert.ok(ui.includes("'invoice_name_user'") && ui.includes('var learn = function') && ui.includes("pvKeepCodes: 'الإبقاء"), 'öğrenen sözlük + kod koruma seçeneği (tr/en/ar)');
+});

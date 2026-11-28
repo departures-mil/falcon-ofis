@@ -83,7 +83,40 @@
   var isAl = function (c) { return !!c && /[0-9A-Za-zÇĞİÖŞÜçğıöşüÂÎÛâîû]/.test(c); };
   var isWordChAt = function (s, i) { var c = s[i]; return isAl(c) || (c === '+' && isAl(s[i - 1]) && !isAl(s[i + 1])); };
   // «24PortSC» → «24 Port SC», «1Metre» → «1 Metre»: bitişik yazılmış sözlük kelimelerini ayır.
+  // v1.76: takım tezgâhı / fatura kısaltmaları — önce Türkçe açık yazıma çevrilir, sonra sözlükten geçer.
+  // sure:false → anlamı kesin değil, arayüz «yorumlanan kısaltma» olarak kullanıcıya gösterir (düzeltmesi öğrenilir).
+  var ABBR = [
+    { re: /\bTAK(?:MA)?\.?\s*U[CÇ](?:LU|LÜ)?\b\.?\s*-?/gi, k: 'TAK.UC', tr: 'takma uçlu', sure: true },
+    { re: /\bANHT\b\.?/gi, k: 'ANHT.', tr: 'sıkma anahtarı', sure: true },
+    { re: /\bDKT\b/g, k: 'DKT', tr: 'delik kater tutucu', sure: false },
+    { re: /\bUDT\b/g, k: 'UDT', tr: 'u-matkap tutucu', sure: false },
+    { re: /\bDÇT\b/g, k: 'DÇT', tr: 'dış çap tutucu', sure: false },
+    { re: /\bKLV\b\.?/g, k: 'KLV', tr: 'kılavuz', sure: false },
+    { re: /\bMNDR\b\.?/g, k: 'MNDR', tr: 'mandren', sure: false }
+  ];
+  // Mors konik: Türkçe «MK5» → uluslararası «MT5» (yalnız takım bağlama bağlamında; ayar «orijinal kodu koru» kapatır)
+  var MORSE_CTX = /punta|mors|morse|konik|mandren|matkap|redüksiyon|reduksiyon|kovan|pinole|tutucu|sap\b/i;
+  function stdCodes(src, out, keep) {
+    if (keep || !MORSE_CTX.test(String(src || ''))) return out;
+    return String(out).replace(/\bMK\s?([0-6])(?![0-9])/g, 'MT$1');
+  }
+  function abbrs(s) {
+    var r = [];
+    ABBR.forEach(function (a) { a.re.lastIndex = 0; if (a.re.test(String(s || ''))) r.push({ k: a.k, tr: a.tr, sure: a.sure }); a.re.lastIndex = 0; });
+    return r;
+  }
+  function expand(s) {
+    s = String(s); var s0 = s;
+    ABBR.forEach(function (a) { a.re.lastIndex = 0; s = s.replace(a.re, function (m) { var up = m === m.toLocaleUpperCase('tr'); return ' ' + (up ? a.tr.toLocaleUpperCase('tr') : a.tr) + ' '; }); });
+    // döner punta bağlamında «UÇ» = punta ucu (tornada aksi hâlde kesici uç / insert)
+    if (/punta/i.test(s)) s = s.replace(/(\d)\s*(U[CÇ]|uç|uc)(?![A-Za-zÇĞİÖŞÜçğıöşü])/g, function (m, d, u) { return d + ' ' + (u === u.toUpperCase() ? 'PUNTA UÇLARI' : 'punta uçları'); });
+    if (/punta/i.test(s)) s = s.replace(/(^|[^A-Za-zÇĞİÖŞÜçğıöşü])(U[CÇ]|uç|uc)(?![A-Za-zÇĞİÖŞÜçğıöşü])/g, function (m, b, u) { return b + (u === u.toUpperCase() ? 'PUNTA UCU' : 'punta ucu'); });
+    s = s.replace(/\s*\bSET\s*-\s+/g, ' - SET: ').replace(/\s*\bset\s*-\s+/gi, ' - Set: ');
+    if (s === s0) return s;
+    return s.replace(/\s{2,}/g, ' ').replace(/\s+:/g, ':').replace(/\s*\+\s*/g, ' + ').trim();
+  }
   function presplit(s) {
+    s = expand(s);
     s = s.replace(/(\d)\s*(mt|metre)\b/gi, '$1 metre');
     s = s.replace(/(\d+)\s*[’']?(?:lı|li|lu|lü)(?![A-Za-zçğıöşü])/gi, function (a, n, off, all) { var rest = all.slice(off + a.length); return n + (/^\s*$/.test(rest) || /^\s+(paket|kutu|adet|koli)/i.test(rest) ? '-Pack' : '-Way'); });
     s = s.replace(/([0-9A-Za-zÇĞİÖŞÜçğıöşü])[’'](?:dan|den|tan|ten|da|de|ta|te|ya|ye|yı|yi|yu|yü|nın|nin|nun|nün|ın|in|un|ün|a|e|ı|i|u|ü|lar|ler|ları|leri|lı|li|lu|lü)(?![A-Za-zçğıöşü])/g, '$1');
@@ -97,7 +130,10 @@
     if (letters.length > 1 && letters === letters.toLocaleUpperCase('tr') && /^[A-Z]/.test(en)) return en.toUpperCase();
     return en;
   }
-  function translate(text, lg) {
+  function translate(text, lg, opts) {
+    var r0 = translate0(text, lg); r0.text = stdCodes(text, r0.text, opts && opts.keepCodes); r0.abbr = abbrs(text); return r0;
+  }
+  function translate0(text, lg) {
     var ar = lg === 'ar', src = presplit(String(text == null ? '' : text));
     // belirteçler: sözcük / ayraç
     var tok = [], i = 0;
@@ -141,7 +177,7 @@
       var g = seg[s], prev = s > 0 ? seg[s - 1] : null, prevNum = prev && /^\d+([.,]\d+)?$/.test(tok[prev.a].t) && /^\s*$/.test(tok.slice(prev.b + 1, g.a).map(function (x) { return x.t; }).join(''));
       if (g.key === 'metre' || g.key === 'mt' || g.key === 'metrelik') { if (prevNum) g.out = ar ? 'م' : 'm'; }
       if (g.kind === 'W') { if (prevNum && !ar) { g.out = LEX[g.key][0].replace(/^with /i, ''); g.join = '-'; } else if (!ar) { g.out = 'with ' + LEX[g.key][0].replace(/^with /i, ''); g.move = true; } continue; }
-      if (!g.kind && g.key && /l[ıiuü]$/.test(g.key) && prevNum && !ar) { var stm = g.key.slice(0, -2), sa = analyze(stm) || analyze(stm.replace(/ğ$/, 'k')); if (sa && LEX[sa.key]) g.out = caseLike(tok[g.a].t, LEX[sa.key][0]); if (/^[A-Z]/.test(g.out)) g.join = '-'; continue; }
+      if (!g.kind && g.key && /l[ıiuü]$/.test(g.key) && !/^with /i.test(LEX[g.key][0]) && prevNum && !ar) { var stm = g.key.slice(0, -2), sa = analyze(stm) || analyze(stm.replace(/ğ$/, 'k')); if (sa && LEX[sa.key]) g.out = caseLike(tok[g.a].t, LEX[sa.key][0]); if (/^[A-Z]/.test(g.out)) g.join = '-'; continue; }
       if (g.kind === 'w' && prevNum && !ar) { g.out = LEX[g.key][0]; g.join = '-'; }
       else if ((g.kind === 'w' || g.kind === 'o') && g.key) {
         var base = LEX[g.key][ar ? 1 : 0];
@@ -206,7 +242,7 @@
     if (!ar) out = out.replace(/^(with|without|for|and|or)\b/, function (w) { return w[0].toUpperCase() + w.slice(1); });
     return { text: out, hit: hit, left: left };
   }
-  var api = { translate: translate, size: LEX_DATA.length, has: function (w) { return !!analyze(lower(String(w))); }, version: 1 };
+  var api = { translate: translate, stdCodes: stdCodes, abbrs: abbrs, expand: expand, size: LEX_DATA.length, has: function (w) { return !!analyze(lower(String(w))); }, version: 2 };
   if (typeof window !== 'undefined') window.FalconSozluk = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })();

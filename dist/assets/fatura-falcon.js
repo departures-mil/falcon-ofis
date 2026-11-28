@@ -304,21 +304,21 @@
     tr: {
       pvStepLang: 'Çıktı dili', pvStepNames: 'Ürün adları', pvStepEdit: 'Önizle ve düzelt', pvNamesKeep: 'Olduğu gibi bırak', pvNamesTr: 'Seçilen dile çevir',
       pvNamesBusy: 'Ürün adları çevriliyor…', pvNamesAi: 'Yapay zekâ ile çevrildi', pvNamesOffline: 'İnternet / yapay zekâ yok: çevrimdışı teknik sözlükle çevrildi, gerekirse düzeltin',
-      pvNamesSame: 'Ürün adları zaten Türkçe', pvEditOn: 'Düzelt', pvEditOff: 'Düzeltmeyi bitir',
+      pvNamesSame: 'Ürün adları zaten Türkçe', pvKeepCodes: 'Orijinal kodları koru', pvKeepCodesHint: 'Açıksa belgedeki kodlar aynen kalır (ör. MK5). Kapalıysa uluslararası karşılığı yazılır (MK5 → MT5).', pvAbbr: 'Yorumlanan kısaltmalar', pvAbbrHint: 'kontrol edin; yanlışsa «Düzelt» ile değiştirin, düzeltmeniz sonraki faturalarda kullanılır', pvEditOn: 'Düzelt', pvEditOff: 'Düzeltmeyi bitir',
       pvEditHint: 'Önizlemedeki herhangi bir yazıya tıklayıp düzeltebilirsiniz; düzeltmeler PDF\'e aynen girer. Dil ya da şablon değişirse düzeltmeler sıfırlanır.',
       pvEditLost: 'Dil / şablon değişti, önizlemedeki düzeltmeler sıfırlandı', pvPdf: 'PDF olarak kaydet'
     },
     en: {
       pvStepLang: 'Output language', pvStepNames: 'Product names', pvStepEdit: 'Preview and correct', pvNamesKeep: 'Keep as they are', pvNamesTr: 'Translate to the selected language',
       pvNamesBusy: 'Translating product names…', pvNamesAi: 'Translated with AI', pvNamesOffline: 'No internet / AI: translated with the offline technical glossary, correct if needed',
-      pvNamesSame: 'Product names are already in Turkish', pvEditOn: 'Correct', pvEditOff: 'Finish correcting',
+      pvNamesSame: 'Product names are already in Turkish', pvKeepCodes: 'Keep original codes', pvKeepCodesHint: 'When on, codes stay exactly as in the document (e.g. MK5). When off, the international equivalent is used (MK5 → MT5).', pvAbbr: 'Interpreted abbreviations', pvAbbrHint: 'please check; if wrong, change it with «Correct» — your correction is reused on later invoices', pvEditOn: 'Correct', pvEditOff: 'Finish correcting',
       pvEditHint: 'Click any text in the preview to correct it; corrections go into the PDF exactly as shown. Changing the language or template resets them.',
       pvEditLost: 'Language / template changed, corrections in the preview were reset', pvPdf: 'Save as PDF'
     },
     ar: {
       pvStepLang: 'لغة المستند', pvStepNames: 'أسماء المنتجات', pvStepEdit: 'المعاينة والتصحيح', pvNamesKeep: 'إبقاؤها كما هي', pvNamesTr: 'ترجمتها إلى اللغة المختارة',
       pvNamesBusy: 'جارٍ ترجمة أسماء المنتجات…', pvNamesAi: 'تُرجمت بالذكاء الاصطناعي', pvNamesOffline: 'لا يوجد إنترنت / ذكاء اصطناعي: تُرجمت بالمعجم التقني دون اتصال، صحّحها عند الحاجة',
-      pvNamesSame: 'أسماء المنتجات باللغة التركية أصلاً', pvEditOn: 'تصحيح', pvEditOff: 'إنهاء التصحيح',
+      pvNamesSame: 'أسماء المنتجات باللغة التركية أصلاً', pvKeepCodes: 'الإبقاء على الرموز الأصلية', pvKeepCodesHint: 'عند التفعيل تبقى الرموز كما في المستند (مثل MK5). وعند الإيقاف يُكتب المقابل الدولي (MK5 → MT5).', pvAbbr: 'اختصارات مُفسَّرة', pvAbbrHint: 'يرجى التحقق؛ إن كانت خاطئة فغيّرها عبر «تصحيح» — ويُعاد استخدام تصحيحك في الفواتير اللاحقة', pvEditOn: 'تصحيح', pvEditOff: 'إنهاء التصحيح',
       pvEditHint: 'انقر على أي نص في المعاينة لتصحيحه؛ تدخل التصحيحات إلى ملف PDF كما هي. تغيير اللغة أو القالب يلغي التصحيحات.',
       pvEditLost: 'تغيّرت اللغة / القالب، فأُلغيت التصحيحات في المعاينة', pvPdf: 'حفظ بصيغة PDF'
     }
@@ -1106,7 +1106,7 @@
   var TERM1 = null;
   function offlineName(s, lg) {
     // v1.74: çevrimdışı teknik çeviri kütüphanesi (sozluk-falcon.js, ~2500 terim + Türkçe ek çözümleme) varsa o
-    if (window.FalconSozluk && window.FalconSozluk.translate) { try { var fs0 = window.FalconSozluk.translate(s, lg); if (fs0 && fs0.text) return fs0; } catch (e) {} }
+    if (window.FalconSozluk && window.FalconSozluk.translate) { try { var fs0 = window.FalconSozluk.translate(s, lg, { keepCodes: true }); if (fs0 && fs0.text) return fs0; } catch (e) {} }
     var src = String(s || ''), low = src.toLocaleLowerCase('tr');
     if (low.length !== src.length) low = src.toLowerCase();
     var isL = function (ch) { return !!ch && /[a-zçğıöşüâîû0-9]/i.test(ch); };
@@ -1126,6 +1126,22 @@
       return wd;
     });
     return { text: out.replace(/\s+/g, ' ').trim(), hit: hit };
+  }
+  // v1.76: kullanıcının önizlemede düzelttiği ürün adı çevirileri (eşitlenir) — sonraki faturalarda yapay zekâ / sözlükten önce gelir
+  function nameUser(v) {
+    if (v) return F().settings.set('invoice_name_user', JSON.stringify(v)).catch(function () {});
+    return Promise.resolve(F().settings.get('invoice_name_user')).then(function (x) { var o = jparse(x, {}); return o && typeof o === 'object' ? o : {}; }, function () { return {}; });
+  }
+  // v1.76: «MK5» (Mors konik) → «MT5»; ayar «Orijinal kodları koru» açıksa kodlar belgedeki gibi kalır
+  function keepCodesPref(v) {
+    try { if (v != null) { localStorage.setItem('fat.keepCodes', v ? '1' : '0'); return !!v; } return localStorage.getItem('fat.keepCodes') === '1'; } catch (e) { return !!v; }
+  }
+  function stdName(src, txt) { var S = window.FalconSozluk; try { return S && S.stdCodes ? S.stdCodes(src, txt, keepCodesPref()) : txt; } catch (e) { return txt; } }
+  function abbrOf(list) {
+    var S = window.FalconSozluk, seen = {}, out = [];
+    if (!S || !S.abbrs) return out;
+    list.forEach(function (x) { (S.abbrs(x) || []).forEach(function (a) { if (!a.sure && !seen[a.k]) { seen[a.k] = 1; out.push(a); } }); });
+    return out;
   }
   function nameCache(v) {
     if (v) return F().settings.set('invoice_name_tr', JSON.stringify(v)).catch(function () {});
@@ -1155,9 +1171,11 @@
   function translateNames(list, lg, onLate) {
     var uniq = list.filter(function (x, i) { return list.indexOf(x) === i; });
     if (lg === 'tr') { var id = {}; uniq.forEach(function (x) { id[x] = x; }); return Promise.resolve({ map: id, src: 'same' }); }
-    return nameCache().then(function (cache) {
-      var c = cache[lg] || {}, miss = uniq.filter(function (x) { return c[x] == null; });
-      var done = function (src) { var map = {}; uniq.forEach(function (x) { map[x] = c[x] != null ? c[x] : x; }); return { map: map, src: src }; };
+    return Promise.all([nameCache(), nameUser()]).then(function (r0) {
+      var cache = r0[0], uu = r0[1][lg] || {}, user = {};
+      var c = cache[lg] || {}, miss = uniq.filter(function (x) { return c[x] == null && uu[x] == null; });
+      uniq.forEach(function (x) { if (uu[x] != null) user[x] = 1; });
+      var done = function (src) { var map = {}; uniq.forEach(function (x) { map[x] = uu[x] != null ? uu[x] : c[x] != null ? c[x] : x; }); return { map: map, src: src, user: user }; };
       if (!miss.length) return done('ai');
       var ai = window.FalconFaturaPdf && window.FalconFaturaPdf.translate;
       var aiP = ai ? Promise.resolve(ai(miss, lg)) : Promise.reject(new Error('no-ai'));
@@ -1165,8 +1183,8 @@
       var offline = function (pending) {
         // çevrimdışı çeviri önbelleğe yazılmaz (internet gelince yapay zekâ ile yeniden çevrilir)
         return offlineNames(miss, lg).then(function (o) {
-          var map = {}; uniq.forEach(function (x) { map[x] = c[x] != null ? c[x] : o.map[x] != null ? o.map[x] : x; });
-          return { map: map, src: 'offline', via: o.via, pending: !!pending, left: o.left || [] };
+          var map = {}; uniq.forEach(function (x) { map[x] = uu[x] != null ? uu[x] : c[x] != null ? c[x] : o.map[x] != null ? o.map[x] : x; });
+          return { map: map, src: 'offline', via: o.via, pending: !!pending, left: o.left || [], user: user };
         });
       };
       var timer = null;
@@ -1489,7 +1507,8 @@
           if (names === 'tr' && tr.map && tr.lg === cur.lang) {
             its = its.map(function (it) {
               var x = Object.assign({}, it);
-              if (tr.map[String(it.name || '')] != null) x.name = tr.map[String(it.name || '')];
+              var sn = String(it.name || '');
+              if (tr.map[sn] != null) x.name = tr.user && tr.user[sn] ? tr.map[sn] : stdName(sn, tr.map[sn]);
               if (it.unit) x.unit = unitTr(it.unit, cur.lang);
               return x;
             });
@@ -1550,13 +1569,23 @@
           drawEd();
         };
         // her değişiklikte hemen toplanır (pencere kapanınca düğümler kopar), kayıt 600 ms sonra
+        var learn = function () {
+          if (names !== 'tr' || !tr.map || tr.lg !== ED.lg || !ED.lg) return;
+          var rev = {};
+          Object.keys(tr.map).forEach(function (src) { var shown = tr.user && tr.user[src] ? tr.map[src] : stdName(src, tr.map[src]); rev[String(shown).trim()] = src; });
+          var add = {};
+          edList().forEach(function (e) { var src = rev[String(e.o).trim()], v = String(e.n || '').replace(/\s+/g, ' ').trim(); if (src != null && v && v !== String(e.o).trim()) add[src] = v; });
+          if (!Object.keys(add).length) return;
+          var lg = ED.lg;
+          nameUser().then(function (u) { u[lg] = Object.assign(u[lg] || {}, add); return nameUser(u); });
+        };
         var saveTimer = 0, dirty = false;
         var queueSave = function () {
           if (collect()) dirty = true;
           clearTimeout(saveTimer);
-          saveTimer = setTimeout(function () { if (dirty) { dirty = false; savePv(); } }, 600);
+          saveTimer = setTimeout(function () { if (dirty) { dirty = false; savePv(); learn(); } }, 600);
         };
-        var flush = function () { clearTimeout(saveTimer); if (collect()) dirty = true; if (dirty) { dirty = false; return savePv(); } return Promise.resolve(); };
+        var flush = function () { clearTimeout(saveTimer); if (collect()) dirty = true; if (dirty) { dirty = false; learn(); return savePv(); } return Promise.resolve(); };
         var edInfo = el('span', { class: 'fat-pv-nm' });
         var edAll = el('button', { type: 'button', class: 'btn small', text: '↺ ' + t('pvRevertAll'), onclick: function () {
           confirmBox(t('pvRevertAllQ')).then(function (ok) {
@@ -1627,8 +1656,16 @@
               if (names === x[0]) return; names = x[0]; pvNamesPref(names); drawNm(); ensureNames().then(render); render();
             } }));
           });
+          if (names === 'tr') {
+            var kc = el('label', { class: 'fat-pv-kc', title: t('pvKeepCodesHint'), style: 'display:inline-flex;align-items:center;gap:4px;margin-inline-start:8px;font-size:12px;cursor:pointer' });
+            var cb = el('input', { type: 'checkbox' }); cb.checked = keepCodesPref();
+            cb.onchange = function () { keepCodesPref(cb.checked); render(); };
+            kc.appendChild(cb); kc.appendChild(document.createTextNode(t('pvKeepCodes'))); nmBox.appendChild(kc);
+          }
           nmInfo.className = 'fat-pv-nm' + (tr.busy ? ' busy' : '');
           nmInfo.textContent = names !== 'tr' ? '' : tr.busy ? '⏳ ' + t('pvNamesBusy') : tr.lg === cur.lang && tr.src ? (tr.src === 'ai' ? '✓ ' + t('pvNamesAi') : tr.src === 'same' ? t('pvNamesSame') : (tr.pending ? '⌁ ' + t('pvNamesWait') : '⚠ ' + t('pvNamesOffline')) + (tr.left && tr.left.length ? ' — ' + t('pvNamesLeft') + ': ' + tr.left.slice(0, 12).join(', ') : '')) : '';
+          if (names === 'tr' && !tr.busy && tr.lg === cur.lang && tr.abbr && tr.abbr.length)
+            nmInfo.textContent += (nmInfo.textContent ? ' · ' : '') + '⚠ ' + t('pvAbbr') + ': ' + tr.abbr.map(function (a) { return a.k + ' = ' + a.tr; }).join(', ') + ' — ' + t('pvAbbrHint');
         };
         var ensureNames = function () {
           if (names !== 'tr' || (tr.lg === cur.lang && tr.map)) { drawNm(); return Promise.resolve(); }
@@ -1639,10 +1676,10 @@
           return translateNames(list, lg, function (r2) {
             // geç gelen yapay zekâ çevirisi: dil ve seçim aynıysa önizleme güncellenir
             if (cur.lang !== lg || names !== 'tr') return;
-            tr = { lg: lg, map: r2.map, src: r2.src, busy: false }; drawNm(); render(); toast(t('pvNamesLate'));
+            tr = { lg: lg, map: r2.map, src: r2.src, busy: false, user: r2.user || {}, abbr: abbrOf(list) }; drawNm(); render(); toast(t('pvNamesLate'));
           }).then(function (r) {
             if (cur.lang !== lg) return;
-            tr = { lg: lg, map: r.map, src: r.src, busy: false, pending: r.pending, left: r.left || [] }; drawNm();
+            tr = { lg: lg, map: r.map, src: r.src, busy: false, pending: r.pending, left: r.left || [], user: r.user || {}, abbr: abbrOf(list) }; drawNm();
           }, function () { tr.busy = false; drawNm(); });
         };
         // 3) düzelt

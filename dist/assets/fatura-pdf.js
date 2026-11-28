@@ -1236,8 +1236,10 @@
       if (!key || r[1] === 'local') { var e = new Error('no-ai'); e.skip = true; throw e; }
       if (typeof navigator !== 'undefined' && navigator.onLine === false) { var e2 = new Error('offline'); e2.net = true; throw e2; }
       var prompt = ['Translate each product / service name from a commercial invoice into ' + LN + '.',
-        'Rules: use the standard formal technical terminology of the electrical, electronics, automotive and aviation industries (not everyday language).',
-        'Keep model numbers, part numbers, codes, brand names, sizes, voltages, currents and units (e.g. "LP-12-C04PE-02-001", "GX-16", "19mm", "6-36V", "200A", "2NO+2NC", "PNP", "NC") exactly as written.',
+        'Rules: use the standard formal technical terminology of the electrical, electronics, automotive, aviation and machine-tool / tooling industries (ISO and manufacturer catalogue language, not everyday language).',
+        'Machine-tool terms (Turkish → English): döner punta = Live Center; takma uçlu = with Interchangeable Tips; punta ucu = Center Tip; gövde = Body; anahtar (ANHT.) = Wrench; dış çap tutucu = OD Turning Tool Holder; iç çap tutucu = ID Boring Tool Holder; delik kater = Boring Bar; delik kater soketi / kovanı = Boring Bar Sleeve; DKT = Boring Bar Holder; UDT = U-Drill Holder; pens = Collet; mandren / ayna = Chuck; kılavuz = Tap; kısa = Short. In Arabic use the equivalent formal Modern Standard Arabic technical terms (e.g. ذنبة دوّارة, حامل قضيب التجويف, جلبة قضيب التجويف).',
+        'Expand Turkish abbreviations into full terms (e.g. "TAK.UC" = takma uçlu, "4UC" = 4 tips, "ANHT." = wrench). Keep Morse-taper codes such as "MK5" exactly as written (the app converts them itself).',
+        'Keep model numbers, part numbers, codes, brand names, sizes, voltages, currents and units (e.g. "LP-12-C04PE-02-001", "GX-16", "SE2600M", "BMT55", "CUTEX-160A-B/MC_BMT55", "Ø40 H60", "D40 d12", "19mm", "6-36V", "200A", "2NO+2NC", "PNP", "NC") exactly as written.',
         'Do not add or drop information. Return ONLY a JSON array of strings, same length and order as the input.',
         'Input:', JSON.stringify(list)].join('\n');
       var body = { contents: [{ role: 'user', parts: [{ text: prompt }] }], generationConfig: { temperature: 0, responseMimeType: 'application/json' } };
@@ -1548,7 +1550,7 @@
     });
   }
 
-  var api = { _g: { linesOf: linesOf, gHeaderAt: gHeaderAt, gGroups: gGroups, gKey: gKey, headPart: headPart }, gemini: gemini, renderPage: renderPage, b64: b64, translate: translate, read: read, readMany: readMany, kindOf: kindOf, parseLayout: parseLayout, parseGeneric: parseGeneric, parseBest: parseBest, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, rateNum: rateNum, fixVat: fixVat, isoDate: isoDate, extract: extract, version: '1.75.0' };
+  var api = { _g: { linesOf: linesOf, gHeaderAt: gHeaderAt, gGroups: gGroups, gKey: gKey, headPart: headPart }, gemini: gemini, renderPage: renderPage, b64: b64, translate: translate, read: read, readMany: readMany, kindOf: kindOf, parseLayout: parseLayout, parseGeneric: parseGeneric, parseBest: parseBest, normalize: normalize, verify: verify, compare: compare, selfCheck: selfCheck, rankModels: rankModels, num: num, rateNum: rateNum, fixVat: fixVat, isoDate: isoDate, extract: extract, version: '1.76.0' };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.FalconFaturaPdf = api;
 })(typeof window !== 'undefined' ? window : globalThis);

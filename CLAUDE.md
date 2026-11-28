@@ -178,3 +178,10 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   oran tam sayı orana düzeltilir; `snapRate`. Miktar ≤ 0 → null (eksi işareti atılır), eksi fiyat (tutar eksi değilse) artı. Arayüz `saveProducts`: KDV 0–100 / fiyat ≥ 0 değilse alan boş gider,
   ERR_INVALID_AMOUNT'ta fiyatsız / KDV'siz bir kez daha, olmazsa satır atlanır ve `impProdErr` ile adıyla bildirilir (aktarım durmaz); faturaya aktarılan kalemler de aynı süzgeçten geçer;
   ERR tablosunda ERR_INVALID_AMOUNT / ERR_INVALID_QUANTITY (tr/en/ar). Örnek: NURSAN taranmış e-Fatura (örnek 5). Test: `test/app.test.js` (1.75), `araclar/fatura-171-e2e.js` 4b (KDV %20 + ürün kaydı).
+
+- 1.76.0 TAKIM TEZGÂHI ÇEVİRİSİ (fatura ürün adları): sözlük `araclar/sozluk/60-takim-tezgahi.txt` (~70 terim; döner punta = Live Center, delik kater soketi = Boring Bar Sleeve,
+  dış çap tutucu = OD Turning Tool Holder…). Motor (`sozluk-motor.js`, `version: 2`): `ABBR` kısaltma tablosu → Türkçe açık yazım (`expand`; TAK.UC, ANHT., DKT, UDT, DÇT, KLV, MNDR;
+  `sure:false` olanlar `abbrs()` ile önizlemede «Yorumlanan kısaltmalar»), punta bağlamında UÇ = punta ucu, `stdCodes(src, out, keep)` MK0–6 → MT (yalnız `MORSE_CTX`).
+  `translate(text, lg, {keepCodes})`; arayüz sözlüğü ham kodla çağırır, kod standardı `view()`'da `stdName` ile (ayar `localStorage['fat.keepCodes']`, önizlemede «Orijinal kodları koru»).
+  Kullanıcı düzeltmesi: önizlemede çevrilmiş ad «Düzelt» ile değişince `learn()` → ayar `invoice_name_user` {dil: {kaynak: yeni}} (eşitlenir), `translateNames` önce bunu kullanır
+  (`user` bayrağı: stdCodes uygulanmaz). Gemini istemi (`translateAi`) aynı terim / kısaltma kurallarını içerir. Test: `test/app.test.js` (1.76).

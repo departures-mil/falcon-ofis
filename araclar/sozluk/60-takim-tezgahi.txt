@@ -1,0 +1,59 @@
+# Takım tezgâhı, takım tutucu, torna / freze aksesuarları (tr | en | ar) — v1.76. Sektörün resmî terimleri (ISO / üretici katalog dili).
+# Kısaltmalar (TAK.UC, ANHT., DKT, UDT…) sozluk-motor.js ABBR tablosunda Türkçe açık yazıma çevrilir, sonra buradan karşılanır.
+döner punta | Live Center | ذنبة دوّارة
+sıkma anahtarı | Wrench | مفتاح ربط
+sabit punta | Dead Center | ذنبة ثابتة
+punta ucu | Center Tip | رأس الذنبة
+punta uçları | Center Tips | رؤوس الذنبة
+takma uçlu | With Interchangeable Tips | برؤوس قابلة للتبديل
+takma uç | Indexable Insert | لقمة قابلة للتبديل
+kesici uç | Cutting Insert | لقمة قطع
+dış çap tutucu | OD Turning Tool Holder | حامل أداة خراطة القطر الخارجي
+iç çap tutucu | ID Boring Tool Holder | حامل أداة تجويف القطر الداخلي
+dış çap kater | OD Turning Tool | أداة خراطة خارجية
+delik kater | Boring Bar | قضيب تجويف
+delik katerı | Boring Bar | قضيب تجويف
+delik kater tutucu | Boring Bar Holder | حامل قضيب التجويف
+delik kater tutucusu | Boring Bar Holder | حامل قضيب التجويف
+delik kater soketi | Boring Bar Sleeve | جلبة قضيب التجويف
+delik kater kovanı | Boring Bar Sleeve | جلبة قضيب التجويف
+u-matkap tutucu | U-Drill Holder | حامل مثقاب U
+u matkap tutucu | U-Drill Holder | حامل مثقاب U
+u-matkap | U-Drill | مثقاب U
+u matkap | U-Drill | مثقاب U
+redüksiyon kovanı | Reduction Sleeve | جلبة تخفيض
+mors konik | Morse Taper | مخروط مورس
+mors konik kovan | Morse Taper Sleeve | جلبة مخروط مورس
+mors kovan | Morse Taper Sleeve | جلبة مخروط مورس
+pens tutucu | Collet Chuck | حامل كوليت
+pens somunu | Collet Nut | صامولة الكوليت
+mandren | Chuck | ظرف
+torna aynası | Lathe Chuck | ظرف المخرطة
+ayna çenesi | Chuck Jaw | فك الظرف
+yumuşak çene | Soft Jaw | فك لين
+sert çene | Hard Jaw | فك صلب
+kater tutucu | Tool Holder | حامل أداة
+taret | Turret | برج الأدوات
+taret tutucu | Turret Tool Holder | حامل أداة البرج
+ekseneli tutucu | Axial Tool Holder | حامل أداة محوري
+eksenel tutucu | Axial Tool Holder | حامل أداة محوري
+radyal tutucu | Radial Tool Holder | حامل أداة شعاعي
+tahrikli takım | Live Tool | أداة مدارة
+kanal kater | Grooving Tool | أداة تخديد
+kanal açma | Grooving | تخديد
+kesme kater | Parting-Off Tool | أداة قطع فصل
+diş kater | Threading Tool | أداة لولبة
+vida açma | Threading | لولبة
+kılavuz | Tap | ذكر قلاووظ
+kılavuz tutucu | Tap Holder | حامل ذكر القلاووظ
+frez | Milling Cutter | فريزة
+freze çakısı | Milling Cutter | فريزة
+parmak freze | End Mill | فريزة إصبعية
+alın freze | Face Mill | فريزة وجهية
+punta matkabı | Center Drill | مثقاب مركزي
+havşa | Countersink | مثقاب تشطيف
+rayba | Reamer | موسّع ثقوب
+kare saplı | Square Shank | بساق مربعة
+silindirik saplı | Cylindrical Shank | بساق أسطوانية
+soğutma sıvılı | with Internal Coolant | مع تبريد داخلي
+iç soğutmalı | with Internal Coolant | مع تبريد داخلي
