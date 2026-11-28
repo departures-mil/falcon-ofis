@@ -73,6 +73,10 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   Arayüz `araclar/patch-ui-165.py` (Kasa düğmesi, `sc` süzgeci girişleri de kapsar, aramada sc_doc, ayrıntıda dekont + Notum), servis `patch-srv-165.py`
   (migration 30). Test: `araclar/shamcash-e2e.js <dekont.pdf>`.
 
+- 1.65.1 TUTAR SIRALAMASI: Kasa tablosunda TUTAR başlığı (`FalconAmtSortTh`) tıklanınca 0 → büyükten küçüğe → küçükten büyüğe → tarih sırası (bileşen durumu
+  `falconSrt`). `FalconSortAmt` işaretli tutarı güncel kurla (`V().rates`, birim/USD) USD'ye çevirerek sıralar; eşitlikte tarih sırası korunur. Yama
+  `araclar/patch-ui-1651.py` (masaüstü index + telefon main bundle; telefon-hazirla.sh'ta). Stil satır içi (telefona CSS gerekmez).
+
 ## Test
 - `npm test`: `test/app.test.js` (sürüm, çekirdek kopyası, CSP, güncelleme kanalı, paketleme, Wi‑Fi arşiv kuralı sql.js ile, FOPK) +
   `test/electron-smoke.test.js` (gerçek Electron + xvfb, `FALCON_SMOKE=1`: açılış, üst çubuk, Ayarlar sırası; eski 1.57.0 kabuğunda
