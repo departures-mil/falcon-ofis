@@ -63,6 +63,11 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await pickFile(path.join(SAMPLE, 'sham-giris.pdf'));
   await dlg.locator('.sc-attach-btn').click();
   await dlg.locator('.sc-attach a').waitFor({ timeout: 30000 });
+  // 1.67.1: yön bilinmiyorsa dekont türü esas (SEND → Çıkış + uyarı); kullanıcı Giriş'i seçince gönderen dekonttan yeniden alınır
+  if (/out/.test(await dlg.locator('.segmented button.active').first().getAttribute('class'))) {
+    assert.ok(await dlg.locator('.sc-read .sc-msg.warn').count() >= 1, 'tür uyarısı');
+    await dlg.locator('.segmented button', { hasText: /^Giriş$/ }).first().click(); await sleep(400);
+  }
   const vals = await dlg.evaluate((d) => [...d.querySelectorAll('input')].map((i) => i.value));
   assert.ok(vals.includes('250'), 'tutar doldu ' + vals);
   assert.ok(vals.includes('2026-11-27'), 'tarih doldu');

@@ -12,7 +12,7 @@
 (function () {
   'use strict';
   if (window.FalconShamDekont) return;
-  var VERSION = '1.67.0';
+  var VERSION = '1.67.1';
 
   // ---------- dil ----------
   var TX = {
@@ -41,7 +41,17 @@
       fAttached: 'Ekli dekont', fRemove: 'Kaldır', fRead: '✓ Dekont okundu, alanlar dolduruldu — kontrol edip kaydedin',
       fReadDiff: '⚠ Dekont okundu ama iki okuma farklı ({f}) — tutar ve işlem noyu dekontla karşılaştırın',
       fNone: '⚠ Dekont okunamadı — dosya eklendi, alanları elle doldurun', fDup: 'Bu dekont zaten kayıtlı (aynı işlem no). Eklenmedi.',
-      fAcc: 'Kasa Sham Cash kasası olarak ayarlandı: {a}', fCur: 'Dikkat: dekontun para birimi {c}; {c} Sham Cash kasası yok', fLocked: 'Dekont bilgileri (değiştirilemez)'
+      fAcc: 'Kasa Sham Cash kasası olarak ayarlandı: {a}', fCur: 'Dikkat: dekontun para birimi {c}; {c} Sham Cash kasası yok', fLocked: 'Dekont bilgileri (değiştirilemez)',
+      fReading: 'Dekont okunuyor…', fStepOn: '🌐 Online okunuyor (yapay zekâ)…', fStepOff: '📴 Offline okunuyor / teyit ediliyor…',
+      mBoth: '🌐 Online okundu · ✓ offline okumayla teyit edildi', mDiff: '🌐 Online okundu · ⚠ offline okuma {n} alanda farklı — aşağıdan doğrusunu seçin',
+      mAiOnly: '🌐 Online okundu · offline teyit yapılamadı — alanları dekontla karşılaştırın', mOffNet: '📴 İnternet yok: offline okundu — alanları kontrol edin',
+      mOffKey: '📴 Yapay zekâ anahtarı yok: offline okundu — alanları kontrol edin', mOff: '📴 Offline okundu (online okuma yapılamadı) — alanları kontrol edin',
+      mNone: '⚠ Dekont okunamadı — dosya eklendi, alanları elle doldurun',
+      sOk: 'teyitli', sAi: 'yalnız online', sOff: 'yalnız offline', sDiff: 'farklı', pickOn: 'Online', pickOff: 'Offline',
+      filled: 'Forma dolduruldu. Kontrol edip «Kaydet»e basın; «İptal» derseniz hiçbir şey kaydedilmez.',
+      kindDir: '{k} → {d}', conflict: '⚠ Dekont türü {k}: Tür «{d}» yapıldı. Bu dekont sizin değilse Tür\'ü değiştirin.',
+      dropHere: 'Sham Cash dekontunu buraya bırakın (PDF / JPEG / PNG)', payeeHit: 'Kayıtlı alıcı: {n}', other_in: 'Gönderen', other_out: 'Alıcı',
+      other_acc_in: 'Gönderen hesap', other_acc_out: 'Alıcı hesap', ocrSham: 'Sham Cash dekontu tanındı'
     },
     en: {
       btn: 'Sham Cash receipt', btnTip: 'Reads a Sham Cash receipt (PDF or image) and records it as cash in / cash out',
@@ -68,7 +78,17 @@
       fAttached: 'Attached receipt', fRemove: 'Remove', fRead: '✓ Receipt read and fields filled in — check and save',
       fReadDiff: '⚠ Receipt read but the two readings differ ({f}) — compare the amount and transaction no with the receipt',
       fNone: '⚠ The receipt could not be read — the file is attached, fill in the fields by hand', fDup: 'This receipt is already recorded (same transaction no). Not attached.',
-      fAcc: 'Cash box set to the Sham Cash box: {a}', fCur: 'Note: the receipt currency is {c}; there is no {c} Sham Cash box', fLocked: 'Receipt details (cannot be changed)'
+      fAcc: 'Cash box set to the Sham Cash box: {a}', fCur: 'Note: the receipt currency is {c}; there is no {c} Sham Cash box', fLocked: 'Receipt details (cannot be changed)',
+      fReading: 'Reading receipt…', fStepOn: '🌐 Reading online (AI)…', fStepOff: '📴 Reading / confirming offline…',
+      mBoth: '🌐 Read online · ✓ confirmed by the offline reading', mDiff: '🌐 Read online · ⚠ the offline reading differs in {n} field(s) — choose the correct value below',
+      mAiOnly: '🌐 Read online · offline confirmation not possible — compare the fields with the receipt', mOffNet: '📴 No internet: read offline — check the fields',
+      mOffKey: '📴 No AI key: read offline — check the fields', mOff: '📴 Read offline (online reading failed) — check the fields',
+      mNone: '⚠ The receipt could not be read — the file is attached, fill in the fields by hand',
+      sOk: 'confirmed', sAi: 'online only', sOff: 'offline only', sDiff: 'differs', pickOn: 'Online', pickOff: 'Offline',
+      filled: 'Filled into the form. Check and press «Save»; «Cancel» records nothing.',
+      kindDir: '{k} → {d}', conflict: '⚠ Receipt type {k}: Type set to «{d}». If this is not your receipt, change the Type.',
+      dropHere: 'Drop the Sham Cash receipt here (PDF / JPEG / PNG)', payeeHit: 'Saved recipient: {n}', other_in: 'Sender', other_out: 'Recipient',
+      other_acc_in: 'Sender account', other_acc_out: 'Recipient account', ocrSham: 'Sham Cash receipt recognised'
     },
     ar: {
       btn: 'إيصال شام كاش', btnTip: 'يقرأ إيصال شام كاش (PDF أو صورة) ويسجّله كإدخال أو إخراج في الصندوق',
@@ -95,7 +115,17 @@
       fAttached: 'الإيصال المرفق', fRemove: 'إزالة', fRead: '✓ قُرئ الإيصال ومُلئت الحقول — تحقّق ثم احفظ',
       fReadDiff: '⚠ قُرئ الإيصال لكن القراءتين مختلفتان ({f}) — قارن المبلغ ورقم العملية بالإيصال',
       fNone: '⚠ تعذّرت قراءة الإيصال — أُرفق الملف، املأ الحقول يدوياً', fDup: 'هذا الإيصال مسجَّل مسبقاً (رقم العملية نفسه). لم يُرفق.',
-      fAcc: 'ضُبط الصندوق على صندوق شام كاش: {a}', fCur: 'تنبيه: عملة الإيصال {c}؛ ولا يوجد صندوق شام كاش بعملة {c}', fLocked: 'بيانات الإيصال (لا تُعدَّل)'
+      fAcc: 'ضُبط الصندوق على صندوق شام كاش: {a}', fCur: 'تنبيه: عملة الإيصال {c}؛ ولا يوجد صندوق شام كاش بعملة {c}', fLocked: 'بيانات الإيصال (لا تُعدَّل)',
+      fReading: 'جارٍ قراءة الإيصال…', fStepOn: '🌐 قراءة عبر الإنترنت (ذكاء اصطناعي)…', fStepOff: '📴 قراءة / تحقّق دون اتصال…',
+      mBoth: '🌐 قُرئ عبر الإنترنت · ✓ وتأكّد بالقراءة دون اتصال', mDiff: '🌐 قُرئ عبر الإنترنت · ⚠ القراءة دون اتصال تختلف في {n} حقل — اختر القيمة الصحيحة أدناه',
+      mAiOnly: '🌐 قُرئ عبر الإنترنت · تعذّر التحقّق دون اتصال — قارن الحقول بالإيصال', mOffNet: '📴 لا يوجد إنترنت: قُرئ دون اتصال — تحقّق من الحقول',
+      mOffKey: '📴 لا يوجد مفتاح ذكاء اصطناعي: قُرئ دون اتصال — تحقّق من الحقول', mOff: '📴 قُرئ دون اتصال (تعذّرت القراءة عبر الإنترنت) — تحقّق من الحقول',
+      mNone: '⚠ تعذّرت قراءة الإيصال — أُرفق الملف، املأ الحقول يدوياً',
+      sOk: 'مؤكَّد', sAi: 'عبر الإنترنت فقط', sOff: 'دون اتصال فقط', sDiff: 'مختلف', pickOn: 'عبر الإنترنت', pickOff: 'دون اتصال',
+      filled: 'مُلئت الحقول في النموذج. تحقّق ثم اضغط «حفظ»؛ وعند «إلغاء» لا يُسجَّل شيء.',
+      kindDir: '{k} ← {d}', conflict: '⚠ نوع الإيصال {k}: ضُبط النوع على «{d}». إن لم يكن هذا إيصالك فغيّر النوع.',
+      dropHere: 'أفلت إيصال شام كاش هنا (PDF / JPEG / PNG)', payeeHit: 'مستلم محفوظ: {n}', other_in: 'المرسل', other_out: 'المستلم',
+      other_acc_in: 'حساب المرسل', other_acc_out: 'حساب المستلم', ocrSham: 'تم التعرّف على إيصال شام كاش'
     }
   };
   var CATS = {
@@ -334,7 +364,7 @@
             var w = mode === 'name' ? W.ara : W.eng;
             var prm = mode === 'name' ? { tessedit_pageseg_mode: '7', preserve_interword_spaces: '1' } : { tessedit_pageseg_mode: '7', tessedit_char_whitelist: mode === 'last4' ? '0123456789' : mode === 'digits' ? '0123456789/:-*. ABCDEFGHIJKLMNOPQRSTUVWXYZ' : '' };
             prm.user_defined_dpi = '300';
-            return w.setParameters(prm).then(function () { return w.recognize(c); }).then(function (x) { out[k] = { text: clean(x.data.text), conf: x.data.confidence }; });
+            return w.setParameters(prm).then(function () { return w.recognize(c, {}, { blocks: mode === 'name' }); }).then(function (x) { out[k] = { text: mode === 'name' ? (spacedName(x.data, c.height) || clean(x.data.text)) : clean(x.data.text), conf: x.data.confidence }; });
           });
         };
         field('kind', 'digits', 0.55); field('ref', 'digits', 0.55); field('date', 'digits', 0.42);
@@ -344,14 +374,33 @@
       });
     });
   }
+  // Arapça adlarda çevrimdışı okuma bazen boşluğu kaçırır ("فخر الدين" → "فخرالدين"): harf kutuları arasındaki boşluk satır
+  // yüksekliğinin ~%30'undan büyükse kelime ayrılır (sağdan sola; kutular üst üste binebildiğinden kelimenin en sol ucu izlenir).
+  function spacedName(data, h) {
+    var words = [];
+    (data.blocks || []).forEach(function (b) { (b.paragraphs || []).forEach(function (p) { (p.lines || []).forEach(function (l) { (l.words || []).forEach(function (w) { words.push(w); }); }); }); });
+    if (!words.length) return '';
+    var out = [], thr = h * 0.3;
+    words.forEach(function (w) {
+      var sy = w.symbols || [], cur = '', minX = null;
+      if (!sy.length) { if (clean(w.text)) out.push(clean(w.text)); return; }
+      sy.forEach(function (q) {
+        if (minX != null && minX - q.bbox.x1 > thr && cur) { out.push(cur); cur = ''; minX = null; }
+        cur += q.text; minX = minX == null ? q.bbox.x0 : Math.min(minX, q.bbox.x0);
+      });
+      if (cur) out.push(cur);
+    });
+    return clean(out.join(' '));
+  }
   function parseOcr(o) {
     var g = function (k) { return o[k] ? o[k].text : ''; };
     var d = { kind: (/SEND|RECEIVE|TRANSFER|DEPOSIT|WITHDRAW/.exec(g('kind').toUpperCase()) || [g('kind').replace(/[^A-Z ]/g, '').trim()])[0] };
     d.ref = (/\d{5,}/.exec(g('ref').replace(/\s/g, '')) || [''])[0];
     var dt = g('date'), tm = /(\d{2}):?(\d{2}):(\d{2})/.exec(dt);
     d.time = tm ? tm[1] + ':' + tm[2] + ':' + tm[3] : '';
-    d.date = dateFix(dt.split(/\s-\s|\s+-|-\s+/)[0]);
-    var gen = /(\d{1,2}[\/7]+\d{1,2}[\/7]+\d{4})/.exec(g('generated'));
+    var iso = /(20\d{2})\s*[-\/.]\s*(\d{1,2})\s*[-\/.]\s*(\d{1,2})/.exec(dt);
+    d.date = iso ? dateFix(('0' + iso[3]).slice(-2) + '/' + ('0' + iso[2]).slice(-2) + '/' + iso[1]) : dateFix(dt.split(/\s-\s|\s+-|-\s+/)[0]);
+    var gen = /(\d{1,2}[\/7\-.]+\d{1,2}[\/7\-.]+\d{4})/.exec(g('generated'));
     d.generated = gen ? dateFix(gen[1]) : '';
     d.from_name = g('from_name'); d.to_name = g('to_name');
     // Sham Cash hesapları maskeli yazılır: "************" + son 4 hane (yalnız son 4 hane okunur)
@@ -365,7 +414,7 @@
   }
   // "26/711/72026" gibi: bölü çizgisinden sonra fazladan okunan 7 / 1 atılır; geçerli tarih aranır
   function dateFix(s) {
-    s = String(s || '').replace(/[^\d\/]/g, '');
+    s = String(s || '').replace(/(\d)[-.](?=\d)/g, '$1/').replace(/[^\d\/]/g, '');
     if (validDate(s)) return s;
     var parts = s.split('/').filter(Boolean);
     var cands = [];
@@ -386,12 +435,17 @@
   }
 
   // ---------- birleştirme / teyit ----------
-  var CHECK = ['ref', 'amount', 'date', 'time', 'from_account', 'to_account', 'currency'];
+  var CHECK = ['ref', 'amount', 'date', 'time', 'from_account', 'to_account', 'currency', 'kind'];
+  var FIELDS = ['kind', 'ref', 'amount', 'currency', 'date', 'time', 'from_name', 'from_account', 'to_name', 'to_account'];
+  // Genel OCR metninden (telefon) ad ve hesaplar güvenilir okunmaz: teyitte kullanılmaz
+  var PARTIAL_SKIP = ['from_name', 'from_account', 'to_name', 'to_account'];
+  function sameAny(k, a, b) { return /_name$/.test(k) ? nospace(a) === nospace(b) : same(k, a, b); }
   function same(k, a, b) {
     if (!a || !b) return true; // biri okuyamadıysa fark sayılmaz
     if (k === 'amount') return amountNum(a) === amountNum(b);
     if (/account/.test(k)) return last4(a) === last4(b);
     if (k === 'time') return a.replace(/\D/g, '') === b.replace(/\D/g, '');
+    if (k === 'kind') return a.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4) === b.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4);
     return clean(a) === clean(b);
   }
   // Bilinen adlar: dekont adı bunlardan biriyle (boşluklar hariç) aynıysa bilinen yazılış kullanılır (çevrimdışı okuma boşluk kaçırabilir)
@@ -434,19 +488,24 @@
   }
 
   // Ana okuma: { doc, source: side|both|ai|offline|none, diffs: [alan], aiError }
-  function read(u8, mime, name, side) {
+  function read(u8, mime, name, side, onStep) {
     mime = mimeOf(name, mime);
+    var step = function (k) { try { if (onStep) onStep(k); } catch (e) {} };
     if (side && side.ref) {
       var d0 = normDoc(side);
       ['from_name', 'to_name', 'from_account', 'to_account', 'note', 'kind'].forEach(function (k) { if (side[k] != null) d0[k] = String(side[k]); }); // doğrulanmış metin aynen
       return Promise.resolve({ doc: d0, source: 'side', diffs: [], verified: true });
     }
     var cvP = toCanvas(u8, mime).catch(function () { return null; });
+    // Önce online (yapay zekâ); internet / anahtar yoksa yalnız offline. Online okunsa bile offline okuma da yapılır ve alan alan karşılaştırılır.
+    step('online');
     var aiP = viaAi(u8, mime).then(function (d) { return { d: d }; }, function (e) { return { e: e }; });
     var offP = cvP.then(function (cv) {
+      step('offline');
       if (!cv) return null;
       if (cv.text && /SENDER|RECIPIENT|TRANSACTION|المرسل/.test(cv.text)) return parseText(cv.text);
-      return ocrAvailable() ? viaOcr(cv.canvas).catch(function () { return null; }) : null;
+      var viaText = function () { return textOcr(cv.canvas); };
+      return ocrAvailable() ? viaOcr(cv.canvas).then(function (d) { return d && (d.ref || d.amount) ? d : viaText(); }, viaText) : viaText();
     });
     return Promise.all([aiP, offP, getMe()]).then(function (r) {
       var ai = r[0].d || null, off = r[1], me = r[2], fn = fromFileName(name);
@@ -464,9 +523,35 @@
           if (doc.time && fn.time && doc.date === fn.date && Math.abs(secs(doc.time) - secs(fn.time)) > 600 && source === 'offline') diffs.push('time');
         }
         if (!doc.currency && off && off.currency) doc.currency = off.currency;
-        return { doc: doc, source: source, diffs: diffs, aiError: r[0].e ? (r[0].e.skip ? 'skip' : r[0].e.key ? 'key' : r[0].e.net ? 'net' : 'fail') : '', verified: source === 'both' && !diffs.length, canvas: null };
+        if (fn && !doc.time && fn.time && validDate(doc.date) && doc.date === fn.date) doc.time = fn.time;
+        // alan alan: ok (iki okuma aynı) · diff (farklı) · ai (yalnız online) · off (yalnız offline)
+        var checks = {};
+        FIELDS.forEach(function (k) {
+          var a = ai && ai[k], o = off && !(off._partial && PARTIAL_SKIP.indexOf(k) >= 0) && off[k];
+          if (a && o) checks[k] = diffs.indexOf(k) >= 0 || !sameAny(k, a, o) ? 'diff' : 'ok';
+          else if (a) checks[k] = 'ai'; else if (o || doc[k]) checks[k] = 'off';
+        });
+        diffs = FIELDS.filter(function (k) { return checks[k] === 'diff'; });
+        var aiDoc = ai ? Object.assign({}, ai) : null, offDoc = off ? Object.assign({}, off) : null;
+        if (aiDoc) { delete aiDoc._conf; delete aiDoc._model; } if (offDoc) { delete offDoc._conf; delete offDoc._partial; }
+        return { doc: doc, source: source, diffs: diffs, checks: checks, aiDoc: aiDoc, offDoc: offDoc, model: ai && ai._model || '',
+          aiError: r[0].e ? (r[0].e.skip ? 'skip' : r[0].e.key ? 'key' : r[0].e.net ? 'net' : 'fail') : '', verified: source === 'both' && !diffs.length, canvas: null };
       });
     }).then(function (res) { return cvP.then(function (cv) { res.preview = cv ? cv.canvas : null; return res; }); });
+  }
+  // Telefonda (ya da masaüstü OCR'ı başarısızsa) genel okuyucunun Tesseract'ı: sayfa metni → "ETİKET değer" satırları
+  function textOcr(canvas) {
+    var FD = window.FalconDekont;
+    if (!FD || !FD.ocr) return null;
+    return Promise.resolve(FD.ocr(canvas)).then(function (txt) {
+      if (!txt || !/TRANSACTION|SENDER|RECIPIENT|AMOUNT/i.test(txt)) return null;
+      var d = parseText(txt);
+      ['from_name', 'to_name'].forEach(function (k) { if (/[\u0600-\u06FF]/.test(d[k])) d[k] = clean(d[k].replace(/(^|\s)[A-Za-z][A-Za-z.]*(?=\s|$)/g, ' ')); });
+      ['from_account', 'to_account'].forEach(function (k) { d[k] = /\*{4,}\d{4}$/.test(d[k]) ? d[k] : ''; });
+      if (d.note && /^[-–—~_.]+$/.test(d.note)) d.note = '-';
+      d._partial = true;
+      return d.ref || d.amount ? d : null;
+    }, function () { return null; });
   }
   function secs(s) { var m = /(\d{2}):(\d{2}):(\d{2})/.exec(s || ''); return m ? +m[1] * 3600 + +m[2] * 60 + +m[3] : 0; }
   // PDF'in yazı katmanı varsa (bazı sürümler): "ETİKET değer" satırlarından
@@ -476,6 +561,8 @@
     d.kind = get(/^TRANSACTION\s+(?!NUMBER|DATE)([A-Z ]+)$/i).toUpperCase(); d.ref = get(/TRANSACTION\s+NUMBER\s+(\S+)/i);
     var dt = get(/TRANSACTION\s+(?:DATE\s+)?(\d{1,2}\/\d{1,2}\/\d{4}\s*-\s*\d{2}:\d{2}:\d{2})/i);
     if (dt) { d.date = dt.split('-')[0].trim(); d.time = dt.split('-')[1].trim(); }
+    var dti = get(/TRANSACTION\s+(?:DATE\s+)?(\d{4}-\d{1,2}-\d{1,2}\s*-\s*\d{2}:\d{2}:\d{2})/i);
+    if (!dt && dti) { var mi = /(\d{4})-(\d{1,2})-(\d{1,2})\s*-\s*(\S+)/.exec(dti); d.date = ('0' + mi[3]).slice(-2) + '/' + ('0' + mi[2]).slice(-2) + '/' + mi[1]; d.time = mi[4]; }
     d.from_name = get(/SENDER\s+NAME\s+(.+)$/i); d.from_account = get(/SENDER\s+ACCOUNT\s+(\S+)/i);
     d.to_name = get(/RECIPIENT\s+NAME\s+(.+)$/i); d.to_account = get(/RECIPIENT\s+ACCOUNT\s+(\S+)/i);
     var am = get(/AMOUNT\s+(.+)$/i); d.amount = am.replace(/[^\d.,]/g, ''); d.currency = curOf(am);
@@ -527,22 +614,29 @@
   // (saveShamCash: sc_doc + sc_doc_file). { file, doc, source, diffs, verified, direction, other: {name, account}, account_id, accountName, dup }
   function pick(opts) {
     opts = opts || {};
-    return pickFiles().then(function (files) {
+    return (opts.file ? Promise.resolve([opts.file]) : pickFiles()).then(function (files) {
       var f = files && files[0];
       if (!f) return null;
-      return bytesOf(f).then(function (u8) { return read(u8, f.mime, f.originalName); }, function () { return { doc: normDoc({}), source: 'none', diffs: [] }; }).then(function (res) {
+      if (opts.onFile) try { opts.onFile(f); } catch (e) {}
+      return bytesOf(f).then(function (u8) { return read(u8, f.mime, f.originalName, null, opts.onStep); }, function () { return { doc: normDoc({}), source: 'none', diffs: [] }; }).then(function (res) {
         var d = res.doc || normDoc({});
         return Promise.all([getMe(), dupOf(d.ref), accounts()]).then(function (r) {
           var me = r[0], dup = r[1], list = r[2];
-          var dir = directionOf(me, d) || '';
+          var dir = directionOf(me, d) || '', dirFrom = dir ? 'me' : '';
           var want = opts.direction === 'in' || opts.direction === 'out' ? opts.direction : '';
+          var kd = kindDir(d.kind), conflict = false;
+          if (!dir && kd) { // v1.67.1: dekont türü (SEND → çıkış, RECEIVE → giriş)
+            dir = kd; dirFrom = 'kind'; conflict = !!want && want !== kd;
+            if (!conflict) addMe(dir === 'out' ? d.from_name : d.to_name, dir === 'out' ? d.from_account : d.to_account).catch(function () {});
+          }
           if (!dir && want && res.source !== 'none') { // yön bulunamadı: formdaki yön esas, adımı öğren (sonraki dekontlar kendiliğinden)
-            dir = want;
+            dir = want; dirFrom = 'form';
             addMe(dir === 'out' ? d.from_name : d.to_name, dir === 'out' ? d.from_account : d.to_account).catch(function () {});
           }
           var useDir = dir || want || 'out';
           var cur = d.currency || '';
-          return (cur ? pickAccount(list, cur) : Promise.resolve(null)).then(function (accId) {
+          return Promise.all([cur ? pickAccount(list, cur) : Promise.resolve(null), useDir === 'out' ? payeeOf(d.to_name, d.to_account) : Promise.resolve(null)]).then(function (pr) {
+            var accId = pr[0], payee = pr[1];
             var acc = list.filter(function (a) { return a.id === accId; })[0];
             var doc = Object.assign({}, d, { file_name: f.originalName || '', file_path: f.relPath, read_by: res.source + (res.model ? ':' + res.model : '') });
             delete doc._conf; delete doc._model;
@@ -550,13 +644,198 @@
               file: { relPath: f.relPath, originalName: f.originalName, mime: f.mime }, doc: doc, source: res.source, diffs: res.diffs || [], verified: !!res.verified,
               direction: useDir, dirKnown: !!dir, other: useDir === 'out' ? { name: d.to_name || '', account: d.to_account || '' } : { name: d.from_name || '', account: d.from_account || '' },
               amount: amountNum(d.amount), date: toIso(d.date) || '', currency: cur, account_id: acc ? acc.id : null, accountName: acc ? acc.name : '',
-              accountIsSham: !!(acc && /sham|شام/i.test(acc.name || '')), dup: dup
+              accountIsSham: !!(acc && /sham|شام/i.test(acc.name || '')), dup: dup,
+              checks: res.checks || {}, aiDoc: res.aiDoc || null, offDoc: res.offDoc || null, aiError: res.aiError || '', model: res.model || '',
+              dirFrom: dirFrom, kindDir: kd, conflict: conflict, time: d.time || '', note: d.note && d.note !== '-' ? d.note : '', payee: payee
             };
           });
         });
       });
     });
   }
+
+  function kindDir(k) {
+    k = String(k || '').toUpperCase();
+    if (/^(SEND|SENT|TRANSFER OUT|WITHDRAW|PAY|PAYMENT|إرسال|ارسال|تحويل صادر)/.test(k)) return 'out';
+    if (/^(RECEIVE|RECEIVED|DEPOSIT|TRANSFER IN|استلام|استقبال|إيداع|تحويل وارد)/.test(k)) return 'in';
+    return '';
+  }
+  // Kayıtlı Sham Cash alıcısı: hesabın son 4 hanesi ya da ad (boşluklar hariç) aynıysa
+  function payeeOf(name, account) {
+    var a = last4(account), n = nospace(name);
+    if (!a && !n) return Promise.resolve(null);
+    return dbAll('SELECT * FROM shamcash_payees ORDER BY use_count DESC, id').then(function (rows) {
+      var byAcc = a ? rows.filter(function (r) { return last4(r.account_no) === a; }) : [];
+      if (byAcc.length === 1) return byAcc[0];
+      var byName = n ? (byAcc.length ? byAcc : rows).filter(function (r) { return nospace(r.name) === n; }) : [];
+      return byName[0] || null;
+    });
+  }
+  // Okuma sonucundan forma yazılacak alanlar (yalnız formda olan alanlar; kayıt kendiliğinden YAPILMAZ)
+  function formPatch(r, v, doc) {
+    v = v || {}; doc = doc || r.doc;
+    var dir = r.formDir || r.direction, p = { pay_method: 'shamcash', sc_on: true, sc_doc: JSON.stringify(doc), sc_doc_file: r.file, sc_doc_ref: doc.ref || '' };
+    if (doc.ref) p.sc_ref = doc.ref;
+    var oName = dir === 'out' ? doc.to_name : doc.from_name, oAcc = dir === 'out' ? doc.to_account : doc.from_account;
+    if (oName) p.sc_name = oName; if (oAcc) p.sc_account = oAcc;
+    var am = amountNum(doc.amount); if ('amount' in v && am) p.amount = String(am);
+    var dt = toIso(doc.date); if ('date' in v && dt) p.date = dt;
+    if (r.form && (r.dirKnown || r.conflict)) p.direction = dir;
+    if ('account_id' in v && r.account_id) p.account_id = r.account_id;
+    var note = doc.note && doc.note !== '-' ? doc.note : '';
+    if (note && !String(v.sc_note || '').trim()) p.sc_note = note;
+    if (Array.isArray(v.people) && oName) {
+      var ls = v.people.filter(function (x) { return String(x || '').trim(); });
+      if (!ls.some(function (x) { return nospace(x) === nospace(oName); })) ls.push(oName);
+      p.people = ls;
+    }
+    if (dir === 'out' && r.payee) { p.sc_payee_id = r.payee.id; p.sc_save_payee = false; if (r.payee.phone && !String(v.sc_phone || '').trim()) p.sc_phone = r.payee.phone; if (r.payee.qr_text) p.sc_qr_text = r.payee.qr_text; }
+    p.sc_doc_info = { source: r.source, checks: r.checks || {}, aiDoc: r.aiDoc, offDoc: r.offDoc, aiError: r.aiError || '', dirFrom: r.dirFrom || '', conflict: !!r.conflict,
+      kind: doc.kind || '', time: doc.time || '', note: note, direction: dir, accountName: r.accountName || '', currency: doc.currency || r.currency || '', payee: r.payee ? r.payee.name : '', chosen: (r.chosen || {}) };
+    return p;
+  }
+  // Farklı okunan alanda kullanıcının seçimi: 'ai' ya da 'off' değeri dekonta ve forma yazılır
+  function choose(v, k, which) {
+    var info = v.sc_doc_info; if (!info) return null;
+    var src = which === 'off' ? info.offDoc : info.aiDoc; if (!src || !src[k]) return null;
+    var doc = {}; try { doc = JSON.parse(v.sc_doc || '{}'); } catch (e) { doc = {}; }
+    doc[k] = src[k]; if (k === 'amount' && src.currency) doc.currency = src.currency;
+    var chosen = Object.assign({}, info.chosen); chosen[k] = which;
+    var r = { file: v.sc_doc_file, doc: doc, source: info.source, checks: info.checks, aiDoc: info.aiDoc, offDoc: info.offDoc, aiError: info.aiError, dirFrom: info.dirFrom,
+      conflict: false, direction: v.direction || info.direction, formDir: v.direction || info.direction, form: false, accountName: info.accountName, currency: info.currency,
+      payee: null, chosen: chosen };
+    var p = formPatch(r, v, doc);
+    delete p.account_id; delete p.people; delete p.sc_payee_id;
+    if (k !== 'note') delete p.sc_note;
+    p.sc_doc_info = Object.assign({}, info, { chosen: chosen, kind: doc.kind || info.kind, time: doc.time || info.time });
+    return p;
+  }
+  function message(info) {
+    if (!info) return { text: '', ok: false };
+    var n = Object.keys(info.checks || {}).filter(function (k) { return info.checks[k] === 'diff' && !(info.chosen || {})[k]; }).length;
+    if (info.source === 'both') return n ? { text: t('mDiff', { n: n }), ok: false } : { text: t('mBoth'), ok: true };
+    if (info.source === 'ai') return { text: t('mAiOnly'), ok: false };
+    if (info.source === 'offline') return { text: info.aiError === 'net' ? t('mOffNet') : info.aiError === 'skip' || info.aiError === 'key' ? t('mOffKey') : t('mOff'), ok: false };
+    if (info.source === 'side') return { text: t('readSide'), ok: true };
+    return { text: t('mNone'), ok: false };
+  }
+  // Okuma özeti tablosu: [{ k, label, value, st: ok|diff|ai|off, stText, choices? }]
+  function rows(v) {
+    var info = v && v.sc_doc_info; if (!info) return [];
+    var doc = {}; try { doc = JSON.parse(v.sc_doc || '{}'); } catch (e) { doc = {}; }
+    var dir = v.direction === 'in' || v.direction === 'out' ? v.direction : info.direction, ch = info.checks || {}, chosen = info.chosen || {};
+    var nm = dir === 'out' ? 'to_name' : 'from_name', ac = dir === 'out' ? 'to_account' : 'from_account';
+    var fmt = function (k, d) { if (!d) return ''; if (k === 'amount') return [d.amount, d.currency].filter(Boolean).join(' '); return d[k] || ''; };
+    var list = [
+      ['kind', doc.kind ? t('kindDir', { k: doc.kind, d: t(dir) }) : '', t('kind')],
+      ['amount', fmt('amount', doc), t('amount')],
+      ['account', info.accountName ? info.accountName + (info.currency ? ' (' + info.currency + ')' : '') : '', t('account')],
+      ['date', doc.date || '', t('date')], ['time', doc.time || '', t('time')],
+      [nm, doc[nm] || '', t('other_' + dir)], [ac, doc[ac] || '', t('other_acc_' + dir)],
+      ['ref', doc.ref || '', t('ref')], ['note', doc.note && doc.note !== '-' ? doc.note : '', t('note')]
+    ];
+    var shown = list.map(function (x) { return x[0]; }).concat(['currency']);
+    FIELDS.forEach(function (k) { if (ch[k] === 'diff' && shown.indexOf(k) < 0) list.push([k, doc[k] || '', t(k)]); });
+    var out = [];
+    list.forEach(function (x) {
+      var k = x[0]; if (!x[1]) return;
+      var st = k === 'amount' ? (ch.amount === 'diff' || ch.currency === 'diff' ? 'diff' : ch.amount || '') : ch[k] || '';
+      var row = { k: k, label: x[2], value: x[1], st: st || 'none', stText: st === 'ok' ? '✓ ' + t('sOk') : st === 'ai' ? t('sAi') : st === 'off' ? t('sOff') : '' };
+      if (k === 'account' && info.payee && dir === 'out') row.stText = t('payeeHit', { n: info.payee });
+      if (st === 'diff' && info.aiDoc && info.offDoc) {
+        var ck = k === 'amount' && ch.amount !== 'diff' ? 'currency' : k;
+        row.choices = [{ which: 'ai', label: t('pickOn') + ': ' + fmt(k, info.aiDoc), on: chosen[ck] !== 'off' }, { which: 'off', label: t('pickOff') + ': ' + fmt(k, info.offDoc), on: chosen[ck] === 'off' }];
+        row.key = ck;
+        if (chosen[ck]) row.st = 'ok';
+      }
+      out.push(row);
+    });
+    return out;
+  }
+  // Kullanıcı dekont eklendikten sonra Tür'ü değiştirirse karşı taraf (ad / hesap / kişi) dekonttan yeniden alınır;
+  // yön dekont türünden ya da formdan geldiyse kullanıcının seçimiyle «benim adım» öğrenilir.
+  function redirect(v) {
+    var info = v && v.sc_doc_info, dir = v && v.direction;
+    if (!info || (dir !== 'in' && dir !== 'out') || dir === info.direction) return null;
+    var doc = {}; try { doc = JSON.parse(v.sc_doc || '{}'); } catch (e) { return null; }
+    var oldName = info.direction === 'out' ? doc.to_name : doc.from_name, nm = dir === 'out' ? doc.to_name : doc.from_name, ac = dir === 'out' ? doc.to_account : doc.from_account;
+    var p = { sc_name: nm || '', sc_account: ac || '' };
+    if (Array.isArray(v.people)) {
+      var ls = v.people.filter(function (x) { return String(x || '').trim() && (!oldName || nospace(x) !== nospace(oldName)); });
+      if (nm && !ls.some(function (x) { return nospace(x) === nospace(nm); })) ls.push(nm);
+      p.people = ls.length ? ls : [''];
+    }
+    if (dir === 'in') { p.sc_payee_id = null; }
+    if (info.dirFrom !== 'me') addMe(dir === 'out' ? doc.from_name : doc.to_name, dir === 'out' ? doc.from_account : doc.to_account).catch(function () {});
+    p.sc_doc_info = Object.assign({}, info, { direction: dir, conflict: false, dirFrom: 'user', payee: dir === 'out' ? info.payee : '' });
+    return p;
+  }
+  function conflictText(info) { return info && info.conflict ? t('conflict', { k: info.kind, d: t(info.direction) }) : ''; }
+  function markForm(root, v) {
+    var info = v && v.sc_doc_info; if (!root || !info) return;
+    var ch = info.checks || {}, chosen = info.chosen || {}, open = function (k) { return ch[k] === 'diff' && !chosen[k]; };
+    var bad = [];
+    if (open('amount') || open('currency')) bad.push(v.amount);
+    if (open('date')) bad.push(v.date);
+    if (open('ref')) bad.push(v.sc_ref);
+    var dir = v.direction === 'in' || v.direction === 'out' ? v.direction : info.direction, oth = dir === 'out' ? 'to_' : 'from_';
+    if (open(oth + 'name')) bad.push(v.sc_name);
+    if (open(oth + 'account')) bad.push(v.sc_account);
+    var vals = [v.amount, v.date, v.sc_name, v.sc_account, v.sc_ref, info.note ? v.sc_note : '', info.accountName ? clean(info.accountName + ' (' + info.currency + ')') : '']
+      .concat(Array.isArray(v.people) ? v.people : []).filter(function (x) { return bad.indexOf(x) < 0; });
+    mark(root, vals, bad);
+  }
+  // «Fişten oku» için: dosya Sham Cash dekontu mu? (ad, PDF yazısı ya da hızlı sayfa okuması)
+  function detect(file) {
+    if (/sham[\s_\-]?cash/i.test(file && file.originalName || '')) return Promise.resolve(true);
+    return bytesOf(file).then(function (u8) {
+      return toCanvas(u8, mimeOf(file.originalName, file.mime)).then(function (cv) {
+        if (cv.text) return /SHAM\s?CASH|TRANSACTION\s+NUMBER|RECIPIENT\s+ACCOUNT/i.test(cv.text);
+        var small = document.createElement('canvas'), k = Math.min(1, 1100 / cv.canvas.width);
+        small.width = Math.round(cv.canvas.width * k); small.height = Math.round(cv.canvas.height * k);
+        small.getContext('2d').drawImage(cv.canvas, 0, 0, small.width, small.height);
+        var rx = /SHAM\s?CASH|SHOM\s?CASH|TRANSACTION\s+NUMBER|RECIPIENT\s+(NAME|ACCOUNT)|SENDER\s+ACCOUNT/i;
+        if (ocrAvailable()) return ocrWorkers().then(function (W) { return W.eng.setParameters({ tessedit_pageseg_mode: '3', tessedit_char_whitelist: '' }).then(function () { return W.eng.recognize(small); }); }).then(function (x) { return rx.test(x.data.text || ''); }, function () { return false; });
+        var FD = window.FalconDekont;
+        return FD && FD.ocr ? Promise.resolve(FD.ocr(cv.canvas)).then(function (tx) { return rx.test(tx || ''); }, function () { return false; }) : false;
+      });
+    }).catch(function () { return false; });
+  }
+  // Sürükle-bırak: dosya orijinal haliyle (bayt bayt) dekontlara kaydedilir
+  function fromDrop(fileObj) {
+    var fr = F().files || {};
+    if (!fileObj || !/\.(pdf|jpe?g|png)$/i.test(fileObj.name || '') && !/pdf|jpeg|png/.test(fileObj.type || '')) return Promise.reject(new Error('type'));
+    if (!fr.saveReceipt) return Promise.reject(new Error('save'));
+    return fileObj.arrayBuffer().then(function (b) { return Promise.resolve(fr.saveReceipt(new Uint8Array(b), fileObj.name)); }).then(unwrap);
+  }
+  // Doldurulan alanları formda vurgula (kullanıcı değiştirince söner)
+  function mark(root, vals, bad) {
+    if (!root) return;
+    var set = {}; (vals || []).forEach(function (x) { if (x != null && String(x).trim()) set[String(x).trim()] = 1; });
+    var badSet = {}; (bad || []).forEach(function (x) { if (x != null && String(x).trim()) badSet[String(x).trim()] = 1; });
+    Array.prototype.forEach.call(root.querySelectorAll('input:not([type=checkbox]):not([type=file]),select,textarea'), function (e) {
+      var val = String(e.value || '').trim(), sel = e.tagName === 'SELECT' && e.selectedIndex >= 0 ? clean(e.options[e.selectedIndex].textContent) : '';
+      e.classList.remove('sc-filled', 'sc-diff');
+      if (!val) return;
+      if (badSet[val]) e.classList.add('sc-diff'); else if (set[val] || (sel && set[sel])) e.classList.add('sc-filled');
+      if (!e.__scMark) { e.__scMark = 1; e.addEventListener('input', function () { e.classList.remove('sc-filled', 'sc-diff'); }); }
+    });
+  }
+  (function () {
+    try {
+      var st = document.createElement('style');
+      st.textContent = '.sc-filled{outline:2px solid rgba(34,197,94,.75)!important;outline-offset:1px;background-color:rgba(34,197,94,.08)!important}' +
+        '.sc-diff{outline:2px solid rgba(245,158,11,.9)!important;outline-offset:1px;background-color:rgba(245,158,11,.10)!important}' +
+        '.sc-drop-on{outline:3px dashed #22c55e!important;outline-offset:-6px}' +
+        '.sc-read{border:1px solid rgba(34,197,94,.35);border-radius:10px;padding:8px 10px;margin:6px 0;display:grid;gap:6px}' +
+        '.sc-read .sc-msg{font-weight:600}.sc-read .sc-msg.ok{color:#22c55e}.sc-read .sc-msg.warn{color:#f59e0b}' +
+        '.sc-read table{width:100%;border-collapse:collapse;font-size:12.5px}.sc-read td{padding:3px 6px;border-top:1px solid rgba(127,127,127,.18);vertical-align:middle}' +
+        '.sc-read td.k{opacity:.7;white-space:nowrap}.sc-read td.s{white-space:nowrap;text-align:end}.sc-read .st-ok{color:#22c55e}.sc-read .st-diff{color:#f59e0b;font-weight:600}' +
+        '.sc-read .st-ai,.sc-read .st-off{opacity:.65}.sc-read .chs{display:inline-flex;gap:4px;flex-wrap:wrap}.sc-read .chs button{font-size:11.5px;padding:2px 8px}' +
+        '.sc-read .chs button.on{outline:2px solid #22c55e}.sc-read .sc-hint{opacity:.75;font-size:12px}';
+      (document.head || document.documentElement).appendChild(st);
+    } catch (e) {}
+  })();
 
   // ---------- dosya alma ----------
   function bytesOf(file) {
@@ -835,6 +1114,6 @@
   }
 
   try { css(); } catch (e) {}
-  window.FalconShamDekont = { open: open, read: read, pick: pick, accounts: accounts, t: t, openOriginal: openOriginal, checkInbox: checkInbox, parseOcr: parseOcr, dateFix: dateFix, parseText: parseText, version: VERSION,
+  window.FalconShamDekont = { open: open, read: read, pick: pick, formPatch: formPatch, choose: choose, rows: rows, conflictText: conflictText, redirect: redirect, markForm: markForm, message: message, detect: detect, fromDrop: fromDrop, mark: mark, kindDir: kindDir, payeeOf: payeeOf, toIso: toIso, amountNum: amountNum, accounts: accounts, t: t, openOriginal: openOriginal, checkInbox: checkInbox, parseOcr: parseOcr, dateFix: dateFix, parseText: parseText, version: VERSION,
     _test: { normDoc: normDoc, directionOf: directionOf, amountNum: amountNum, snapName: snapName, toIso: toIso, curOf: curOf } };
 })();

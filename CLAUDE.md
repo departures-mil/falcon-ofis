@@ -97,3 +97,12 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   OCR ana iş parçacığında, `ocr/tesseract-core-simd-lstm.wasm.js` + ara/eng; telefonda da). `addInvoicePayment` `sc: { ref, name, account, doc }` → hareketin
   sc_ref / sc_doc / pay_method (telefon: `araclar/patch-srv-166.py`); aynı sc_ref ikinci kez → `ERR_SC_DUPLICATE` (arayüz de açıklama / sc_ref ile engeller).
   Dekont `files.saveReceipt` (orijinal PDF / resim; telefonda JPEG) → `addReceipts`. Test: `araclar/tahsilat-166-e2e.js` (örnekler `araclar/dekont-ornek/`).
+
+- 1.67.1 DEKONTTAN DOLDURMA + ONAY (Para Girişi / Çıkışı): `araclar/patch-ui-1671.py` (iki bundle; telefon-hazirla.sh'ta) `FalconScDocAttach` baştan: okuma özeti tablosu
+  (`FalconShamDekont.rows/message/conflictText`), farklı alanda Online/Offline seçimi (`choose`), sürükle-bırak (`fromDrop` → files.saveReceipt, bayt bayt), vurgu (`markForm`:
+  `.sc-filled` yeşil / `.sc-diff` turuncu), Tür sonradan değişince karşı taraf yeniden (`redirect`, yön dekonttan/formdan geldiyse «benim adım» öğrenilir). Forma yazılanlar
+  `formPatch` (amount/date/direction/account_id/sc_*/sc_note/people/kayıtlı alıcı + geçici `sc_doc_info`); kayıt yalnız Kaydet ile. `FalconScApply` ortak; «Fişten oku»
+  (`FalconOcrBtn`, `cur` = form değeri) `detect` ile Sham Cash dekontunu tanır (import `receipt`, PDF de). Yön sırası: benim adlarım → dekont türü (`kindDir`: SEND→out,
+  RECEIVE→in; formla çelişirse yön değişir + uyarı, ad öğrenilmez) → formdaki yön. `read(…, onStep)`: online + offline paralel, `checks` alan alan (ok/diff/ai/off), `aiDoc`/`offDoc`;
+  masaüstü OCR'ı yoksa (telefon) `FalconDekont.ocr` metni → `parseText` (`_partial`: ad/hesap teyitte kullanılmaz). Offline: ISO tarih (2026-11-28 - 12:34:34), tireli GENERATED,
+  Arapça adlarda harf kutusu boşluğuyla kelime ayırma (`spacedName`). Test: `araclar/dekont-1671-e2e.js` (Gemini ana süreçte taklit; örnek `dekont-ornek/sham-goruntu.pdf` görüntü tabanlı).
