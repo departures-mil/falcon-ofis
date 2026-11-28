@@ -1,10 +1,10 @@
 {
- "version": "1.67.0",
- "notes": "Sham Cash her yerde: elle girilen her kayda dekont (PDF/resim), girişlerde Sham Cash, kasa otomatiği; fatura tahsilatı Sham Cash dekontundan; Kasa'da tutara göre sıralama",
- "size": 9798658,
- "sha256": "19f44a952a92aba407d65aa2cfa29cd3a17fef03fc6db660d057a087e5d92b37",
- "sig": "MEQCIG/bOBIpn8ID2qzbKoFLvyCQHYgZRN27gNKq3ydobO+ZAiAp+vP9Do9vshADLaqO0hPZQnm9xtRpHXdIs6+eqJnOnA==",
- "file": "telefon-1.67.0.fopk",
+ "version": "1.67.1",
+ "notes": "Para girişi/çıkışı: Sham Cash dekontundan doldurma + onay — önce online, sonra offline teyit, sürükle-bırak, Fişten oku Sham Cash'i tanır",
+ "size": 9807084,
+ "sha256": "67a82ac26db4f5d98c025e9c0b6a0b8ed69a7e7b3e5b13a5e4211927e555068e",
+ "sig": "MEQCIH4LYiPYaYiK7iwd4T9eZiRjdzMpRc8ZWw1Wxwc8WrekAiAeRTpuKxQXTdqmN8Yfzulzgl7DjHG30fmDIioE2Y1Whw==",
+ "file": "telefon-1.67.1.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-28T10:01:19.673Z"
+ "publishedAt": "2026-11-28T10:15:38.542Z"
 }
