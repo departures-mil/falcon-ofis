@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// 1.68 Telegram «Kayıtlı Mesajlar» → Sham Cash dekontu otomatik kayıt (gerçek Electron, boş veri klasörü, Telegram istemcisi taklit).
+// 1.68 / 1.69.1 Telegram «Kayıtlı Mesajlar» → Sham Cash dekontu otomatik kayıt (gerçek Electron, boş veri klasörü, Telegram istemcisi taklit).
 //   PLAYWRIGHT_CORE=/opt/npm-tools/node_modules/playwright-core xvfb-run -a -s "-screen 0 1600x1000x24" node araclar/telegram-168-e2e.js [çıktı-klasörü]
-// 1) PDF + altyazı «sisteme ekle» → online okuma → Para Girişi 250 USD (ad «benim»), Telegram'a «✅ … eklendi» yanıtı, günlük, orijinal dosya bayt bayt.
+// 1) PDF + altyazı «Ekle» (1.69.1: mesaj «ekle» ile başlar; «şunu da ekle» tetik değildir; «sisteme ekle» de geçerli) → online okuma → Para Girişi 250 USD (ad «benim»), Telegram'a «✅ … eklendi» yanıtı, günlük, orijinal dosya bayt bayt.
 // 2) PDF, ardından ayrı mesaj «Sisteme ekle: kira» → online 30 sn sürüyor → 3 sn sonra offline okumayla Para Çıkışı 75 USD, Notum «kira».
 // 3) Aynı dekont tekrar → «zaten kayıtlı», ikinci kayıt yok. 4) Dekontsuz eski tetik → «bulunamadı». 5) Yanıtlanmış tetik atlanır.
 // 6) Ayarlar kartı (tr / ar), «gözden geçir» listesi; kayıt düzenlenince işaret kalkar.
@@ -67,7 +67,7 @@ const GIRIS = { kind: 'SEND', ref: '900111222', date: '27/11/2026', time: '14:32
 
   // 1) PDF + altyazı
   await aiMode({ doc: GIRIS });
-  const m1 = await page.evaluate(() => window.__tgAdd({ file: 'sham-giris.pdf', message: 'Sisteme ekle' }));
+  const m1 = await page.evaluate(() => window.__tgAdd({ file: 'sham-giris.pdf', message: 'Ekle' }));
   await page.evaluate(() => window.FalconTelegram.scan(true));
   let tx = await q("SELECT id, direction, amount, sc_ref, sc_name, description, json_extract(sc_doc,'$.file_path') AS fp FROM cash_transactions WHERE sc_ref IS NOT NULL ORDER BY id");
   console.log('1)', JSON.stringify(tx));
@@ -82,7 +82,7 @@ const GIRIS = { kind: 'SEND', ref: '900111222', date: '27/11/2026', time: '14:32
 
   // 2) PDF sonra ayrı tetik + not; online yavaş → offline ile
   await aiMode({ doc: Object.assign({}, GIRIS, { ref: '900111333', amount: '75', from_name: 'Metin Ercan Guler', to_name: 'Omar Saleh' }), delay: 30000 });
-  await page.evaluate(() => { window.__tgAdd({ file: 'sham-cikis.pdf' }); window.__tgAdd({ message: 'sisteme ekle: kira' }); });
+  await page.evaluate(() => { window.__tgAdd({ message: 'şunu da ekle' }); window.__tgAdd({ file: 'sham-cikis.pdf' }); window.__tgAdd({ message: 'ekle: kira' }); });
   let t0 = Date.now();
   await page.evaluate(() => window.FalconTelegram.scan(true));
   const d2 = Date.now() - t0;

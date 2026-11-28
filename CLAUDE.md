@@ -116,7 +116,7 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
 - 1.68 TELEGRAM → SHAM CASH DEKONTU: `dist/assets/telegram-falcon.js` (masaüstü + telefon; Ayarlar kartı `.tgf-kart`, Bildirimler kartından sonra) Telegram «Kayıtlı Mesajlar»ı
   izler (açılışta, ekran açıkken dakikada bir, öne gelince, internet gelince + GramJS NewMessage). GramJS tarayıcı paketi `dist/assets/telegram-vendor.js` (telegram@2.26.22,
   esbuild; yalnız oturum varken yüklenir; `LICENSE-gramjs.txt`), WebSocket `wss://*.web.telegram.org` (iki CSP'de). Oturum `localStorage.tg_session` (yalnız bu cihaz, eşitlenmez);
-  uygulama anahtarı `localStorage.tg_api` > `guncelleme/telegram.json` {api_id, api_hash} (raw GitHub, `tg_api_remote`) > koddaki sabit. Tetik `tg_trigger` («sisteme ekle»;
+  uygulama anahtarı `localStorage.tg_api` > `guncelleme/telegram.json` {api_id, api_hash} (raw GitHub, `tg_api_remote`) > koddaki sabit. Tetik (1.69.1) `tg_trigger` > `guncelleme/telegram.json` `trigger` (`tg_trigger_remote`) > «ekle»; mesaj tetikle BAŞLAMALI (ya da yalnız tetik), «sisteme ekle» her zaman geçerli, eski kayıtlı «sisteme ekle» yok sayılır;
   altyazıda ya da dekonttan hemen önce 30 dk / hemen sonra 5 dk; arkasındaki yazı Notum). İşlenen mesajlar `tg_done`; başka cihazın «🦅 Falcon Ofis» yanıtı olan tetik atlanır;
   bir haftadan eski tetik işlenmez. Kayıt `FalconShamDekont.autoImport` (shamcash-falcon.js): files.saveReceipt (telefon: `araclar/patch-srv-168.py`) → read, `tg_wait` sn
   (vars. 15) sonra `waiting.skip` (offline hazırsa) → yön benim adlarım > dekont türü > Çıkış(+review) → `saveItem`/importShamCashReceipt, açıklama «📨 Telegram»; tutar yoksa

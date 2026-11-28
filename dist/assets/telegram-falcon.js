@@ -1,6 +1,6 @@
 /*
  * Falcon Ofis v1.68 — Telegram «Kayıtlı Mesajlar»dan Sham Cash dekontu → otomatik kayıt.
- * Kullanıcı Telegram'da Kayıtlı Mesajlar'a dekontu (PDF / JPEG / PNG) gönderip yanına (altyazı) ya da hemen önüne / arkasına «sisteme ekle»
+ * Kullanıcı Telegram'da Kayıtlı Mesajlar'a dekontu (PDF / JPEG / PNG) gönderip yanına (altyazı) ya da hemen önüne / arkasına «ekle» (v1.69.1; mesaj «ekle» ile başlar; eski «sisteme ekle» de geçerli)
  * yazınca program dekontu indirir, 1.67 okuyucusuyla okur (online → offline teyit; online uzun sürerse offline ile) ve onay beklemeden
  * Para Girişi / Çıkışı olarak kaydeder (FalconShamDekont.autoImport). Kayıt sonradan elle düzeltilebilir; şüpheli kayıtlar Ayarlar →
  * Telegram kartında «gözden geçir» olarak listelenir (kayıt düzenlenince ya da «✓ Gözden geçirdim» ile kalkar).
@@ -9,13 +9,13 @@
  */
 (function () {
   'use strict';
-  var VERSION = '1.68.0';
+  var VERSION = '1.69.1';
   // Telegram uygulama anahtarı (my.telegram.org → Falcon Ofis). localStorage.tg_api = "id:hash" ile değiştirilebilir.
   var API_ID = 0, API_HASH = '';
   var MARK = '🦅 Falcon Ofis';
   var TX = {
     tr: {
-      title: 'Telegram → Sham Cash dekontu', desc: 'Telegram\'da «Kayıtlı Mesajlar»a Sham Cash dekontunu (PDF / resim) gönderip yanına «{w}» yazın: dekont okunur ve Para Girişi / Çıkışı olarak kendiliğinden kaydedilir. Kayıtları sonradan Kasa\'dan düzeltebilirsiniz.',
+      title: 'Telegram → Sham Cash dekontu', desc: 'Telegram\'da «Kayıtlı Mesajlar»a Sham Cash dekontunu (PDF / resim) gönderip yanına «{w}» yazın (mesaj «{w}» ile başlamalı; arkasına yazdığınız not olur): dekont okunur ve Para Girişi / Çıkışı olarak kendiliğinden kaydedilir. Kayıtları sonradan Kasa\'dan düzeltebilirsiniz.',
       connect: 'Telegram\'a bağlan', phone: 'Telefon numarası (+90…, +963…)', sendCode: 'Kod gönder', code: 'Telegram\'dan gelen kod', signIn: 'Giriş', pw: 'İki adımlı doğrulama şifresi', cancel: 'Vazgeç',
       codeSent: 'Kod Telegram uygulamanıza mesaj olarak gönderildi.', connecting: 'Bağlanıyor…', connected: 'Bağlı: {n}', logout: 'Telegram oturumunu kapat',
       on: 'Otomatik ekle (Kayıtlı Mesajlar izlenir)', trigger: 'Tetik sözcüğü', wait: 'Online okuma en çok (sn) — sonra offline ile kaydedilir', check: 'Şimdi kontrol et',
@@ -32,7 +32,7 @@
       dev_phone: 'telefon', dev_desktop: 'masaüstü', phoneBad: 'Numarayı uluslararası biçimde yazın (ör. +963…).', codeBad: 'Kod yanlış ya da süresi doldu.', pwBad: 'Şifre yanlış.', flood: 'Çok fazla deneme — biraz bekleyin.'
     },
     en: {
-      title: 'Telegram → Sham Cash receipt', desc: 'Send the Sham Cash receipt (PDF / image) to «Saved Messages» in Telegram and write «{w}» with it: the receipt is read and recorded as Money In / Out automatically. You can correct records later in Cash.',
+      title: 'Telegram → Sham Cash receipt', desc: 'Send the Sham Cash receipt (PDF / image) to «Saved Messages» in Telegram and write «{w}» with it (the message must start with «{w}»; text after it becomes the note): the receipt is read and recorded as Money In / Out automatically. You can correct records later in Cash.',
       connect: 'Connect to Telegram', phone: 'Phone number (+90…, +963…)', sendCode: 'Send code', code: 'Code from Telegram', signIn: 'Sign in', pw: 'Two-step verification password', cancel: 'Cancel',
       codeSent: 'The code was sent as a message to your Telegram app.', connecting: 'Connecting…', connected: 'Connected: {n}', logout: 'Log out of Telegram',
       on: 'Add automatically (watch Saved Messages)', trigger: 'Trigger phrase', wait: 'Max online reading (s) — then saved with the offline reading', check: 'Check now',
@@ -49,7 +49,7 @@
       dev_phone: 'phone', dev_desktop: 'desktop', phoneBad: 'Write the number in international format (e.g. +963…).', codeBad: 'Wrong or expired code.', pwBad: 'Wrong password.', flood: 'Too many attempts — please wait.'
     },
     ar: {
-      title: 'تيليغرام ← إيصال شام كاش', desc: 'أرسل إيصال شام كاش (PDF / صورة) إلى «الرسائل المحفوظة» في تيليغرام واكتب معه «{w}»: يُقرأ الإيصال ويُسجَّل تلقائياً كإدخال / إخراج نقدية. يمكنك تصحيح السجلات لاحقاً من الصندوق.',
+      title: 'تيليغرام ← إيصال شام كاش', desc: 'أرسل إيصال شام كاش (PDF / صورة) إلى «الرسائل المحفوظة» في تيليغرام واكتب معه «{w}» (يجب أن تبدأ الرسالة بـ«{w}»، وما يليها يصبح ملاحظة): يُقرأ الإيصال ويُسجَّل تلقائياً كإدخال / إخراج نقدية. يمكنك تصحيح السجلات لاحقاً من الصندوق.',
       connect: 'الاتصال بتيليغرام', phone: 'رقم الهاتف (‎+963…)', sendCode: 'إرسال الرمز', code: 'الرمز الوارد من تيليغرام', signIn: 'تسجيل الدخول', pw: 'كلمة مرور التحقق بخطوتين', cancel: 'إلغاء',
       codeSent: 'أُرسل الرمز كرسالة إلى تطبيق تيليغرام لديك.', connecting: 'جارٍ الاتصال…', connected: 'متصل: {n}', logout: 'تسجيل الخروج من تيليغرام',
       on: 'إضافة تلقائية (مراقبة الرسائل المحفوظة)', trigger: 'عبارة التشغيل', wait: 'أقصى مدة للقراءة عبر الإنترنت (ثانية) — ثم يُحفظ بالقراءة دون اتصال', check: 'تحقّق الآن',
@@ -85,13 +85,14 @@
   function remoteKey() {
     if (keyP) return keyP;
     keyP = fetch(KEY_URL + '?t=' + Math.floor(Date.now() / 3600000), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+      if (j && typeof j.trigger === 'string' && j.trigger.trim().length >= 2 && j.trigger.trim().length <= 40) { if (ls('tg_trigger_remote') !== j.trigger.trim()) { ls('tg_trigger_remote', j.trigger.trim()); emit(); } }
       if (j && /^\d+$/.test(String(j.api_id)) && /^[0-9a-f]{32}$/i.test(String(j.api_hash || ''))) { var v = j.api_id + ':' + j.api_hash; if (ls('tg_api_remote') !== v) { ls('tg_api_remote', v); emit(); } }
     }).catch(function () {}).then(function () { setTimeout(function () { keyP = null; }, 600000); });
     return keyP;
   }
   var cfg = {
     on: function () { return ls('tg_on') !== '0'; },
-    trigger: function () { return String(ls('tg_trigger') || 'sisteme ekle'); },
+    trigger: function () { var v = String(ls('tg_trigger') || ''); if (v && norm(v) !== 'sisteme ekle') return v; return String(ls('tg_trigger_remote') || 'ekle'); },
     wait: function () { var n = Number(ls('tg_wait')); return n >= 3 && n <= 60 ? n : 15; },
     session: function () { return String(ls('tg_session') || ''); }
   };
@@ -165,17 +166,21 @@
 
   // ---------- tetik ----------
   function norm(s) { return String(s || '').toLocaleLowerCase('tr').replace(/[‎‏]/g, '').replace(/[.,!?;:«»"'()\-–—_*]+/g, ' ').replace(/\s+/g, ' ').trim(); }
-  // metin tetik içeriyorsa tetikten sonraki ek metni (not) döner; içermiyorsa null
+  // v1.69.1: mesaj tetikle BAŞLIYORSA (ya da yalnız tetikse) tetiktir; arkasındaki yazı not («ekle kira» → «kira»). «sisteme ekle» de çalışır.
+  // Tetik değilse null döner.
   function trig(text) {
-    var w = norm(cfg.trigger()), x = norm(text);
-    if (!w || !x) return null;
-    var i = (' ' + x + ' ').indexOf(' ' + w + ' ');
-    if (i < 0) return null;
-    var raw = String(text || '').trim(), rest = x.slice(i + w.length).trim();
-    if (!rest) return '';
-    // ek metni olduğu gibi (büyük / küçük harf korunur) almaya çalış
-    var j = raw.toLocaleLowerCase('tr').indexOf(cfg.trigger().toLocaleLowerCase('tr'));
-    return j >= 0 ? raw.slice(j + cfg.trigger().length).replace(/^[\s:,.\-–—]+/, '').trim() : rest;
+    var x = norm(text);
+    if (!x) return null;
+    var list = [cfg.trigger(), 'sisteme ekle'].map(norm).filter(function (w, i, a) { return w && a.indexOf(w) === i; })
+      .sort(function (a, b) { return b.length - a.length; });
+    for (var k = 0; k < list.length; k++) {
+      var w = list[k];
+      if (x !== w && x.indexOf(w + ' ') !== 0) continue;
+      var n = w.split(' ').length, toks = String(text || '').trim().split(/\s+/), used = 0, i = 0;
+      while (i < toks.length && used < n) { if (norm(toks[i])) used++; i++; }
+      return toks.slice(i).join(' ').replace(/^[\s:,.\-–—]+/, '').trim();
+    }
+    return null;
   }
   function fileOf(m) {
     if (!m || !m.media) return null;
@@ -429,7 +434,7 @@
     on.addEventListener('change', function () { ls('tg_on', on.checked ? '1' : '0'); if (on.checked) scan(); render(); });
     body.appendChild(el('label', { class: 'tgf-row', style: 'cursor:pointer' }, [on, el('span', { text: t('on') })]));
     var trg = el('input', { type: 'text', class: 'input', 'data-k': 'trig', dir: 'auto', value: cfg.trigger() });
-    trg.addEventListener('change', function () { var v = String(trg.value || '').trim(); ls('tg_trigger', v || 'sisteme ekle'); trg.blur(); render(); });
+    trg.addEventListener('change', function () { var v = String(trg.value || '').trim(); if (!v || norm(v) === norm(String(ls('tg_trigger_remote') || 'ekle'))) ls('tg_trigger', null); else ls('tg_trigger', v); trg.blur(); render(); });
     body.appendChild(el('div', { class: 'tgf-row' }, [el('span', { class: 'tgf-st', text: t('trigger') + ':' }), trg]));
     var wt = el('input', { type: 'number', class: 'input', 'data-k': 'wait', min: '3', max: '60', value: String(cfg.wait()), style: 'max-width:90px' });
     wt.addEventListener('change', function () { var n = Math.round(Number(wt.value)); ls('tg_wait', n >= 3 && n <= 60 ? n : 15); wt.blur(); render(); });
