@@ -1,10 +1,10 @@
 {
- "version": "1.68.0",
- "notes": "Telegram Kayıtlı Mesajlar'dan Sham Cash dekontu otomatik kayıt (sisteme ekle); dekont okuma hızlandı (1.67.2)",
- "size": 10046851,
- "sha256": "5d09e2f8a7ae455933caa9607a4ad2e3f731829f584b5798b38bc9c049411c72",
- "sig": "MEYCIQD9Dvd67obNEwt8/GqCDLbgXOl5ANybjE03nf8PUbMK6wIhAJH435gKmWvYI/29xir43cg4bfyjZUM0LqbPGrqbLWZp",
- "file": "telefon-1.68.0.fopk",
+ "version": "1.69.1",
+ "notes": "Telegram tetiği artık yalnız «ekle» (mesaj başında; arkası not); çevrimdışı okuma / çeviri iyileştirmeleri",
+ "size": 10047651,
+ "sha256": "f2cd7613325f612a98af20462bc89f7ee88d3b37bf315e0eda70bc31224562fa",
+ "sig": "MEQCIGA1h2f+UwsEuJbSXcC4H4IMih83vjVjFi7nGwKrKmvxAiA/xe96TNsJENmOaCW6vfESB5uLP3vECxlTRmbd+xyAvQ==",
+ "file": "telefon-1.69.1.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-28T11:07:44.218Z"
+ "publishedAt": "2026-11-28T11:25:18.573Z"
 }
