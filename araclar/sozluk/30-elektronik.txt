@@ -1,0 +1,347 @@
+# Elektronik bileşenler, elektrik, güç, ölçüm, otomasyon (tr | en | ar)
+elektronik parça | Electronic Component | مكون إلكتروني
+elektronik parçalar | Electronic Components | مكونات إلكترونية
+elektronik bileşen | Electronic Component | مكون إلكتروني
+bileşen | Component | مكون
+bileşenleri | Components | مكونات
+devre elemanı | Circuit Element | عنصر دارة
+yarı iletken | Semiconductor | شبه موصل
+yarıiletken | Semiconductor | شبه موصل
+direnci | Resistor | مقاومة
+dirençler | Resistors | مقاومات
+direnç seti | Resistor Kit | طقم مقاومات
+smd direnç | SMD Resistor | مقاومة SMD
+karbon film direnç | Carbon Film Resistor | مقاومة غشاء كربوني
+metal film direnç | Metal Film Resistor | مقاومة غشاء معدني
+güç direnci | Power Resistor | مقاومة قدرة
+şönt direnç | Shunt Resistor | مقاومة تحويلة
+şönt | Shunt | تحويلة
+ayarlı direnç | Variable Resistor | مقاومة متغيرة
+kondansatörü | Capacitor | مكثف
+kondansatörler | Capacitors | مكثفات
+kapasitör | Capacitor | مكثف
+süper kapasitör | Supercapacitor | مكثف فائق
+polyester kondansatör | Polyester Capacitor | مكثف بوليستر
+film kondansatör | Film Capacitor | مكثف غشائي
+kompanzasyon kondansatörü | Power Factor Correction Capacitor | مكثف تصحيح معامل القدرة
+kompanzasyon | Power Factor Correction | تصحيح معامل القدرة
+diyotu | Diode | ديود
+diyotlar | Diodes | ديودات
+schottky diyot | Schottky Diode | ديود شوتكي
+hızlı diyot | Fast Recovery Diode | ديود استعادة سريعة
+tvs diyot | TVS Diode | ديود TVS
+transistörü | Transistor | ترانزستور
+transistörler | Transistors | ترانزستورات
+güç transistörü | Power Transistor | ترانزستور قدرة
+entegresi | Integrated Circuit | دارة متكاملة
+entegreler | Integrated Circuits | دارات متكاملة
+çip | Chip | رقاقة
+çipi | Chip | رقاقة
+işlemsel yükselteç | Operational Amplifier | مضخم عمليات
+opamp | Op-Amp | مضخم عمليات
+voltaj regülatörü | Voltage Regulator | منظم جهد
+gerilim regülatörü | Voltage Regulator | منظم جهد
+gerilim düzenleyici | Voltage Regulator | منظم جهد
+gerilim | Voltage | جهد
+voltaj | Voltage | جهد
+akım | Current | تيار
+akımı | Current | تيار
+yüksek akım | High Current | تيار عالٍ
+yüksek akımlı | High Current | تيار عالٍ
+düşük akım | Low Current | تيار منخفض
+yüksek gerilim | High Voltage | جهد عالٍ
+alçak gerilim | Low Voltage | جهد منخفض
+orta gerilim | Medium Voltage | جهد متوسط
+güç | Power | قدرة
+gücü | Power | قدرة
+watt | Watt | واط
+voltluk | Volt | فولت
+amperlik | Ampere | أمبير
+amper | Ampere | أمبير
+volt | Volt | فولت
+doğru akım | Direct Current | تيار مستمر
+alternatif akım | Alternating Current | تيار متردد
+tek faz | Single-Phase | أحادي الطور
+tek fazlı | Single-Phase | أحادي الطور
+üç faz | Three-Phase | ثلاثي الأطوار
+üç fazlı | Three-Phase | ثلاثي الأطوار
+trifaze | Three-Phase | ثلاثي الأطوار
+monofaze | Single-Phase | أحادي الطور
+faz | Phase | طور
+nötr | Neutral | محايد
+toprak | Earth | أرضي
+kısa devre | Short Circuit | دارة قصيرة
+aşırı akım | Overcurrent | تيار زائد
+aşırı gerilim | Overvoltage | جهد زائد
+aşırı yük | Overload | حمل زائد
+parafudr | Surge Arrester | مانعة صواعق
+yıldırım | Lightning | صاعقة
+paratoner | Lightning Rod | مانعة صواعق
+sigorta | Fuse | فيوز
+sigortası | Fuse | فيوز
+sigortalar | Fuses | فيوزات
+cam sigorta | Glass Fuse | فيوز زجاجي
+bıçak sigorta | Blade Fuse | فيوز شفرة
+bıçaklı sigorta | Blade Fuse | فيوز شفرة
+nh sigorta | NH Fuse | فيوز NH
+sigorta kutusu | Fuse Box | علبة فيوزات
+sigorta tutucu | Fuse Holder | حامل فيوز
+şalter | Circuit Breaker | قاطع دارة
+şalteri | Circuit Breaker | قاطع دارة
+kompakt şalter | Moulded Case Circuit Breaker | قاطع دارة بعلبة مصبوبة
+anahtarlı şalter | Isolator Switch | مفتاح عزل
+yük ayırıcı | Load Break Switch | مفتاح فصل الحمل
+ayırıcı | Disconnector | فاصل
+devre kesici | Circuit Breaker | قاطع دارة
+röle | Relay | مرحل
+rölesi | Relay | مرحل
+röleler | Relays | مرحلات
+katı hal rölesi | Solid State Relay | مرحل حالة صلبة
+zaman rölesi | Timer Relay | مرحل توقيت
+termik röle | Thermal Overload Relay | مرحل حراري
+faz koruma rölesi | Phase Protection Relay | مرحل حماية الطور
+marş rölesi | Starter Relay | مرحل بدء التشغيل
+kontaktörü | Contactor | كونتاكتور
+yardımcı kontak | Auxiliary Contact | تماس مساعد
+buton | Push Button | زر ضغط
+butonu | Push Button | زر ضغط
+düğme | Button | زر
+düğmesi | Button | زر
+acil stop | Emergency Stop | توقف طارئ
+acil durdurma | Emergency Stop | توقف طارئ
+mantar buton | Mushroom Push Button | زر فطري
+anahtar | Switch | مفتاح
+anahtarı | Switch | مفتاح
+pako şalter | Cam Switch | مفتاح كامة
+mikro switch | Micro Switch | مفتاح صغير
+sınır anahtarı | Limit Switch | مفتاح حدي
+limit switch | Limit Switch | مفتاح حدي
+kapı switchi | Door Switch | مفتاح باب
+on-off | On-Off | تشغيل-إيقاف
+açma kapama | On/Off | تشغيل/إيقاف
+açma-kapama | On/Off | تشغيل/إيقاف
+anahtar priz | Switch and Socket | مفتاح ومقبس
+seçici anahtar | Selector Switch | مفتاح اختيار
+sensör | Sensor | حساس
+sensörü | Sensor | حساس
+sensörler | Sensors | حساسات
+endüktif sensör | Inductive Sensor | حساس حثي
+endüktif | Inductive | حثي
+kapasitif sensör | Capacitive Sensor | حساس سعوي
+kapasitif | Capacitive | سعوي
+fotosel | Photoelectric Sensor | حساس كهروضوئي
+optik sensör | Optical Sensor | حساس ضوئي
+yaklaşım sensörü | Proximity Sensor | حساس تقارب
+yakınlık sensörü | Proximity Sensor | حساس تقارب
+hareket sensörü | Motion Sensor | حساس حركة
+sıcaklık sensörü | Temperature Sensor | حساس حرارة
+nem sensörü | Humidity Sensor | حساس رطوبة
+basınç sensörü | Pressure Sensor | حساس ضغط
+seviye sensörü | Level Sensor | حساس مستوى
+akış sensörü | Flow Sensor | حساس تدفق
+gaz sensörü | Gas Sensor | حساس غاز
+duman sensörü | Smoke Sensor | حساس دخان
+manyetik sensör | Magnetic Sensor | حساس مغناطيسي
+manyetik | Magnetic | مغناطيسي
+mıknatıs | Magnet | مغناطيس
+hall sensörü | Hall Effect Sensor | حساس تأثير هول
+yük hücresi | Load Cell | خلية حمل
+termokupl | Thermocouple | مزدوج حراري
+termostat | Thermostat | منظم حرارة
+higrometre | Hygrometer | مقياس رطوبة
+nem | Humidity | رطوبة
+transmitter | Transmitter | مرسل
+dönüştürücüsü | Transducer | محوّل طاقة
+pnp | PNP | PNP
+npn | NPN | NPN
+no | NO | NO
+nc | NC | NC
+normalde açık | Normally Open | مفتوح عادة
+normalde kapalı | Normally Closed | مغلق عادة
+algılama mesafesi | Sensing Distance | مسافة الاستشعار
+algılama | Detection | كشف
+motor | Motor | محرك
+motoru | Motor | محرك
+elektrik motoru | Electric Motor | محرك كهربائي
+redüktörlü motor | Geared Motor | محرك بمخفض سرعة
+dc motor | DC Motor | محرك DC
+ac motor | AC Motor | محرك AC
+fırçalı | Brushed | بفرش
+fırçasız | Brushless | بدون فرش
+kömür | Carbon Brush | فرشاة كربونية
+motor kömürü | Motor Carbon Brush | فرشاة محرك
+sürücüsü kartı | Driver Board | لوحة تشغيل
+motor sürücü kartı | Motor Driver Board | لوحة تشغيل المحرك
+hız kontrol | Speed Control | تحكم بالسرعة
+yumuşak yolvericisi | Soft Starter | بادئ ناعم
+yumuşak yolverici | Soft Starter | بادئ ناعم
+yolverici | Starter | بادئ
+sürücü ünitesi | Drive Unit | وحدة تشغيل
+frekans konvertörü | Frequency Converter | محوّل تردد
+hız kontrol cihazı | Speed Controller | منظم سرعة
+güç kaynağı modülü | Power Supply Module | وحدة مزود طاقة
+smps | Switch-Mode Power Supply | مزود طاقة تبديلي
+anahtarlamalı güç kaynağı | Switch-Mode Power Supply | مزود طاقة تبديلي
+ray tipi güç kaynağı | DIN Rail Power Supply | مزود طاقة على سكة DIN
+adaptörlü güç kaynağı | Power Adapter | محوّل طاقة
+şarj | Charging | شحن
+şarjlı | Rechargeable | قابل للشحن
+şarj edilebilir | Rechargeable | قابل للشحن
+pil | Battery | بطارية
+pili | Battery | بطارية
+piller | Batteries | بطاريات
+akü | Battery | بطارية
+aküsü | Battery | بطارية
+kuru tip akü | Sealed Lead-Acid Battery | بطارية رصاص حمضية مغلقة
+jel akü | Gel Battery | بطارية جل
+lityum | Lithium | ليثيوم
+lityum iyon | Lithium-Ion | ليثيوم أيون
+lityum polimer | Lithium Polymer | ليثيوم بوليمر
+kurşun asit | Lead-Acid | رصاص حمضي
+pil yuvası | Battery Holder | حامل بطارية
+pil tutucu | Battery Holder | حامل بطارية
+batarya grubu | Battery Pack | حزمة بطاريات
+batarya paketi | Battery Pack | حزمة بطاريات
+akü şarj cihazı | Battery Charger | شاحن بطاريات
+invertörü | Inverter | عاكس
+güneş enerjisi | Solar Energy | طاقة شمسية
+güneş paneli | Solar Panel | لوح شمسي
+güneş panelleri | Solar Panels | ألواح شمسية
+şarj kontrol cihazı | Charge Controller | منظم شحن
+şarj regülatörü | Charge Controller | منظم شحن
+mppt | MPPT | MPPT
+pwm | PWM | PWM
+on-grid | On-Grid | متصل بالشبكة
+off-grid | Off-Grid | غير متصل بالشبكة
+şebeke | Grid | شبكة كهربائية
+şebeke bağlantılı | Grid-Tied | متصل بالشبكة
+jeneratörü | Generator | مولد
+dizel jeneratör | Diesel Generator | مولد ديزل
+transfer panosu | Transfer Switch Panel | لوحة تحويل
+otomatik transfer şalteri | Automatic Transfer Switch | مفتاح تحويل تلقائي
+dağıtım panosu | Distribution Board | لوحة توزيع
+ana dağıtım panosu | Main Distribution Board | لوحة التوزيع الرئيسية
+tali pano | Sub-Distribution Board | لوحة توزيع فرعية
+sayaç panosu | Meter Panel | لوحة عدادات
+elektrik sayacı | Electricity Meter | عداد كهرباء
+enerji analizörü | Power Analyser | محلل طاقة
+akım trafosu | Current Transformer | محول تيار
+gerilim trafosu | Voltage Transformer | محول جهد
+izolasyon trafosu | Isolation Transformer | محول عزل
+toroid trafo | Toroidal Transformer | محول حلقي
+toroid | Toroid | حلقي
+ferrit | Ferrite | فريت
+ferrit nüve | Ferrite Core | قلب فريت
+nüve | Core | قلب
+şok bobini | Choke | خانق
+filtre kartı | Filter Board | لوحة مرشح
+emi filtresi | EMI Filter | مرشح EMI
+gürültü filtresi | Noise Filter | مرشح ضوضاء
+soğutucu blok | Heat Sink | مشتت حرارة
+alüminyum soğutucu | Aluminium Heat Sink | مشتت حرارة ألمنيوم
+termal ped | Thermal Pad | وسادة حرارية
+termal | Thermal | حراري
+ısıl | Thermal | حراري
+ısı | Heat | حرارة
+ısı iletken | Thermally Conductive | موصل للحرارة
+silikon | Silicone | سيليكون
+izole | Insulated | معزول
+kablo bağlantı | Cable Connection | توصيل كابل
+pcb | PCB | PCB
+baskı devre | Printed Circuit | دارة مطبوعة
+delikli plaket | Perfboard | لوحة مثقبة
+plaket | Circuit Board | لوحة دارة
+breadboard | Breadboard | لوحة تجارب
+deney kartı | Development Board | لوحة تجارب
+deney seti | Experiment Kit | طقم تجارب
+eğitim seti | Training Kit | طقم تدريب
+başlangıç seti | Starter Kit | طقم مبتدئين
+modülü kartı | Module Board | لوحة وحدة
+röle kartı | Relay Board | لوحة مرحلات
+röle modülü | Relay Module | وحدة مرحلات
+sensör modülü | Sensor Module | وحدة حساس
+kablosuz modül | Wireless Module | وحدة لاسلكية
+bluetooth modülü | Bluetooth Module | وحدة بلوتوث
+wifi modülü | Wi-Fi Module | وحدة Wi-Fi
+gps modülü | GPS Module | وحدة GPS
+gsm modülü | GSM Module | وحدة GSM
+ekran modülü | Display Module | وحدة عرض
+kamera modülü | Camera Module | وحدة كاميرا
+şarj modülü | Charging Module | وحدة شحن
+voltaj düşürücü | Step-Down Converter | محوّل خافض
+voltaj yükseltici | Step-Up Converter | محوّل رافع
+düşürücü | Step-Down | خافض
+yükseltici modül | Step-Up Module | وحدة رافعة
+dc-dc dönüştürücü | DC-DC Converter | محوّل DC-DC
+ac-dc dönüştürücü | AC-DC Converter | محوّل AC-DC
+sinyal jeneratörü | Signal Generator | مولد إشارات
+osiloskop | Oscilloscope | راسم الإشارات
+lojik analizör | Logic Analyser | محلل منطقي
+spektrum analizörü | Spectrum Analyser | محلل طيف
+güç kaynağı laboratuvar | Laboratory Power Supply | مزود طاقة مختبري
+laboratuvar | Laboratory | مختبر
+pens ampermetre | Clamp Meter | مقياس كلّابي
+ampermetre | Ammeter | مقياس أمبير
+voltmetre | Voltmeter | مقياس فولت
+megometre | Insulation Resistance Tester | مقياس مقاومة العزل
+toprak megeri | Earth Resistance Tester | مقياس مقاومة التأريض
+termal kamera | Thermal Camera | كاميرا حرارية
+lehim istasyonu | Soldering Station | محطة لحام
+sıcak hava istasyonu | Hot Air Station | محطة هواء ساخن
+lehim teli | Solder Wire | سلك لحام
+lehim pastası | Solder Paste | معجون لحام
+lehim pompası | Desoldering Pump | شفاط لحام
+lehim emici | Desoldering Wick | شريط شفط اللحام
+flux | Flux | مساعد صهر
+pasta | Paste | معجون
+ledli | LED | LED
+led lamba | LED Lamp | مصباح LED
+led ampul | LED Bulb | لمبة LED
+led şerit | LED Strip | شريط LED
+led panel | LED Panel | لوحة LED
+led sürücü | LED Driver | مشغل LED
+led driver | LED Driver | مشغل LED
+ampul | Bulb | لمبة
+lamba | Lamp | مصباح
+lambası | Lamp | مصباح
+duy | Lamp Holder | دواية
+floresan | Fluorescent | فلورسنت
+balast | Ballast | كابح
+starter | Starter | بادئ
+acil aydınlatma | Emergency Lighting | إنارة طوارئ
+çıkış armatürü | Exit Sign | لافتة خروج
+sokak lambası | Street Light | مصباح شارع
+kablo tava | Cable Tray | حامل كابلات
+kanal | Trunking | مجرى
+kablo kanalı kapağı | Trunking Cover | غطاء مجرى
+spiral boru | Flexible Conduit | أنبوب مرن
+spiral hortum | Flexible Conduit | أنبوب مرن
+boru kelepçesi | Pipe Clamp | مشبك أنبوب
+elektrik borusu | Electrical Conduit | أنبوب كهربائي
+pvc boru | PVC Pipe | أنبوب PVC
+topraklama çubuğu | Earth Rod | قضيب تأريض
+topraklama barası | Earth Busbar | قضيب تأريض
+bara | Busbar | قضيب توزيع
+bakır bara | Copper Busbar | قضيب نحاسي
+izolatörlü | Insulated | معزول
+kumanda kablosu | Control Cable | كابل تحكم
+kumanda panosu | Control Panel | لوحة تحكم
+kontrol paneli | Control Panel | لوحة تحكم
+otomasyon | Automation | أتمتة
+otomasyon sistemi | Automation System | نظام أتمتة
+endüstriyel otomasyon | Industrial Automation | أتمتة صناعية
+scada | SCADA | SCADA
+hmi | HMI | HMI
+plc modülü | PLC Module | وحدة PLC
+giriş modülü | Input Module | وحدة دخل
+çıkış modülü | Output Module | وحدة خرج
+iletişim modülü | Communication Module | وحدة اتصال
+güç modülü | Power Module | وحدة طاقة
+cpu modülü | CPU Module | وحدة المعالج
+analog giriş | Analogue Input | دخل تناظري
+analog çıkış | Analogue Output | خرج تناظري
+röle çıkışlı | Relay Output | خرج مرحل
+transistör çıkışlı | Transistor Output | خرج ترانزستور
+kanal sayısı | Number of Channels | عدد القنوات
+kanal | Channel | قناة
+kanallı | Channel | قنوات

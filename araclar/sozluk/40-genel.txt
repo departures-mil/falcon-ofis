@@ -1,0 +1,564 @@
+# Genel ürün sözcükleri, mekanik, el aletleri, otomotiv, havacılık, malzeme, bağlaçlar (tr | en | ar)
+ve | and | و
+veya | or | أو
+ya da | or | أو
+ile | with | مع
+için | for | لـ
+uyumlu | Compatible | متوافق
+ile uyumlu | Compatible | متوافق
+dahil | Included | مشمول
+dahildir | Included | مشمول
+hariç | Excluded | غير مشمول
+hariçtir | Excluded | غير مشمول
+kdv dahil | VAT Included | شامل الضريبة
+kdv hariç | Excluding VAT | غير شامل الضريبة
+olan | with | ذو
+adet | pcs | قطعة
+adetlik | Piece | قطعة
+parça | Part | قطعة
+parçası | Part | قطعة
+parçalar | Parts | قطع
+parçaları | Parts | قطع
+yedek parça | Spare Part | قطعة غيار
+yedek parçası | Spare Part | قطعة غيار
+yedek parçalar | Spare Parts | قطع غيار
+yedek | Spare | احتياطي
+yedeği | Spare | احتياطي
+aksesuar | Accessory | ملحق
+aksesuarı | Accessory | ملحق
+aksesuarlar | Accessories | ملحقات
+aksesuarları | Accessories | ملحقات
+sarf malzeme | Consumable | مستهلكات
+sarf malzemesi | Consumable | مستهلكات
+malzeme | Material | مادة
+malzemesi | Material | مادة
+malzemeler | Materials | مواد
+ekipman | Equipment | معدات
+ekipmanı | Equipment | معدات
+ekipmanlar | Equipment | معدات
+donanım | Hardware | عتاد
+donanımı | Hardware | عتاد
+alet | Tool | أداة
+aleti | Tool | أداة
+aletler | Tools | أدوات
+el aleti | Hand Tool | أداة يدوية
+el aletleri | Hand Tools | أدوات يدوية
+takım | Set | طقم
+takımı | Set | طقم
+set | Set | طقم
+seti | Set | طقم
+setler | Sets | أطقم
+kit | Kit | طقم
+kiti | Kit | طقم
+paketi | Pack | عبوة
+paketler | Packs | عبوات
+kutu | Box | علبة
+kutusu | Box | علبة
+kutular | Boxes | علب
+koli | Carton | كرتونة
+kolisi | Carton | كرتونة
+rulo | Roll | لفة
+rulosu | Roll | لفة
+makara | Reel | بكرة
+makarası | Reel | بكرة
+top | Roll | لفة
+boy | Length | طول
+ölçü | Size | مقاس
+ölçüsü | Size | مقاس
+boyut | Size | حجم
+boyutu | Size | حجم
+numara | Size | رقم
+no | No | رقم
+çeşit | Assorted | متنوع
+çeşitli | Assorted | متنوع
+karışık | Assorted | مشكل
+muhtelif | Miscellaneous | متنوع
+diğer | Other | أخرى
+genel | General | عام
+özel | Special | خاص
+özel üretim | Custom-Made | مصنع حسب الطلب
+standart tip | Standard Type | النوع القياسي
+yeni nesil | Next-Generation | جيل جديد
+nesil | Generation | جيل
+sürüm | Version | إصدار
+versiyon | Version | إصدار
+yüksek kaliteli | High-Quality | عالي الجودة
+kaliteli | Quality | عالي الجودة
+birinci sınıf | Premium | من الدرجة الأولى
+ekonomik tip | Economy Type | النوع الاقتصادي
+ağır hizmet | Heavy-Duty | للخدمة الشاقة
+ağır hizmet tipi | Heavy-Duty | للخدمة الشاقة
+hafif hizmet | Light-Duty | للخدمة الخفيفة
+çok amaçlı | Multi-Purpose | متعدد الأغراض
+çok fonksiyonlu | Multi-Function | متعدد الوظائف
+fonksiyonlu | Function | وظيفة
+fonksiyon | Function | وظيفة
+özellikli | Featured | بميزة
+özelliği | Feature | ميزة
+ayarlı | Adjustable | قابل للتعديل
+ayarlanabilir | Adjustable | قابل للتعديل
+sabitlenebilir | Lockable | قابل للتثبيت
+katlanır | Folding | قابل للطي
+katlanabilir | Foldable | قابل للطي
+teleskopik | Telescopic | تلسكوبي
+döner | Rotating | دوار
+dönerli | Swivel | دوار
+sabitli | Fixed | ثابت
+manyetikli | Magnetic | مغناطيسي
+mıknatıslı | Magnetic | مغناطيسي
+şarjlı matkap | Cordless Drill | مثقاب لاسلكي
+akülü | Cordless | لاسلكي
+akülü matkap | Cordless Drill | مثقاب لاسلكي
+darbeli | Impact | ذو طرق
+darbeli matkap | Impact Drill | مثقاب طرقي
+kırıcı | Breaker | مطرقة تكسير
+kırıcı delici | Rotary Hammer | مثقاب مطرقي
+spiral taşlama | Angle Grinder | جلاخة زاوية
+avuç taşlama | Angle Grinder | جلاخة زاوية
+taşlama makinesi | Grinder | جلاخة
+kesme taşı | Cutting Disc | قرص قطع
+kesme diski | Cutting Disc | قرص قطع
+zımpara taşı | Grinding Wheel | حجر تجليخ
+flap disk | Flap Disc | قرص صنفرة
+tel fırça | Wire Brush | فرشاة سلكية
+fırça | Brush | فرشاة
+fırçası | Brush | فرشاة
+dekupaj | Jigsaw | منشار أركت
+dekupaj testere | Jigsaw | منشار أركت
+daire testere | Circular Saw | منشار دائري
+şerit testere | Band Saw | منشار شريطي
+testere ağzı | Saw Blade | شفرة منشار
+testere bıçağı | Saw Blade | شفرة منشار
+vidalama | Screwdriver | مفك كهربائي
+vidalama makinesi | Electric Screwdriver | مفك كهربائي
+tork anahtarı | Torque Wrench | مفتاح عزم
+lokma | Socket | لقمة مفتاح
+lokma takımı | Socket Set | طقم لقم
+lokma anahtar | Socket Wrench | مفتاح لقم
+cırcır | Ratchet | سقاطة
+cırcırlı | Ratchet | سقاطة
+alyan | Hex Key | مفتاح ألن
+alyan anahtar | Hex Key | مفتاح ألن
+alyan takımı | Hex Key Set | طقم مفاتيح ألن
+yıldız anahtar | Ring Spanner | مفتاح حلقي
+açık ağız anahtar | Open-End Spanner | مفتاح مفتوح
+kombine anahtar | Combination Spanner | مفتاح مركب
+ingiliz anahtarı | Adjustable Wrench | مفتاح إنكليزي
+boru anahtarı | Pipe Wrench | مفتاح أنابيب
+anahtar seti | Spanner Set | طقم مفاتيح
+tornavida seti | Screwdriver Set | طقم مفكات
+düz tornavida | Flat Screwdriver | مفك مسطح
+yıldız tornavida | Phillips Screwdriver | مفك فيليبس
+uç seti | Bit Set | طقم رؤوس
+bits uç | Screwdriver Bit | رأس مفك
+kargaburun | Long-Nose Pliers | زرادية بوز طويل
+yan keski | Side Cutter | قصافة جانبية
+keski | Chisel | إزميل
+kerpeten | Pincers | كماشة
+kablo makası | Cable Cutter | قصافة كابلات
+makas | Scissors | مقص
+maket bıçağı | Utility Knife | سكين قطع
+mezura | Tape Measure | شريط قياس
+şerit metre | Tape Measure | شريط قياس
+kumpas | Caliper | قدمة
+dijital kumpas | Digital Caliper | قدمة رقمية
+mikrometre | Micrometer | ميكرومتر
+komparatör | Dial Indicator | مؤشر قرصي
+su terazisi | Spirit Level | ميزان ماء
+gönye | Square | زاوية قائمة
+mengene | Vice | ملزمة
+işkence | Clamp | ملزمة
+pafta kolu | Die Stock | حامل لقم القلاووظ
+kılavuz takımı | Tap Set | طقم ذكور
+yağdanlık | Oil Can | زيتية
+gres pompası | Grease Gun | مسدس شحم
+silikon tabancası | Caulking Gun | مسدس سيليكون
+sıcak silikon | Hot Melt Glue | غراء حراري
+yapıştırıcı | Adhesive | لاصق
+tutkal | Glue | غراء
+epoksi | Epoxy | إيبوكسي
+sızdırmazlık macunu | Sealant | مانع تسرب
+macun | Putty | معجون
+boya | Paint | طلاء
+boyası | Paint | طلاء
+sprey | Spray | بخاخ
+temizleyici | Cleaner | منظف
+temizlik | Cleaning | تنظيف
+kontak temizleyici | Contact Cleaner | منظف تماسات
+pas sökücü | Rust Remover | مزيل الصدأ
+yağlayıcı | Lubricant | مزلق
+yağlama | Lubrication | تزييت
+iş eldiveni | Work Gloves | قفازات عمل
+eldiven | Gloves | قفازات
+eldiveni | Gloves | قفازات
+koruyucu gözlük | Safety Glasses | نظارات واقية
+gözlük | Glasses | نظارات
+baret | Safety Helmet | خوذة أمان
+kask | Helmet | خوذة
+iş ayakkabısı | Safety Shoes | أحذية أمان
+iş elbisesi | Workwear | ملابس عمل
+reflektörlü yelek | Reflective Vest | سترة عاكسة
+yelek | Vest | سترة
+emniyet kemeri | Safety Harness | حزام أمان
+maske | Mask | قناع
+kulak tıkacı | Earplugs | سدادات أذن
+yangın söndürücü | Fire Extinguisher | طفاية حريق
+yangın tüpü | Fire Extinguisher | طفاية حريق
+ilk yardım çantası | First Aid Kit | حقيبة إسعافات أولية
+merdiven | Ladder | سلم
+iskele | Scaffold | سقالة
+el arabası | Wheelbarrow | عربة يدوية
+transpalet | Pallet Truck | رافعة منصات
+forklift | Forklift | رافعة شوكية
+vinç | Crane | رافعة
+caraskal | Chain Hoist | رافعة سلسلة
+halat | Rope | حبل
+sapan | Sling | حبال رفع
+kanca | Hook | خطاف
+kancası | Hook | خطاف
+zincirli | Chain | سلسلة
+rulman | Bearing | محمل
+rulmanı | Bearing | محمل
+bilyalı rulman | Ball Bearing | محمل كريات
+makaralı rulman | Roller Bearing | محمل أسطواني
+yatak | Bearing Housing | مبيت محمل
+kaplin | Coupling | قارنة
+kaplini | Coupling | قارنة
+dişli kutusu | Gearbox | علبة تروس
+pinyon | Pinion | ترس صغير
+kremayer | Rack Gear | جريدة مسننة
+zincir dişlisi | Sprocket | ترس سلسلة
+v kayışı | V-Belt | سير V
+triger kayışı | Timing Belt | سير توقيت
+kayışı | Belt | سير
+yağ keçesi | Oil Seal | مانع تسرب زيت
+keçesi | Seal | مانع تسرب
+oring | O-Ring | حلقة O
+o ring | O-Ring | حلقة O
+piston | Piston | مكبس
+silindir | Cylinder | أسطوانة
+silindiri | Cylinder | أسطوانة
+pnömatik silindir | Pneumatic Cylinder | أسطوانة هوائية
+hidrolik silindir | Hydraulic Cylinder | أسطوانة هيدروليكية
+hidrolik pompa | Hydraulic Pump | مضخة هيدروليكية
+pompa | Pump | مضخة
+pompası | Pump | مضخة
+dalgıç pompa | Submersible Pump | مضخة غاطسة
+santrifüj pompa | Centrifugal Pump | مضخة طرد مركزي
+selenoid valf | Solenoid Valve | صمام كهرومغناطيسي
+selenoid | Solenoid | ملف لولبي
+küresel vana | Ball Valve | صمام كروي
+çek valf | Check Valve | صمام عدم رجوع
+emniyet valfi | Safety Valve | صمام أمان
+basınç regülatörü | Pressure Regulator | منظم ضغط
+şartlandırıcı | Air Service Unit | وحدة تهيئة الهواء
+rakorlu | Fitting | بوصلة
+hortum rakoru | Hose Fitting | وصلة خرطوم
+hortumu | Hose | خرطوم
+hava hortumu | Air Hose | خرطوم هواء
+hidrolik hortum | Hydraulic Hose | خرطوم هيدروليكي
+nipel | Nipple | حلمة
+dirsek | Elbow | كوع
+te | Tee | وصلة T
+redüksiyon | Reducer | مخفض
+tapa | Plug | سدادة
+tapası | Plug | سدادة
+filtresi | Filter | مرشح
+yağ filtresi | Oil Filter | مرشح زيت
+hava filtresi | Air Filter | مرشح هواء
+yakıt filtresi | Fuel Filter | مرشح وقود
+polen filtresi | Cabin Air Filter | مرشح هواء المقصورة
+su filtresi | Water Filter | مرشح ماء
+filtre elemanı | Filter Element | عنصر مرشح
+kartuş | Cartridge | خرطوشة
+kartuşu | Cartridge | خرطوشة
+toner | Toner | حبر
+mürekkep | Ink | حبر
+otomotiv | Automotive | سيارات
+oto | Automotive | سيارات
+araç | Vehicle | مركبة
+aracı | Vehicle | مركبة
+araba | Car | سيارة
+kamyon | Truck | شاحنة
+otobüs | Bus | حافلة
+motosiklet | Motorcycle | دراجة نارية
+marş motoru | Starter Motor | محرك بدء التشغيل
+marş | Starter | بادئ
+şarj dinamosu | Alternator | مولد تيار متردد
+alternatör | Alternator | مولد تيار متردد
+buji | Spark Plug | شمعة إشعال
+bujisi | Spark Plug | شمعة إشعال
+ateşleme bobini | Ignition Coil | ملف إشعال
+ateşleme | Ignition | إشعال
+enjektörü | Injector | حاقن
+yakıt pompası | Fuel Pump | مضخة وقود
+su pompası | Water Pump | مضخة ماء
+termostatı | Thermostat | منظم حرارة
+radyatörü | Radiator | مشع
+fren diski | Brake Disc | قرص مكبح
+fren balatası | Brake Pad | وسادة مكبح
+fren kaliperi | Brake Caliper | فكي المكبح
+debriyaj seti | Clutch Kit | طقم القابض
+amortisörü | Shock Absorber | ممتص صدمات
+rotil | Ball Joint | مفصل كروي
+rot başı | Tie Rod End | طرف ذراع التوجيه
+salıncak | Control Arm | ذراع التحكم
+aks | Axle | محور
+porya | Wheel Hub | محور العجلة
+jant | Rim | جنط
+akü kutup başı | Battery Terminal | طرف بطارية
+kutup başı | Terminal | طرف
+korna | Horn | بوق
+far ampulü | Headlamp Bulb | لمبة مصباح أمامي
+sinyal | Indicator | إشارة
+sis farı | Fog Lamp | مصباح ضباب
+silecek süpürgesi | Wiper Blade | شفرة ماسحة
+dikiz aynası | Rear-View Mirror | مرآة الرؤية الخلفية
+cam kaldırma | Window Regulator | رافعة زجاج
+kapı kilidi | Door Lock | قفل الباب
+sigorta kutusu kapağı | Fuse Box Cover | غطاء علبة الفيوزات
+bıçak tip | Blade Type | من نوع الشفرة
+mini bıçak | Mini Blade | شفرة صغيرة
+uçak parçası | Aircraft Part | قطعة طائرة
+uçak parçaları | Aircraft Parts | قطع طائرات
+iniş takımı | Landing Gear | جهاز الهبوط
+uçak gövdesi | Fuselage | جسم الطائرة
+kanatçık | Aileron | جنيح
+flap | Flap | قلاب
+dümen | Rudder | دفة
+irtifa dümeni | Elevator | رافع
+motor kaputu | Engine Cowling | غطاء المحرك
+yakıt sistemi | Fuel System | نظام الوقود
+hidrolik sistem | Hydraulic System | نظام هيدروليكي
+elektrik sistemi | Electrical System | نظام كهربائي
+uçuş kontrol | Flight Control | التحكم بالطيران
+uçuş | Flight | طيران
+seyrüsefer | Navigation | ملاحة
+navigasyon | Navigation | ملاحة
+haberleşme sistemi | Communication System | نظام اتصالات
+transponder | Transponder | جهاز مرسل مستجيب
+radar | Radar | رادار
+kara kutu | Flight Data Recorder | مسجل بيانات الطيران
+yer destek ekipmanı | Ground Support Equipment | معدات الدعم الأرضي
+yer güç ünitesi | Ground Power Unit | وحدة الطاقة الأرضية
+yardımcı güç ünitesi | Auxiliary Power Unit | وحدة الطاقة المساعدة
+bakım | Maintenance | صيانة
+bakımı | Maintenance | صيانة
+onarım | Repair | إصلاح
+onarımı | Repair | إصلاح
+tamir | Repair | إصلاح
+tamiri | Repair | إصلاح
+revizyon | Overhaul | عمرة
+revizyonu | Overhaul | عمرة
+değişim | Replacement | استبدال
+değişimi | Replacement | استبدال
+değiştirme | Replacement | استبدال
+söküm | Removal | فك
+sökümü | Removal | فك
+takma | Installation | تركيب
+kontrolü | Inspection | فحص
+muayene | Inspection | فحص
+test | Test | اختبار
+testi | Test | اختبار
+sertifikalı | Certified | معتمد
+sertifikası | Certificate | شهادة
+onaylı | Approved | معتمد
+uygunluk belgesi | Certificate of Conformity | شهادة مطابقة
+ithal | Imported | مستورد
+yerli | Domestic | محلي
+yerli üretim | Locally Made | صنع محلي
+menşei | Origin | المنشأ
+çin | China | الصين
+türkiye | Turkey | تركيا
+almanya | Germany | ألمانيا
+avrupa | Europe | أوروبا
+koruma | Protection | حماية
+korumalı | Protected | محمي
+korumasız | Unprotected | غير محمي
+güvenli | Safe | آمن
+emniyet | Safety | سلامة
+emniyetli | Safety | آمن
+uyarı | Warning | تحذير
+uyarı levhası | Warning Sign | لافتة تحذير
+levha | Sign | لافتة
+etiket | Label | ملصق
+etiketi | Label | ملصق
+etiketler | Labels | ملصقات
+plaka | Plate | لوحة
+plakası | Plate | لوحة
+sac | Sheet Metal | صفيحة معدنية
+
+profil | Profile | مقطع
+profili | Profile | مقطع
+alüminyum profil | Aluminium Profile | مقطع ألمنيوم
+köşebent | Angle Bar | زاوية معدنية
+lama | Flat Bar | قضيب مسطح
+çubuk | Rod | قضيب
+çubuğu | Rod | قضيب
+mil çeliği | Shaft Steel | فولاذ أعمدة
+boru profil | Box Section | مقطع صندوقي
+sacı | Sheet | صفيحة
+galvaniz | Galvanised | مجلفن
+galvanizli | Galvanised | مجلفن
+krom | Chrome | كروم
+kromlu | Chrome-Plated | مطلي بالكروم
+nikelaj | Nickel-Plated | مطلي بالنيكل
+pirinç kaplama | Brass-Plated | مطلي بالنحاس
+elektrostatik boyalı | Powder-Coated | مطلي بالمسحوق
+boyalı | Painted | مطلي
+boyasız | Unpainted | غير مطلي
+cilalı | Polished | مصقول
+mat | Matte | مطفي
+parlak | Glossy | لامع
+pvc | PVC | PVC
+abs | ABS | ABS
+naylon | Nylon | نايلون
+poliamid | Polyamide | بولي أميد
+polietilen | Polyethylene | بولي إيثيلين
+polipropilen | Polypropylene | بولي بروبيلين
+polikarbonat | Polycarbonate | بولي كربونات
+teflon | PTFE | تيفلون
+kauçuk conta | Rubber Gasket | حشية مطاطية
+silikon conta | Silicone Gasket | حشية سيليكون
+köpük | Foam | إسفنج
+sünger | Sponge | إسفنج
+keçe | Felt | لباد
+karton | Cardboard | كرتون
+kağıt | Paper | ورق
+kâğıt | Paper | ورق
+fotokopi kağıdı | Copy Paper | ورق نسخ
+kırtasiye | Stationery | قرطاسية
+ofis malzemesi | Office Supplies | لوازم مكتبية
+dosya | File | ملف
+klasör | Folder | مجلد
+kalem | Pen | قلم
+mobilya | Furniture | أثاث
+masa | Desk | مكتب
+sandalye | Chair | كرسي
+dolap | Cabinet | خزانة
+dolabı | Cabinet | خزانة
+çelik dolap | Steel Cabinet | خزانة فولاذية
+takım dolabı | Tool Cabinet | خزانة أدوات
+takım çantası | Tool Bag | حقيبة أدوات
+alet çantası | Tool Bag | حقيبة أدوات
+takım kutusu | Toolbox | صندوق أدوات
+alet kutusu | Toolbox | صندوق أدوات
+organizer | Organizer | منظم
+düzenleyici | Organizer | منظم
+düzenleyicisi | Organizer | منظم
+tutucusu | Holder | حامل
+askısı | Hanger | علاقة
+standı | Stand | حامل
+stand | Stand | حامل
+ayak | Foot | قاعدة
+ayağı | Foot | قاعدة
+ayakları | Feet | أقدام
+tekerleği | Wheel | عجلة
+tekerlekler | Wheels | عجلات
+kulp | Handle | مقبض
+kulpu | Handle | مقبض
+sap | Handle | مقبض
+sapı | Handle | مقبض
+saplı | With Handle | بمقبض
+tutamak | Handle | مقبض
+menteşe | Hinge | مفصلة
+menteşesi | Hinge | مفصلة
+kilit dili | Latch | لسان القفل
+mandal | Latch | مزلاج
+sürgü | Bolt | مزلاج
+asma kilit | Padlock | قفل معلق
+anahtarlı | Keyed | بمفتاح
+şifreli kilit | Combination Lock | قفل رقمي
+lehimsiz | Solderless | بدون لحام
+delik | Hole | ثقب
+delikli | Perforated | مثقب
+yıl | Year | سنة
+yılı | Year | سنة
+ay | Month | شهر
+aylık | Monthly | شهري
+hafta | Week | أسبوع
+haftalık | Weekly | أسبوعي
+gün | Day | يوم
+günlük | Daily | يومي
+saat | Hour | ساعة
+saatlik | Hourly | بالساعة
+dakika | Minute | دقيقة
+saniye | Second | ثانية
+kapaklı | With Cover | بغطاء
+derinlik | Depth | عمق
+derinliği | Depth | عمق
+çift dönüşümlü | Double-Conversion | تحويل مزدوج
+dönüşümlü | Conversion | تحويل
+platin | Platinum | بلاتيني
+kullanıcı | User | مستخدم
+kullanıcılı | User | مستخدم
+personel | Personnel | الموظفين
+gece görüşlü | Night Vision | رؤية ليلية
+gece görüş | Night Vision | رؤية ليلية
+gece | Night | ليل
+gündüz | Day | نهار
+parmak izi | Fingerprint | بصمة إصبع
+adreslenebilir | Addressable | قابل للعنونة
+konvansiyonel | Conventional | تقليدي
+reflektör | Reflector | عاكس
+reflektörlü | with Reflector | بعاكس
+kutup | Pole | قطب
+kutuplu | Pole | قطب
+tek kutuplu | Single-Pole | أحادي القطب
+çift kutuplu | Double-Pole | ثنائي القطب
+mantar | Mushroom | فطري
+kademe | Position | وضعية
+kademeli | Position | وضعيات
+otomatik kademe | Auto-Ranging | تحديد المدى تلقائياً
+isıyla daralan | Heat Shrink | قابل للانكماش الحراري
+ısıyla daralan | Heat Shrink | قابل للانكماش الحراري
+makaron ısıyla daralan | Heat Shrink Tube | أنبوب انكماش حراري
+daralan | Shrink | قابل للانكماش
+çok turlu | Multi-Turn | متعدد اللفات
+çok | Multi | متعدد
+arka ışıklı | Backlit | بإضاءة خلفية
+arka aydınlatmalı | Backlit | بإضاءة خلفية
+ışıklı | Illuminated | مضيء
+ışık | Light | ضوء
+kurşunsuz | Lead-Free | خالٍ من الرصاص
+kurşun | Lead | رصاص
+kapalı | Closed | مغلق
+açık | Open | مفتوح
+devirdaim | Water Pump | مضخة ماء
+devirdaim pompası | Water Pump | مضخة ماء
+devirdaim pompalı | with Water Pump | مع مضخة ماء
+iridyum | Iridium | إيريديوم
+halojen | Halogen | هالوجين
+ksenon | Xenon | زينون
+muz tipi | Flat Blade Type | من النوع المسطح
+monokristal | Monocrystalline | أحادي البلورة
+polikristal | Polycrystalline | متعدد البلورات
+tam sinüs | Pure Sine Wave | موجة جيبية نقية
+modifiye sinüs | Modified Sine Wave | موجة جيبية معدلة
+sinüs | Sine Wave | موجة جيبية
+kaplı | Coated | مغلف
+bakır kaplı | Copper-Clad | مكسو بالنحاس
+nitril | Nitrile | نتريل
+nitril kaplı | Nitrile-Coated | مغلف بالنتريل
+kuru kimyevi tozlu | Dry Chemical Powder | بودرة كيميائية جافة
+kuru | Dry | جاف
+kimyevi | Chemical | كيميائي
+kimyasal | Chemical | كيميائي
+tozlu | Powder | بودرة
+toz | Powder | بودرة
+ücret | Fee | رسوم
+ücreti | Fee | رسوم
+kargo ücreti | Shipping Fee | رسوم الشحن
+nakliye | Freight | نقل
+nakliye ücreti | Freight Charge | رسوم النقل
+ana | Main | رئيسي
+bobin | Coil | ملف
+smd bobin | SMD Inductor | ملف SMD
+kontrollü | Controlled | متحكم به
+akü | Battery | بطارية
+kontak | Contact | تماس
+çift | Dual | مزدوج
+çift portlu | Dual-Port | ثنائي المنفذ
+çift fanlı | Dual-Fan | بمروحتين
+bir çift | 1 Pair | زوج واحد
+çifti | Pair | زوج

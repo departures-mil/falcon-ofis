@@ -1,0 +1,380 @@
+# Sunucu, bilgisayar donanımı, depolama, ağ, fiber, siber güvenlik (tr | en | ar)
+sunucular | Servers | خوادم
+sunucusu | Server | خادم
+sunucu donanımı | Server Hardware | عتاد الخادم
+sunucu rafı | Server Rack | رف خوادم
+sunucu kabini | Server Cabinet | خزانة خوادم
+sistem dolabı | Rack Cabinet | خزانة رف
+dikili tip | Floor-Standing | قائم على الأرض
+ayaklı | Floor-Standing | بقوائم
+tekerlekli | Castor-Mounted | بعجلات
+duvar tipi kabin | Wall-Mount Cabinet | خزانة جدارية
+kabin fanı | Cabinet Fan | مروحة خزانة
+fan modülü | Fan Module | وحدة مروحة
+fan ünitesi | Fan Unit | وحدة مروحة
+fan tepsisi | Fan Tray | صينية مراوح
+havalandırma | Ventilation | تهوية
+havalandırmalı | Ventilated | مهوّى
+delikli | Perforated | مثقب
+delikli kapı | Perforated Door | باب مثقب
+cam kapı | Glass Door | باب زجاجي
+cam kapılı | Glass Door | بباب زجاجي
+kapı | Door | باب
+kapısı | Door | باب
+yan panel | Side Panel | لوحة جانبية
+yan kapak | Side Cover | غطاء جانبي
+körleme paneli | Blanking Panel | لوحة تغطية
+körleme | Blanking | تغطية
+kör panel | Blanking Panel | لوحة تغطية
+sabit raf | Fixed Shelf | رف ثابت
+sürgülü raf | Sliding Shelf | رف منزلق
+sürgülü | Sliding | منزلق
+raylı kit | Rail Kit | طقم سكك
+ray kiti | Rail Kit | طقم سكك
+montaj kiti | Mounting Kit | طقم تركيب
+montaj seti | Mounting Kit | طقم تركيب
+montaj aparatı | Mounting Bracket | حامل تركيب
+montaj braketi | Mounting Bracket | حامل تركيب
+montaj | Mounting | تركيب
+montajı | Mounting | تركيب
+kablo yönetim kolu | Cable Management Arm | ذراع إدارة الكابلات
+kafes somun | Cage Nut | صامولة قفصية
+kafes somunu | Cage Nut | صامولة قفصية
+19 inç | 19-Inch | 19 بوصة
+inç | Inch | بوصة
+inch | Inch | بوصة
+kasa | Chassis | هيكل
+kasası | Chassis | هيكل
+bilgisayar kasası | Computer Case | علبة حاسوب
+güç kaynağı | Power Supply | مزود طاقة
+güç kaynakları | Power Supplies | مزودات طاقة
+yedekli güç kaynağı | Redundant Power Supply | مزود طاقة احتياطي
+sıcak takılabilir | Hot-Swappable | قابل للتبديل أثناء التشغيل
+sıcak değiştirilebilir | Hot-Swappable | قابل للتبديل أثناء التشغيل
+hot swap | Hot-Swap | تبديل أثناء التشغيل
+kızağı | Caddy | حامل
+disk kızağı | Drive Caddy | حامل قرص
+sürücü kızağı | Drive Caddy | حامل قرص
+disk tepsisi | Drive Tray | درج قرص
+sabit sürücü | Hard Drive | محرك أقراص صلب
+sabit diski | Hard Disk | قرص صلب
+harici disk | External Drive | قرص خارجي
+harici | External | خارجي
+dahili | Internal | داخلي
+katı hal | Solid State | حالة صلبة
+ssd disk | SSD | SSD
+nvme disk | NVMe SSD | NVMe SSD
+sürücü | Drive | محرك أقراص
+sürücüsü | Drive | محرك أقراص
+optik sürücü | Optical Drive | محرك أقراص ضوئية
+depolama birimi | Storage Unit | وحدة تخزين
+depolama sistemi | Storage System | نظام تخزين
+depolama alanı | Storage Space | مساحة تخزين
+disk dizisi | Disk Array | مصفوفة أقراص
+disk denetleyici | Disk Controller | وحدة تحكم بالأقراص
+raid denetleyici | RAID Controller | وحدة تحكم RAID
+genişletme kartı | Expansion Card | بطاقة توسعة
+genişleme kartı | Expansion Card | بطاقة توسعة
+yükseltici kart | Riser Card | بطاقة رافعة
+riser kart | Riser Card | بطاقة رافعة
+arka panel | Backplane | لوحة خلفية
+arka paneli | Backplane | لوحة خلفية
+ön panel | Front Panel | لوحة أمامية
+ön paneli | Front Panel | لوحة أمامية
+ön çerçeve | Front Bezel | إطار أمامي
+çerçeve | Frame | إطار
+çerçevesi | Frame | إطار
+çerçeveli | Framed | بإطار
+anakartı | Motherboard | لوحة أم
+sistem kartı | System Board | لوحة النظام
+işlemcisi | Processor | معالج
+çekirdek | Core | نواة
+çekirdekli | Core | نواة
+iş parçacığı | Thread | خيط معالجة
+önbellek | Cache | ذاكرة مخبئية
+bellek kartı | Memory Card | بطاقة ذاكرة
+hafıza | Memory | ذاكرة
+hafıza kartı | Memory Card | بطاقة ذاكرة
+flash bellek | Flash Drive | ذاكرة فلاش
+usb bellek | USB Flash Drive | ذاكرة USB
+kayıtlı bellek | Registered Memory | ذاكرة مسجلة
+hata düzeltmeli | ECC | مصحح للأخطاء
+yük azaltmalı | Load-Reduced | منخفض الحمل
+yonga | Chip | رقاقة
+yonga seti | Chipset | طقم شرائح
+grafik kartı | Graphics Card | بطاقة رسوميات
+grafik işlemci | Graphics Processor | معالج رسوميات
+hızlandırıcı | Accelerator | مسرّع
+hızlandırıcı kart | Accelerator Card | بطاقة تسريع
+yapay zeka | Artificial Intelligence | ذكاء اصطناعي
+yapay zekâ | Artificial Intelligence | ذكاء اصطناعي
+yönetim kartı | Management Card | بطاقة إدارة
+uzaktan erişim kartı | Remote Access Card | بطاقة وصول عن بعد
+yönetim modülü | Management Module | وحدة إدارة
+denetleyici kartı | Controller Card | بطاقة تحكم
+ağ arayüz kartı | Network Interface Card | بطاقة واجهة شبكة
+arayüz | Interface | واجهة
+arayüzü | Interface | واجهة
+arabirim | Interface | واجهة
+fiber kanal | Fibre Channel | قناة ليفية
+fiber channel | Fibre Channel | قناة ليفية
+fc | FC | FC
+host bus adaptör | Host Bus Adapter | محوّل ناقل المضيف
+ana bilgisayar | Host | مضيف
+ağ cihazı | Network Device | جهاز شبكة
+ağ cihazları | Network Devices | أجهزة شبكة
+ağ ekipmanı | Network Equipment | معدات شبكة
+ağ kablosu | Network Cable | كابل شبكة
+ağ dolabı | Network Cabinet | خزانة شبكة
+ağ anahtarlayıcı | Network Switch | مبدّل شبكة
+anahtarlayıcı | Switch | مبدّل
+omurga anahtarı | Core Switch | مبدّل رئيسي
+omurga | Core | رئيسي
+kenar anahtarı | Edge Switch | مبدّل طرفي
+erişim anahtarı | Access Switch | مبدّل وصول
+yönlendiricisi | Router | موجّه
+kablosuz erişim noktası | Wireless Access Point | نقطة وصول لاسلكية
+kablosuz ağ | Wireless Network | شبكة لاسلكية
+kablosuz denetleyici | Wireless Controller | وحدة تحكم لاسلكية
+menzil genişletici | Range Extender | موسّع نطاق
+sinyal güçlendirici | Signal Booster | مقوي إشارة
+güçlendirici | Amplifier | مضخم
+yükseltici | Amplifier | مضخم
+tekrarlayıcı | Repeater | مكرر
+medya dönüştürücü | Media Converter | محوّل وسائط
+ortam dönüştürücü | Media Converter | محوّل وسائط
+poe enjektör | PoE Injector | حاقن PoE
+poe enjektörü | PoE Injector | حاقن PoE
+poe destekli | PoE-Enabled | يدعم PoE
+poe beslemeli | PoE-Powered | يعمل بـ PoE
+enjektör | Injector | حاقن
+yönetilebilir switch | Managed Switch | مبدّل مُدار
+yönetilemez switch | Unmanaged Switch | مبدّل غير مُدار
+akıllı | Smart | ذكي
+katman 2 | Layer 2 | الطبقة 2
+katman 3 | Layer 3 | الطبقة 3
+yığınlanabilir | Stackable | قابل للتكديس
+istifleme | Stacking | تكديس
+yığınlama kablosu | Stacking Cable | كابل تكديس
+bağlantı noktası | Port | منفذ
+uplink portu | Uplink Port | منفذ ربط علوي
+gigabit | Gigabit | جيجابت
+bakır | Copper | نحاس
+bakır kablo | Copper Cable | كابل نحاسي
+doğrudan bağlantı kablosu | Direct Attach Cable | كابل اتصال مباشر
+dac kablo | DAC Cable | كابل DAC
+aktif optik kablo | Active Optical Cable | كابل ضوئي نشط
+aktif | Active | نشط
+pasif | Passive | سلبي
+modülleri | Modules | وحدات
+modüller | Modules | وحدات
+transceiver | Transceiver | مرسل مستقبل
+alıcı-verici | Transceiver | مرسل مستقبل
+dalga boyu | Wavelength | طول موجي
+mesafe | Distance | مسافة
+menzil | Range | مدى
+tek modlu | Single-Mode | أحادي النمط
+çok modlu | Multi-Mode | متعدد الأنماط
+singlemode | Single-Mode | أحادي النمط
+multimode | Multi-Mode | متعدد الأنماط
+fiber optik kablo | Fiber Optic Cable | كابل ألياف ضوئية
+fiber optik kablolar | Fiber Optic Cables | كابلات ألياف ضوئية
+fiber optik konnektör | Fiber Optic Connector | موصل ألياف ضوئية
+fiber optik adaptör | Fiber Optic Adapter | محوّل ألياف ضوئية
+fiber optik ek kutusu | Fiber Optic Splice Closure | علبة لحام ألياف ضوئية
+fiber optik sonlandırma kutusu | Fiber Optic Termination Box | علبة إنهاء ألياف ضوئية
+fiber optik dağıtım kutusu | Fiber Optic Distribution Box | علبة توزيع ألياف ضوئية
+fiber optik test cihazı | Fiber Optic Tester | جهاز اختبار ألياف ضوئية
+optik güç ölçer | Optical Power Meter | مقياس طاقة ضوئية
+görsel hata bulucu | Visual Fault Locator | محدد الأعطال المرئي
+optik zaman alanı reflektometresi | Optical Time-Domain Reflectometer | مقياس انعكاس ضوئي
+kesici | Cleaver | قاطعة
+fiber kesici | Fiber Cleaver | قاطعة ألياف
+fiber sıyırıcı | Fiber Stripper | مقشرة ألياف
+ek koruyucusu | Splice Protector | واقي لحام
+ek koruyucular | Splice Protectors | واقيات لحام
+ek tablası | Splice Tray | صينية لحام
+ek tepsisi | Splice Tray | صينية لحام
+ek kapağı | Splice Closure | غطاء لحام
+fiber tüp | Fiber Tube | أنبوب ألياف
+gevşek tüp | Loose Tube | أنبوب مرخي
+sıkı tamponlu | Tight-Buffered | محكم التغليف
+mikro kanal | Microduct | قناة دقيقة
+üflemeli | Air-Blown | بالنفخ الهوائي
+damla kablo | Drop Cable | كابل إسقاط
+drop kablo | Drop Cable | كابل إسقاط
+abone kutusu | Subscriber Box | علبة مشترك
+terminal kutusu | Terminal Box | علبة أطراف
+sonlandırma paneli | Termination Panel | لوحة إنهاء
+bölücü | Splitter | مقسم
+optik bölücü | Optical Splitter | مقسم ضوئي
+plc bölücü | PLC Splitter | مقسم PLC
+kuplör | Coupler | مقرن
+adaptörlü | With Adapters | بمحولات
+adaptörsüz | Without Adapters | بدون محولات
+pigtail | Pigtail | ضفيرة
+pigtaili | Pigtail | ضفيرة
+pigtail seti | Pigtail Set | طقم ضفائر
+patch kablo | Patch Cable | كابل توصيل
+patch kablosu | Patch Cable | كابل توصيل
+patch cordu | Patch Cord | سلك توصيل
+duplex | Duplex | مزدوج
+dubleks | Duplex | مزدوج
+simplex | Simplex | أحادي
+simpleks | Simplex | أحادي
+çift yönlü | Bidirectional | ثنائي الاتجاه
+tek yönlü | Unidirectional | أحادي الاتجاه
+yüklü | Loaded | محمّل
+yüksüz | Unloaded | غير محمّل
+port sayısı | Number of Ports | عدد المنافذ
+portu | Port | منفذ
+portları | Ports | منافذ
+portlar | Ports | منافذ
+modüler jak | Modular Jack | مقبس معياري
+utp kablo | UTP Cable | كابل UTP
+ftp kablo | FTP Cable | كابل FTP
+stp kablo | STP Cable | كابل STP
+sftp kablo | S/FTP Cable | كابل S/FTP
+cat6 kablo | Cat6 Cable | كابل Cat6
+cat6a kablo | Cat6A Cable | كابل Cat6A
+cat5e kablo | Cat5e Cable | كابل Cat5e
+kat | Category | فئة
+priz kutusu | Outlet Box | علبة مقبس
+data prizi | Data Outlet | مقبس بيانات
+data priz | Data Outlet | مقبس بيانات
+yüz plakası | Face Plate | لوحة أمامية
+yüz plakası tek | Single Face Plate | لوحة أمامية مفردة
+çıkış kutusu | Outlet Box | علبة مخرج
+zemin kutusu | Floor Box | علبة أرضية
+kablo test cihazı | Cable Tester | جهاز اختبار الكابلات
+ağ test cihazı | Network Tester | جهاز اختبار الشبكة
+darbe aleti | Punch-Down Tool | أداة تثبيت
+punch aleti | Punch-Down Tool | أداة تثبيت
+sonlandırma aleti | Termination Tool | أداة إنهاء
+konnektör sıkma pensesi | Connector Crimping Tool | أداة كبس الموصلات
+sıkma aleti | Crimping Tool | أداة كبس
+kablo soyucu | Cable Stripper | مقشرة كابلات
+güvenlik duvarı cihazı | Firewall Appliance | جهاز جدار حماية
+yeni nesil güvenlik duvarı | Next-Generation Firewall | جدار حماية من الجيل التالي
+birleşik tehdit yönetimi | Unified Threat Management | إدارة التهديدات الموحدة
+tehdit | Threat | تهديد
+tehdit istihbaratı | Threat Intelligence | استخبارات التهديدات
+saldırı önleme sistemi | Intrusion Prevention System | نظام منع التسلل
+saldırı tespiti | Intrusion Detection | كشف التسلل
+güvenlik operasyon merkezi | Security Operations Centre | مركز عمليات الأمن
+olay yönetimi | Event Management | إدارة الأحداث
+güvenlik bilgi ve olay yönetimi | Security Information and Event Management | إدارة المعلومات والأحداث الأمنية
+uç nokta | Endpoint | نقطة طرفية
+uç nokta koruma | Endpoint Protection | حماية النقاط الطرفية
+uç nokta güvenliği | Endpoint Security | أمن النقاط الطرفية
+veri sızıntısı önleme | Data Loss Prevention | منع تسرب البيانات
+kötü amaçlı yazılım | Malware | برمجيات خبيثة
+fidye yazılımı | Ransomware | برمجيات الفدية
+kimlik avı | Phishing | تصيد احتيالي
+oltalama | Phishing | تصيد احتيالي
+istenmeyen e-posta | Spam | بريد عشوائي
+e-posta güvenliği | E-mail Security | أمن البريد الإلكتروني
+web güvenliği | Web Security | أمن الويب
+web uygulama güvenlik duvarı | Web Application Firewall | جدار حماية تطبيقات الويب
+ağ güvenliği | Network Security | أمن الشبكات
+bilgi güvenliği | Information Security | أمن المعلومات
+siber saldırı | Cyber Attack | هجوم سيبراني
+siber | Cyber | سيبراني
+güvenlik denetimi | Security Audit | تدقيق أمني
+güvenlik testi | Security Test | اختبار أمني
+penetrasyon testi | Penetration Test | اختبار اختراق
+zafiyet analizi | Vulnerability Assessment | تقييم الثغرات
+risk analizi | Risk Assessment | تقييم المخاطر
+risk değerlendirmesi | Risk Assessment | تقييم المخاطر
+iki faktörlü kimlik doğrulama | Two-Factor Authentication | مصادقة ثنائية
+çok faktörlü kimlik doğrulama | Multi-Factor Authentication | مصادقة متعددة العوامل
+kimlik yönetimi | Identity Management | إدارة الهوية
+yetkili erişim yönetimi | Privileged Access Management | إدارة الوصول المميز
+parola yöneticisi | Password Manager | مدير كلمات المرور
+parola | Password | كلمة مرور
+şifre | Password | كلمة مرور
+donanım güvenlik modülü | Hardware Security Module | وحدة أمان الأجهزة
+güvenlik anahtarı | Security Key | مفتاح أمان
+akıllı kart | Smart Card | بطاقة ذكية
+kart okuyucu | Card Reader | قارئ بطاقات
+parmak izi okuyucu | Fingerprint Reader | قارئ بصمات
+biyometrik | Biometric | بيومتري
+geçiş kontrol | Access Control | التحكم في الدخول
+geçiş kontrol sistemi | Access Control System | نظام التحكم في الدخول
+turnike | Turnstile | بوابة دوارة
+kamera sistemi | Camera System | نظام كاميرات
+ip kamera | IP Camera | كاميرا IP
+dome kamera | Dome Camera | كاميرا قبة
+bullet kamera | Bullet Camera | كاميرا أسطوانية
+ağ video kaydedici | Network Video Recorder | مسجل فيديو شبكي
+dijital video kaydedici | Digital Video Recorder | مسجل فيديو رقمي
+video kayıt cihazı | Video Recorder | مسجل فيديو
+kayıt | Recording | تسجيل
+hırsız alarm | Intruder Alarm | إنذار سرقة
+yangın alarm | Fire Alarm | إنذار حريق
+yangın algılama | Fire Detection | كشف الحريق
+duman dedektörü | Smoke Detector | كاشف دخان
+dedektör | Detector | كاشف
+dedektörü | Detector | كاشف
+yedekleme yazılımı | Backup Software | برنامج نسخ احتياطي
+felaket kurtarma | Disaster Recovery | التعافي من الكوارث
+iş sürekliliği | Business Continuity | استمرارية الأعمال
+yüksek erişilebilirlik | High Availability | توافر عالٍ
+kümeleme | Clustering | عنقدة
+küme | Cluster | عنقود
+sanal makine | Virtual Machine | آلة افتراضية
+sanal | Virtual | افتراضي
+konteyner | Container | حاوية
+lisans anahtarı | Licence Key | مفتاح ترخيص
+kullanıcı lisansı | User Licence | ترخيص مستخدم
+cihaz lisansı | Device Licence | ترخيص جهاز
+süresiz lisans | Perpetual Licence | ترخيص دائم
+süresiz | Perpetual | دائم
+abonelik lisansı | Subscription Licence | ترخيص اشتراك
+yenileme | Renewal | تجديد
+lisans yenileme | Licence Renewal | تجديد الترخيص
+destek paketi | Support Package | باقة دعم
+bakım sözleşmesi | Maintenance Contract | عقد صيانة
+hizmet seviyesi | Service Level | مستوى الخدمة
+yerinde destek | On-Site Support | دعم في الموقع
+uzaktan destek | Remote Support | دعم عن بعد
+7/24 destek | 24/7 Support | دعم على مدار الساعة
+genişletilmiş garanti | Extended Warranty | ضمان ممتد
+garanti uzatma | Warranty Extension | تمديد الضمان
+garantili | With Warranty | مع ضمان
+garantisi | Warranty | ضمان
+yıl garanti | Year Warranty | سنة ضمان
+yıllık lisans | Annual Licence | ترخيص سنوي
+danışmanlık | Consulting | استشارات
+danışmanlık hizmeti | Consulting Service | خدمة استشارية
+hizmeti | Service | خدمة
+hizmet | Service | خدمة
+hizmetler | Services | خدمات
+işçilik | Labour | أجور العمل
+kurulum hizmeti | Installation Service | خدمة التركيب
+devreye alma | Commissioning | تشغيل أولي
+yapılandırma | Configuration | تهيئة
+konfigürasyon | Configuration | تهيئة
+ayar | Setting | ضبط
+ayarı | Setting | ضبط
+kalibrasyon | Calibration | معايرة
+eğitim | Training | تدريب
+eğitimi | Training | تدريب
+keşif | Site Survey | مسح الموقع
+saha | Site | موقع
+saha keşfi | Site Survey | مسح الموقع
+proje | Project | مشروع
+projesi | Project | مشروع
+tasarım | Design | تصميم
+tasarımı | Design | تصميم
+altyapı | Infrastructure | بنية تحتية
+yapısal kablolama | Structured Cabling | كابلات منظمة
+kablolama | Cabling | تمديد كابلات
+kablo çekimi | Cable Pulling | سحب الكابلات
+sonlandırılması | Termination | إنهاء
+etiketleme | Labelling | وضع العلامات
+test ve raporlama | Testing and Reporting | الاختبار وإعداد التقارير
+raporlama | Reporting | إعداد التقارير
+rapor | Report | تقرير
+ölçüm raporu | Measurement Report | تقرير قياس
+dokümantasyon | Documentation | توثيق

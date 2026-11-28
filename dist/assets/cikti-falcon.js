@@ -7,11 +7,11 @@
   'use strict';
   if (window.FalconCikti) return;
   var TX = {
-    tr: { title: 'Çıktı', lang: 'Çıktı dili', edit: 'Önizle ve düzelt', names: 'Ürün adları', nKeep: 'Olduğu gibi bırak', nTr: 'Seçilen dile çevir', nBusy: '⏳ Ürün adları çevriliyor…', nAi: '✓ Yapay zekâ ile çevrildi', nOff: '⚠ İnternet / yapay zekâ yok: çevrimdışı teknik sözlükle çevrildi, gerekirse düzeltin', nSame: 'Ürün adları zaten Türkçe', editOn: '✎ Düzelt', editOff: '✓ Düzeltmeyi bitir', pdf: '⬇ PDF olarak kaydet', close: 'Kapat',
+    tr: { title: 'Çıktı', lang: 'Çıktı dili', edit: 'Önizle ve düzelt', names: 'Ürün adları', nKeep: 'Olduğu gibi bırak', nTr: 'Seçilen dile çevir', nBusy: '⏳ Ürün adları çevriliyor…', nAi: '✓ Yapay zekâ ile çevrildi', nOff: '⚠ İnternet / yapay zekâ yok: çevrimdışı teknik sözlükle çevrildi, gerekirse düzeltin', nSame: 'Ürün adları zaten Türkçe', nLeft: 'sözlükte olmayan', editOn: '✎ Düzelt', editOff: '✓ Düzeltmeyi bitir', pdf: '⬇ PDF olarak kaydet', close: 'Kapat',
       hint: 'Önizlemedeki herhangi bir yazıya tıklayıp düzeltebilirsiniz; düzeltmeler PDF\'e aynen girer. Dil değişirse düzeltmeler sıfırlanır.', busy: 'Hazırlanıyor…', lost: 'Dil değişti, düzeltmeler sıfırlandı' },
-    en: { title: 'Output', lang: 'Output language', edit: 'Preview and correct', names: 'Product names', nKeep: 'Keep as they are', nTr: 'Translate to the selected language', nBusy: '⏳ Translating product names…', nAi: '✓ Translated with AI', nOff: '⚠ No internet / AI: translated with the offline technical glossary, correct if needed', nSame: 'Product names are already in Turkish', editOn: '✎ Correct', editOff: '✓ Finish correcting', pdf: '⬇ Save as PDF', close: 'Close',
+    en: { title: 'Output', lang: 'Output language', edit: 'Preview and correct', names: 'Product names', nKeep: 'Keep as they are', nTr: 'Translate to the selected language', nBusy: '⏳ Translating product names…', nAi: '✓ Translated with AI', nOff: '⚠ No internet / AI: translated with the offline technical glossary, correct if needed', nSame: 'Product names are already in Turkish', nLeft: 'not in the glossary', editOn: '✎ Correct', editOff: '✓ Finish correcting', pdf: '⬇ Save as PDF', close: 'Close',
       hint: 'Click any text in the preview to correct it; corrections go into the PDF exactly as shown. Changing the language resets them.', busy: 'Preparing…', lost: 'Language changed, corrections were reset' },
-    ar: { title: 'المستند', lang: 'لغة المستند', edit: 'المعاينة والتصحيح', names: 'أسماء المنتجات', nKeep: 'إبقاؤها كما هي', nTr: 'ترجمتها إلى اللغة المختارة', nBusy: '⏳ جارٍ ترجمة أسماء المنتجات…', nAi: '✓ تُرجمت بالذكاء الاصطناعي', nOff: '⚠ لا يوجد إنترنت / ذكاء اصطناعي: تُرجمت بالمعجم التقني دون اتصال، صحّحها عند الحاجة', nSame: 'أسماء المنتجات باللغة التركية أصلاً', editOn: '✎ تصحيح', editOff: '✓ إنهاء التصحيح', pdf: '⬇ حفظ بصيغة PDF', close: 'إغلاق',
+    ar: { title: 'المستند', lang: 'لغة المستند', edit: 'المعاينة والتصحيح', names: 'أسماء المنتجات', nKeep: 'إبقاؤها كما هي', nTr: 'ترجمتها إلى اللغة المختارة', nBusy: '⏳ جارٍ ترجمة أسماء المنتجات…', nAi: '✓ تُرجمت بالذكاء الاصطناعي', nOff: '⚠ لا يوجد إنترنت / ذكاء اصطناعي: تُرجمت بالمعجم التقني دون اتصال، صحّحها عند الحاجة', nSame: 'أسماء المنتجات باللغة التركية أصلاً', nLeft: 'غير موجودة في المعجم', editOn: '✎ تصحيح', editOff: '✓ إنهاء التصحيح', pdf: '⬇ حفظ بصيغة PDF', close: 'إغلاق',
       hint: 'انقر على أي نص في المعاينة لتصحيحه؛ تدخل التصحيحات إلى ملف PDF كما هي. تغيير اللغة يلغي التصحيحات.', busy: 'جارٍ التحضير…', lost: 'تغيّرت اللغة فأُلغيت التصحيحات' }
   };
   var ui = function () { var l = document.documentElement.lang; return TX[l] ? l : 'tr'; };
@@ -83,12 +83,12 @@
             ensureNames().then(function () { load(); });
           } }));
         });
-        nmInfo.textContent = names !== 'tr' ? '' : nm.busy ? t('nBusy') : nm.lg === lg && nm.src ? (nm.src === 'ai' ? t('nAi') : nm.src === 'same' ? t('nSame') : t('nOff')) : '';
+        nmInfo.textContent = names !== 'tr' ? '' : nm.busy ? t('nBusy') : nm.lg === lg && nm.src ? (nm.src === 'ai' ? t('nAi') : nm.src === 'same' ? t('nSame') : t('nOff') + (nm.left && nm.left.length ? ' — ' + t('nLeft') + ': ' + nm.left.slice(0, 12).join(', ') : '')) : '';
       };
       var ensureNames = function () {
         if (!canNames || names !== 'tr' || (nm.lg === lg && nm.map)) { drawNm(); return Promise.resolve(); }
         var l0 = lg; nm.busy = true; drawNm();
-        return FF.translateNames(o.names.map(String), l0).then(function (r) { if (lg === l0) nm = { lg: l0, map: r.map, src: r.src, busy: false }; drawNm(); }, function () { nm.busy = false; drawNm(); });
+        return FF.translateNames(o.names.map(String), l0).then(function (r) { if (lg === l0) nm = { lg: l0, map: r.map, src: r.src, left: r.left || [], busy: false }; drawNm(); }, function () { nm.busy = false; drawNm(); });
       };
       var edBtn = el('button', { type: 'button', class: 'btn small' });
       var setEdit = function (on) { editing = on; var d = doc(); if (d) d.designMode = on ? 'on' : 'off'; edBtn.className = 'btn small' + (on ? ' primary' : ''); edBtn.textContent = on ? t('editOff') : t('editOn'); };

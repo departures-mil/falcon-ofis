@@ -1,0 +1,248 @@
+# Konnektörler, soketler, kablolar (tr | en | ar). Anahtarlar küçük harf; ekli biçimler çözümleyiciyle bulunur.
+konnektör | Connector | موصل
+konektör | Connector | موصل
+konnektor | Connector | موصل
+konektor | Connector | موصل
+bağlantı konnektörü | Connector | موصل
+erkek konnektör | Male Connector | موصل ذكر
+dişi konnektör | Female Connector | موصل أنثى
+erkek | Male | ذكر
+dişi | Female | أنثى
+erkek-dişi | Male-Female | ذكر-أنثى
+erkek erkek | Male to Male | ذكر إلى ذكر
+dişi dişi | Female to Female | أنثى إلى أنثى
+erkek dişi | Male to Female | ذكر إلى أنثى
+dairesel konnektör | Circular Connector | موصل دائري
+dikdörtgen konnektör | Rectangular Connector | موصل مستطيل
+askeri konnektör | Military Connector | موصل عسكري
+askeri standart | Military Standard | معيار عسكري
+havacılık tipi | Aviation Type | من نوع الطيران
+havacılık | Aviation | طيران
+uçak | Aircraft | طائرة
+mike | Aviation Connector | موصل طيران
+fiş | Plug | قابس
+fişi | Plug | قابس
+erkek fiş | Male Plug | قابس ذكر
+dişi fiş | Female Plug | قابس أنثى
+priz | Socket Outlet | مقبس كهربائي
+grup priz | Power Strip | مشترك كهربائي
+uzatma prizi | Power Strip | مشترك كهربائي
+akım korumalı priz | Surge-Protected Power Strip | مشترك كهربائي بحماية من التيار
+soket | Socket | مقبس
+soketli | Socketed | بمقبس
+yuvası | Slot | فتحة
+jak | Jack | مقبس
+jakı | Jack | مقبس
+ses jakı | Audio Jack | مقبس صوت
+dc jak | DC Jack | مقبس DC
+dc fiş | DC Plug | قابس DC
+güç jakı | Power Jack | مقبس طاقة
+pin | Pin | دبوس
+pinli | Pin | أطراف
+iğne | Pin | إبرة
+uç sayısı | Number of Pins | عدد الأطراف
+kontak | Contact | تماس
+kontaklı | Contact | تماس
+altın kaplama | Gold-Plated | مطلي بالذهب
+altın kaplamalı | Gold-Plated | مطلي بالذهب
+gümüş kaplama | Silver-Plated | مطلي بالفضة
+nikel kaplama | Nickel-Plated | مطلي بالنيكل
+kaplamalı | Plated | مطلي
+kaplama | Plating | طلاء
+lehimli | Solder Type | للحام
+lehim tipi | Solder Type | للحام
+sıkmalı | Crimp Type | للكبس
+sıkma tipi | Crimp Type | للكبس
+vidalı | Screw Type | ببراغي
+vida tipi | Screw Type | ببراغي
+geçmeli | Push-Fit | بالضغط
+klipsli | Clip-On | بمشبك
+kilitli | Locking | بقفل
+kilitlemeli | Locking | بقفل
+kilit | Lock | قفل
+kilidi | Lock | قفل
+bayonet | Bayonet | حربة
+bayonet kilitli | Bayonet Locking | بقفل حربي
+dişli kilit | Threaded Coupling | قفل ملولب
+itme çekme | Push-Pull | دفع وسحب
+hızlı bağlantı | Quick Connect | توصيل سريع
+hızlı kaplin | Quick Coupler | وصلة سريعة
+panel montaj | Panel Mount | للتركيب على اللوحة
+panele montaj | Panel Mount | للتركيب على اللوحة
+pcb montaj | PCB Mount | للتركيب على اللوحة المطبوعة
+pcb tipi | PCB Mount | للتركيب على اللوحة المطبوعة
+kablo tipi | Cable Mount | للتركيب على الكابل
+kabloya montaj | Cable Mount | للتركيب على الكابل
+duvar montajlı | Wall-Mounted | مثبت على الجدار
+tavan montajlı | Ceiling-Mounted | مثبت على السقف
+yüzey montaj | Surface Mount | تركيب سطحي
+gömme | Flush-Mount | غاطس
+sıva altı | Flush-Mount | غاطس
+sıva üstü | Surface-Mount | تركيب سطحي
+flanşlı | Flanged | بشفة
+flanş | Flange | شفة
+düz tip | Straight Type | مستقيم
+90 derece | 90-Degree | 90 درجة
+dik açılı | Right-Angle | بزاوية قائمة
+derece | Degree | درجة
+açı | Angle | زاوية
+rf konnektör | RF Connector | موصل RF
+koaksiyel konnektör | Coaxial Connector | موصل محوري
+koaksiyel | Coaxial | محوري
+koaks | Coaxial | محوري
+bnc konnektör | BNC Connector | موصل BNC
+n tipi | N-Type | من النوع N
+tnc | TNC | TNC
+sma konnektör | SMA Connector | موصل SMA
+f konnektör | F Connector | موصل F
+rj45 konnektör | RJ45 Connector | موصل RJ45
+rj45 jak | RJ45 Jack | مقبس RJ45
+rj11 | RJ11 | RJ11
+konnektör başlığı | Connector Boot | غطاء موصل
+konnektör kılıfı | Connector Boot | غطاء موصل
+kılıfı | Boot | غطاء
+toz kapağı | Dust Cap | غطاء غبار
+toz kapakları | Dust Caps | أغطية غبار
+koruma kapağı | Protective Cap | غطاء واقٍ
+yalıtım kapağı | Insulating Boot | غطاء عازل
+d-sub | D-Sub | D-Sub
+db9 | DB9 | DB9
+db25 | DB25 | DB25
+seri kablo | Serial Cable | كابل تسلسلي
+kablo | Cable | كابل
+kablosu | Cable | كابل
+kabloları | Cables | كابلات
+kablolar | Cables | كابلات
+kablo seti | Cable Set | طقم كابلات
+kablo demeti | Cable Harness | حزمة كابلات
+kablo grubu | Cable Assembly | مجموعة كابلات
+kablo tavası | Cable Tray | حامل كابلات
+kablo kanalı | Cable Trunking | مجرى كابلات
+kablo makarası | Cable Reel | بكرة كابلات
+kablo sarıcı | Cable Reel | بكرة كابلات
+kablo spirali | Spiral Cable Wrap | غلاف كابلات حلزوني
+spiral | Spiral | حلزوني
+spiralli | Spiral | حلزوني
+kablo etiketi | Cable Label | ملصق كابل
+kablo işaretleyici | Cable Marker | علامة كابل
+kablo klipsi | Cable Clip | مشبك كابل
+kablo kelepçesi | Cable Clamp | مشبك كابل
+kablo bağı | Cable Tie | رباط كابلات
+cırt cırt | Hook-and-Loop | فيلكرو
+cırtlı | Hook-and-Loop | فيلكرو
+kablo koruyucu | Cable Protector | واقي كابل
+kablo kılıfı | Cable Sleeve | غلاف كابل
+örgülü kılıf | Braided Sleeve | غلاف مضفور
+örgülü | Braided | مضفور
+çoklu kablo | Multi-Cable | متعدد الكابلات
+ara kablosu | Jumper Cable | كابل وصل
+bağlantı kablosu | Connection Cable | كابل توصيل
+data kablosu | Data Cable | كابل بيانات
+veri kablosu | Data Cable | كابل بيانات
+sinyal kablosu | Signal Cable | كابل إشارة
+kontrol kablosu | Control Cable | كابل تحكم
+enerji kablosu | Power Cable | كابل طاقة
+besleme kablosu | Power Supply Cable | كابل تغذية
+şarj kablosu | Charging Cable | كابل شحن
+hoparlör kablosu | Speaker Cable | كابل مكبر صوت
+ses kablosu | Audio Cable | كابل صوت
+görüntü kablosu | Video Cable | كابل فيديو
+anten kablosu | Antenna Cable | كابل هوائي
+toprak kablosu | Earth Cable | كابل تأريض
+nyy kablo | NYY Cable | كابل NYY
+nym kablo | NYM Cable | كابل NYM
+ttr kablo | TTR Flexible Cable | كابل مرن TTR
+h05vv-f | H05VV-F | H05VV-F
+çok telli | Stranded | متعدد الشعيرات
+tek telli | Solid Core | أحادي الشعيرة
+som | Solid | مصمت
+bükümlü | Twisted | مجدول
+bükümlü çift | Twisted Pair | زوج مجدول
+zırhlı | Armoured | مدرع
+zırhlı kablo | Armoured Cable | كابل مدرع
+çelik zırhlı | Steel-Armoured | مدرع بالفولاذ
+dış ortam | Outdoor | خارجي
+iç ortam | Indoor | داخلي
+dış mekan | Outdoor | خارجي
+iç mekan | Indoor | داخلي
+dış mekân | Outdoor | خارجي
+iç mekân | Indoor | داخلي
+yer altı | Underground | تحت الأرض
+havai hat | Overhead Line | خط هوائي
+kendinden taşıyıcı | Self-Supporting | ذاتي الحمل
+uv dayanımlı | UV-Resistant | مقاوم للأشعة فوق البنفسجية
+uv dayanıklı | UV-Resistant | مقاوم للأشعة فوق البنفسجية
+dayanıklı | Durable | متين
+dayanımlı | Resistant | مقاوم
+yağa dayanıklı | Oil-Resistant | مقاوم للزيت
+ısıya dayanıklı | Heat-Resistant | مقاوم للحرارة
+alev almaz | Flame-Retardant | مقاوم للهب
+yanmaz | Non-Combustible | غير قابل للاحتراق
+halojensiz | Halogen-Free | خالٍ من الهالوجين
+düşük dumanlı | Low Smoke | منخفض الدخان
+su geçirmezlik | Waterproofing | عزل مائي
+sızdırmaz | Sealed | محكم
+sızdırmazlık | Sealing | إحكام
+conta | Gasket | حشية
+contası | Gasket | حشية
+contalı | Gasketed | بحشية
+ip67 | IP67 | IP67
+ip68 | IP68 | IP68
+ip65 | IP65 | IP65
+dişli | Threaded | ملولب
+diş | Thread | سن
+vida dişi | Screw Thread | سن لولبي
+somun | Nut | صامولة
+somunu | Nut | صامولة
+pul | Washer | وردة
+rondela | Washer | وردة
+yaylı rondela | Spring Washer | وردة نابضية
+vida | Screw | برغي
+vidası | Screw | برغي
+vidalar | Screws | براغي
+saplama | Stud | مسمار ملولب
+pim | Pin | مسمار
+segman | Retaining Ring | حلقة تثبيت
+ara parça | Spacer | فاصل
+mesafe parçası | Spacer | فاصل
+distans | Standoff | فاصل
+adaptör | Adapter | محوّل
+adaptörü | Adapter | محوّل
+adaptor | Adapter | محوّل
+çevirici adaptör | Converter Adapter | محوّل
+dönüştürücü kablo | Converter Cable | كابل محوّل
+çoğaltıcı | Splitter | موزع
+splitter | Splitter | موزع
+y kablo | Y-Cable | كابل Y
+y kablosu | Y-Cable | كابل Y
+ara bağlantı | Interconnect | وصلة بينية
+ek | Splice | وصلة
+ek yeri | Splice Point | نقطة الوصل
+ekleme | Splicing | وصل
+ek parça | Joint | وصلة
+manşon | Sleeve | جلبة
+ek manşonu | Splice Sleeve | جلبة وصل
+kablo ek manşonu | Cable Joint Kit | طقم وصلة كابل
+pabucu | Lug | طرف
+kablo ucu | Cable End | طرف كابل
+yüksük | Ferrule | جلبة طرفية
+kablo yüksüğü | Cable Ferrule | جلبة طرفية
+izoleli | Insulated | معزول
+izolesiz | Non-Insulated | غير معزول
+yalıtımlı | Insulated | معزول
+yalıtımsız | Non-Insulated | غير معزول
+yalıtkan | Insulator | عازل
+izolatör | Insulator | عازل
+damar | Core | سلك
+damarlı kablo | Multi-Core Cable | كابل متعدد الأسلاك
+çift damarlı | Two-Core | ثنائي الأسلاك
+üç damarlı | Three-Core | ثلاثي الأسلاك
+dört damarlı | Four-Core | رباعي الأسلاك
+5 damarlı | Five-Core | خماسي الأسلاك
+blendaj | Shielding | تدريع
+ekranlama | Shielding | تدريع
+folyo | Foil | رقاقة
+folyolu | Foil-Shielded | مدرع برقاقة
+kılıf rengi | Jacket Colour | لون الغلاف
+dış kılıf | Outer Jacket | غلاف خارجي
+iç kılıf | Inner Sheath | غلاف داخلي

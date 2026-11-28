@@ -15,7 +15,7 @@ const pem = fs.readFileSync(process.env.OZEL_ANAHTAR || '', 'utf8');
 // v1.59: Fatura sekmesi eklentisi de (dist/assets/fatura-falcon.js) telefona girer
 // v1.59.1: duyuru-falcon.js (yüzen 🔔 gizli, Ayarlar'da "Bildirimler ve Duyurular" kartı) da masaüstü kopyasından gelir
 // v1.60: PDF'den doldur (fatura-pdf.js + pdf.js çevrimdışı okuyucu) ve karekod (qrcode-gen.js)
-for (const f of ['kullanim.js', 'kullanim-falcon.js', 'fatura-falcon.js', 'duyuru-falcon.js', 'fatura-pdf.js', 'qrcode-gen.js', 'pdfjs/pdf.min.mjs', 'pdfjs/pdf.worker.min.mjs', 'pdfjs/LICENSE.txt', 'shamcash-falcon.js',
+for (const f of ['kullanim.js', 'kullanim-falcon.js', 'sozluk-falcon.js', 'fatura-falcon.js', 'duyuru-falcon.js', 'fatura-pdf.js', 'qrcode-gen.js', 'pdfjs/pdf.min.mjs', 'pdfjs/pdf.worker.min.mjs', 'pdfjs/LICENSE.txt', 'shamcash-falcon.js',
   // v1.66: fatura tahsilatı dekont okuyucu (Sham Cash / genel; çevrimdışı OCR ana iş parçacığında: Tesseract çekirdeği + Arapça / İngilizce)
   'dekont-falcon.js', 'ocr/tesseract-core-simd-lstm.wasm.js', 'ocr/ara.traineddata.gz', 'ocr/eng.traineddata.gz', 'ocr/LICENSE-tesseract-core.txt',
   // v1.71: belge (fatura / teklif fotoğrafı) OCR'ı için Türkçe model; faturaya özel dosyalar Wi‑Fi eşitlemesinde de (lan-falcon.js FILE_COLUMNS)
@@ -35,6 +35,7 @@ for (const f of ['kullanim.js', 'kullanim-falcon.js', 'fatura-falcon.js', 'duyur
     h = h.replace(/(<script type="module")/, '<script src="./assets/kullanim.js"></script>\n    <script src="./assets/kullanim-falcon.js"></script>\n    $1');
     fs.writeFileSync(ih, h);
   }
+  if (!h.includes('sozluk-falcon.js')) { h = h.replace(/(\s*<script src="\.\/assets\/fatura-falcon\.js"><\/script>)/, '\n    <script src="./assets/sozluk-falcon.js"></script>$1'); fs.writeFileSync(ih, h); }
   if (!h.includes('fatura-falcon.js')) {
     h = h.replace(/(<script src="\.\/assets\/kullanim-falcon\.js"><\/script>)/, '$1\n    <script src="./assets/fatura-falcon.js"></script>');
     fs.writeFileSync(ih, h);

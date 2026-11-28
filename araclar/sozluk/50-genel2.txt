@@ -1,0 +1,419 @@
+# Genel söz varlığı 2: hizmet fiilleri (-ma/-me), ev aletleri, kaynak, oto, inşaat, sıfatlar (tr | en | ar)
+yükseltme | Upgrade | ترقية
+güncelleme | Update | تحديث
+düzenleme | Arrangement | تنظيم
+kablo düzenleme | Cable Management | تنظيم الكابلات
+çekme | Pulling | سحب
+çekim | Pulling | سحب
+kablo çekme | Cable Pulling | سحب الكابلات
+yapılandırma | Configuration | تهيئة
+kurma | Installation | تركيب
+kurulumu | Installation | تركيب
+çıkarma | Extraction | استخراج
+ısı haritası | Heat Map | خريطة حرارية
+harita | Map | خريطة
+haritası | Map | خريطة
+haritalama | Mapping | رسم الخرائط
+keşfi | Survey | مسح
+kural | Rule | قاعدة
+kuralı | Rule | قاعدة
+taşıma | Transport | نقل
+yükleme | Loading | تحميل
+boşaltma | Unloading | تفريغ
+paketleme | Packing | تغليف
+ambalajlama | Packaging | تغليف
+temizleme | Cleaning | تنظيف
+yıkama | Washing | غسيل
+boyama | Painting | طلاء
+kaplatma | Plating | طلاء
+kesme | Cutting | قطع
+soyma | Stripping | تقشير
+sıkma | Tightening | شد
+somun sıkma | Nut Runner | شد الصواميل
+sökme | Dismantling | فك
+takma | Fitting | تركيب
+delme | Drilling | ثقب
+kaynak | Welding | لحام
+kaynakçı | Welder | لحام
+kaynak makinesi | Welding Machine | آلة لحام
+kaynak maskesi | Welding Mask | قناع لحام
+kaynak elektrodu | Welding Electrode | قطب لحام
+kaynak teli | Welding Wire | سلك لحام
+kaynak pensesi | Electrode Holder | ماسك أقطاب
+şase pensesi | Earth Clamp | ماسك أرضي
+elektrot | Electrode | قطب
+elektrodu | Electrode | قطب
+rutil | Rutile | روتيلي
+bazik | Basic | قاعدي
+gazaltı | MIG/MAG | ميغ/ماغ
+gazaltı kaynak | MIG/MAG Welding | لحام ميغ/ماغ
+argon kaynak | TIG Welding | لحام تيغ
+tig kaynak | TIG Welding | لحام تيغ
+plazma | Plasma | بلازما
+plazma kesme | Plasma Cutting | قطع بالبلازما
+otomatik kararan | Auto-Darkening | ذاتي التعتيم
+kararan | Darkening | معتم
+makine | Machine | آلة
+makinesi | Machine | آلة
+makineler | Machines | آلات
+makina | Machine | آلة
+makinası | Machine | آلة
+tabanca | Gun | مسدس
+tabancası | Gun | مسدس
+hava tabancası | Air Gun | مسدس هواء
+boya tabancası | Spray Gun | مسدس رش
+kriko | Jack | رافعة
+hidrolik kriko | Hydraulic Jack | رافعة هيدروليكية
+ton | Ton | طن
+litre | Litre | لتر
+litrelik | Litre | لتر
+gram | Gram | غرام
+kilogram | Kilogram | كيلوغرام
+kilo | Kilogram | كيلوغرام
+yağsız | Oil-Free | خالٍ من الزيت
+sessiz | Silent | صامت
+gürültüsüz | Noiseless | عديم الضوضاء
+basınçlı | Pressurised | مضغوط
+basınçlı hava | Compressed Air | هواء مضغوط
+lazer metre | Laser Distance Meter | مقياس مسافة ليزري
+duvar tarama cihazı | Wall Scanner | ماسح الجدران
+tarama | Scanning | مسح
+manyetik uçlu | Magnetic Tip | برأس مغناطيسي
+uçlu | Tip | رأس
+ölçü trafosu | Instrument Transformer | محول قياس
+el tipi | Handheld | محمول باليد
+el | Hand | يد
+el feneri | Torch | مصباح يدوي
+fener | Lantern | فانوس
+yollu | Way | اتجاهات
+yol | Way | اتجاه
+göstergeli | with Indicator | بمؤشر
+ekranlı kablo | Shielded Cable | كابل مدرع
+ekranlı | with Display | بشاشة
+komple | Complete | كامل
+tam | Full | كامل
+şamandıra | Float | عوامة
+şamandıralı | with Float | بعوامة
+debimetre | Mass Air Flow Sensor | حساس تدفق الهواء
+hava akış sensörü | Air Flow Sensor | حساس تدفق الهواء
+akış | Flow | تدفق
+krank mili | Crankshaft | عمود المرفق
+krank | Crank | مرفق
+eksantrik mili | Camshaft | عمود الكامات
+eksantrik | Cam | كامة
+pozisyon | Position | موضع
+pozisyon sensörü | Position Sensor | حساس موضع
+oksijen | Oxygen | أكسجين
+oksijen sensörü | Oxygen Sensor | حساس أكسجين
+lambda sondası | Lambda Probe | مسبار لامدا
+sonda | Probe | مسبار
+sondası | Probe | مسبار
+geri görüş | Rear-View | للرؤية الخلفية
+geri görüş kamerası | Rear-View Camera | كاميرا الرؤية الخلفية
+geri | Rear | خلفي
+görüş | Vision | رؤية
+park sensörü | Parking Sensor | حساس ركن
+park | Parking | ركن
+araç takip cihazı | Vehicle Tracking Device | جهاز تتبع المركبات
+takip | Tracking | تتبع
+elektrikli araç | Electric Vehicle | مركبة كهربائية
+şarj soketi | Charging Socket | مقبس شحن
+motor bölmesi | Engine Compartment | حجرة المحرك
+bölme | Compartment | حجرة
+bölmesi | Compartment | حجرة
+hat | Line | خط
+hattı | Line | خط
+anten hattı | Antenna Line | خط الهوائي
+yıldırımdan korunma | Lightning Protection | الحماية من الصواعق
+korunma | Protection | حماية
+uydu | Satellite | قمر صناعي
+uydu alıcısı | Satellite Receiver | مستقبل أقمار صناعية
+çanak anten | Satellite Dish | طبق استقبال
+mikrodalga | Microwave | ميكروويف
+link | Link | وصلة
+kablo soyma | Cable Stripping | تقشير الكابلات
+kesme pensesi | Cutting Pliers | كماشة قطع
+duvar tarama | Wall Scanning | مسح الجدران
+akıllı ev | Smart Home | منزل ذكي
+ev | Home | منزل
+ölçümlü | with Metering | بقياس
+enerji ölçümlü | with Energy Metering | بقياس الطاقة
+hareket sensörlü | with Motion Sensor | بحساس حركة
+hareket | Motion | حركة
+tavan tipi | Ceiling Type | من النوع السقفي
+tavan | Ceiling | سقف
+bataryalı | Battery-Powered | يعمل بالبطارية
+güneş enerjili | Solar-Powered | يعمل بالطاقة الشمسية
+enerjili | Powered | يعمل بالطاقة
+bahçe | Garden | حديقة
+bahçe lambası | Garden Lamp | مصباح حديقة
+spot | Spotlight | ضوء موضعي
+gömme spot | Recessed Spotlight | ضوء موضعي غاطس
+günışığı | Warm White | أبيض دافئ
+gün ışığı | Daylight | ضوء النهار
+soğuk beyaz | Cool White | أبيض بارد
+sıcak beyaz | Warm White | أبيض دافئ
+dönüş | Turn | منعطف
+dönüş parçası | Corner Piece | قطعة زاوية
+köşe dönüş | Corner Piece | قطعة زاوية
+sistemi | System | نظام
+sistem | System | نظام
+sistemler | Systems | أنظمة
+izleme sistemi | Monitoring System | نظام مراقبة
+ısı pompası | Heat Pump | مضخة حرارية
+dış ünite | Outdoor Unit | وحدة خارجية
+iç ünite | Indoor Unit | وحدة داخلية
+kombi | Combi Boiler | غلاية مركبة
+kazan | Boiler | غلاية
+buzdolabı | Refrigerator | ثلاجة
+derin dondurucu | Deep Freezer | مجمد عميق
+çamaşır makinesi | Washing Machine | غسالة ملابس
+bulaşık makinesi | Dishwasher | غسالة صحون
+kurutma makinesi | Dryer | مجفف
+saç kurutma makinesi | Hair Dryer | مجفف شعر
+saç | Hair | شعر
+fırın | Oven | فرن
+mikrodalga fırın | Microwave Oven | فرن ميكروويف
+ocak | Hob | موقد
+davlumbaz | Cooker Hood | شفاط
+aspiratör | Extractor Fan | شفاط هواء
+su ısıtıcı | Water Heater | سخان ماء
+şofben | Water Heater | سخان ماء
+termosifon | Electric Water Heater | سخان كهربائي
+rezistans | Heating Element | عنصر تسخين
+rezistansı | Heating Element | عنصر تسخين
+elektrikli süpürge | Vacuum Cleaner | مكنسة كهربائية
+süpürge | Vacuum Cleaner | مكنسة
+ütü | Iron | مكواة
+kurutma | Drying | تجفيف
+blender | Blender | خلاط
+mikser | Mixer | خلاط
+kahve makinesi | Coffee Machine | آلة قهوة
+çaycı | Tea Maker | صانعة شاي
+televizyon | Television | تلفزيون
+uzaktan kumandası | Remote Control | جهاز تحكم عن بعد
+televizyon askı aparatı | TV Wall Mount | حامل تلفزيون
+askı aparatı | Wall Mount | حامل جداري
+aparat | Attachment | ملحق
+aparatı | Attachment | ملحق
+hoparlörü | Loudspeaker | مكبر صوت
+ses sistemi | Sound System | نظام صوت
+anfi | Amplifier | مضخم
+amfi | Amplifier | مضخم
+mikser masası | Mixing Desk | طاولة مزج
+gelişmiş | Advanced | متقدم
+temel | Basic | أساسي
+başına | per | لكل
+core başına | per Core | لكل شعيرة
+metre başına | per Metre | لكل متر
+adet başına | per Piece | لكل قطعة
+birlikte | Included | مرفق
+ile birlikte | Included | مرفق
+vidalarıyla birlikte | with Screws | مع البراغي
+füzyon | Fusion | انصهار
+füzyon ek | Fusion Splice | لحام انصهاري
+grubu | Group | مجموعة
+grup | Group | مجموعة
+akü grubu | Battery Pack | حزمة بطاريات
+inşaat | Construction | بناء
+çimento | Cement | إسمنت
+beton | Concrete | خرسانة
+tuğla | Brick | طوب
+kum | Sand | رمل
+alçı | Plaster | جبس
+alçıpan | Plasterboard | ألواح جبسية
+fayans | Wall Tile | بلاط جدران
+seramik karo | Ceramic Tile | بلاط سيراميك
+parke | Parquet | باركيه
+cam yünü | Glass Wool | صوف زجاجي
+taş yünü | Rock Wool | صوف صخري
+yalıtım levhası | Insulation Board | لوح عزل
+membran | Membrane | غشاء
+su yalıtımı | Waterproofing | عزل مائي
+ısı yalıtımı | Thermal Insulation | عزل حراري
+ses yalıtımı | Sound Insulation | عزل صوتي
+pencere | Window | نافذة
+kapı kolu | Door Handle | مقبض باب
+musluk | Tap | صنبور
+batarya musluk | Mixer Tap | خلاط ماء
+lavabo | Washbasin | مغسلة
+klozet | Toilet | مرحاض
+duş | Shower | دش
+sifon | Siphon | سيفون
+rakor bağlantı | Fitting | وصلة
+ppr boru | PPR Pipe | أنبوب PPR
+pe boru | PE Pipe | أنبوب PE
+pvc boru | PVC Pipe | أنبوب PVC
+kombi bağlantı seti | Boiler Connection Kit | طقم توصيل الغلاية
+petek | Radiator | مشعاع
+yerden ısıtma | Underfloor Heating | تدفئة أرضية
+kollektör | Manifold | مجمع
+genleşme tankı | Expansion Tank | خزان تمدد
+hidrofor | Booster Pump | مضخة تعزيز
+su deposu | Water Tank | خزان ماء
+depo | Tank | خزان
+deposu | Tank | خزان
+tank | Tank | خزان
+tankı | Tank | خزان
+hazne | Reservoir | خزان
+hazneli | with Reservoir | بخزان
+ilaç | Medicine | دواء
+tıbbi | Medical | طبي
+tıbbi cihaz | Medical Device | جهاز طبي
+steril | Sterile | معقم
+tek kullanımlık | Disposable | للاستعمال مرة واحدة
+kullanımlık | Use | استخدام
+yeniden kullanılabilir | Reusable | قابل لإعادة الاستخدام
+kullanım | Use | استخدام
+kullanım kılavuzu | User Manual | دليل المستخدم
+kılavuzu | Manual | دليل
+katalog | Catalogue | كتالوج
+broşür | Brochure | كتيب
+numune | Sample | عينة
+örnek | Sample | عينة
+prototip | Prototype | نموذج أولي
+kalıp | Mould | قالب
+kalıbı | Mould | قالب
+döküm | Casting | صب
+dövme | Forged | مطروق
+işleme | Machining | تشغيل
+cnc işleme | CNC Machining | تشغيل CNC
+torna işleme | Turning | خراطة
+freze işleme | Milling | تفريز
+lazer kesim | Laser Cutting | قطع بالليزر
+abkant büküm | Press Brake Bending | ثني بالمكبس
+büküm | Bending | ثني
+bükme | Bending | ثني
+kaynaklı | Welded | ملحوم
+kaynaksız | Seamless | بدون لحام
+dikişsiz | Seamless | بدون لحام
+dikişli | Welded | ملحوم
+ısıl işlem | Heat Treatment | معالجة حرارية
+sertleştirilmiş | Hardened | مقسّى
+taşlanmış | Ground | مجلوخ
+taşlama taşı | Grinding Wheel | حجر تجليخ
+zımparalı | Abrasive | كاشط
+aşındırıcı | Abrasive | كاشط
+aşınma | Wear | تآكل
+aşınmaya dayanıklı | Wear-Resistant | مقاوم للتآكل
+korozyon | Corrosion | تآكل
+korozyona dayanıklı | Corrosion-Resistant | مقاوم للتآكل
+paslanmaz | Stainless | مقاوم للصدأ
+pas | Rust | صدأ
+çinko | Zinc | زنك
+kalay | Tin | قصدير
+titanyum | Titanium | تيتانيوم
+tungsten | Tungsten | تنغستن
+karbür | Carbide | كربيد
+elmas | Diamond | ماس
+hss | HSS | HSS
+kobaltlı | Cobalt | كوبالت
+kobalt | Cobalt | كوبالت
+alaşım | Alloy | سبيكة
+alaşımlı | Alloy | سبيكة
+dökme demir | Cast Iron | حديد صب
+pik döküm | Cast Iron | حديد صب
+sfero döküm | Ductile Iron | حديد مرن
+bronz | Bronze | برونز
+kurşun asitli | Lead-Acid | رصاص حمضي
+kompozit | Composite | مركب
+fiberglas | Fibreglass | ألياف زجاجية
+cam elyaf | Glass Fibre | ألياف زجاجية
+karbon fiber | Carbon Fibre | ألياف كربونية
+pleksi | Acrylic | أكريليك
+akrilik | Acrylic | أكريليك
+mdf | MDF | MDF
+sunta | Chipboard | لوح حبيبي
+kontrplak | Plywood | خشب رقائقي
+masif | Solid Wood | خشب صلب
+deri kaplı | Leather-Covered | مغلف بالجلد
+kumaş kaplı | Fabric-Covered | مغلف بالقماش
+sağlam | Robust | متين
+kırılmaz | Unbreakable | غير قابل للكسر
+darbeye dayanıklı | Impact-Resistant | مقاوم للصدمات
+çizilmeye dayanıklı | Scratch-Resistant | مقاوم للخدش
+kaymaz | Non-Slip | مانع للانزلاق
+antistatik | Anti-Static | مضاد للكهرباء الساكنة
+antibakteriyel | Antibacterial | مضاد للبكتيريا
+ergonomik | Ergonomic | مريح
+kompakt | Compact | مدمج
+ince tip | Slim | نحيف
+mini | Mini | صغير
+mikro | Micro | دقيق
+maksimum | Maximum | أقصى
+minimum | Minimum | أدنى
+nominal | Nominal | اسمي
+anma | Rated | اسمي
+anma akımı | Rated Current | التيار الاسمي
+anma gerilimi | Rated Voltage | الجهد الاسمي
+çalışma | Operating | تشغيل
+çalışma gerilimi | Operating Voltage | جهد التشغيل
+çalışma sıcaklığı | Operating Temperature | درجة حرارة التشغيل
+besleme | Supply | تغذية
+besleme gerilimi | Supply Voltage | جهد التغذية
+beslemeli | Powered | بتغذية
+girişli | Input | دخل
+çıkışlı | Output | خرج
+girişi | Input | دخل
+çıkışı | Output | خرج
+bağlantılı | Connected | متصل
+bağlantısız | Unconnected | غير متصل
+bağlantısı | Connection | توصيل
+uyumluluk | Compatibility | توافق
+kapasiteli | Capacity | سعة
+yüksek kapasiteli | High-Capacity | عالي السعة
+düşük | Low | منخفض
+yüksek | High | عالٍ
+yüksek sıcaklığa dayanıklı | High-Temperature Resistant | مقاوم للحرارة العالية
+sıcaklığa dayanıklı | Temperature-Resistant | مقاوم للحرارة
+sıcak | Hot | ساخن
+soğuk | Cold | بارد
+ılık | Warm | دافئ
+nemli | Humid | رطب
+susuz | Waterless | بدون ماء
+sulu | Water | مائي
+yağlı | Oiled | مزيت
+gazlı | Gas | غازي
+elektronik kontrollü | Electronically Controlled | متحكم إلكترونياً
+uzaktan kumandalı | Remote-Controlled | بالتحكم عن بعد
+kumandalı | Remote-Controlled | بالتحكم عن بعد
+programlanabilir | Programmable | قابل للبرمجة
+dijital göstergeli | with Digital Display | بشاشة رقمية
+ayarlı sıcaklık | Adjustable Temperature | حرارة قابلة للتعديل
+sıcaklık kontrollü | Temperature-Controlled | متحكم بالحرارة
+termostatlı | with Thermostat | بمنظم حرارة
+zamanlayıcılı | with Timer | بمؤقت
+sensörlü | with Sensor | بحساس
+lisanslı | Licensed | مرخص
+kalibreli | Calibrated | معاير
+kalibrasyonlu | Calibrated | معاير
+sertifikalı kalibrasyon | Certified Calibration | معايرة معتمدة
+değişken | Variable | متغير
+sabit hızlı | Fixed-Speed | ثابت السرعة
+değişken hızlı | Variable-Speed | متغير السرعة
+devir | Speed | دوران
+devirli | Speed | سرعة
+kademeli hız | Variable Speed | سرعة متغيرة
+redüktörlü | Geared | بمخفض
+kayışlı | Belt-Driven | بسير
+zincir tahrikli | Chain-Driven | بسلسلة
+tahrik | Drive | دفع
+tahrikli | Driven | مدفوع
+mekanizma | Mechanism | آلية
+mekanizması | Mechanism | آلية
+düzenek | Mechanism | آلية
+sistemli | System | نظام
+kontrol sistemi | Control System | نظام تحكم
+izleme | Monitoring | مراقبة
+takip sistemi | Tracking System | نظام تتبع
+ölçüm sistemi | Measurement System | نظام قياس
+uyarı sistemi | Warning System | نظام إنذار
+alarm sistemi | Alarm System | نظام إنذار
+haberleşme cihazı | Communication Device | جهاز اتصال
+cihazları | Devices | أجهزة
+cihazlar | Devices | أجهزة
+ünitesi | Unit | وحدة
+üniteleri | Units | وحدات
+modülleri | Modules | وحدات
+kartlar | Cards | بطاقات
+kartları | Cards | بطاقات

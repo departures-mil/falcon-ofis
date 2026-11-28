@@ -302,12 +302,44 @@
     for (var i = 0; i < d.length; i += 4) if (d[i] > 243 && d[i + 1] > 243 && d[i + 2] > 243) w++;
     return w / n;
   }
-  function docCanvas(cv, mode) {
+  // v1.74: koyu / renkli başlık bandı var mı (turuncu, lacivert tablo başlığı): genişliğin yarısından fazlası koyu ya da doygun renkli,
+  // yüksekliğin %1'inden kalın yatay şerit. Taranmış / gri belgelerde yoktur (ince tablo çizgileri sayılmaz).
+  function hasBands(cv) {
+    var c = toCanvas(cv, 800), W = c.width, H = c.height, d = c.getContext('2d').getImageData(0, 0, W, H).data, run = 0, need = Math.max(3, Math.round(H * 0.01));
+    for (var y = 0; y < H; y++) {
+      var n = 0;
+      for (var x = 0; x < W; x++) { var i = (y * W + x) * 4, r = d[i], g = d[i + 1], b = d[i + 2], mx = Math.max(r, g, b), mn = Math.min(r, g, b); if (mx < 110 || (mx - mn > 90 && mx > 120)) n++; }
+      if (n > W * 0.45) { if (++run >= need) return true; } else run = 0;
+    }
+    return false;
+  }
+  function docCanvas(cv, mode, minSide, band) {
     var sk = skewOf(cv);
-    var c = toCanvas(Math.abs(sk) >= 0.4 ? rotated(cv, sk) : cv, 3000, 2600), cx = c.getContext('2d'), W = c.width, H = c.height, img = cx.getImageData(0, 0, W, H), d = img.data, sum = 0, n = W * H;
+    var c = toCanvas(Math.abs(sk) >= 0.4 ? rotated(cv, sk) : cv, Math.max(3000, minSide || 0), minSide || 2600), cx = c.getContext('2d'), W = c.width, H = c.height, img = cx.getImageData(0, 0, W, H), d = img.data, sum = 0, n = W * H;
     var g = new Float32Array(n), x, y;
     for (var i = 0, k = 0; k < n; i += 4, k++) { g[k] = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]; sum += g[k]; }
     if (sum / n < 110) for (var k2 = 0; k2 < n; k2++) g[k2] = 255 - g[k2];
+    // v1.74: renkli / koyu zeminli bölgeler (tablo başlığı bantları: turuncu, lacivert…): blok blok yazının kutbu bulunur; açık renk yazı koyu
+    // zeminin üstündeyse blok tersine çevrilip zemin beyaza, yazı siyaha gerilir; düz renkli (yazısız) zemin beyaza boyanır
+    if (band && !root.__noBand) (function () {
+      var B = 24, bw = Math.ceil(W / B), bh = Math.ceil(H / B), mn = new Float32Array(bw * bh), mx = new Float32Array(bw * bh), me = new Float32Array(bw * bh), bx, by;
+      for (by = 0; by < bh; by++) for (bx = 0; bx < bw; bx++) {
+        var lo = 255, hi = 0, su = 0, cn = 0;
+        for (var yy = by * B; yy < Math.min(H, by * B + B); yy++) for (var xx = bx * B; xx < Math.min(W, bx * B + B); xx++) { var v = g[yy * W + xx]; if (v < lo) lo = v; if (v > hi) hi = v; su += v; cn++; }
+        mn[by * bw + bx] = lo; mx[by * bw + bx] = hi; me[by * bw + bx] = su / cn;
+      }
+      for (by = 0; by < bh; by++) for (bx = 0; bx < bw; bx++) {
+        var L = 255, Hh = 0, S = 0, C = 0;
+        for (var ny = Math.max(0, by - 1); ny <= Math.min(bh - 1, by + 1); ny++) for (var nx = Math.max(0, bx - 1); nx <= Math.min(bw - 1, bx + 1); nx++) { var bi = ny * bw + nx; if (mn[bi] < L) L = mn[bi]; if (mx[bi] > Hh) Hh = mx[bi]; S += me[bi]; C++; }
+        var M = S / C, i0 = by * bw + bx, flat = mx[i0] - mn[i0] < 22 && me[i0] < 232, inv = !flat && Hh - L > 60 && M < 225 && (Hh - M) > 1.3 * (M - L);
+        if (!flat && !inv) continue;
+        // bloğun kendi zemini: tersinde koyu uç (L), düzde blok ortalaması
+        for (var y2 = by * B; y2 < Math.min(H, by * B + B); y2++) for (var x2 = bx * B; x2 < Math.min(W, bx * B + B); x2++) {
+          var q2 = y2 * W + x2;
+          g[q2] = flat ? 255 : Math.max(0, Math.min(255, 255 - (g[q2] - L) * 255 / Math.max(40, Hh - L)));
+        }
+      }
+    })();
     // yerel ortalama (tümlev görüntüsü), pencere ≈ en uzun kenarın %2'si; ortalamanın %9 altı yazı (gölgeli satır / parlama / hare için)
     var ink = new Uint8Array(n), I = new Float64Array((W + 1) * (H + 1)), r = Math.max(8, Math.round(Math.max(W, H) * 0.01));
     for (y = 0; y < H; y++) { var row = 0; for (x = 0; x < W; x++) { row += g[y * W + x]; I[(y + 1) * (W + 1) + x + 1] = I[y * (W + 1) + x + 1] + row; } }
@@ -367,9 +399,9 @@
     items.forEach(function (it) { it.y = it.y - m * (it.x + it.w / 2); });
     return items;
   }
-  function tessWords(cv, mode) {
+  function tessWords(cv, mode, minSide, band) {
     return docEngine().then(function (E) {
-      var c = docCanvas(cv, mode);
+      var c = docCanvas(cv, mode, minSide, band);
       return canvasBytes(c, 'image/png').then(function (png) {
         E.m.FS.writeFile('/input', png);
         if (E.api.SetImageFile(1, 0) === 1) throw new Error('ocr-image');
@@ -393,14 +425,14 @@
           var mc = cs[Math.floor(cs.length / 2)], mh = Math.min(hs[Math.floor(hs.length / 2)], gH * 1.3);
           l.forEach(function (i) { i.h = mh; i.y = mc - mh / 2; });
         });
-        return { width: c.width, height: c.height, items: items, via: 'tesseract-' + E.lg + '-' + (mode || 'lat') };
+        return { width: c.width, height: c.height, items: items, via: 'tesseract-' + E.lg + '-' + (mode || 'lat') + (band ? '-band' : '') };
       });
     });
   }
   // opts.mode: 'lat' (varsayılan) | 'soft' (Tesseract ikinci deneme); opts.tess: yerel zekâ kurulu olsa da Tesseract
   function docOcr(cv, opts) {
     opts = opts || {};
-    var tw = function () { return tessWords(cv, opts.mode); };
+    var tw = function () { return tessWords(cv, opts.mode, opts.min, opts.band); };
     if (!opts.tess && root.FCYZ && root.FCYZ.available()) {
       return root.FCYZ.ready('ocr').then(function (ok) {
         if (!ok) return tw();
@@ -517,7 +549,7 @@
     });
   }
 
-  var api = { read: read, parse: parse, num: num, isoDate: isoDate, curOf: curOf, verify: verify, norm: norm, refKey: refKey, prepare: prepare, ocr: ocr, docOcr: docOcr, docClean: docClean, loadImg: loadImg, toCanvas: toCanvas, canvasBytes: canvasBytes, kindOf: kindOf, version: '1.71.0' };
+  var api = { read: read, parse: parse, num: num, isoDate: isoDate, curOf: curOf, verify: verify, norm: norm, refKey: refKey, prepare: prepare, ocr: ocr, docOcr: docOcr, hasBands: hasBands, docClean: docClean, loadImg: loadImg, toCanvas: toCanvas, canvasBytes: canvasBytes, kindOf: kindOf, version: '1.71.0' };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.FalconDekont = api;
 })(typeof window !== 'undefined' ? window : globalThis);

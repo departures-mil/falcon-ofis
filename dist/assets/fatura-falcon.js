@@ -414,6 +414,7 @@
   var TX171 = {
     tr: {
       fromPdf: 'Belgeden doldur', fromPdfHint: 'Fatura / teklif belgesini (PDF ya da fotoğraf: JPEG, PNG) okuyup müşteri, belge bilgileri, ürün ve fiyatları doldurur — önce yapay zeka, internet yoksa çevrimdışı (OCR)',
+      docMulti: 'Birden çok sayfa / ekran görüntüsü seçebilir ya da art arda yapıştırabilirsiniz (Ctrl+V): sırayla okunur, ürünler tek listede birleşir.', docList1: '1 dosya hazır', docListN: '{n} dosya — sırayla okunup tek listede birleşecek', docRead1: '▶ Oku', docReadN: '▶ Oku ve birleştir ({n})', docPage: 'Sayfa {i}/{n}', impStatus: 'Stok', impNoParty: 'Belgede müşteri / satıcı bilgisi yok — yalnız ürünler aktarılır.',
       docPickT: 'Belge seç', docDrop: 'Belgeyi buraya sürükleyin, yapıştırın (Ctrl+V) ya da seçin — PDF, JPEG, PNG (telefonla çekilmiş ekran / kâğıt fotoğrafı da olur)',
       docPick: '📄 Dosya seç', docCamera: '📷 Fotoğraf çek', docReading: 'Belge okunuyor…', docOcr: 'Görüntüden yazı okunuyor (çevrimdışı OCR)…', docOcr2: 'Çevrimdışı okuma ikinci ayarla tekrarlanıyor…',
       docUnreadable: 'Belgeden bilgi okunamadı. İnternet varsa yapay zeka anahtarıyla (Ayarlar → Asistan) daha iyi okunur.',
@@ -429,10 +430,11 @@
       pfTitle: '🔒 Özel dosyalar', pfHint: 'Yalnız sen görürsün: fatura çıktısında, PDF\'te ve müşteriye gönderilenlerde yer almaz. Cihazların arasında eşitlenir.',
       pfAdd: '＋ Dosya ekle', pfDrop: 'Dosyaları buraya sürükleyin ya da yapıştırın (Ctrl+V) — PDF, resim, Word, Excel, metin, arşiv…', pfEmpty: 'Bu faturaya eklenmiş özel dosya yok.',
       pfOpen: 'Aç', pfSave: 'Farklı kaydet', pfDel: 'Sil', pfNote: 'Not', pfDelQ: '«{n}» dosyası silinsin mi? (Silinenler kutusundan 30 gün geri alınabilir)', pfAdded: '{n} dosya eklendi',
-      yesDo: 'Evet', pvNamesWait: 'Çevrimdışı çevrildi — yapay zekâ çevirisi gelince kendiliğinden güncellenecek', pvNamesLate: 'Yapay zekâ çevirisi geldi, önizleme güncellendi', kvTitle: 'KDV ekle', kvRate: 'KDV oranı (%)', kvAll: 'Tüm kalemlere uygula', kvClear: 'KDV\'yi kaldır', kvBad: 'Geçerli bir KDV oranı yazın (ör. 20)', kvSum: 'KDV %{r} · Eklenen KDV: {a}', kvSumMix: 'KDV\'li · Eklenen KDV: {a}', kdvYok: 'Bu faturada KDV yok', kvDone: 'KDV %{r} uygulandı', kvRemoved: 'KDV kaldırıldı — fatura KDV\'siz', kvHint: 'KDV, ara toplama (indirimden sonra) eklenir ve genel toplamda ayrı satır olarak görünür. Kalem bazında KDV sütunu açıksa oran her kaleme yazılır; tek kalemi KDV sütunundan ayrıca değiştirebilirsiniz. Kaldırınca fatura KDV\'siz olur. Ürün kayıtlarındaki fiyatlar değişmez.', payModeNoCash: 'Tahsil edildi (kasaya eklenmez)', payNoCashHint: 'Fatura tahsil edildi olarak işaretlenir; kasaya para girişi yazılmaz, kasa bakiyesi değişmez.', payNoCashBtn: '✓ Tahsil edildi olarak işaretle', payNoCashTag: 'kasaya eklenmedi', impSrcCur: 'Belgedeki fiyatların para birimi', impTotals: 'Kalemlerin toplamı {a} · belgedeki ara toplam {b}', pdfApplied: 'Belgeden okunan bilgiler dolduruldu — kontrol edip kaydedin', pfPending: 'Fatura kaydedilince eklenecek', pfTooBig: '«{n}» çok büyük (en çok 50 MB).', pfFail: 'Dosya eklenemedi:', pfBtn: 'Özel dosyalar (yalnız sen görürsün)'
+      pvNamesLeft: 'sözlükte olmayan (düzeltebilirsiniz)', yesDo: 'Evet', pvNamesWait: 'Çevrimdışı çevrildi — yapay zekâ çevirisi gelince kendiliğinden güncellenecek', pvNamesLate: 'Yapay zekâ çevirisi geldi, önizleme güncellendi', kvTitle: 'KDV ekle', kvRate: 'KDV oranı (%)', kvAll: 'Tüm kalemlere uygula', kvClear: 'KDV\'yi kaldır', kvBad: 'Geçerli bir KDV oranı yazın (ör. 20)', kvSum: 'KDV %{r} · Eklenen KDV: {a}', kvSumMix: 'KDV\'li · Eklenen KDV: {a}', kdvYok: 'Bu faturada KDV yok', kvDone: 'KDV %{r} uygulandı', kvRemoved: 'KDV kaldırıldı — fatura KDV\'siz', kvHint: 'KDV, ara toplama (indirimden sonra) eklenir ve genel toplamda ayrı satır olarak görünür. Kalem bazında KDV sütunu açıksa oran her kaleme yazılır; tek kalemi KDV sütunundan ayrıca değiştirebilirsiniz. Kaldırınca fatura KDV\'siz olur. Ürün kayıtlarındaki fiyatlar değişmez.', payModeNoCash: 'Tahsil edildi (kasaya eklenmez)', payNoCashHint: 'Fatura tahsil edildi olarak işaretlenir; kasaya para girişi yazılmaz, kasa bakiyesi değişmez.', payNoCashBtn: '✓ Tahsil edildi olarak işaretle', payNoCashTag: 'kasaya eklenmedi', impSrcCur: 'Belgedeki fiyatların para birimi', impTotals: 'Kalemlerin toplamı {a} · belgedeki ara toplam {b}', pdfApplied: 'Belgeden okunan bilgiler dolduruldu — kontrol edip kaydedin', pfPending: 'Fatura kaydedilince eklenecek', pfTooBig: '«{n}» çok büyük (en çok 50 MB).', pfFail: 'Dosya eklenemedi:', pfBtn: 'Özel dosyalar (yalnız sen görürsün)'
     },
     en: {
       fromPdf: 'Fill from document', fromPdfHint: 'Reads an invoice / quotation (PDF or photo: JPEG, PNG) and fills the customer, document details, products and prices — AI first, offline (OCR) without internet',
+      docMulti: 'You can choose several pages / screenshots or paste them one after another (Ctrl+V): they are read in order and the products are merged into one list.', docList1: '1 file ready', docListN: '{n} files — read in order and merged into one list', docRead1: '▶ Read', docReadN: '▶ Read and merge ({n})', docPage: 'Page {i}/{n}', impStatus: 'Stock', impNoParty: 'No customer / seller details on the document — only the products are imported.',
       docPickT: 'Choose a document', docDrop: 'Drag the document here, paste it (Ctrl+V) or choose it — PDF, JPEG, PNG (a phone photo of a screen or paper works too)',
       docPick: '📄 Choose file', docCamera: '📷 Take photo', docReading: 'Reading the document…', docOcr: 'Reading text from the image (offline OCR)…', docOcr2: 'Repeating the offline reading with a second setting…',
       docUnreadable: 'No data could be read from the document. With internet, an AI key (Settings → Assistant) reads it much better.',
@@ -448,10 +450,11 @@
       pfTitle: '🔒 Private files', pfHint: 'Only you see these: they are not on the invoice printout, the PDF or anything sent to the customer. Synced between your devices.',
       pfAdd: '＋ Add file', pfDrop: 'Drag files here or paste them (Ctrl+V) — PDF, image, Word, Excel, text, archive…', pfEmpty: 'No private files on this invoice.',
       pfOpen: 'Open', pfSave: 'Save as', pfDel: 'Delete', pfNote: 'Note', pfDelQ: 'Delete «{n}»? (It can be restored from Deleted items for 30 days)', pfAdded: '{n} file(s) added',
-      yesDo: 'Yes', pvNamesWait: 'Translated offline — will update automatically when the AI translation arrives', pvNamesLate: 'AI translation arrived, preview updated', kvTitle: 'Add VAT', kvRate: 'VAT rate (%)', kvAll: 'Apply to all lines', kvClear: 'Remove VAT', kvBad: 'Enter a valid VAT rate (e.g. 20)', kvSum: 'VAT {r}% · VAT added: {a}', kvSumMix: 'With VAT · VAT added: {a}', kdvYok: 'No VAT on this invoice', kvDone: 'VAT {r}% applied', kvRemoved: 'VAT removed — invoice without VAT', kvHint: 'VAT is added to the subtotal (after discount) and shown as a separate line in the totals. If the per-line VAT column is on, the rate is written to every line; a single line can be changed in its VAT column. Removing it makes the invoice VAT-free. Product record prices do not change.', payModeNoCash: 'Collected (not added to cash)', payNoCashHint: 'The invoice is marked as collected; no cash entry is written and the cash balance does not change.', payNoCashBtn: '✓ Mark as collected', payNoCashTag: 'not added to cash', impSrcCur: 'Currency of the prices on the document', impTotals: 'Lines total {a} · subtotal on the document {b}', pdfApplied: 'Filled from the document — check and save', pfPending: 'Will be attached when the invoice is saved', pfTooBig: '«{n}» is too large (max 50 MB).', pfFail: 'The file could not be added:', pfBtn: 'Private files (only you see them)'
+      pvNamesLeft: 'not in the glossary (you can correct them)', yesDo: 'Yes', pvNamesWait: 'Translated offline — will update automatically when the AI translation arrives', pvNamesLate: 'AI translation arrived, preview updated', kvTitle: 'Add VAT', kvRate: 'VAT rate (%)', kvAll: 'Apply to all lines', kvClear: 'Remove VAT', kvBad: 'Enter a valid VAT rate (e.g. 20)', kvSum: 'VAT {r}% · VAT added: {a}', kvSumMix: 'With VAT · VAT added: {a}', kdvYok: 'No VAT on this invoice', kvDone: 'VAT {r}% applied', kvRemoved: 'VAT removed — invoice without VAT', kvHint: 'VAT is added to the subtotal (after discount) and shown as a separate line in the totals. If the per-line VAT column is on, the rate is written to every line; a single line can be changed in its VAT column. Removing it makes the invoice VAT-free. Product record prices do not change.', payModeNoCash: 'Collected (not added to cash)', payNoCashHint: 'The invoice is marked as collected; no cash entry is written and the cash balance does not change.', payNoCashBtn: '✓ Mark as collected', payNoCashTag: 'not added to cash', impSrcCur: 'Currency of the prices on the document', impTotals: 'Lines total {a} · subtotal on the document {b}', pdfApplied: 'Filled from the document — check and save', pfPending: 'Will be attached when the invoice is saved', pfTooBig: '«{n}» is too large (max 50 MB).', pfFail: 'The file could not be added:', pfBtn: 'Private files (only you see them)'
     },
     ar: {
       fromPdf: 'التعبئة من مستند', fromPdfHint: 'يقرأ فاتورة / عرض سعر (PDF أو صورة: JPEG، PNG) ويعبّئ بيانات العميل والمستند والمنتجات والأسعار — بالذكاء الاصطناعي أولاً، ودون اتصال (OCR) عند انقطاع الإنترنت',
+      docMulti: 'يمكنك اختيار عدة صفحات / لقطات شاشة أو لصقها واحدة تلو الأخرى (Ctrl+V): تُقرأ بالترتيب وتُدمج المنتجات في قائمة واحدة.', docList1: 'ملف واحد جاهز', docListN: '{n} ملفات — تُقرأ بالترتيب وتُدمج في قائمة واحدة', docRead1: '▶ قراءة', docReadN: '▶ قراءة ودمج ({n})', docPage: 'الصفحة {i}/{n}', impStatus: 'المخزون', impNoParty: 'لا توجد بيانات عميل / بائع في المستند — تُنقل المنتجات فقط.',
       docPickT: 'اختيار مستند', docDrop: 'اسحب المستند إلى هنا أو الصقه (Ctrl+V) أو اختره — PDF، JPEG، PNG (تصلح صورة الشاشة أو الورقة الملتقطة بالهاتف)',
       docPick: '📄 اختيار ملف', docCamera: '📷 التقاط صورة', docReading: 'جارٍ قراءة المستند…', docOcr: 'جارٍ قراءة النص من الصورة (OCR دون اتصال)…', docOcr2: 'إعادة القراءة دون اتصال بإعداد ثانٍ…',
       docUnreadable: 'تعذّرت قراءة بيانات من المستند. مع الإنترنت يقرؤه مفتاح الذكاء الاصطناعي (الإعدادات ← المساعد) أفضل بكثير.',
@@ -467,7 +470,7 @@
       pfTitle: '🔒 ملفات خاصة', pfHint: 'تراها أنت فقط: لا تظهر في مطبوع الفاتورة ولا في ملف PDF ولا فيما يُرسل إلى العميل. تتزامن بين أجهزتك.',
       pfAdd: '＋ إضافة ملف', pfDrop: 'اسحب الملفات إلى هنا أو الصقها (Ctrl+V) — PDF، صورة، Word، Excel، نص، أرشيف…', pfEmpty: 'لا توجد ملفات خاصة لهذه الفاتورة.',
       pfOpen: 'فتح', pfSave: 'حفظ باسم', pfDel: 'حذف', pfNote: 'ملاحظة', pfDelQ: 'حذف «{n}»؟ (يمكن استعادته من المحذوفات خلال 30 يوماً)', pfAdded: 'أُضيف {n} ملف',
-      yesDo: 'نعم', pvNamesWait: 'تُرجمت دون اتصال — ستُحدَّث تلقائياً عند وصول ترجمة الذكاء الاصطناعي', pvNamesLate: 'وصلت ترجمة الذكاء الاصطناعي وحُدِّثت المعاينة', kvTitle: 'إضافة ضريبة القيمة المضافة', kvRate: 'نسبة الضريبة (%)', kvAll: 'تطبيق على جميع البنود', kvClear: 'إزالة الضريبة', kvBad: 'أدخل نسبة ضريبة صحيحة (مثلاً 20)', kvSum: 'الضريبة {r}% · الضريبة المضافة: {a}', kvSumMix: 'مع الضريبة · الضريبة المضافة: {a}', kdvYok: 'لا ضريبة على هذه الفاتورة', kvDone: 'طُبّقت الضريبة {r}%', kvRemoved: 'أُزيلت الضريبة — الفاتورة بدون ضريبة', kvHint: 'تُضاف الضريبة إلى المجموع الفرعي (بعد الخصم) وتظهر سطراً مستقلاً في الإجمالي. إذا كان عمود الضريبة لكل بند مفعّلاً تُكتب النسبة في كل بند، ويمكن تغيير بند واحد من عموده. عند الإزالة تصبح الفاتورة بدون ضريبة. لا تتغير أسعار سجلات المنتجات.', payModeNoCash: 'تم التحصيل (دون إضافة إلى الصندوق)', payNoCashHint: 'تُعلَّم الفاتورة كمحصَّلة؛ لا يُسجَّل إيراد في الصندوق ولا يتغير رصيده.', payNoCashBtn: '✓ تعليمها كمحصَّلة', payNoCashTag: 'لم يُضف إلى الصندوق', impSrcCur: 'عملة الأسعار في المستند', impTotals: 'مجموع البنود {a} · المجموع الفرعي في المستند {b}', pdfApplied: 'عُبّئت البيانات من المستند — راجعها ثم احفظ', pfPending: 'سيُرفق عند حفظ الفاتورة', pfTooBig: '«{n}» كبير جداً (الحد 50 ميغابايت).', pfFail: 'تعذّرت إضافة الملف:', pfBtn: 'ملفات خاصة (تراها أنت فقط)'
+      pvNamesLeft: 'غير موجودة في المعجم (يمكنك تصحيحها)', yesDo: 'نعم', pvNamesWait: 'تُرجمت دون اتصال — ستُحدَّث تلقائياً عند وصول ترجمة الذكاء الاصطناعي', pvNamesLate: 'وصلت ترجمة الذكاء الاصطناعي وحُدِّثت المعاينة', kvTitle: 'إضافة ضريبة القيمة المضافة', kvRate: 'نسبة الضريبة (%)', kvAll: 'تطبيق على جميع البنود', kvClear: 'إزالة الضريبة', kvBad: 'أدخل نسبة ضريبة صحيحة (مثلاً 20)', kvSum: 'الضريبة {r}% · الضريبة المضافة: {a}', kvSumMix: 'مع الضريبة · الضريبة المضافة: {a}', kdvYok: 'لا ضريبة على هذه الفاتورة', kvDone: 'طُبّقت الضريبة {r}%', kvRemoved: 'أُزيلت الضريبة — الفاتورة بدون ضريبة', kvHint: 'تُضاف الضريبة إلى المجموع الفرعي (بعد الخصم) وتظهر سطراً مستقلاً في الإجمالي. إذا كان عمود الضريبة لكل بند مفعّلاً تُكتب النسبة في كل بند، ويمكن تغيير بند واحد من عموده. عند الإزالة تصبح الفاتورة بدون ضريبة. لا تتغير أسعار سجلات المنتجات.', payModeNoCash: 'تم التحصيل (دون إضافة إلى الصندوق)', payNoCashHint: 'تُعلَّم الفاتورة كمحصَّلة؛ لا يُسجَّل إيراد في الصندوق ولا يتغير رصيده.', payNoCashBtn: '✓ تعليمها كمحصَّلة', payNoCashTag: 'لم يُضف إلى الصندوق', impSrcCur: 'عملة الأسعار في المستند', impTotals: 'مجموع البنود {a} · المجموع الفرعي في المستند {b}', pdfApplied: 'عُبّئت البيانات من المستند — راجعها ثم احفظ', pfPending: 'سيُرفق عند حفظ الفاتورة', pfTooBig: '«{n}» كبير جداً (الحد 50 ميغابايت).', pfFail: 'تعذّرت إضافة الملف:', pfBtn: 'ملفات خاصة (تراها أنت فقط)'
     }
   };
   ['tr', 'en', 'ar'].forEach(function (l) { Object.keys(TX171[l]).forEach(function (k) { TX[l][k] = TX171[l][k]; }); });
@@ -1102,6 +1105,8 @@
   var TR_SUF = ['larının', 'lerinin', 'ları', 'leri', 'lar', 'ler', 'sının', 'sinin', 'nın', 'nin', 'ının', 'inin', 'sı', 'si', 'su', 'sü', 'yla', 'yle', 'dan', 'den', 'tan', 'ten', 'da', 'de', 'ta', 'te', 'ı', 'i', 'u', 'ü'];
   var TERM1 = null;
   function offlineName(s, lg) {
+    // v1.74: çevrimdışı teknik çeviri kütüphanesi (sozluk-falcon.js, ~2500 terim + Türkçe ek çözümleme) varsa o
+    if (window.FalconSozluk && window.FalconSozluk.translate) { try { var fs0 = window.FalconSozluk.translate(s, lg); if (fs0 && fs0.text) return fs0; } catch (e) {} }
     var src = String(s || ''), low = src.toLocaleLowerCase('tr');
     if (low.length !== src.length) low = src.toLowerCase();
     var isL = function (ch) { return !!ch && /[a-zçğıöşüâîû0-9]/i.test(ch); };
@@ -1130,19 +1135,22 @@
   // kullanılır, yapay zekâ çevirisi geldiğinde önbelleğe yazılır ve onLate ile önizleme kendiliğinden güncellenir.
   var NM_FAST = 8000, NM_OFF = 20000;
   function offlineNames(miss, lg) {
-    var Y = window.FCYZ, dict = function () { var o = {}; miss.forEach(function (x) { o[x] = offlineName(x, lg).text; }); return o; };
-    if (!Y || !Y.available || !Y.available()) return Promise.resolve({ map: dict(), via: 'dict' });
+    // v1.74: önce sözlük (anında, teknik terimlerde en tutarlısı); sözlükte bulunamayan Türkçe kelime kalan adlar yerel zekâyla (NLLB) çevrilir
+    var o = {}, left = {};
+    miss.forEach(function (x) { var r = offlineName(x, lg); o[x] = r.text; if (r.left && r.left.length) left[x] = r.left; });
+    var rest = Object.keys(left), Y = window.FCYZ, all = function () { var w = []; Object.keys(left).forEach(function (k) { left[k].forEach(function (x) { if (w.indexOf(x) < 0) w.push(x); }); }); return w; };
+    if (!rest.length || !Y || !Y.available || !Y.available()) return Promise.resolve({ map: o, via: 'dict', left: all() });
     var t0 = Date.now();
     return Promise.resolve(Y.ready('mt')).then(function (ok) {
-      if (!ok) return { map: dict(), via: 'dict' };
-      var o = dict(), i = 0;
+      if (!ok) return { map: o, via: 'dict', left: all() };
+      var i = 0;
       var step = function () {
-        if (i >= miss.length || Date.now() - t0 > NM_OFF) return { map: o, via: 'yz' };
-        var x = miss[i++];
-        return Promise.resolve(Y.translate(x, 'auto', lg)).then(function (r) { if (r && r.text && String(r.text).trim()) o[x] = String(r.text).trim(); }, function () {}).then(step);
+        if (i >= rest.length || Date.now() - t0 > NM_OFF) return { map: o, via: 'dict+yz', left: all() };
+        var x = rest[i++];
+        return Promise.resolve(Y.translate(x, 'auto', lg)).then(function (r) { var v = r && r.text && String(r.text).trim(); if (v && !/[çğıöşüÇĞİÖŞÜ]/.test(v)) { o[x] = v; delete left[x]; } }, function () {}).then(step);
       };
       return step();
-    }, function () { return { map: dict(), via: 'dict' }; });
+    }, function () { return { map: o, via: 'dict', left: all() }; });
   }
   function translateNames(list, lg, onLate) {
     var uniq = list.filter(function (x, i) { return list.indexOf(x) === i; });
@@ -1158,7 +1166,7 @@
         // çevrimdışı çeviri önbelleğe yazılmaz (internet gelince yapay zekâ ile yeniden çevrilir)
         return offlineNames(miss, lg).then(function (o) {
           var map = {}; uniq.forEach(function (x) { map[x] = c[x] != null ? c[x] : o.map[x] != null ? o.map[x] : x; });
-          return { map: map, src: 'offline', via: o.via, pending: !!pending };
+          return { map: map, src: 'offline', via: o.via, pending: !!pending, left: o.left || [] };
         });
       };
       var timer = null;
@@ -1270,6 +1278,7 @@
       '.fat-drop{border:2px dashed var(--border,#cbd5e1);border-radius:12px;padding:26px 16px;text-align:center;cursor:pointer;color:var(--muted,#64748b);line-height:1.5}.fat-drop.on,.fat-drop:hover{border-color:#38bdf8;background:#38bdf812}' +
       '.fat-nocash{display:inline-block;margin-top:4px;font-size:11px}' +
       '.fat-drop-acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}' +
+      '.fat-pick-list{display:flex;flex-direction:column;gap:4px;margin-top:8px;max-height:220px;overflow:auto}.fat-pick-it{display:flex;align-items:center;gap:8px;padding:4px 8px;border:1px solid var(--border,#ddd);border-radius:6px}.fat-pick-it>span:nth-child(2){flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}' +
       '.fat-imp-opts{display:flex;flex-direction:column;gap:8px}.fat-imp-o{display:flex;gap:8px;align-items:flex-start}.fat-imp-o2{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding-inline-start:26px}.fat-imp-o2 select{max-width:100%}' +
       '.fat-imp-sub{margin-top:2px;line-height:1.35;overflow-wrap:anywhere}.fat-imp-doc{margin:2px 0 8px;overflow-wrap:anywhere}' +
       '.fat-pf{display:flex;flex-direction:column;gap:8px}.fat-pf-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 10px;border:1px solid var(--border,#e2e8f0);border-radius:10px}' +
@@ -1619,7 +1628,7 @@
             } }));
           });
           nmInfo.className = 'fat-pv-nm' + (tr.busy ? ' busy' : '');
-          nmInfo.textContent = names !== 'tr' ? '' : tr.busy ? '⏳ ' + t('pvNamesBusy') : tr.lg === cur.lang && tr.src ? (tr.src === 'ai' ? '✓ ' + t('pvNamesAi') : tr.src === 'same' ? t('pvNamesSame') : tr.pending ? '⌁ ' + t('pvNamesWait') : '⚠ ' + t('pvNamesOffline')) : '';
+          nmInfo.textContent = names !== 'tr' ? '' : tr.busy ? '⏳ ' + t('pvNamesBusy') : tr.lg === cur.lang && tr.src ? (tr.src === 'ai' ? '✓ ' + t('pvNamesAi') : tr.src === 'same' ? t('pvNamesSame') : (tr.pending ? '⌁ ' + t('pvNamesWait') : '⚠ ' + t('pvNamesOffline')) + (tr.left && tr.left.length ? ' — ' + t('pvNamesLeft') + ': ' + tr.left.slice(0, 12).join(', ') : '')) : '';
         };
         var ensureNames = function () {
           if (names !== 'tr' || (tr.lg === cur.lang && tr.map)) { drawNm(); return Promise.resolve(); }
@@ -1633,7 +1642,7 @@
             tr = { lg: lg, map: r2.map, src: r2.src, busy: false }; drawNm(); render(); toast(t('pvNamesLate'));
           }).then(function (r) {
             if (cur.lang !== lg) return;
-            tr = { lg: lg, map: r.map, src: r.src, busy: false, pending: r.pending }; drawNm();
+            tr = { lg: lg, map: r.map, src: r.src, busy: false, pending: r.pending, left: r.left || [] }; drawNm();
           }, function () { tr.busy = false; drawNm(); });
         };
         // 3) düzelt
@@ -2842,27 +2851,50 @@
 
     // ----- Belgeden doldur (v1.71: PDF + fotoğraf; sürükle-bırak, yapıştır, kamera) -----
     // opts: { hasItems, hasCust, productsOnly } → importPreview seçenekleri
+    // v1.74: birden çok dosya / sayfa seçilebilir (ör. 3 sayfalık teklifin ekran görüntüleri): sırayla okunup tek listede birleşir.
+    // Dosya penceresinden tek dosya seçilirse hemen okunur; yapıştırılan / sürüklenen dosyalar listeye eklenir, «Oku» ile başlar.
     function pickPdf(done, opts) {
       opts = opts || {};
-      var fin = false, m = null;
-      var go = function (f) { if (fin || !f) return; fin = true; cleanup(); if (m) m.close(); readPdf(f, done, opts); };
+      var fin = false, m = null, list = [];
+      var go = function (fs) { if (fin || !fs || !fs.length) return; fin = true; cleanup(); if (m) m.close(); readPdf(fs.length === 1 ? fs[0] : fs, done, opts); };
+      var ok = function (f) { return f && (/^(application\/pdf|image\/(jpeg|png|webp))$/.test(f.type) || /\.(pdf|jpe?g|png|webp)$/i.test(f.name || '')); };
+      var listBox = el('div', { class: 'fat-pick-list' }), readB = el('button', { type: 'button', class: 'btn primary', style: 'display:none', onclick: function () { go(list.slice()); } });
+      var draw = function () {
+        listBox.innerHTML = '';
+        list.forEach(function (f, k) {
+          listBox.appendChild(el('div', { class: 'fat-pick-it' }, [
+            el('span', { class: 'muted small', dir: 'ltr', text: (k + 1) + '.' }), el('span', { text: (f.name || 'görüntü') + (f.size ? ' · ' + Math.max(1, Math.round(f.size / 1024)) + ' KB' : '') }),
+            k > 0 ? el('button', { type: 'button', class: 'btn sm', title: '↑', text: '↑', onclick: function () { var x = list[k - 1]; list[k - 1] = list[k]; list[k] = x; draw(); } }) : null,
+            el('button', { type: 'button', class: 'btn sm', title: t('close'), text: '✕', onclick: function () { list.splice(k, 1); draw(); } })
+          ]));
+        });
+        if (list.length) listBox.appendChild(el('div', { class: 'muted small', text: t(list.length > 1 ? 'docListN' : 'docList1', { n: list.length }) }));
+        readB.textContent = list.length > 1 ? t('docReadN', { n: list.length }) : t('docRead1');
+        readB.style.display = list.length ? '' : 'none';
+      };
+      var add = function (fs, auto) {
+        fs = Array.prototype.slice.call(fs || []).filter(ok); if (!fs.length) return;
+        // dosya penceresinden doğrudan seçim ve liste boşken: hemen oku
+        if (auto && !list.length) return go(fs);
+        Array.prototype.push.apply(list, fs); draw();
+      };
       var mkInp = function (cap) {
         var inp = el('input', { type: 'file', accept: 'application/pdf,.pdf,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp', style: 'display:none' });
-        if (cap) inp.setAttribute('capture', 'environment');
-        inp.addEventListener('change', function () { var f = inp.files && inp.files[0]; if (f) go(f); });
+        if (cap) inp.setAttribute('capture', 'environment'); else inp.setAttribute('multiple', 'multiple');
+        inp.addEventListener('change', function () { add(inp.files, true); inp.value = ''; });
         return inp;
       };
       var i1 = mkInp(false), i2 = mkInp(true);
-      var onPaste = function (e) { var it = e.clipboardData && Array.prototype.slice.call(e.clipboardData.items || []).filter(function (x) { return x.kind === 'file'; })[0]; if (it) { e.preventDefault(); go(it.getAsFile()); } };
+      var onPaste = function (e) { var fs = e.clipboardData && Array.prototype.slice.call(e.clipboardData.items || []).filter(function (x) { return x.kind === 'file'; }).map(function (x) { var f = x.getAsFile(); if (f && !f.name) try { f = new File([f], 'ekran-' + (list.length + 1) + '.png', { type: f.type || 'image/png' }); } catch (er) {} return f; }); if (fs && fs.length) { e.preventDefault(); add(fs, false); } };
       var cleanup = function () { document.removeEventListener('paste', onPaste, true); };
       document.addEventListener('paste', onPaste, true);
       var zone = el('div', { class: 'fat-drop', tabindex: '0', text: t('docDrop'), onclick: function () { i1.click(); } });
       zone.addEventListener('dragover', function (e) { e.preventDefault(); zone.classList.add('on'); });
       zone.addEventListener('dragleave', function () { zone.classList.remove('on'); });
-      zone.addEventListener('drop', function (e) { e.preventDefault(); zone.classList.remove('on'); var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (f) go(f); });
-      m = modal('📄 ' + t('docPickT'), [zone, el('div', { class: 'fat-drop-acts' }, [
-        el('button', { type: 'button', class: 'btn primary', text: t('docPick'), onclick: function () { i1.click(); } }),
-        el('button', { type: 'button', class: 'btn', text: t('docCamera'), onclick: function () { i2.click(); } }), i1, i2
+      zone.addEventListener('drop', function (e) { e.preventDefault(); zone.classList.remove('on'); var fs = e.dataTransfer && e.dataTransfer.files; if (fs && fs.length) add(fs, fs.length > 1); });
+      m = modal('📄 ' + t('docPickT'), [zone, el('div', { class: 'muted small', style: 'margin:6px 0', text: t('docMulti') }), listBox, el('div', { class: 'fat-drop-acts' }, [
+        el('button', { type: 'button', class: 'btn', text: t('docPick'), onclick: function () { i1.click(); } }),
+        el('button', { type: 'button', class: 'btn', text: t('docCamera'), onclick: function () { i2.click(); } }), readB, i1, i2
       ])], [el('button', { type: 'button', class: 'btn', text: t('close'), onclick: function () { fin = true; cleanup(); m.close(); } })], '');
     }
     // v1.61.2: yapay zeka okurken çevrimdışı okuma da yapılır ve sonucu teyit eder; beklemek istemeyen "Beklemeden çevrimdışı oku"ya basar
@@ -2877,15 +2909,17 @@
       var tick = setInterval(function () { var s = Math.round((Date.now() - t0) / 1000); clock.textContent = s >= 3 ? t('pdfSec', { s: s }) : ''; if (aiOn && s >= 8) skipB.style.display = ''; }, 1000);
       var stop = function () { clearInterval(tick); bm.close(); };
       var ocrMsg = '';
-      window.FalconFaturaPdf.read(file, { ctl: ctl, onStep: function (step, model) {
-        if (step === 'ocr' || step === 'ocr2') { ocrMsg = t(step === 'ocr' ? 'docOcr' : 'docOcr2'); if (!aiOn) msg.lastChild.textContent = ocrMsg; else sub.textContent = '✦ ' + (model || '') + ' · ' + ocrMsg; return; }
+      var many = Array.isArray(file) && file.length > 1, P = window.FalconFaturaPdf;
+      (many && P.readMany ? P.readMany : function (f, o) { return P.read(Array.isArray(f) ? f[0] : f, o); })(file, { ctl: ctl, onStep: function (step, model, pg) {
+        if (pg && pg.n > 1) clock.title = ''; var pgT = pg && pg.n > 1 ? t('docPage', { i: pg.i + 1, n: pg.n }) + ' · ' : '';
+        if (step === 'ocr' || step === 'ocr2') { ocrMsg = pgT + t(step === 'ocr' ? 'docOcr' : 'docOcr2'); if (!aiOn) msg.lastChild.textContent = ocrMsg; else sub.textContent = '✦ ' + (model || '') + ' · ' + ocrMsg; return; }
         aiOn = step === 'ai';
-        msg.lastChild.textContent = step === 'ai' ? t('pdfAi') : step === 'verify' ? t('pdfVerify') : ocrMsg || t('pdfOffline');
-        sub.textContent = step === 'ai' && model ? '✦ ' + model : file.name || '';
+        msg.lastChild.textContent = pgT + (step === 'ai' ? t('pdfAi') : step === 'verify' ? t('pdfVerify') : ocrMsg || t('pdfOffline'));
+        sub.textContent = step === 'ai' && model ? '✦ ' + model : (Array.isArray(file) ? (file[pg ? pg.i : 0] || {}).name : file.name) || '';
         if (!aiOn) skipB.style.display = 'none';
       } }).then(function (r) {
         stop();
-        r._file = file;
+        r._files = Array.isArray(file) ? file : [file]; r._file = r._files[0];
         if (!r.items.length && !r.buyer.name && !r.seller.name) { toast(r.warnings.indexOf('scanned') >= 0 && r.kind === 'pdf' && !r.ocr ? t('pdfScanned') : t('docUnreadable'), 'error'); return; }
         return Promise.all([q('SELECT * FROM customers').catch(function () { return []; }), q('SELECT id, name, code, unit, sale_price, cost_currency, vat_rate, depot FROM products').catch(function () { return []; })])
           .then(function (x) { importPreview(r, x[0], x[1], done, opts || {}); });
@@ -3016,7 +3050,7 @@
         var ni = function (k, cls) { return el('input', { class: cls, type: 'number', step: 'any', dir: 'ltr', value: it[k] == null ? '' : String(it[k]), oninput: function (e) { it[k] = e.target.value === '' ? null : num(e.target.value); } }); };
         var ti = function (k, cls) { return el('input', { class: cls, value: it[k] || '', oninput: function (e) { it[k] = e.target.value; } }); };
         // v1.71: liste fiyatı / iskonto ve Model · P/N · S/N bilgisi (yalnız gösterilir)
-        var subTxt = [it.list_price != null ? t('impList') + ' ' + fmt(it.list_price, cur || 'TRY') : '', it.disc_rate ? t('impDisc') + ' %' + it.disc_rate : '', it.amount != null ? '= ' + fmt(it.amount, cur || 'TRY') : '',
+        var subTxt = [it.status ? t('impStatus') + ': ' + it.status : '', it.list_price != null ? t('impList') + ' ' + fmt(it.list_price, cur || 'TRY') : '', it.disc_rate ? t('impDisc') + ' %' + it.disc_rate : '', it.amount != null ? '= ' + fmt(it.amount, cur || 'TRY') : '',
           it.model ? t('impModel') + ': ' + it.model : '', it.part_no ? t('impPn') + ': ' + it.part_no : '', it.serial ? t('impSn') + ': ' + it.serial : ''].filter(Boolean).join(' · ');
         return (o.tr = el('tr', { class: diffRows[i] ? 'fat-imp-diff' : null }, [el('td', null, [cb]), el('td', null, [ti('code', 'cd')]), el('td', null, [ti('name', 'nm2'), subTxt ? el('div', { class: 'muted small fat-imp-sub', dir: 'auto', text: subTxt }) : null]), el('td', null, [ni('qty', 'q')]), el('td', null, [ti('unit', 'u')]),
           el('td', null, [ni('price', 'p')]), el('td', null, [ni('vat', 'v')]), el('td', null, [sel])]));
@@ -3067,12 +3101,12 @@
       if (r.alt && ck && ck.status !== 'match') {
         var altAi = r.alt.source === 'ai' && !(r.alt.check && r.alt.check.status === 'fixed');
         altB = el('button', { type: 'button', class: 'btn', text: altAi ? '✦ ' + t('useAi') : '⌁ ' + t('useOff'), onclick: function () {
-          var o = r.alt; o.alt = r; o._file = r._file; if (!o.check || o.check.status !== 'fixed') o.check = Object.assign({}, ck, { status: 'diff', whole: false });
+          var o = r.alt; o.alt = r; o._file = r._file; o._files = r._files; if (!o.check || o.check.status !== 'fixed') o.check = Object.assign({}, ck, { status: 'diff', whole: false });
           m.close(); importPreview(o, customers, products, done, opts);
         } });
       }
       var reB = r.source !== 'ai' && !r.verifiedBy && r._file && r.aiError && r.aiError !== 'skip' && r.aiError !== 'key'
-        ? el('button', { type: 'button', class: 'btn', text: '✦ ' + t('rereadAi'), onclick: function () { m.close(); readPdf(r._file, done, opts); } }) : null;
+        ? el('button', { type: 'button', class: 'btn', text: '✦ ' + t('rereadAi'), onclick: function () { m.close(); readPdf(r._files && r._files.length > 1 ? r._files : r._file, done, opts); } }) : null;
       // v1.71: belge bilgisi (tür, no, tarih, geçerlilik, kur…) ve aktarım seçenekleri
       var mt = r.meta || {};
       var docInfo = [mt.doc_kind ? t('impKind_' + (/^(quote|proforma|invoice)$/.test(mt.doc_kind) ? mt.doc_kind : 'other')) : t('impDoc'), mt.number ? '№ ' + mt.number : '', mt.date ? dmy(mt.date) : '',
@@ -3081,6 +3115,9 @@
         r.ocr ? t('impOcr') + ': ' + r.ocr : ''].filter(Boolean).join(' · ');
       var O = { prod: true, upd: true, cust: !opts.hasCust, append: !!opts.hasItems, attach: !!(r._file && !opts.productsOnly) };
       try { var sv = jparse(localStorage.getItem('fat_imp_opts') || '', {}); if (sv.prod != null) O.prod = !!sv.prod; if (sv.upd != null) O.upd = !!sv.upd; if (sv.attach != null && O.attach) O.attach = !!sv.attach; } catch (e) {}
+      // v1.74: yalnız ürün tablosu (ekran görüntüsü): belgede müşteri / satıcı bilgisi yoksa müşteri bölümü kapalı, müşteri aktarılmaz
+      var noParty = !['buyer', 'seller'].some(function (k) { var p = r[k] || {}; return p.name || p.tax_no || p.address || p.phone; });
+      if (noParty) O.cust = false;
       var keepO = function () { try { localStorage.setItem('fat_imp_opts', JSON.stringify({ prod: O.prod, upd: O.upd, attach: O.attach })); } catch (e) {} };
       var chk2 = function (k, label) { var c = el('input', { type: 'checkbox', onchange: function (e) { O[k] = e.target.checked; keepO(); if (k === 'prod') updSel.disabled = !O.prod; } }); c.checked = !!O[k]; return el('label', { class: 'check fat-imp-o' }, [c, el('span', { text: label })]); };
       var updSel = el('select', { onchange: function (e) { O.upd = e.target.value === 'upd'; keepO(); } }, [opt('upd', t('impPriceUpd'), O.upd), opt('keep', t('impPriceKeep'), !O.upd)]);
@@ -3089,7 +3126,7 @@
       var optBox = el('div', { class: 'fat-imp-opts' }, [
         chk2('prod', t('impSaveProd')),
         el('div', { class: 'fat-imp-o2' }, [el('span', { class: 'muted small', text: t('impPriceMode') + ':' }), updSel]),
-        opts.productsOnly ? null : chk2('cust', t('impTakeCust')),
+        opts.productsOnly || noParty ? null : chk2('cust', t('impTakeCust')),
         modeSel && !opts.productsOnly ? el('div', { class: 'fat-imp-o2' }, [el('span', { class: 'muted small', text: t('impItemsMode') + ':' }), modeSel]) : null,
         O.attach || (r._file && !opts.productsOnly) ? chk2('attach', t('impAttach')) : null
       ]);
@@ -3097,7 +3134,8 @@
         el('div', { class: 'fat-imp-src' }, [el('span', { class: 'fat-pv-tag', text: src }), cur ? el('span', { class: 'muted small', text: t('currency') + ': ' + cur }) : el('span', { class: 'notice error small', text: t('impCurUnknown', { c: r.currency || '?' }) })]),
         docInfo ? el('div', { class: 'muted small fat-imp-doc', dir: 'auto', text: '📄 ' + docInfo }) : null,
         vBox,
-        opts.productsOnly ? null : el('h3', { class: 'section-title', text: t('secCustomer') }), opts.productsOnly ? null : cBox,
+        opts.productsOnly || noParty ? null : el('h3', { class: 'section-title', text: t('secCustomer') }), opts.productsOnly || noParty ? null : cBox,
+        noParty && !opts.productsOnly ? el('div', { class: 'muted small', text: 'ⓘ ' + t('impNoParty') }) : null,
         mRows.length && !opts.productsOnly ? el('h3', { class: 'section-title', text: t('secInfo') }) : null,
         mRows.length && !opts.productsOnly ? el('div', { class: 'fat-imp-ms' }, mRows) : null,
         mRows.length && !opts.productsOnly ? el('div', { class: 'field-hint', text: t('impMetaHint') }) : null,
@@ -3146,7 +3184,8 @@
             if (mSel.due_date && r.meta.due_date) data.due_date = r.meta.due_date;
             data.currency = dstCur;
             if (srcCur !== dstCur) data._fxFrom = srcCur;
-            var fileP = O.attach && r._file ? keepSourceFile(r._file).then(function (f) { data._files = [f]; }, function (err) { toast(t('pfFail') + ' ' + String(err && (err.code || err.message) || err), 'error'); }) : Promise.resolve();
+            var srcs = r._files && r._files.length ? r._files : r._file ? [r._file] : [], kept = [];
+            var fileP = O.attach && srcs.length ? srcs.reduce(function (pp, sf) { return pp.then(function () { return keepSourceFile(sf).then(function (f) { kept.push(f); }); }); }, Promise.resolve()).then(function () { data._files = kept; }, function (err) { toast(t('pfFail') + ' ' + String(err && (err.code || err.message) || err), 'error'); }) : Promise.resolve();
             return fileP.then(function () { m.close(); done(data); });
           }, function () {});
         } });

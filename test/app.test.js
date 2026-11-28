@@ -439,3 +439,27 @@ test('Fatura tahsilatı Sham Cash (1.66): sc → hareketin sc_ref / sc_doc alanl
   assert.strictEqual(db.get('SELECT t.sc_doc FROM cash_transactions t JOIN invoice_payments p ON p.cash_transaction_id = t.id WHERE p.id = ?', [p2.id]).sc_doc, null);
   assert.strictEqual(db.get('SELECT status, paid FROM invoices WHERE id = ?', [inv.id]).paid, 1100);
 });
+
+test('1.74: çevrimdışı teknik çeviri kütüphanesi güncel ve Türkçe kelime bırakmıyor', () => {
+  const { execFileSync } = require('child_process');
+  const before = fs.readFileSync(path.join(ROOT, 'dist/assets/sozluk-falcon.js'), 'utf8');
+  execFileSync(process.execPath, [path.join(ROOT, 'araclar/sozluk-derle.js')]);
+  assert.strictEqual(fs.readFileSync(path.join(ROOT, 'dist/assets/sozluk-falcon.js'), 'utf8'), before, 'sozluk-falcon.js kaynaklardan derlenmemiş (node araclar/sozluk-derle.js)');
+  delete require.cache[require.resolve(path.join(ROOT, 'dist/assets/sozluk-falcon.js'))];
+  const S = require(path.join(ROOT, 'dist/assets/sozluk-falcon.js'));
+  assert.ok(S.size > 2000, 'terim sayısı');
+  const cases = {
+    'Fiber Optik Patch Panel Rack Tipi 24 PortSC Duplex Boş': 'Fiber Optic Patch Panel Rack Type 24 Port SC Duplex Blank',
+    'Keystone Jack CAT6 UTP 180° Beyaz': 'Keystone Jack CAT6 UTP 180° White',
+    'Kapaklı Plastik Kutu 10x20': 'Plastic Box with Cover 10x20',
+    'Data Patch Panel 24-Port UTP Modüler Boş': 'Data Patch Panel 24-Port UTP Modular Blank',
+    'Fiber Optik Patch Cord Duplex LC/LC SM LSZH 2Mt': 'Fiber Optic Patch Cord Duplex LC/LC SM LSZH 2 m',
+    'Sunucu İçin Yedekli Güç Kaynağı 800W': 'Redundant Power Supply for Server 800W',
+    'Solder Tip T12': 'Solder Tip T12',
+    'Stepper Motor Nema 23': 'Stepper Motor Nema 23',
+  };
+  for (const [k, v] of Object.entries(cases)) assert.strictEqual(S.translate(k, 'en').text, v, k);
+  ['Ağ Cihazlarının Kurulumu ve Yapılandırılması', 'Kontaktör 3 Kutuplu 25A 220V Bobin', 'Siber Güvenlik Danışmanlık Hizmeti 1 Yıl', 'Bulaşık Makinesi Rezistansı']
+    .forEach((x) => { const r = S.translate(x, 'en'); assert.ok(!/[çğıöşüÇĞİÖŞÜ]/.test(r.text) && !r.left.length, x + ' → ' + r.text); });
+  assert.ok(S.translate('Fiber Optik Kablo', 'ar').text.includes('ألياف'), 'Arapça');
+});

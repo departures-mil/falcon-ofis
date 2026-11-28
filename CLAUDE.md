@@ -159,3 +159,15 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   ETTN `layOn` meta'dan her zaman düşer (düzenleyici, çıktı, barkod metni, karekod `ettn: ''`, belgeden okuma MK listesi). Ürün adı çevirisi `translateNames(list, lg, onLate)`: en güçlü model
   (fatura-pdf `translateAi`, istek 120 sn) `NM_FAST` 8 sn içinde gelmezse `offlineNames` (yerel zekâ mt, ≤20 sn; yoksa `offlineName` sözlüğü) → önizleme açılır, yapay zekâ gelince
   önbelleğe + `onLate` ile önizleme güncellenir. Sözlük `TERMS2` (~590 terim) + ekli kelimelerde kök arama (`TR_SUF`), «1Metre» → «1 m».
+
+- 1.74.0 ÇEVRİMDIŞI ÇEVİRİ KÜTÜPHANESİ + EKRAN GÖRÜNTÜSÜNDEN ÜRÜN + ÇOKLU EKLEME: `dist/assets/sozluk-falcon.js` OTOMATİK ÜRETİLİR (`node araclar/sozluk-derle.js`; kaynak
+  `araclar/sozluk/*.txt` «tr | en | ar» + `00-temel.tsv`, motor `araclar/sozluk-motor.js`; sonraki dosya öncekini ezer) → `window.FalconSozluk.translate(text, lg)` {text, hit, left}:
+  çok kelimeli en uzun eşleşme, Türkçe ek çözümleme (ünlü uyumu denetimli; edilgen -ıl/-n, ikiz ünsüz, yumuşama), şapkasız BÜYÜK harf yazım (FOLD), `AMB` (İngilizcede de
+  anlamlı kısa kelimeler yalnız adda kesin Türkçe varsa), «-lı» → «with X» (arkasındaki kelime dizisinin sonuna), sayı + «-lı» → «24-Port», «X İçin Y» → «Y for X», «N'li» → N-Pack/N-Way,
+  sayı + Metre/Mt → «m». `offlineName` önce bunu kullanır; `offlineNames` sözlükte kalan Türkçe kelimeli adları yerel zekâya (NLLB) verir; `left` önizlemede gösterilir.
+  Test: `test/app.test.js` (sözlük güncel + örnek adlarda Türkçe harf kalmaz). Kalite taraması: `node /tmp/qa/qa.js` benzeri (dictionary-en ile).
+  Belge okuma: `dekont-falcon.js docCanvas` renkli / koyu bantları blok blok ters çevirir (beyaz yazı), düz renkli zemini beyaza boyar; `docOcr(cv,{mode,min})`. `fatura-pdf.js`: OCR'a dayanıklı
+  başlık sözcükleri (Qry, Guantity, DESCR…, «usr PRICE» → liste), fiyatsız liste (`qtyOnly`: ad + miktar), `fixRow` (ondalık ayracı kaybı: liste × (1−isk.) = net, net × miktar = tutar),
+  `status` (stok durumu), çok geçişli OCR (soft → lat → lat@3400, tutarlı satır puanı), `readMany(files)` (sırayla okur, sınırdaki tekrarları atar, toplam son sayfadan).
+  Arayüz `pickPdf`: çoklu seçim / sürükle / art arda yapıştır listesi («▶ Oku ve birleştir (n)»), `r._files` hepsi özel dosya olur; belgede taraf yoksa müşteri bölümü gizli.
+  Geliştirme aracı `araclar/ekran-oku.js <dosya…> [--birlestir] [--satirlar=lat:2600]`. Test: `araclar/fatura-174-e2e.js` (örnekler `araclar/fatura-ornek/ekran/`, depoda yok).
