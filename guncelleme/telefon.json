@@ -1,10 +1,10 @@
 {
- "version": "1.77.0",
- "notes": "Güçlü teknik çeviri sözlüğü (~3.900 terim), İngilizce ürün adları internetsiz Arapçaya, düzgün Arapça sözcük sırası, yapay zekâya zorunlu terim listesi; faturada senaryo / fatura tipi / özelleştirme no son bırakıldığı gibi (boş da), Enter = Kaydet.",
- "size": 16527832,
- "sha256": "7911f215c41368d945dc2a044f9c1103f45b89f6fb1109aa5397256bfb5f7f04",
- "sig": "MEUCIH4eUIg3NJWoUk2tm9XMFzuroXWc75tY26FY9rxAPgzJAiEAkMY7+cgTcgp5e/uxN6p8jYz9MR63zbTWEW+GL3odukY=",
- "file": "telefon-1.77.0.fopk",
+ "version": "1.78.0",
+ "notes": "Kişi kartında her program (WhatsApp, Telegram, Conversations, Signal, normal arama) için ayrı numara ve @kullanıcı adı, alt alta; listede ipucu, aramada bulunur.",
+ "size": 16528650,
+ "sha256": "b7d3348e269cf18ee39200d65aa34ecf86bbce5f5dde28107ed6c1e63b5383df",
+ "sig": "MEUCIAbt03lSNX9i8FMvEL3HG+dwP5NGIE6kXeXIlRlsSl/RAiEA+O6f0BX6RaKtIMjBM7ufgQoNv3u8OoHBdFJDkdI/xXE=",
+ "file": "telefon-1.78.0.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-28T17:20:29.624Z"
+ "publishedAt": "2026-11-28T17:36:06.577Z"
 }
