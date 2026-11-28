@@ -5,7 +5,7 @@
 # Eklentiler (kullanim, fatura, duyuru-falcon.js) ve index.html etiketleri telefon-yayinla.js'te eklenir. Sonra:
 #   OZEL_ANAHTAR=<ozel-anahtar.pem> node araclar/telefon-yayinla.js <yeni-sürüm> <hedef-www> "notlar"
 set -e
-W="$1"; V="$2"; ESKI=1.71.0  # taban: son yayınlanan telefon fopk (159 yamaları içinde; eklentiler telefon-yayinla.js'te güncel kopyadan gelir)
+W="$1"; V="$2"; ESKI=1.73.0  # taban: son yayınlanan telefon fopk (159 yamaları içinde; eklentiler telefon-yayinla.js'te güncel kopyadan gelir)
 [ -n "$W" ] && [ -n "$V" ] || { echo "kullanım: telefon-hazirla.sh <www> <sürüm>"; exit 1; }
 rm -rf "$W"; mkdir -p "$W"
 node -e "require('./electron/update-pack').extractPack(require('fs').readFileSync('guncelleme/telefon-$ESKI.fopk'),'$W')" >/dev/null
