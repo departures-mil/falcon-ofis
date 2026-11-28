@@ -1,0 +1,428 @@
+# v1.79 — Sunucu, depolama, ağ / fiber, siber güvenlik, güvenlik sistemleri, enerji, BT donanımı, lisans / hizmet (tr | en | ar)
+# Kaynak: kullanıcının gerçek faturaları (Dell R740XD, Seagate Exos, SFP/SFP28, fiber patch panel, HBA…) + ileride gerekecek terimler.
+# Tek kelimelik belirsiz anahtarları (anahtar, kart, kasa, ray, modül…) EZME; çok kelimeli öbek kullan.
+
+## Sunucu
+raf tipi sunucu | Rack Server | خادم رفي
+kule tipi sunucu | Tower Server | خادم برجي
+blade sunucu | Blade Server | خادم شفرة
+blade kasası | Blade Chassis | هيكل خوادم الشفرة
+çift işlemcili | Dual-Processor | ثنائي المعالج
+tek işlemcili | Single-Processor | أحادي المعالج
+dört işlemcili | Quad-Processor | رباعي المعالجات
+işlemci soğutucusu | CPU Heatsink | مشتت حرارة المعالج
+işlemci fanı | CPU Fan | مروحة المعالج
+sunucu kasası | Server Chassis | هيكل الخادم
+sunucu ana kartı | Server Motherboard | اللوحة الأم للخادم
+sunucu ray kiti | Server Rail Kit | طقم سكك الخادم
+kayar ray | Sliding Rail | سكة منزلقة
+kayar ray kiti | Sliding Rail Kit | طقم سكك منزلقة
+sabit ray | Static Rail | سكة ثابتة
+kablo yönetim kolu | Cable Management Arm | ذراع إدارة الكابلات
+ön çerçeve | Front Bezel | الإطار الأمامي
+ön panel | Front Panel | اللوحة الأمامية
+riser kartı | Riser Card | بطاقة رافعة
+yükseltici kart | Riser Card | بطاقة رافعة
+uzaktan yönetim kartı | Remote Management Card | بطاقة الإدارة عن بُعد
+uzaktan yönetim lisansı | Remote Management License | ترخيص الإدارة عن بُعد
+yönetim portu | Management Port | منفذ الإدارة
+sunucu yönetim yazılımı | Server Management Software | برنامج إدارة الخوادم
+güvenilir platform modülü | Trusted Platform Module (TPM) | وحدة النظام الأساسي الموثوق (TPM)
+yedekli güç kaynağı | Redundant Power Supply | مزود طاقة احتياطي
+çalışırken değiştirilebilir | Hot-Swap | قابل للتبديل أثناء التشغيل
+hot swap | Hot-Swap | قابل للتبديل أثناء التشغيل
+hotswap | Hot-Swap | قابل للتبديل أثناء التشغيل
+yedekli fan | Redundant Fan | مروحة احتياطية
+fan modülü | Fan Module | وحدة مراوح
+c13 c14 güç kablosu | C13-C14 Power Cord | سلك طاقة C13-C14
+iş istasyonu | Workstation | محطة عمل
+mini bilgisayar | Mini PC | حاسوب مصغر
+endüstriyel bilgisayar | Industrial PC | حاسوب صناعي
+ince istemci | Thin Client | عميل رقيق
+grafik işlem birimi | Graphics Processing Unit (GPU) | وحدة معالجة الرسومات (GPU)
+hızlandırıcı kart | Accelerator Card | بطاقة تسريع
+
+## Bellek
+sunucu belleği | Server Memory | ذاكرة خادم
+kayıtlı bellek | Registered Memory (RDIMM) | ذاكرة مسجلة (RDIMM)
+ecc kayıtlı | ECC Registered | ECC مسجلة
+ecc registered | ECC Registered | ECC مسجلة
+yük azaltmalı bellek | Load-Reduced Memory (LRDIMM) | ذاكرة مخفضة الحمل (LRDIMM)
+hata düzeltmeli bellek | ECC Memory | ذاكرة تصحيح الأخطاء (ECC)
+dizüstü belleği | Laptop Memory (SO-DIMM) | ذاكرة حاسوب محمول (SO-DIMM)
+masaüstü belleği | Desktop Memory (DIMM) | ذاكرة حاسوب مكتبي (DIMM)
+bellek modülü | Memory Module | وحدة ذاكرة
+bellek yuvası | Memory Slot | فتحة ذاكرة
+bellek kiti | Memory Kit | طقم ذاكرة
+çift kanal | Dual-Channel | ثنائي القناة
+tek sıra | Single-Rank | أحادي الصف
+çift sıra | Dual-Rank | ثنائي الصف
+
+## Depolama
+sabit disk | Hard Disk Drive (HDD) | قرص صلب (HDD)
+kurumsal sabit disk | Enterprise Hard Drive | قرص صلب للمؤسسات
+kurumsal ssd | Enterprise SSD | SSD للمؤسسات
+katı hal sürücüsü | Solid-State Drive (SSD) | محرك أقراص الحالة الصلبة (SSD)
+harici disk | External Drive | قرص خارجي
+harici sabit disk | External Hard Drive | قرص صلب خارجي
+taşınabilir disk | Portable Drive | قرص محمول
+disk kızağı | Drive Caddy | حامل قرص
+disk tepsisi | Drive Tray | درج القرص
+disk yuvası | Drive Bay | حجرة القرص
+disk yuvalı | with Drive Bays | مع حجرات أقراص
+disk dönüştürücü | Drive Adapter | محول قرص
+disk dizisi | Disk Array | مصفوفة أقراص
+depolama sunucusu | Storage Server | خادم تخزين
+ağa bağlı depolama | Network-Attached Storage (NAS) | تخزين متصل بالشبكة (NAS)
+depolama alanı ağı | Storage Area Network (SAN) | شبكة منطقة التخزين (SAN)
+disk genişletme ünitesi | Disk Expansion Enclosure | وحدة توسيع الأقراص
+teyp sürücüsü | Tape Drive | محرك أشرطة
+teyp kütüphanesi | Tape Library | مكتبة أشرطة
+yedekleme kartuşu | Backup Cartridge | خرطوشة نسخ احتياطي
+raid kartı | RAID Controller | وحدة تحكم RAID
+raid denetleyici | RAID Controller | وحدة تحكم RAID
+raid denetleyicisi | RAID Controller | وحدة تحكم RAID
+hba kartı | HBA Card | بطاقة HBA
+önbellek modülü | Cache Module | وحدة ذاكرة التخزين المؤقت
+önbellek pili | Cache Battery | بطارية ذاكرة التخزين المؤقت
+dakikada devir | RPM | دورة/دقيقة
+okuma hızı | Read Speed | سرعة القراءة
+yazma hızı | Write Speed | سرعة الكتابة
+yazma ömrü | Write Endurance | تحمّل الكتابة
+günlük tam yazma | Drive Writes Per Day (DWPD) | عدد مرات الكتابة الكاملة يومياً (DWPD)
+okuma ağırlıklı | Read-Intensive | مكثف القراءة
+yazma ağırlıklı | Write-Intensive | مكثف الكتابة
+karma kullanım | Mixed-Use | استخدام مختلط
+şifreli disk | Self-Encrypting Drive (SED) | قرص ذاتي التشفير (SED)
+kendinden şifreli | Self-Encrypting | ذاتي التشفير
+yenilenmiş | Refurbished | مجدد
+ikinci el | Used | مستعمل
+kutulu | Boxed (Retail) | بالعلبة (تجزئة)
+kutusuz | Bulk (OEM) | بدون علبة (OEM)
+
+## Ağ cihazları
+ağ anahtarı | Network Switch | مبدّل شبكة
+yönetilebilir switch | Managed Switch | مبدّل مُدار
+yönetilemez switch | Unmanaged Switch | مبدّل غير مُدار
+akıllı switch | Smart Switch | مبدّل ذكي
+omurga switch | Core Switch | مبدّل أساسي
+kenar switch | Edge Switch | مبدّل طرفي
+dağıtım switch | Distribution Switch | مبدّل توزيع
+erişim switch | Access Switch | مبدّل وصول
+istiflenebilir | Stackable | قابل للتكديس
+istif kablosu | Stacking Cable | كابل تكديس
+istif modülü | Stacking Module | وحدة تكديس
+yönlendirici | Router | موجّه
+kenar yönlendirici | Edge Router | موجّه طرفي
+modem yönlendirici | Modem Router | موجّه مودم
+kablosuz yönlendirici | Wireless Router | موجّه لاسلكي
+erişim noktası | Access Point | نقطة وصول
+kablosuz erişim noktası | Wireless Access Point | نقطة وصول لاسلكية
+dış ortam erişim noktası | Outdoor Access Point | نقطة وصول خارجية
+kablosuz denetleyici | Wireless Controller | وحدة تحكم لاسلكية
+kablosuz köprü | Wireless Bridge | جسر لاسلكي
+menzil genişletici | Range Extender | موسع نطاق
+ağ adaptörü | Network Adapter | محول شبكة
+fiber ağ kartı | Fiber Network Adapter | بطاقة شبكة ألياف
+medya dönüştürücü | Media Converter | محول وسائط
+poe enjektör | PoE Injector | حاقن PoE
+poe ayırıcı | PoE Splitter | مقسم PoE
+poe switch | PoE Switch | مبدّل PoE
+yük dengeleyici | Load Balancer | موازن الأحمال
+uplink portu | Uplink Port | منفذ الربط الصاعد
+yukarı bağlantı | Uplink | ربط صاعد
+konsol kablosu | Console Cable | كابل وحدة التحكم
+konsol sunucusu | Console Server | خادم وحدة التحكم
+kvm anahtarı | KVM Switch | مبدّل KVM
+kvm konsol | KVM Console | وحدة تحكم KVM
+konsol çekmecesi | Console Drawer | درج وحدة التحكم
+ip telefon | IP Phone | هاتف IP
+santral | PBX | مقسم هاتفي
+ip santral | IP PBX | مقسم هاتفي IP
+ses ağ geçidi | Voice Gateway | بوابة صوت
+ağ geçidi | Gateway | بوابة
+kablosuz ağ | Wireless Network | شبكة لاسلكية
+gigabit | Gigabit | جيجابت
+çift bant | Dual-Band | ثنائي النطاق
+üç bant | Tri-Band | ثلاثي النطاق
+
+## Fiber / optik / kablolama
+optik modül | Optical Transceiver | وحدة إرسال واستقبال ضوئية
+optik alıcı verici | Optical Transceiver | وحدة إرسال واستقبال ضوئية
+sfp modülü | SFP Module | وحدة SFP
+tek mod | Single-Mode (SM) | أحادي النمط (SM)
+tek modlu | Single-Mode (SM) | أحادي النمط (SM)
+çok mod | Multimode (MM) | متعدد الأنماط (MM)
+çok modlu | Multimode (MM) | متعدد الأنماط (MM)
+doğrudan bağlantı kablosu | Direct Attach Cable (DAC) | كابل توصيل مباشر (DAC)
+aktif optik kablo | Active Optical Cable (AOC) | كابل ضوئي نشط (AOC)
+fiber patch kablo | Fiber Patch Cord | سلك توصيل ألياف
+fiber patch cord | Fiber Patch Cord | سلك توصيل ألياف
+fiber optik kablo | Fiber Optic Cable | كابل ألياف ضوئية
+fiber kablo | Fiber Cable | كابل ألياف
+iç ortam fiber kablo | Indoor Fiber Cable | كابل ألياف داخلي
+dış ortam fiber kablo | Outdoor Fiber Cable | كابل ألياف خارجي
+zırhlı fiber kablo | Armored Fiber Cable | كابل ألياف مدرع
+fiber ek kasası | Fiber Splice Enclosure | علبة وصلات الألياف
+ek kasası | Splice Enclosure | علبة وصلات
+fiber sonlandırma kutusu | Fiber Termination Box | صندوق إنهاء الألياف
+fiber dağıtım kutusu | Fiber Distribution Box | صندوق توزيع الألياف
+fiber adaptör | Fiber Adapter | محول ألياف
+fiber konnektör | Fiber Connector | موصل ألياف
+fiber ayırıcı | Fiber Splitter | مقسم ألياف
+optik ayırıcı | Optical Splitter | مقسم ضوئي
+fiber ek makinesi | Fusion Splicer | جهاز لحام الألياف
+fiber kesici | Fiber Cleaver | قاطع الألياف
+fiber soyucu | Fiber Stripper | مقشر الألياف
+optik güç ölçer | Optical Power Meter | مقياس القدرة الضوئية
+ışık kaynağı | Light Source | مصدر ضوئي
+otdr | OTDR | جهاز OTDR
+çekirdek | Core | نواة
+yama kablosu | Patch Cord | سلك توصيل
+yama paneli | Patch Panel | لوحة توصيل
+data patch panel | Data Patch Panel | لوحة توصيل بيانات
+boş patch panel | Unloaded Patch Panel | لوحة توصيل فارغة
+yüklü patch panel | Loaded Patch Panel | لوحة توصيل مجهزة
+ağ kablosu | Network Cable | كابل شبكة
+ethernet kablosu | Ethernet Cable | كابل إيثرنت
+bükümlü çift | Twisted Pair | زوج مجدول
+ekransız | Unshielded (UTP) | غير محمي (UTP)
+folyolu | Foiled (FTP) | مغلف بالرقائق (FTP)
+halojensiz | Halogen-Free (LSZH) | خالٍ من الهالوجين (LSZH)
+düşük duman halojensiz | Low Smoke Zero Halogen (LSZH) | منخفض الدخان خالٍ من الهالوجين (LSZH)
+modüler jak | Modular Jack | مقبس معياري
+keystone jak | Keystone Jack | مقبس كيستون
+rj45 konnektör | RJ45 Connector | موصل RJ45
+rj45 jak | RJ45 Jack | مقبس RJ45
+konnektör kılıfı | Connector Boot | غطاء الموصل
+data prizi | Data Outlet | مقبس بيانات
+yüzey montaj kutusu | Surface Mount Box | علبة تركيب سطحي
+kablo test cihazı | Cable Tester | جهاز اختبار الكابلات
+pense crimp | Crimping Tool | أداة كبس
+krimp pensesi | Crimping Tool | أداة كبس
+kablo makarası | Cable Reel | بكرة كابل
+kutu kablo | Cable Box | علبة كابل
+
+## Kabin / rack
+ağ kabini | Network Cabinet | خزانة شبكة
+sistem kabini | Server Cabinet | خزانة خوادم
+sunucu kabini | Server Cabinet | خزانة خوادم
+duvar tipi kabin | Wall-Mount Cabinet | خزانة جدارية
+dikili tip | Floor-Standing | أرضي قائم
+dikili tip kabin | Floor-Standing Cabinet | خزانة أرضية قائمة
+açık rack | Open Frame Rack | حامل مفتوح
+kabin rafı | Cabinet Shelf | رف خزانة
+sabit raf | Fixed Shelf | رف ثابت
+kayar raf | Sliding Shelf | رف منزلق
+kabin fanı | Cabinet Fan | مروحة خزانة
+fan ünitesi | Fan Unit | وحدة مراوح
+kafes somun | Cage Nut | صامولة قفصية
+kör panel | Blanking Panel | لوحة تغطية
+güç dağıtım ünitesi | Power Distribution Unit (PDU) | وحدة توزيع الطاقة (PDU)
+akıllı pdu | Smart PDU | وحدة توزيع طاقة ذكية
+yatay kablo düzenleyici | Horizontal Cable Manager | منظم كابلات أفقي
+dikey kablo düzenleyici | Vertical Cable Manager | منظم كابلات عمودي
+fırça panel | Brush Panel | لوحة فرشاة
+delikli kapı | Perforated Door | باب مثقب
+cam kapı | Glass Door | باب زجاجي
+kilitli kapı | Lockable Door | باب بقفل
+yan panel | Side Panel | لوحة جانبية
+kabin tekerleği | Cabinet Caster | عجلة خزانة
+
+## Siber güvenlik
+güvenlik duvarı | Firewall | جدار حماية
+yeni nesil güvenlik duvarı | Next-Generation Firewall (NGFW) | جدار حماية من الجيل التالي (NGFW)
+güvenlik duvarı cihazı | Firewall Appliance | جهاز جدار حماية
+birleşik tehdit yönetimi | Unified Threat Management (UTM) | الإدارة الموحدة للتهديدات (UTM)
+saldırı tespit sistemi | Intrusion Detection System (IDS) | نظام كشف التسلل (IDS)
+saldırı önleme sistemi | Intrusion Prevention System (IPS) | نظام منع التسلل (IPS)
+web uygulama güvenlik duvarı | Web Application Firewall (WAF) | جدار حماية تطبيقات الويب (WAF)
+sanal özel ağ | Virtual Private Network (VPN) | شبكة افتراضية خاصة (VPN)
+vpn ağ geçidi | VPN Gateway | بوابة VPN
+uç nokta koruma | Endpoint Protection | حماية نقاط النهاية
+uç nokta güvenliği | Endpoint Security | أمن نقاط النهاية
+uç nokta tespit ve yanıt | Endpoint Detection and Response (EDR) | الكشف عن نقاط النهاية والاستجابة (EDR)
+genişletilmiş tespit ve yanıt | Extended Detection and Response (XDR) | الكشف والاستجابة الموسعة (XDR)
+güvenlik bilgi ve olay yönetimi | Security Information and Event Management (SIEM) | إدارة معلومات وأحداث الأمن (SIEM)
+güvenlik operasyon merkezi | Security Operations Center (SOC) | مركز عمليات الأمن (SOC)
+veri sızıntısı önleme | Data Loss Prevention (DLP) | منع فقدان البيانات (DLP)
+ağ erişim kontrolü | Network Access Control (NAC) | التحكم في الوصول إلى الشبكة (NAC)
+ayrıcalıklı erişim yönetimi | Privileged Access Management (PAM) | إدارة الوصول المميز (PAM)
+kimlik ve erişim yönetimi | Identity and Access Management (IAM) | إدارة الهوية والوصول (IAM)
+çok faktörlü kimlik doğrulama | Multi-Factor Authentication (MFA) | المصادقة متعددة العوامل (MFA)
+iki faktörlü kimlik doğrulama | Two-Factor Authentication (2FA) | المصادقة الثنائية (2FA)
+donanım güvenlik anahtarı | Hardware Security Key | مفتاح أمان مادي
+donanım güvenlik modülü | Hardware Security Module (HSM) | وحدة أمان الأجهزة (HSM)
+güvenlik anahtarı | Security Key | مفتاح أمان
+e-posta güvenliği | Email Security | أمن البريد الإلكتروني
+e-posta güvenlik ağ geçidi | Email Security Gateway | بوابة أمن البريد الإلكتروني
+web filtreleme | Web Filtering | تصفية الويب
+içerik filtreleme | Content Filtering | تصفية المحتوى
+antivirüs | Antivirus | مضاد فيروسات
+antivirüs yazılımı | Antivirus Software | برنامج مضاد فيروسات
+kötü amaçlı yazılım | Malware | برمجيات خبيثة
+fidye yazılımı koruması | Ransomware Protection | الحماية من برامج الفدية
+sızma testi | Penetration Test | اختبار الاختراق
+zafiyet taraması | Vulnerability Scan | فحص الثغرات
+zafiyet yönetimi | Vulnerability Management | إدارة الثغرات
+güvenlik denetimi | Security Audit | تدقيق أمني
+log yönetimi | Log Management | إدارة السجلات
+kayıt yönetimi | Log Management | إدارة السجلات
+dijital sertifika | Digital Certificate | شهادة رقمية
+ssl sertifikası | SSL Certificate | شهادة SSL
+kod imzalama sertifikası | Code Signing Certificate | شهادة توقيع الشيفرة
+şifreleme | Encryption | تشفير
+disk şifreleme | Disk Encryption | تشفير الأقراص
+veri imha | Data Destruction | إتلاف البيانات
+yedekleme yazılımı | Backup Software | برنامج النسخ الاحتياطي
+yedekleme cihazı | Backup Appliance | جهاز نسخ احتياطي
+felaket kurtarma | Disaster Recovery | التعافي من الكوارث
+bulut yedekleme | Cloud Backup | نسخ احتياطي سحابي
+hibrit bulut | Hybrid Cloud | سحابة هجينة
+hibrit | Hybrid | هجين
+sanallaştırma | Virtualization | المحاكاة الافتراضية
+sanallaştırma lisansı | Virtualization License | ترخيص المحاكاة الافتراضية
+sanal sunucu | Virtual Server | خادم افتراضي
+işletim sistemi | Operating System | نظام التشغيل
+sunucu işletim sistemi | Server Operating System | نظام تشغيل الخوادم
+istemci erişim lisansı | Client Access License (CAL) | ترخيص وصول العميل (CAL)
+kullanıcı lisansı | User License | ترخيص مستخدم
+cihaz lisansı | Device License | ترخيص جهاز
+çekirdek lisansı | Core License | ترخيص نواة
+kalıcı lisans | Perpetual License | ترخيص دائم
+abonelik lisansı | Subscription License | ترخيص اشتراك
+lisans yenileme | License Renewal | تجديد الترخيص
+lisans anahtarı | License Key | مفتاح الترخيص
+lisanslı | Licensed | مرخص
+lisanssız | Unlicensed | غير مرخص
+
+## Güvenlik sistemleri (CCTV / geçiş / alarm)
+ip kamera | IP Camera | كاميرا IP
+analog kamera | Analog Camera | كاميرا تناظرية
+dome kamera | Dome Camera | كاميرا قبة
+bullet kamera | Bullet Camera | كاميرا أسطوانية
+ptz kamera | PTZ Camera | كاميرا PTZ
+balık gözü kamera | Fisheye Camera | كاميرا عين السمكة
+termal kamera | Thermal Camera | كاميرا حرارية
+plaka tanıma kamerası | License Plate Recognition Camera | كاميرا التعرف على اللوحات
+gece görüşlü | with Night Vision | مع رؤية ليلية
+kızılötesi | Infrared (IR) | أشعة تحت الحمراء (IR)
+değişken odaklı | Varifocal | متغير البعد البؤري
+sabit lensli | Fixed Lens | بعدسة ثابتة
+ağ video kaydedici | Network Video Recorder (NVR) | مسجل فيديو شبكي (NVR)
+dijital video kaydedici | Digital Video Recorder (DVR) | مسجل فيديو رقمي (DVR)
+kayıt cihazı | Recorder | جهاز تسجيل
+kanal | Channel | قناة
+kamera direği | Camera Pole | عمود كاميرا
+kamera montaj aparatı | Camera Mounting Bracket | حامل تثبيت الكاميرا
+bağlantı kutusu | Junction Box | علبة توصيل
+kartlı geçiş | Card Access | دخول بالبطاقة
+kartlı geçiş sistemi | Card Access System | نظام الدخول بالبطاقة
+parmak izi okuyucu | Fingerprint Reader | قارئ بصمات الأصابع
+parmak izi okuyuculu | with Fingerprint Reader | مع قارئ بصمات
+yüz tanıma terminali | Face Recognition Terminal | جهاز التعرف على الوجه
+kart okuyucu | Card Reader | قارئ بطاقات
+kart okuyuculu | with Card Reader | مع قارئ بطاقات
+yakınlık kartı | Proximity Card | بطاقة تقارب
+manyetik kilit | Magnetic Lock | قفل مغناطيسي
+elektromanyetik kilit | Electromagnetic Lock | قفل كهرومغناطيسي
+kapı otomatiği | Door Operator | مشغل الأبواب
+turnike | Turnstile | بوابة دوارة
+alarm paneli | Alarm Panel | لوحة إنذار
+hareket dedektörü | Motion Detector | كاشف حركة
+kapı manyetik kontağı | Door Magnetic Contact | ملامس مغناطيسي للباب
+siren | Siren | صفارة إنذار
+interkom | Intercom | جهاز اتصال داخلي
+görüntülü diafon | Video Door Phone | هاتف باب بالفيديو
+x-ray bagaj tarama cihazı | X-Ray Baggage Scanner | جهاز فحص الأمتعة بالأشعة السينية
+kapı tipi metal dedektör | Walk-Through Metal Detector | كاشف معادن بوابي
+el tipi metal dedektör | Hand-Held Metal Detector | كاشف معادن يدوي
+
+## Enerji (BT)
+kesintisiz güç kaynağı | Uninterruptible Power Supply (UPS) | مزود طاقة غير منقطع (UPS)
+çift dönüşüm | Double-Conversion | تحويل مزدوج
+çift dönüşümlü | Double-Conversion | تحويل مزدوج
+online çift dönüşüm | Online Double-Conversion | تحويل مزدوج عبر الإنترنت
+hat etkileşimli | Line-Interactive | تفاعلي مع الخط
+akü kabini | Battery Cabinet | خزانة بطاريات
+harici akü | External Battery | بطارية خارجية
+bakım bypass | Maintenance Bypass | تجاوز الصيانة
+voltaj regülatörü | Voltage Regulator | منظم جهد
+akım korumalı priz | Surge-Protected Power Strip | مشترك كهربائي محمي
+
+## Bilgisayar ve çevre birimleri
+dizüstü bilgisayar | Laptop | حاسوب محمول
+masaüstü bilgisayar | Desktop Computer | حاسوب مكتبي
+tablet bilgisayar | Tablet | حاسوب لوحي
+yerleştirme istasyonu | Docking Station | محطة إرساء
+bağlantı istasyonu | Docking Station | محطة إرساء
+port çoğaltıcı | Port Replicator | موسع منافذ
+usb çoğaltıcı | USB Hub | موزع USB
+kablosuz klavye fare seti | Wireless Keyboard and Mouse Set | طقم لوحة مفاتيح وفأرة لاسلكي
+kablosuz mouse | Wireless Mouse | فأرة لاسلكية
+monitör kolu | Monitor Arm | ذراع شاشة
+monitör askı aparatı | Monitor Mount | حامل شاشة
+çok fonksiyonlu yazıcı | Multifunction Printer | طابعة متعددة الوظائف
+lazer yazıcı | Laser Printer | طابعة ليزر
+barkod yazıcı | Barcode Printer | طابعة باركود
+etiket yazıcı | Label Printer | طابعة ملصقات
+fiş yazıcı | Receipt Printer | طابعة إيصالات
+barkod okuyucu | Barcode Scanner | ماسح باركود
+el terminali | Handheld Terminal | جهاز طرفي محمول
+toner kartuşu | Toner Cartridge | خرطوشة حبر
+mürekkep kartuşu | Ink Cartridge | خرطوشة حبر سائل
+drum ünitesi | Drum Unit | وحدة الأسطوانة
+etkileşimli tahta | Interactive Whiteboard | سبورة تفاعلية
+video konferans sistemi | Video Conferencing System | نظام مؤتمرات الفيديو
+konferans kamerası | Conference Camera | كاميرا مؤتمرات
+konferans mikrofonu | Conference Microphone | ميكروفون مؤتمرات
+kulaklıklı mikrofon | Headset | سماعة رأس مع ميكروفون
+ekran kartı | Graphics Card | بطاقة رسومات
+anakart | Motherboard | لوحة أم
+güç kaynağı ünitesi | Power Supply Unit (PSU) | وحدة إمداد الطاقة (PSU)
+kasa fanı | Case Fan | مروحة الهيكل
+termal macun | Thermal Paste | معجون حراري
+dönüştürücü kablo | Adapter Cable | كابل محول
+görüntü kablosu | Video Cable | كابل فيديو
+hafıza kartı | Memory Card | بطاقة ذاكرة
+usb bellek | USB Flash Drive | ذاكرة فلاش USB
+flaş bellek | Flash Drive | ذاكرة فلاش
+
+## Hizmet / garanti / fatura ifadeleri
+ürün | Product | منتج
+ürün destek hizmeti | Product Support Service | خدمة دعم المنتج
+destek paketi | Support Package | باقة دعم
+yerinde destek | On-Site Support | دعم في الموقع
+yerinde servis | On-Site Service | خدمة في الموقع
+yerinde | On-Site | في الموقع
+uzaktan destek | Remote Support | دعم عن بُعد
+ertesi iş günü | Next Business Day (NBD) | يوم العمل التالي (NBD)
+7/24 destek | 24/7 Support | دعم على مدار الساعة
+garanti uzatma | Warranty Extension | تمديد الضمان
+uzatılmış garanti | Extended Warranty | ضمان ممتد
+garanti süresi | Warranty Period | فترة الضمان
+üretici garantisi | Manufacturer Warranty | ضمان الشركة المصنعة
+distribütör garantisi | Distributor Warranty | ضمان الموزع
+kurulum hizmeti | Installation Service | خدمة التركيب
+kurulum ve devreye alma | Installation and Commissioning | التركيب والتشغيل
+yapılandırma hizmeti | Configuration Service | خدمة التهيئة
+danışmanlık hizmeti | Consulting Service | خدمة استشارية
+bakım sözleşmesi | Maintenance Contract | عقد صيانة
+yıllık bakım | Annual Maintenance | صيانة سنوية
+eğitim hizmeti | Training Service | خدمة التدريب
+nakliye bedeli | Shipping Cost | تكلفة الشحن
+gümrük bedeli | Customs Duty | الرسوم الجمركية
+yıllık abonelik | Annual Subscription | اشتراك سنوي
+aylık abonelik | Monthly Subscription | اشتراك شهري
+abonelik | Subscription | اشتراك
+dikili kabin | Floor-Standing Cabinet | خزانة أرضية قائمة
+güç kaynaklı | with Power Supply | مع مزود طاقة
+yedekli güç kaynaklı | with Redundant Power Supply | مع مزود طاقة احتياطي
+çift güç kaynaklı | with Dual Power Supply | مع مزود طاقة مزدوج
+kayar | Sliding | منزلق
+dikili | Floor-Standing | أرضي قائم
+masaüstü | Desktop | مكتبي
+masaüstü tip | Desktop | مكتبي
+sunucu ürün destek hizmeti | Server Product Support Service | خدمة دعم منتج الخادم
+raf montajlı | Rack-Mount | للتركيب في الرف
+rafa montaj kiti | Rack-Mount Kit | طقم تركيب في الرف

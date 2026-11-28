@@ -555,3 +555,19 @@ test('1.78: kişi ulaşım — program başına numara + @kullanıcı adı', () 
   assert.deepStrictEqual(JSON.parse(cleanContacts({ telegram: true, x: 1, _d: { telegram: { user: ' nuh ', no: '' }, whatsapp: { no: ' +963 9 ' }, bad: { no: '1' } } })),
     { telegram: 1, _d: { telegram: { user: '@nuh' }, whatsapp: { no: '+963 9' } } });
 });
+
+test('1.79: sunucu / ağ / siber güvenlik terimleri, işlemci seviyesi kod olarak kalır', () => {
+  delete require.cache[require.resolve(path.join(ROOT, 'dist/assets/sozluk-falcon.js'))];
+  const S = require(path.join(ROOT, 'dist/assets/sozluk-falcon.js'));
+  const en = (x) => S.translate(x, 'en').text, ar = (x) => S.translate(x, 'ar').text;
+  assert.ok(S.size > 4100, 'sözlük ' + S.size + ' terim');
+  assert.strictEqual(en('Yedekli Güç Kaynağı 750W Çalışırken Değiştirilebilir'), 'Redundant Power Supply 750W Hot-Swap');
+  assert.strictEqual(en('Sunucu Belleği 32GB DDR4 2666MHz ECC Kayıtlı'), 'Server Memory 32GB DDR4 2666MHz ECC Registered');
+  assert.strictEqual(en('Raf Tipi Sunucu 2U Çift İşlemcili Yedekli Güç Kaynaklı'), 'Rack Server 2U Dual-Processor with Redundant Power Supply');
+  assert.strictEqual(en('Yama Kablosu Cat6A FTP 2 Metre'), 'Patch Cord Cat6A FTP 2 m');
+  assert.strictEqual(en('Kartlı Geçiş Kontrol Cihazı Parmak İzi Okuyuculu'), 'Card Access Controller with Fingerprint Reader');
+  assert.strictEqual(en('Sanallaştırma Lisansı 2 İşlemci Kalıcı Lisans'), 'Virtualization License 2 Processor Perpetual License');
+  assert.strictEqual(ar('DELL R740XD - 16LFF / 4SFF, 2 x Gold 6152, 768GB DDR4 (24 x 32GB 2666)'), 'DELL R740XD - 16LFF / 4SFF, 2 x Gold 6152, 768GB DDR4 (24 x 32GB 2666)');
+  assert.strictEqual(ar('Intel Xeon Silver 4214R İşlemci 12 Çekirdek'), 'Intel Xeon Silver 4214R معالج 12 نواة');
+  assert.ok(!/[çğıöşüÇĞİÖŞÜ]/.test(en('Kesintisiz Güç Kaynağı 3kVA Online Çift Dönüşüm')), 'UPS satırında Türkçe kalmaz');
+});

@@ -217,3 +217,7 @@ paketin yanındaki düz JS eklentileriyle (`dist/assets/*-falcon.js`) eklenir. G
   ve `araclar/patch-ui-178.py` (masaüstü index + telefon main; adlar paketten regex ile yakalanır): kişi formunda `FalconReachEd` (program başına kutu: simge aç/kapa + alt alta
   Numara / @kullanıcı adı; normal aramada yalnız numara; yazınca simge açılır; blur'da @ eklenir), listede simge ipucu `FalconReachTip`, kişi aramasında `contacts` da aranır,
   `reachHint` tr/en/ar. telefon-hazirla.sh'ta. Test: `araclar/kisi-178-e2e.js`, `test/app.test.js` (1.78).
+- 1.79.0 SUNUCU / AĞ / SİBER GÜVENLİK SÖZLÜĞÜ: `araclar/sozluk/82-sunucu-ag-siber.txt` (~400 terim: sunucu + bellek, depolama, ağ cihazları, fiber / kablolama, kabin / PDU,
+  siber güvenlik, CCTV / geçiş / alarm, BT enerjisi, bilgisayar + çevre birimleri, hizmet / garanti / lisans). Eskiyi ezen tek kelimelik anahtar YOK (arka panel = Backplane, güç kablosu,
+  devir, projektör, regülatör… eski anlamında bırakıldı); 1.78'deki 3.723 terimin çevirisi değişmedi (eski / yeni derleme karşılaştırması). Motor: `tier` — Arapçada
+  gold/silver/platinum/bronze + model no («Gold 6152», «Silver 4214R») ENLEX ile çevrilmez. Test: `test/app.test.js` (1.79).

@@ -199,7 +199,9 @@
         if (eparts && !eparts.some(function (x) { return TRCH.test(x); }) && !(trOk && (n > 1 || trName || !lookupEn(eparts)))) {
           var ea = lookupEn(eparts);
           var rw0 = tok[words[p]].t;
-          if (ea && !(n === 1 && (/^\d/.test(parts[0]) || (rw0.length <= 3 && rw0 === rw0.toUpperCase())))) { m = { n: n, en: ea }; break; }
+          // v1.79: işlemci / ürün seviyesi + model no («Gold 6152», «Silver 4214R», «Platinum 8380») kod gibi aynen kalır
+          var tier = n === 1 && /^(gold|silver|platinum|bronze)$/.test(parts[0]) && p + 1 < words.length && /^\d{3,5}[a-z]{0,2}$/.test(lw[p + 1]);
+          if (ea && !tier && !(n === 1 && (/^\d/.test(parts[0]) || (rw0.length <= 3 && rw0 === rw0.toUpperCase())))) { m = { n: n, en: ea }; break; }
         }
         if (!trOk) continue;
         m = { n: n, key: hitk, kind: kind };
