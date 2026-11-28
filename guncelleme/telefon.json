@@ -1,10 +1,10 @@
 {
- "version": "1.67.1",
- "notes": "Para girişi/çıkışı: Sham Cash dekontundan doldurma + onay — önce online, sonra offline teyit, sürükle-bırak, Fişten oku Sham Cash'i tanır",
- "size": 9807084,
- "sha256": "67a82ac26db4f5d98c025e9c0b6a0b8ed69a7e7b3e5b13a5e4211927e555068e",
- "sig": "MEQCIH4LYiPYaYiK7iwd4T9eZiRjdzMpRc8ZWw1Wxwc8WrekAiAeRTpuKxQXTdqmN8Yfzulzgl7DjHG30fmDIioE2Y1Whw==",
- "file": "telefon-1.67.1.fopk",
+ "version": "1.68.0",
+ "notes": "Telegram Kayıtlı Mesajlar'dan Sham Cash dekontu otomatik kayıt (sisteme ekle); dekont okuma hızlandı (1.67.2)",
+ "size": 10046851,
+ "sha256": "5d09e2f8a7ae455933caa9607a4ad2e3f731829f584b5798b38bc9c049411c72",
+ "sig": "MEYCIQD9Dvd67obNEwt8/GqCDLbgXOl5ANybjE03nf8PUbMK6wIhAJH435gKmWvYI/29xir43cg4bfyjZUM0LqbPGrqbLWZp",
+ "file": "telefon-1.68.0.fopk",
  "minShell": 0,
- "publishedAt": "2026-11-28T10:15:38.542Z"
+ "publishedAt": "2026-11-28T11:07:44.218Z"
 }
